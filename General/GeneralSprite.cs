@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace HappyDungeon
 {
-    class GeneralSprite
+    public class GeneralSprite
     {
         public Texture2D selfTexture { get; set; }
         public int rowCount { get; set; }
@@ -20,6 +20,7 @@ namespace HappyDungeon
         public float layer { get; set; }        // Layer to draw on 
         public float scaleCof { get; set; }     // Scale coefficient 
         public float opacity { get; set; }      // Draw opacity 
+        public Vector2 positionOffset { get; set; }
 
         private int textureWidth;
         private int textureHeight;
@@ -55,6 +56,7 @@ namespace HappyDungeon
             scaleCof = Globals.SCALAR;                  // By default using the global setting 
             opacity = 1;
             colLimitation = -1;
+            positionOffset = new Vector2(0, 0);
 
             textureWidth = selfTexture.Width / columnsCount;
             textureHeight = selfTexture.Height / rowCount;
@@ -83,12 +85,12 @@ namespace HappyDungeon
         public void Draw(SpriteBatch spriteBatch, Vector2 location, Color color)
         {
             
-            int row = rowLimitation > 0 ? rowLimitation : (int)((float)currentFrame / (float)columnsCount);
-            int column = colLimitation > 0? colLimitation : currentFrame % columnsCount;
+            int row = rowLimitation >= 0 ? rowLimitation : (int)((float)currentFrame / (float)columnsCount);
+            int column = colLimitation >= 0? colLimitation : currentFrame % columnsCount;
 
             Rectangle sourceRectangle = new Rectangle(textureWidth * column, textureHeight * row, textureWidth, textureHeight);
 
-            spriteBatch.Draw(selfTexture, location, sourceRectangle, defaultTine * opacity, 
+            spriteBatch.Draw(selfTexture, location + positionOffset, sourceRectangle, defaultTine * opacity, 
                 0f, Vector2.Zero, scaleCof, SpriteEffects.None, layer);
 
         }

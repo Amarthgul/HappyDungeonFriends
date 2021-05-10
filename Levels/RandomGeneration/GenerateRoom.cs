@@ -12,7 +12,7 @@ namespace HappyDungeon
 {
     class GenerateRoom
     {
-        private bool dev = false;
+        private bool _DEVMODE = true;
         public RoomInfo room { get; set; }
 
         private const int ENEMY_MAX = 8;
@@ -257,7 +257,7 @@ namespace HappyDungeon
 
         public void PopulateEnemy()
         {
-            if (dev)
+            if (_DEVMODE)
             {
             }
 
@@ -406,6 +406,18 @@ namespace HappyDungeon
         {
             room = RL;
             room.Type = Globals.RoomTypes.Start;
+
+            if (_DEVMODE)
+            {
+                room.Arrangement = new int[,] {
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                { 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0},
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+            }
 
             return room;
         }

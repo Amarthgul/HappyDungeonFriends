@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace HappyDungeon
+
 {
     public class Globals
     {
@@ -36,11 +38,12 @@ namespace HappyDungeon
 
 
         // ================================================================================
-        // =============================== Sprites Basic ==================================
+        // ============================== Sprites Related =================================
         // ================================================================================
         public const int WHOLE_SHEET = -1; // Use the entire sheet when updating frames 
         public const int ONE_FRAME = 1;
         public const int FRAME_CYCLE = 4;  // By default each animation cycle has 4 frames 
+        public static Vector2 SPRITE_OFFSET_2 = new Vector2(-2 * Globals.SCALAR, -2 * Globals.SCALAR);
 
         // ================================================================================
         // ============================== Levels and Rooms ================================
@@ -56,17 +59,24 @@ namespace HappyDungeon
         // =========================== Item and enemy indexes =============================
         // ================================================================================
         // -1 ~ -255 are items 
-        public const int ITEM_TORCH = -1; 
+        public const int ITEM_TORCH = -1;
 
         // -256 and smaller are enemies or NPCs 
+
+
+        // ================================================================================
+        // ==================================== UIs =======================================
+        // ================================================================================
+        public const int SLOT_SIZE = 3;
 
         // ================================================================================
         // ================================ Draw Layers ===================================
         // ================================================================================
         public const float MAP_LAYER = 0.1f;    // The beackground/maps/rooms
         public const float BLOCKS_LAYER = 0.2f; // Blocks and evnironments 
+        public const float ITEM_LAYER = 0.4f; 
         public const float MC_LAYER = 0.5f;     // Main character 
-        public const float MIX_LAYER = 0.6f;    // items and enemies 
+        public const float ENEMY_LAYER = 0.6f;    // items and enemies 
         public const float FOW_LAYER = 0.7f;    // Fog of War
         public const float UI_LAYER = 0.8f;
         public const float UI_MINIMAP = 0.85f; 
@@ -79,19 +89,20 @@ namespace HappyDungeon
         // Speed metre 
         public const int SPEED_BASELINE = 1 * SCALAR;
         // Time realted 
-        public const int KEYBOARD_HOLD = 50;
-        public const int FRAME_DELAY = 125; // 8 fps 
+        public const int ITEM_HOLD = 100;    // Items cannot be picked up before this time ends 
+        public const int KEYBOARD_HOLD = 100;
+        public const int FRAME_DELAY = 125;  // 8 fps 
 
         public static Random RND = new Random();
 
         public enum RoomTypes { Start, Boss, Merchant, Normal };
         public enum EnemyTypes { Minion, Elite, Boss };
-        public enum Weapons { Torch };
+        public enum ItemType { Primary, Usable, Junk };
         public enum Direction { Left, Right, Up, Down, None };
         public enum GameStates { TitleScreen, Running, RoomTransitioning, Setting, Bag, GameOver, Story }
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Dead }
 
-
+        // Four direction iterator 
         public static List<Direction> FourDirIter = new List<Direction>() 
             { Direction.Left, Direction.Right, Direction.Up, Direction.Down};
 

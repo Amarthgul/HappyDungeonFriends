@@ -109,5 +109,32 @@ namespace HappyDungeon
             return StaticBlockList;
         }
 
+        public List<IItem> GetCollectibleItemList(Game1 game)
+        {
+            List<IItem> ItemList = new List<IItem>();
+            Vector2 Position; 
+
+            int[,] RoomMat = game.roomCycler.GetCurrentRoomInfo().Arrangement;
+
+            for (int i = 0; i < RoomMat.GetLength(0); i++)
+            {
+                for (int j = 0; j < RoomMat.GetLength(1); j++)
+                {
+                    Position = Misc.Instance.PositionTranslate(i, j);
+
+                    switch (RoomMat[i, j])
+                    {
+                        case Globals.ITEM_TORCH:
+                            ItemList.Add(new Torch(game, Position)); ;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return ItemList; 
+        }
+
     }
 }

@@ -31,15 +31,15 @@ namespace HappyDungeon
         // ================================================================================
         // Main character 
         public MC mainChara;
-        public List<IEnemy> enemyList;
-        public List<IItem> collectibleItemList;
-        public List<IItem> bagItemList; 
+        public List<IEnemy> enemyList { get; set; }           // Refreshes with every room
+        public List<IItem> collectibleItemList { get; set; }  // Refreshes with every room 
+        public List<IItem> bagItemList { get; set; }
 
         // ================================================================================
         // =================== Maps, rooms, and environmental effects =====================
         // ================================================================================
-        private FoW fogOfWar;
-        private Generator mapGenerator; 
+        private Generator mapGenerator;
+        public FoW fogOfWar;
         public LevelCycling roomCycler;
         public Room currentRoom; 
         public List<IBlock> staticBlockList;
@@ -48,14 +48,15 @@ namespace HappyDungeon
         // ================================================================================
         // ============================= UIs and Screens ==================================
         // ================================================================================
-        public List<IUIElement> UIs;
+        public HeadsupDisplay headsupDisplay; 
         public Minimap minimap;
         public int displayWholeMinimap { set; get; }
 
         // ================================================================================
-        // =================================== Controls ===================================
+        // =========================== Controls and logic =================================
         // ================================================================================
         List<Object> controllerList;
+        public SpellSlots spellSlots; 
 
 
 
@@ -82,24 +83,24 @@ namespace HappyDungeon
             currentRoom.roomInfo = roomCycler.GetStart();
             currentRoom.SetupRoom();
 
-            mapGenerator = new Generator(this);
+            bagItemList = new List<IItem>();
 
-            staticBlockList = mapGenerator.GetStaticBlockList();
+            ReloadLists();
 
             mainChara = new MC(this);
 
-            fogOfWar = new FoW(this);
+            spellSlots = new SpellSlots(this);
 
+
+            fogOfWar = new FoW(this);
 
             minimap = new Minimap(this);
             minimap.SetPivot(roomCycler.GetCurrentLocationIndex());
             minimap.FlagExplored(roomCycler.GetCurrentLocationIndex());
             displayWholeMinimap = 0;
 
-            UIs = new List<IUIElement> {
-                new HeadsupDisplay(this),
-                minimap
-            };
+            headsupDisplay = new HeadsupDisplay(this);
+             
 
             return 0; 
         }
@@ -253,10 +254,15 @@ namespace HappyDungeon
                 controller.Update();
             }
 
-            foreach (IUIElement UI in UIs)
+            foreach (IItem item in collectibleItemList)
             {
-                UI.Update();
+                item.Update();
             }
+
+            fogOfWar.Update();
+
+            minimap.Update();
+            headsupDisplay.Update();
 
             mainChara.Update();
         }
@@ -270,10 +276,8 @@ namespace HappyDungeon
 
             currentRoom.Update();
 
-            foreach (IUIElement UI in UIs)
-            {
-                UI.Update();
-            }
+            minimap.Update();
+            headsupDisplay.Update();
 
             if (currentRoom.TransitionListener())
             {
@@ -283,9 +287,8 @@ namespace HappyDungeon
                 currentRoom.roomInfo = roomCycler.GetCurrentRoomInfo();
                 currentRoom.SetupRoom();
 
-                // Start a new generator and populate the room
-                mapGenerator = new Generator(this);
-                staticBlockList = mapGenerator.GetStaticBlockList();
+                ReloadLists();
+                
 
                 mainChara.Refresh(this);
 
@@ -305,14 +308,17 @@ namespace HappyDungeon
         {
             currentRoom.Draw();
 
+            foreach (IItem item in collectibleItemList)
+            {
+                item.Draw();
+            }
+
             mainChara.Draw();
 
             fogOfWar.Draw();
 
-            foreach (IUIElement UI in UIs)
-            {
-                UI.Draw();
-            }
+            headsupDisplay.Draw();
+            minimap.Draw();
 
             // Check for tab display 
             minimap.DrawWholeMap(displayWholeMinimap);
@@ -341,10 +347,17 @@ namespace HappyDungeon
 
             fogOfWar.Draw();
 
-            foreach (IUIElement UI in UIs)
-            {
-                UI.Draw();
-            }
+            headsupDisplay.Draw();
+            minimap.Draw();
+        }
+
+
+        private void ReloadLists()
+        {
+            // Start a new generator and populate the room
+            mapGenerator = new Generator(this);
+            staticBlockList = mapGenerator.GetStaticBlockList();
+            collectibleItemList = mapGenerator.GetCollectibleItemList(this);
         }
     }
 }

@@ -8,6 +8,11 @@ using Microsoft.Xna.Framework;
 
 namespace HappyDungeon
 {
+    /// <summary>
+    /// Main character. 
+    /// Due to some design flaws, there are more sprites than there should be. 
+    /// You can see this in LoadAllSprites().
+    /// </summary>
     public class MC
     {
 
@@ -44,26 +49,37 @@ namespace HappyDungeon
         private Vector2 startUpPosition = new Vector2(Globals.OUT_FWIDTH / 2 - Globals.OUT_UNIT / 2, 
             Globals.OUT_FHEIGHT / 2 + Globals.OUT_UNIT);
 
-        private PlayerBlockCollision blockCollisionCheck; 
+        private PlayerBlockCollision blockCollisionCheck;
+        private PlayerItemCollision itemCollisionCheck;
 
         // ================================================================================
         // ============================= Drawing and textures =============================
         // ================================================================================
         private GeneralSprite walking;
-        private GeneralSprite currentSprite;
+        private GeneralSprite walkingWithTorch; 
+        // The sprite to use 
+        private GeneralSprite currentWalkingSprite;
+
+        private GeneralSprite torchFlame;
+        private GeneralSprite torchShadow; 
+        private List<GeneralSprite> additionalSprites; 
+
         private Color defaultTint = Color.White;
 
-        private Game1 game;
-        private SpriteBatch spriteBatch;
 
         // ================================================================================
         // ============================= States and parameters ============================
         // ================================================================================
+        private enum primaryTypes { None, Torch };
+        private primaryTypes primaryState;
         private Globals.GeneralStates mcState;
         public int currentHealth;
         public int currentMaxHP;
-        public int moveSpeed; 
+        public int moveSpeed;
+        public int pickupDistance = 2;  // Not having to completely reach an item to pick it up. In original unit
 
+        private Game1 game;
+        private SpriteBatch spriteBatch;
 
         // Init 
         public MC(Game1 G)
@@ -79,15 +95,13 @@ namespace HappyDungeon
             collisionRect = new Rectangle((int)collisionOffset.X, (int)collisionOffset.Y, 
                 (int)((1 - RECT_WIDTH_OFFSET * 2) * Globals.OUT_UNIT), (int)((1 - RECT_HEIGHT_OFFSET) * Globals.OUT_UNIT));
 
-            // Initlize all IMs 
-            ImageFile WalkingIM = TextureFactory.Instance.mcWalk;
-
-            // Creating all sprites 
-            walking = new GeneralSprite(WalkingIM.texture, WalkingIM.C, WalkingIM.R, 
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
-
+            LoadAllSprites();
+            
+            // Collisions 
             blockCollisionCheck = new PlayerBlockCollision(game);
+            itemCollisionCheck = new PlayerItemCollision(game);
 
+            primaryState = primaryTypes.None;
             mcState = Globals.GeneralStates.Hold; // Start as on hold 
             isMoving = false;
 
@@ -128,14 +142,48 @@ namespace HappyDungeon
                     break; 
             }
 
-            currentSprite.rowLimitation = (int)facingDir;
-            currentSprite.Update();
+            currentWalkingSprite.rowLimitation = (int)facingDir;
+            currentWalkingSprite.Update();
+
+            foreach (GeneralSprite sprite in additionalSprites)
+            {
+                sprite.rowLimitation = (int)facingDir;
+            }
+            
             
         }
 
         public void Attack()
         {
 
+        }
+
+        /// <summary>
+        /// When being called, torch should be the primary item, thus when toggle off, 
+        /// it goes back to normal walking. 
+        /// </summary>
+        public void ToggleTorch()
+        {
+            if(primaryState != primaryTypes.Torch)
+            {
+                primaryState = primaryTypes.Torch;
+                currentWalkingSprite = walkingWithTorch;
+
+                currentWalkingSprite.rowLimitation = walking.rowLimitation;
+                torchFlame.rowLimitation = walking.rowLimitation;
+                torchShadow.rowLimitation = walking.rowLimitation;
+
+                additionalSprites.Add(torchFlame);
+                additionalSprites.Add(torchShadow);
+            }
+            else
+            {
+                primaryState = primaryTypes.None;
+                currentWalkingSprite = walking;
+                currentWalkingSprite.rowLimitation = walkingWithTorch.rowLimitation;
+
+                additionalSprites.Clear();
+            }
         }
 
         public Rectangle GetRectangle()
@@ -157,10 +205,8 @@ namespace HappyDungeon
             switch (mcState)
             {
                 case Globals.GeneralStates.Hold:
-                    currentSprite = walking;
                     break;
                 case Globals.GeneralStates.Moving:
-                    currentSprite = walking;
                     break;
                 case Globals.GeneralStates.Attack:
                     break;
@@ -170,9 +216,11 @@ namespace HappyDungeon
                     break; 
             }
 
-
+            // Handle collision with blocks 
             if (blockCollisionCheck.ValidMove(GetStagedRectangle()) && CanPassDoors())
                 position += stagedMovement;
+            // Check and handle item pick up
+            itemCollisionCheck.CheckItemCollision(GetPickupRectangle());
 
             stagedMovement = new Vector2(0, 0);
 
@@ -184,16 +232,62 @@ namespace HappyDungeon
             Regulate();
 
             CheckBoundary();
+
+            UpdateAllSprites();
         }
 
         public void Draw()
         {
-            currentSprite.Draw(spriteBatch, position, defaultTint);
+            currentWalkingSprite.Draw(spriteBatch, position, defaultTint);
+
+            foreach (GeneralSprite sprite in additionalSprites)
+            {
+                sprite.Draw(spriteBatch, position, defaultTint);
+            }
         }
 
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================
+
+        /// <summary>
+        /// Since there are a lot of sprites, they are being loaded in this separate method.
+        /// </summary>
+        private void LoadAllSprites()
+        {
+            // Initlize all IMs 
+            ImageFile WalkingIM = TextureFactory.Instance.mcWalk;
+            ImageFile WWT = TextureFactory.Instance.mcTorchWalk; // Walking With Torch 
+            ImageFile iTF = TextureFactory.Instance.itemTorchFlame;
+            ImageFile iTS = TextureFactory.Instance.itemTorchShadow;
+
+            additionalSprites = new List<GeneralSprite>();
+
+            // Creating all sprites 
+            walking = new GeneralSprite(WalkingIM.texture, WalkingIM.C, WalkingIM.R,
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
+            walkingWithTorch = new GeneralSprite(WWT.texture, WWT.C, WWT.R,
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
+
+            torchFlame = new GeneralSprite(iTF.texture, iTF.C, iTF.R,
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER + 0.01f);
+            torchFlame.positionOffset = Globals.SPRITE_OFFSET_2;
+
+            torchShadow = new GeneralSprite(iTS.texture, iTS.C, iTS.R,
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER - 0.01f);
+            torchFlame.positionOffset = Globals.SPRITE_OFFSET_2;
+
+            currentWalkingSprite = walking;
+
+        }
+
+        private void UpdateAllSprites()
+        {
+            foreach (GeneralSprite sprite in additionalSprites)
+            {
+                sprite.Update();
+            }
+        }
 
         /// <summary>
         /// Regulate parameters to avoid impossible values.
@@ -213,6 +307,20 @@ namespace HappyDungeon
             return new Rectangle((int)(collisionRect.X + stagedMovement.X),
                 (int)(collisionRect.Y + stagedMovement.Y),
                 collisionRect.Width, collisionRect.Height);
+        }
+
+        /// <summary>
+        /// Rectangle for calculating item pick up.
+        /// </summary>
+        /// <returns></returns>
+        private Rectangle GetPickupRectangle()
+        {
+            return new Rectangle(
+                collisionRect.X - pickupDistance * Globals.SCALAR,
+                collisionRect.Y - pickupDistance * Globals.SCALAR,
+                collisionRect.Width + pickupDistance * Globals.SCALAR,
+                collisionRect.Height + pickupDistance * Globals.SCALAR
+                );
         }
 
         /// <summary>

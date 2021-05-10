@@ -44,7 +44,6 @@ namespace HappyDungeon
         // ================================================================================
         // ============================ Textures and display ==============================
         // ================================================================================
-        public Texture2D headsUpFill;
         public Texture2D nextLevelTexture;
         public Texture2D levelTexture;     // Can be accessed to make map transitioning 
         private Texture2D blockAllMight;   // Containing all blocks 
@@ -66,7 +65,7 @@ namespace HappyDungeon
             new Vector2(-Globals.OUT_GWIDTH, Globals.OUT_HEADSUP ),     // Go through left door 
             new Vector2(Globals.OUT_GWIDTH, Globals.OUT_HEADSUP ),      // Go through right door 
             new Vector2(0, -Globals.OUT_GHEIGHT + Globals.OUT_HEADSUP), // Go through top door 
-            new Vector2(0, Globals.OUT_HEADSUP + Globals.OUT_GHEIGHT)   // Go through bottom door 
+            new Vector2(0, Globals.OUT_FHEIGHT)   // Go through bottom door 
         }; // Position for next level 
         private Vector2 delta = new Vector2(0, 0);
 
@@ -100,11 +99,8 @@ namespace HappyDungeon
 
         private void generate()
         {
-
-            headsUpFill = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice, 
-                Globals.ORIG_FWIDTH, Globals.ORIG_HEADSUP, pixel => defaultColor);
             levelTexture = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
-                Globals.ORIG_FWIDTH, Globals.ORIG_FHEIGHT, pixel => defaultColor);
+                Globals.ORIG_GWIDTH, Globals.ORIG_GHEIGHT, pixel => defaultColor);
 
             blockAllMight = TextureFactory.Instance.blockAllMight.texture;
         }
@@ -289,9 +285,10 @@ namespace HappyDungeon
 
             if(game.gameState == Globals.GameStates.RoomTransitioning)
             {
-                spriteBatch.Draw(levelTexture, new Vector2(0, Globals.OUT_HEADSUP) + delta, null, defaultTint, 
-                    0f, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_LAYER);
                 spriteBatch.Draw(nextLevelTexture, nextLvPos[(int)TransDir] + delta, null, defaultTint,
+                    0f, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_LAYER);
+
+                spriteBatch.Draw(levelTexture, new Vector2(0, Globals.OUT_HEADSUP) + delta, null, defaultTint, 
                     0f, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_LAYER);
             }
             else

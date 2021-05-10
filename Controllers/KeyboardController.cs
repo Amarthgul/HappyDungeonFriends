@@ -17,10 +17,10 @@ namespace HappyDungeon
             controllerMappings = new Dictionary<Keys, ICommand>()
             {
                 //PlayerMovement
-                {Keys.W, new MoveUpCommand(game)},
-                {Keys.A, new MoveLeftCommand(game)},
-                {Keys.S, new MoveDownCommand(game)},
-                {Keys.D, new MoveRightCommand(game)},
+                {Keys.Q, new UsePrimaryCommand(game)},
+                {Keys.W, new Use1stSlotCommand(game)},
+                {Keys.E, new Use2ndSlotCommand(game)},
+                {Keys.R, new Use3rdSlotCommand(game)},
                 {Keys.Up, new MoveUpCommand(game)},
                 {Keys.Left, new MoveLeftCommand(game)},
                 {Keys.Down, new MoveDownCommand(game)},

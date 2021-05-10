@@ -9,7 +9,7 @@
     <ProjectGuid>{6FE4D4E9-F990-4DB4-8464-CBB7DC8C8FF6}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Game1</RootNamespace>
+    <RootNamespace>HappyDungeon</RootNamespace>
     <AssemblyName>Game1</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
@@ -43,6 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Collisions\PlayerBlockCollision.cs" />
+    <Compile Include="Collisions\PlayerItemCollision.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DisplayMapCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
@@ -50,6 +51,10 @@
     <Compile Include="Commands\MoveLeftCommand.cs" />
     <Compile Include="Commands\MoveRightCommand.cs" />
     <Compile Include="Commands\MoveUpCommand.cs" />
+    <Compile Include="Commands\Use1stSlotCommand.cs" />
+    <Compile Include="Commands\Use2ndSlotCommand.cs" />
+    <Compile Include="Commands\Use3rdSlotCommand.cs" />
+    <Compile Include="Commands\UsePrimaryCommand.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
@@ -59,6 +64,8 @@
     <Compile Include="General\Generator.cs" />
     <Compile Include="General\Globals.cs" />
     <Compile Include="Items\IItem.cs" />
+    <Compile Include="Items\SpellSlots.cs" />
+    <Compile Include="Items\Torch.cs" />
     <Compile Include="Levels\Blocks\BlockInvis.cs" />
     <Compile Include="Levels\Blocks\IBlock.cs" />
     <Compile Include="Levels\FoW.cs" />
@@ -72,7 +79,7 @@
     <Compile Include="MC\MC.cs" />
     <Compile Include="Misc\DrawRectangle.cs" />
     <Compile Include="Misc\Misc.cs" />
-    <Compile Include="Misc\TextureFactory.cs" />
+    <Compile Include="General\TextureFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\HeadsupDisplay.cs" />

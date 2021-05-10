@@ -28,6 +28,8 @@ namespace HappyDungeon
         public RoomInfo GetStart()
         {
 
+            // Note that changing the initial room in GenerateRoom.cs can do the same 
+            // But more comprehensive and less buggy 
             if (_DEVMODE)
                 return TestRoom();
             else
@@ -66,7 +68,12 @@ namespace HappyDungeon
             return currentLocationIndex;
         }
 
-        // Return the room in that direction, assume there is one 
+        /// <summary>
+        /// Return the room in that direction.
+        /// If there is one. 
+        /// </summary>
+        /// <param name="Direction">The direction to loop up</param>
+        /// <returns>Info about that room. Null if no room in that direction</returns>
         public RoomInfo GetNextRoom(Globals.Direction Direction)
         {
             switch (Direction)
@@ -92,6 +99,10 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Set current location as next room.
+        /// </summary>
+        /// <param name="Direction">Direction ot move</param>
         public void MoveIntoRoom(Globals.Direction Direction)
         {
             switch (Direction)
