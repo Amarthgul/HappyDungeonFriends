@@ -12,4 +12,4 @@ Currently still work in progress.
 
 まだまだ...
 
-<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/Screenshot%202021-05-09%20005224.png" height="512">
+<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/Screenshot20210510003517.png" height="512">
