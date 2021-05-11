@@ -1,7 +1,7 @@
 # Happy Dungeon Friends
 
 <p align="center">
-  <src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Icon.bmp">
+  <img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Icon.bmp">
 </p>
 
 This is an open source 2D top down game of a young girl happily explores a whimsical dungeon 
