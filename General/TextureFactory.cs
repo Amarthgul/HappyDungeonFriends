@@ -23,23 +23,29 @@ namespace HappyDungeon
         public ImageFile fogOfWar;
 
         public ImageFile mcWalk;
-        public ImageFile mcTorchWalk; 
+        public ImageFile mcTorchWalk;
 
         // ================================================================================
         // ================================= UI elements ==================================
         // ================================================================================ 
+        public ImageFile cursor; 
         public ImageFile uiFront;
         public ImageFile uiBack;
         public ImageFile miniRooms;
         public ImageFile playerNote;
+        public ImageFile bagOnBar;
+        public ImageFile goldOnBar;
+        public ImageFile fontDigitsSmall;
+        public ImageFile fontDigitsSmallB; 
 
         // ================================================================================
         // =================================== Items ======================================
         // ================================================================================ 
         public ImageFile itemTorch;
         public ImageFile itemTorchFlame;
-        public ImageFile itemTorchShadow; 
-
+        public ImageFile itemTorchShadow;
+        public ImageFile goldOnGround;
+        public ImageFile goldOnGroundFX;
 
         private static TextureFactory instance = new TextureFactory();
 
@@ -67,16 +73,26 @@ namespace HappyDungeon
             mcWalk = new ImageFile(content, "Images/MC/MC_walk", 4, 4);
             mcTorchWalk = new ImageFile(content, "Images/MC/MC_walk_Torch", 4, 4);
 
-
+            // --------------------------------------------------------------------------------
+            // --------------------------------- UI elements ----------------------------------
+            cursor = new ImageFile(content, "Images/UI/cursor", 1, 1);
             uiFront = new ImageFile(content, "Images/UI/HeadsupUIFront", 1, 1);
             uiBack = new ImageFile(content, "Images/UI/HeadsupUIBack", 1, 1);
             miniRooms = new ImageFile(content, "Images/UI/Minimap", 4, 4);
             playerNote = new ImageFile(content, "Images/UI/playerNotation", 4, 4);
+            bagOnBar = new ImageFile(content, "Images/UI/bagOnBar", 1, 2);
+            goldOnBar = new ImageFile(content, "Images/UI/goldOnBar", 1, 1);
+            fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
+            fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);
 
-
+            // --------------------------------------------------------------------------------
+            // ----------------------------------- Items --------------------------------------
             itemTorch = new ImageFile(content, "Images/Items/item_torch", 4, 4);
             itemTorchFlame = new ImageFile(content, "Images/Items/torchFlame", 4, 4);
             itemTorchShadow = new ImageFile(content, "Images/Items/torchShhadows", 4, 4);
+            goldOnGround = new ImageFile(content, "Images/Items/goldOnGround", 4, 4);
+            goldOnGroundFX = new ImageFile(content, "Images/Items/goldOnGroundFX", 4, 4);
+
         }
 
         /// <summary>

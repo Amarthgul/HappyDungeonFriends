@@ -42,28 +42,18 @@ namespace HappyDungeon
 
             rectSprite = new GeneralSprite(RectangleLine, Globals.ONE_FRAME, Globals.ONE_FRAME, 
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.DEBUG_LAYER);
+
             rectSprite.scaleCof = 1;
             rectSprite.opacity = opacity; 
         }
 
-        private Texture2D GenerateFill(int width, int height, Func<int, Color> paint)
-        {
-            Texture2D texture = new Texture2D(graphics, width, height);
-
-            Color[] data = new Color[width * height];
-            for (int pixel = 0; pixel < data.Count(); pixel++)
-                data[pixel] = paint(pixel);
-
-            texture.SetData(data);
-            return texture;
-        }
-
         private void Generate()
         {
-            RectangleLine = GenerateFill(position.Width, position.Height, pixel => fillColor);
+            RectangleLine = TextureFactory.Instance.GenerateTexture(graphics, position.Width, position.Height, pixel => fillColor);
 
-            Texture2D BorderInnerTransp = GenerateFill(RectangleLine.Width - 2 * thickness,
-                RectangleLine.Height - 2 * thickness, pixel => transp);
+            Texture2D BorderInnerTransp = TextureFactory.Instance.GenerateTexture(graphics, 
+                RectangleLine.Width - 2 * thickness, RectangleLine.Height - 2 * thickness, pixel => transp);
+
             Color[] InnerFillData = new Color[BorderInnerTransp.Width * BorderInnerTransp.Height];
 
             BorderInnerTransp.GetData(InnerFillData);
@@ -75,7 +65,7 @@ namespace HappyDungeon
 
         public void Draw()
         {
-            rectSprite.Draw(spriteBatch, new Vector2(position.X, position.Y), defaultTint);
+            rectSprite.Draw(spriteBatch, new Vector2(position.X, position.Y),  defaultTint);
         }
     }
 }

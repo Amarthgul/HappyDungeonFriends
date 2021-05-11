@@ -60,6 +60,7 @@ namespace HappyDungeon
         // ================================================================================
         // -1 ~ -255 are items 
         public const int ITEM_TORCH = -1;
+        public const int ITEM_GOLD = -255; 
 
         // -256 and smaller are enemies or NPCs 
 
@@ -72,6 +73,8 @@ namespace HappyDungeon
         // ================================================================================
         // ================================ Draw Layers ===================================
         // ================================================================================
+        // It is quite easy for monogame to mess it up when 2 draw are in same layer
+        // so I tried to be specific 
         public const float MAP_LAYER = 0.1f;    // The beackground/maps/rooms
         public const float BLOCKS_LAYER = 0.2f; // Blocks and evnironments 
         public const float ITEM_LAYER = 0.4f; 
@@ -79,7 +82,11 @@ namespace HappyDungeon
         public const float ENEMY_LAYER = 0.6f;    // items and enemies 
         public const float FOW_LAYER = 0.7f;    // Fog of War
         public const float UI_LAYER = 0.8f;
-        public const float UI_MINIMAP = 0.85f; 
+        public const float UI_MINIMAP = 0.85f;
+        public const float UI_MINIMAP_PLAYER = 0.86f;
+        public const float UI_TEXT_SHADOW = 0.88f;
+        public const float UI_TEXT_LAYER = 0.89f;
+        public const float CURSOR_LAYER = 0.9f; 
         public const float DEBUG_LAYER = 0.95f;
 
 
@@ -99,7 +106,7 @@ namespace HappyDungeon
         public enum EnemyTypes { Minion, Elite, Boss };
         public enum ItemType { Primary, Usable, Junk };
         public enum Direction { Left, Right, Up, Down, None };
-        public enum GameStates { TitleScreen, Running, RoomTransitioning, Setting, Bag, GameOver, Story }
+        public enum GameStates { TitleScreen, Running, RoomTransitioning, Setting, Bag, GameOver, Conversation }
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Dead }
 
         // Four direction iterator 

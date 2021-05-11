@@ -28,9 +28,22 @@ namespace HappyDungeon
 
                 if (Intersection.Width > 0)
                 {
-                    game.bagItemList.Add(item.Collect());
+                    IItem Duplicate = game.bagItemList.Find(c => c.SelfIndex() == item.SelfIndex());
 
-                    game.spellSlots.TryAddingItem(item);
+                    if (Duplicate != null) // If this item is already in the bag 
+                    {
+                        Duplicate.CountFlux(item.GetCount());
+                    }
+                    else
+                    {
+                        game.bagItemList.Add(item.Collect());
+
+                        game.spellSlots.TryAddingItem(item);
+                    }
+
+                    if (item is DroppedGold)
+                        game.goldCount += item.GetCount();
+
                     ToBeRemoved.Add(item);
                 }
             }

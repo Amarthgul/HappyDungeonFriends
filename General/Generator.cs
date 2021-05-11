@@ -127,6 +127,9 @@ namespace HappyDungeon
                         case Globals.ITEM_TORCH:
                             ItemList.Add(new Torch(game, Position)); ;
                             break;
+                        case Globals.ITEM_GOLD:
+                            ItemList.Add(new DroppedGold(game, Position));
+                            break; 
                         default:
                             break;
                     }

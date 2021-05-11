@@ -47,6 +47,7 @@
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DisplayMapCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\MoveCommand.cs" />
     <Compile Include="Commands\MoveDownCommand.cs" />
     <Compile Include="Commands\MoveLeftCommand.cs" />
     <Compile Include="Commands\MoveRightCommand.cs" />
@@ -57,13 +58,16 @@
     <Compile Include="Commands\UsePrimaryCommand.cs" />
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\KeyboardController.cs" />
+    <Compile Include="Controllers\MouseController.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
     <Compile Include="Enemies\IEnemy.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="General\GeneralSprite.cs" />
     <Compile Include="General\Generator.cs" />
     <Compile Include="General\Globals.cs" />
+    <Compile Include="Items\DroppedGold.cs" />
     <Compile Include="Items\IItem.cs" />
+    <Compile Include="Items\ItemTemplate.cs" />
     <Compile Include="Items\SpellSlots.cs" />
     <Compile Include="Items\Torch.cs" />
     <Compile Include="Levels\Blocks\BlockInvis.cs" />
@@ -85,6 +89,9 @@
     <Compile Include="UI\HeadsupDisplay.cs" />
     <Compile Include="UI\IUIElement.cs" />
     <Compile Include="UI\Minimap.cs" />
+    <Compile Include="UI\MouseCursor.cs" />
+    <Compile Include="UI\TextGenerators\DigitsSmall.cs" />
+    <Compile Include="UI\TextGenerators\IText.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -144,6 +151,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\Levels\blockAllMight.png" />

@@ -24,12 +24,13 @@ namespace HappyDungeon
         private Game1 game; 
         private SpriteBatch spriteBatch; // the spritebatch used to draw the enemy
 
-        public float rangeBaseline { set; get; }
+        private float rangeBaseline;
+        private float rangeNow; 
         private float scaler;
         private int width;
         private int height;
         private bool shakyMode = false;
-        private double shakyRange = 0.2;
+        private double shakyRange = 0.4;
         private int nextUpdateTime;
         private bool clairvoyantMode = false;
         private float clairvoyantRange = 0;
@@ -64,8 +65,10 @@ namespace HappyDungeon
             nextUpdateTime = Globals.RND.Next(SHAKY_MIN, SHAKY_MAX);
             stopwatch.Restart();
 
+            
             rangeBaseline = 1; 
             SetRange(rangeBaseline); // Set default fog range 
+            rangeNow = rangeBaseline; 
 
             Generate();
         }
@@ -77,9 +80,21 @@ namespace HappyDungeon
         /// that can be seen</param>
         public void SetRange(float Range)
         {
+            rangeNow = Range; 
             scaler = Range + 2;
             position = new Vector2(-((scaler * width / 2) - Globals.OUT_UNIT / 2),
                 -((scaler * height / 2) - Globals.OUT_UNIT / 2));
+        }
+
+        private void SetShakyRange(float RangeWithShake)
+        {
+            scaler = RangeWithShake + 2;
+            position = new Vector2(-((scaler * width / 2) - Globals.OUT_UNIT / 2),
+                -((scaler * height / 2) - Globals.OUT_UNIT / 2));
+        }
+        public float GetRange()
+        {
+            return rangeNow;
         }
 
         /// <summary>
@@ -94,6 +109,9 @@ namespace HappyDungeon
         /// <summary>
         /// Turn on or off shaky mode. 
         /// In shaky mode the fog range change a bit.  
+        /// Reason why shaky didn't use a repetitive call on clairvoyant
+        /// is because calirvoyant actually makes player sees further,
+        /// while shaky mode only looks shaky. 
         /// </summary>
         public void ToggleShakyMode()
         {
@@ -117,18 +135,18 @@ namespace HappyDungeon
 
         public void Update()
         {
+            if (clairvoyantMode)
+            {
+                rangeNow = clairvoyantRange + rangeBaseline;
+            }
             if (shakyMode)
             {
                 timer = stopwatch.ElapsedMilliseconds;
                 if (timer > nextUpdateTime)
                 {
-                    float NewRange = rangeBaseline + (float)(Globals.RND.NextDouble() * (2 * shakyRange) - shakyRange);
-                    if (clairvoyantMode)
-                    {
-                        NewRange += clairvoyantRange;
-                    }
+                    float ShakyRange = rangeNow + (float)(Globals.RND.NextDouble() * (2 * shakyRange) - shakyRange);
 
-                    SetRange(NewRange);
+                    SetShakyRange(ShakyRange);
 
                     stopwatch.Restart();
                     nextUpdateTime = Globals.RND.Next(SHAKY_MIN, SHAKY_MAX);

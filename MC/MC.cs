@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace HappyDungeon
 {
@@ -24,6 +25,7 @@ namespace HappyDungeon
         private const float RECT_WIDTH_OFFSET = 0.1f;
         private const float RECT_HEIGHT_OFFSET = 0.3f;
         private const int NEW_ROOM_OFFSET = 2 * Globals.SCALAR;
+        private const int DIRECTION_CD = 200;    // Avoid gltching direction when using mouse 
 
         // The limits for entering doors 
         private int leftLim = 2 * Globals.OUT_UNIT;
@@ -42,7 +44,12 @@ namespace HappyDungeon
         // ================================================================================
         public Vector2 position { set; get; }
         public Globals.Direction facingDir;
+
         public bool isMoving;                   // This field is for limiting movement to only 1 direction 
+        public bool[] canTurn = new bool[] { true, true, true, true };
+        private Stopwatch[] dirStopwatches = new Stopwatch[] { new Stopwatch() , new Stopwatch() , new Stopwatch() , new Stopwatch() };
+        private long[] dirTimers = new long[] { 0, 0, 0, 0 }; 
+
         private Rectangle collisionRect;
         private Vector2 stagedMovement; 
         private Vector2 collisionOffset; 
@@ -72,7 +79,7 @@ namespace HappyDungeon
         // ================================================================================
         private enum primaryTypes { None, Torch };
         private primaryTypes primaryState;
-        private Globals.GeneralStates mcState;
+        public Globals.GeneralStates mcState { set; get; }
         public int currentHealth;
         public int currentMaxHP;
         public int moveSpeed;
@@ -113,9 +120,20 @@ namespace HappyDungeon
         // ================================================================================
         // ================================= Public methods ===============================
         // ================================================================================
+        
+        /// <summary>
+        /// Change the direction of the player. 
+        /// Add a direction lock on that direction to avoid glitch turn when
+        /// that direction is called in another short period of time. 
+        /// </summary>
+        /// <param name="newDir">Direction to turn</param>
         public void ChangeDirection(Globals.Direction newDir)
         {
             facingDir = newDir;
+
+            canTurn[(int)newDir] = false;
+            dirTimers[(int)newDir] = 0;
+            dirStopwatches[(int)newDir].Restart();
         }
 
         public void Move()
@@ -153,6 +171,31 @@ namespace HappyDungeon
             
         }
 
+        /// <summary>
+        /// Determine the location of the cursor and makes the character walk towrds that place.
+        /// </summary>
+        /// <param name="CursorLoc">Position of the cursor in game screen</param>
+        public void RightClickMove(Vector2 CursorLoc)
+        {
+            Vector2 Delta = CursorLoc - position; 
+
+            if(Math.Abs(Delta.X) > Math.Abs(Delta.Y)) // Left or right move 
+            {
+                if (Delta.X > 0)
+                    new MoveRightCommand(game).execute();
+                else
+                    new MoveLeftCommand(game).execute();
+            }
+            else
+            {
+                if (Delta.Y > 0)
+                    new MoveDownCommand(game).execute();
+                else
+                    new MoveUpCommand(game).execute();
+            }
+
+        }
+
         public void Attack()
         {
 
@@ -184,6 +227,16 @@ namespace HappyDungeon
 
                 additionalSprites.Clear();
             }
+        }
+
+        /// <summary>
+        /// While holding torch (or in some other conditions),
+        /// the character might drive enemies away.
+        /// </summary>
+        /// <returns></returns>
+        public bool Illuminati()
+        {
+            return primaryState == primaryTypes.Torch;
         }
 
         public Rectangle GetRectangle()
@@ -230,6 +283,7 @@ namespace HappyDungeon
             isMoving = false; // Set back to false for next movement  
 
             Regulate();
+            UpdateTurnCD();
 
             CheckBoundary();
 
@@ -281,6 +335,9 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// Since player is always visible, additional sprites can be updated all the time. 
+        /// </summary>
         private void UpdateAllSprites()
         {
             foreach (GeneralSprite sprite in additionalSprites)
@@ -290,12 +347,31 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Release the directions frozen if enough time have passed.
+        /// </summary>
+        private void UpdateTurnCD()
+        {
+            for (int i = 0; i < dirTimers.Length; i++)
+            {
+                dirTimers[i] = dirStopwatches[i].ElapsedMilliseconds; 
+
+                if (dirTimers[i] > DIRECTION_CD)
+                {
+                    canTurn[i] = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Regulate parameters to avoid impossible values.
         /// </summary>
         private void Regulate()
         {
             if (currentHealth < 0)
-                currentHealth = 0; 
+                currentHealth = 0;
+
+            if (currentHealth > currentMaxHP)
+                currentHealth = currentMaxHP;
         }
 
         /// <summary>

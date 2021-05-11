@@ -112,7 +112,7 @@ namespace HappyDungeon
             verticalBridge = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice, 
                 BRIDGE_LEN_0, BRIDGE_LEN_0, pixel => fillColor);
 
-            playerNotation = new GeneralSprite(PLN.texture, PLN.C, PLN.R, Globals.WHOLE_SHEET, PLN.C * PLN.R, Globals.UI_MINIMAP);
+            playerNotation = new GeneralSprite(PLN.texture, PLN.C, PLN.R, Globals.WHOLE_SHEET, PLN.C * PLN.R, Globals.UI_MINIMAP_PLAYER);
 
             tabDisplayPos = new Vector2(Globals.OUT_FWIDTH / 2 - minimap.Width / 2 * Globals.SCALAR,
                 Globals.OUT_FHEIGHT / 2 - minimap.Height / 2 * Globals.SCALAR + Globals.OUT_HEADSUP);

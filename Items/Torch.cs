@@ -24,6 +24,8 @@ namespace HappyDungeon
         private long timer;
         private bool cooldownFinished;
 
+        private int torchCount; 
+
         private Color defaultTint = Color.White;
         private Globals.ItemType selfType = Globals.ItemType.Primary;
         private int selfIndex = Globals.ITEM_TORCH;
@@ -40,6 +42,8 @@ namespace HappyDungeon
 
             ImageFile TS = TextureFactory.Instance.itemTorch;
             torchSprite = new GeneralSprite(TS.texture, TS.C, TS.R, 0, Globals.ONE_FRAME, Globals.ITEM_LAYER);
+
+            torchCount = 1; // Theoretically never change 
 
             stopwatch.Restart();
             cooldownFinished = false;
@@ -77,6 +81,20 @@ namespace HappyDungeon
             game.fogOfWar.ToggleClairvoyant(1.5f);
             game.fogOfWar.ToggleShakyMode();
             game.headsupDisplay.SetPrimary(NewSprite);
+        }
+
+        /// <summary>
+        /// Torch does not change count. 
+        /// </summary>
+        /// <param name="Count">Whatever</param>
+        public void CountFlux(int Count)
+        {
+            // Do nothing
+        }
+
+        public int GetCount()
+        {
+            return torchCount;
         }
 
         public void Update()

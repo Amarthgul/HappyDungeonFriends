@@ -47,6 +47,30 @@ namespace HappyDungeon
             }
         }
 
+        public bool ItemGofBreaker(IItem Item, Rectangle PlayerRect, float VisibleRange)
+        {
+            bool result = false;
+            int Threshold = (int)(VisibleRange * Globals.OUT_UNIT); 
+            Rectangle ItemRect = Item.GetRectangle();
+            Vector2 PlayerCenter = new Vector2(
+                PlayerRect.X + PlayerRect.Width / 2, 
+                PlayerRect.Y + PlayerRect.Height / 2);
+
+            foreach(float LocX in new float[] {ItemRect.X, ItemRect.X + ItemRect.Width })
+            {
+                foreach(float LocY in new float[] { ItemRect.Y, ItemRect.Y + ItemRect.Height })
+                {
+                    if (L2Distance(new Vector2(LocX, LocY), PlayerCenter) < Threshold)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+
+            return result; 
+        }
+
         public Vector2 PositionTranslate(int R, int C)
         {
             Vector2 FinalPos = new Vector2(0, 0);
@@ -55,6 +79,11 @@ namespace HappyDungeon
             FinalPos.Y = Globals.OUT_HEADSUP + Globals.OUT_BORDER + R * Globals.OUT_UNIT;
 
             return FinalPos;
+        }
+
+        private int L2Distance(Vector2 P1, Vector2 P2)
+        {
+            return (int)Math.Sqrt(Math.Pow((P1.X - P2.X), 2) + Math.Pow((P1.Y - P2.Y), 2));
         }
     }
 }

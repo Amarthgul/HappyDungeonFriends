@@ -18,10 +18,8 @@ namespace HappyDungeon
         }
         public void execute()
         {
-            game.mainChara.ChangeDirection(Globals.Direction.Up);//face Up
-            if (!game.mainChara.isMoving)
-                game.mainChara.Move();
-           
+            new Commands.MoveCommand().Move(game, Globals.Direction.Up);
+
         }
     }
 }

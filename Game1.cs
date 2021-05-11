@@ -34,6 +34,7 @@ namespace HappyDungeon
         public List<IEnemy> enemyList { get; set; }           // Refreshes with every room
         public List<IItem> collectibleItemList { get; set; }  // Refreshes with every room 
         public List<IItem> bagItemList { get; set; }
+        public int goldCount { get; set; }
 
         // ================================================================================
         // =================== Maps, rooms, and environmental effects =====================
@@ -50,6 +51,7 @@ namespace HappyDungeon
         // ================================================================================
         public HeadsupDisplay headsupDisplay; 
         public Minimap minimap;
+        public MouseCursor cursor; 
         public int displayWholeMinimap { set; get; }
 
         // ================================================================================
@@ -91,7 +93,6 @@ namespace HappyDungeon
 
             spellSlots = new SpellSlots(this);
 
-
             fogOfWar = new FoW(this);
 
             minimap = new Minimap(this);
@@ -100,7 +101,9 @@ namespace HappyDungeon
             displayWholeMinimap = 0;
 
             headsupDisplay = new HeadsupDisplay(this);
-             
+            cursor = new MouseCursor(this);
+
+            goldCount = 0;
 
             return 0; 
         }
@@ -157,9 +160,11 @@ namespace HappyDungeon
             graphics.PreferredBackBufferHeight = Globals.OUT_FHEIGHT;
             graphics.ApplyChanges();
 
-
             controllerList = new List<Object>();
             controllerList.Add(new KeyboardController(this));
+            controllerList.Add(new MouseController(this));
+
+            //IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -223,6 +228,8 @@ namespace HappyDungeon
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp);
 
+            cursor.Draw();
+
             switch (gameState)
             {
                 case Globals.GameStates.Running:
@@ -259,12 +266,14 @@ namespace HappyDungeon
                 item.Update();
             }
 
+            spellSlots.Update();
+
+            mainChara.Update();
+
             fogOfWar.Update();
 
             minimap.Update();
             headsupDisplay.Update();
-
-            mainChara.Update();
         }
 
         /// <summary>
@@ -310,7 +319,8 @@ namespace HappyDungeon
 
             foreach (IItem item in collectibleItemList)
             {
-                item.Draw();
+                if(Misc.Instance.ItemGofBreaker(item, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                    item.Draw();
             }
 
             mainChara.Draw();
@@ -334,6 +344,12 @@ namespace HappyDungeon
                 {
                     DrawRectangle BlockRect = new DrawRectangle(GraphicsDevice, spriteBatch, block.GetRectangle(), Color.Yellow);
                     BlockRect.Draw();
+                }
+
+                foreach(IItem item in collectibleItemList)
+                {
+                    DrawRectangle ItemRect = new DrawRectangle(GraphicsDevice, spriteBatch, item.GetRectangle(), Color.Yellow);
+                    ItemRect.Draw();
                 }
             }
         }
