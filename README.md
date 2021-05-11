@@ -22,4 +22,6 @@ Update 10 May 2021:
 
 now can be navigated by mouse and has some on hover effects.
 
-<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/wxh9xyO.png" height="512">
+<p align="center">
+	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/wxh9xyO.png" width="512">
+</p>
