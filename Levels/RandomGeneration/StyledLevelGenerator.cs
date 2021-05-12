@@ -12,5 +12,6 @@ namespace HappyDungeon.Levels
     /// </summary>
     public interface StyledLevelGenerator
     {
+
     }
 }
