@@ -24,6 +24,7 @@ namespace HappyDungeon
         private const int UPDATE_DELAY = 4;
         private const int TRANSITION_STEP_Y = 8;
         private const int TRANSITION_STEP_X = 16;
+        private const int EDGE_PRESERVE = 17;
 
         // ================================================================================
         // ========================= Infomation about the room ============================
@@ -46,6 +47,7 @@ namespace HappyDungeon
         // ================================================================================
         public Texture2D nextLevelTexture;
         public Texture2D levelTexture;     // Can be accessed to make map transitioning 
+        private Texture2D roomOverlay; 
         private Texture2D blockAllMight;   // Containing all blocks 
         private Color defaultColor = Color.Black;
         private Color defaultTint = Color.White;
@@ -95,6 +97,7 @@ namespace HappyDungeon
             generate();
             AlterTexture();
             UpdateDrawDoors();
+            GenerateOverlay();
         }
 
         private void generate()
@@ -105,7 +108,12 @@ namespace HappyDungeon
             blockAllMight = TextureFactory.Instance.blockAllMight.texture;
         }
 
-        // Crop from the all might texture 
+        /// <summary>
+        /// Crop the target block from the all might texture.
+        /// Note that this only applies to static images, moving blocks are in other classes. 
+        /// </summary>
+        /// <param name="index">Block index</param>
+        /// <returns>Texture of the block</returns>
         private Texture2D getBlockByIndex(int index)
         {
             Texture2D block = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice, 
@@ -163,6 +171,30 @@ namespace HappyDungeon
                 }
             }
             
+        }
+
+        private Texture2D GenerateOverlay()
+        {
+            Texture2D TranspBlock = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
+                Globals.ORIG_GWIDTH - EDGE_PRESERVE * 2, Globals.ORIG_GHEIGHT - EDGE_PRESERVE * 2, 
+                pixel => Color.Transparent);
+
+            roomOverlay = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
+                Globals.ORIG_GWIDTH, Globals.ORIG_GHEIGHT, pixel => Color.Transparent);
+
+            // First copy the level texture 
+            Color[] SrcData = new Color[levelTexture.Width * levelTexture.Height];
+            levelTexture.GetData<Color>(SrcData);
+            roomOverlay.SetData(SrcData);
+
+            // Then dig a hole in the middle to make it reansparent 
+            Color[] TranspData = new Color[TranspBlock.Width * TranspBlock.Height];
+            TranspBlock.GetData<Color>(TranspData);
+
+            roomOverlay.SetData(0, new Rectangle(EDGE_PRESERVE, EDGE_PRESERVE, 
+                TranspBlock.Width, TranspBlock.Height), TranspData, 0, TranspData.Length);
+
+            return roomOverlay;
         }
 
         // Update the doors, used both in initialization and when new doors are being dynamically added 
@@ -294,7 +326,10 @@ namespace HappyDungeon
             else
             {
                 spriteBatch.Draw(levelTexture, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint, 
-                    0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_LAYER); 
+                    0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_LAYER);
+
+                spriteBatch.Draw(roomOverlay, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint,
+                    0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_OVERLAY);
             }
 
         }

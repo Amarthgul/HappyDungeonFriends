@@ -181,6 +181,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/cursor.png
 
+#begin Images/UI/cursorRMBInMap.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/cursorRMBInMap.png
+
 #begin Images/UI/Fonts/DigitsSmall.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -204,6 +216,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/UI/Fonts/DigitsSmallBlack.png
+
+#begin Images/UI/Fonts/fontBigBR.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/Fonts/fontBigBR.png
 
 #begin Images/UI/goldOnBar.png
 /importer:TextureImporter

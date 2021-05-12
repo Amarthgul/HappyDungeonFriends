@@ -36,26 +36,39 @@ namespace HappyDungeon
         private int levelRowCount;
         private int levelColCount;
 
+        private Globals.GameLevel gameLevel; 
+
         public GenerateLevel()
         {
 
         }
 
-        public RoomInfo[,] GenerateLevelSet(int Row, int Col)
+        public RoomInfo[,] GenerateLevelSet(int Row, int Col, Globals.GameLevel LevelSetting)
         {
             levelSetRow = Row;
             levelSetCol = Col;
+            gameLevel = LevelSetting; 
 
-            init();
-            PickStartUpRoom();
-            PopulateRooms();
+            switch (LevelSetting)
+            {
+                case Globals.GameLevel.Delight:
+                    init();
+                    PickStartUpRoom();
+                    PopulateRoomsDelight();
+                    SetBossRooms();
+                    RegulateDoors();
+                    SetMerchantRooms();
+                    ResumeStartupRoom();
+                    break;
+                case Globals.GameLevel.Joy:
+                    break;
+                case Globals.GameLevel.Bliss:
+                    break;
+                default:
+                    break; 
+            }
 
-            SetBossRooms();
-            RegulateDoors();
-
-            SetMerchantRooms();
-
-            ResumeStartupRoom();
+            
 
             return levelSet;
         }
@@ -73,7 +86,7 @@ namespace HappyDungeon
             for (int i = 0; i < levelSet.GetLength(0); i++)
                 for (int j = 0; j < levelSet.GetLength(1); j++)
                     if (Placement[i, j])
-                        levelSet[i, j] = new GenerateRoom().InitRoom();
+                        levelSet[i, j] = new GenerateRoom(gameLevel).InitRoom();
 
             levelRowCount = levelSet.GetLength(0);
             levelColCount = levelSet.GetLength(1);
@@ -239,7 +252,7 @@ namespace HappyDungeon
 
         private void AddItemInRoom(int[] CurrentPos, int ItemIndex, int Number)
         {
-            GenerateRoom RoomGen = new GenerateRoom();
+            GenerateRoom RoomGen = new GenerateRoom(gameLevel);
             RoomGen.room = levelSet[CurrentPos[0], CurrentPos[1]];
             int Count = 0;
 
@@ -278,7 +291,7 @@ namespace HappyDungeon
         /// </summary>
         private void ResumeStartupRoom()
         {
-            GenerateRoom RoomGenTemp = new GenerateRoom();
+            GenerateRoom RoomGenTemp = new GenerateRoom(gameLevel);
             levelSet[startUpRow, startUpCol] = RoomGenTemp.SetAsStartupRoom(levelSet[startUpRow, startUpCol]);
         }
 
@@ -297,7 +310,7 @@ namespace HappyDungeon
         /// Assume a room is neither boss nor startup room, 
         /// populate it with items, blocks, and enemies.
         /// </summary>
-        private void PopulateRooms()
+        private void PopulateRoomsDelight()
         {
             int L1Dist;
             double RowProgression = 0, ColProgression = 0;
@@ -313,7 +326,7 @@ namespace HappyDungeon
 
                     if (levelSet[i, j] != null)
                     {
-                        GenerateRoom RoomGen = new GenerateRoom();
+                        GenerateRoom RoomGen = new GenerateRoom(gameLevel);
                         RoomGen.InitRoom();
                         RoomGen.SetPara(L1Dist, RowProgression, ColProgression);
 
@@ -346,7 +359,7 @@ namespace HappyDungeon
 
                 if (!IsStartUpRoom(row, col))
                 {
-                    GenerateRoom RoomGen = new GenerateRoom();
+                    GenerateRoom RoomGen = new GenerateRoom(gameLevel);
                     RoomGen.InitRoom();
                     RoomGen.SetAsMerchantRoom();
 
@@ -379,7 +392,7 @@ namespace HappyDungeon
 
             int count = 0;
             int[] iter = new int[] { 0, 1, 2, 3 };
-            GenerateRoom RoomGen = new GenerateRoom();
+            GenerateRoom RoomGen = new GenerateRoom(gameLevel);
             RoomGen.InitRoom();
 
             if (_DEVMODE)

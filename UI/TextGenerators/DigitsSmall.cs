@@ -35,11 +35,14 @@ namespace HappyDungeon.UI
         };
 
         public bool useBlack { set; get; }
+        public int interval { set; get; }
+
         public DigitsSmall()
         {
             sourceDigits = TextureFactory.Instance.fontDigitsSmall.texture;
             sourceDigitsB = TextureFactory.Instance.fontDigitsSmallB.texture;
 
+            interval = 1;
             useBlack = false;
         }
 
@@ -75,7 +78,7 @@ namespace HappyDungeon.UI
             foreach (char c in Text)
             {
                 if (digitWidth.ContainsKey(c))
-                    FullWidth += digitWidth[c] + 1;
+                    FullWidth += digitWidth[c] + interval;
             }
 
             // Create a blank texture for pasting 
@@ -100,7 +103,7 @@ namespace HappyDungeon.UI
 
                     textTure.SetData(0, DestRectangle, Data, 0, Data.Length);
 
-                    Recorder += digitWidth[c] + 1; 
+                    Recorder += digitWidth[c] + interval; 
                 }
             }
 

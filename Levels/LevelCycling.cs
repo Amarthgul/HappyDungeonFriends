@@ -17,11 +17,11 @@ namespace HappyDungeon
         public RoomInfo[,] currentMapSet;
         public int[] currentLocationIndex;
 
-        public LevelCycling(int MapSize)
+        public LevelCycling(int MapSize, Globals.GameLevel Level)
         {
             levelRNG = new GenerateLevel();
 
-            currentMapSet = levelRNG.GenerateLevelSet(MapSize, MapSize);
+            currentMapSet = levelRNG.GenerateLevelSet(MapSize, MapSize, Level);
             currentLocationIndex = new int[] { levelRNG.StartUpRoomIndex()[0], levelRNG.StartUpRoomIndex()[1] };
         }
 

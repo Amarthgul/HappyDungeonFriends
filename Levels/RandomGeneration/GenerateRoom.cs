@@ -13,7 +13,7 @@ namespace HappyDungeon
     class GenerateRoom
     {
         private bool _DEVMODE = true;
-        public RoomInfo room { get; set; }
+        
 
         private const int ENEMY_MAX = 8;
         private const int ENEMY_SPAWN_BIAS = 15;
@@ -35,8 +35,6 @@ namespace HappyDungeon
 
         // In regards to the Map class
         public int defaultBlock { get; set; }
-        public int dropPotions { get; set; }
-        public int dropKeys { get; set; }
 
         // Related to the style and possible things that appears in the rooms
         public int blackRoomInedx { get; set; }
@@ -48,156 +46,11 @@ namespace HappyDungeon
         public int[] merchantCharaList { get; set; }
         public int bossIndex { get; set; }
 
+        public RoomInfo room { get; set; }
 
-        // Room matrices 
-        private static bool[,] canPlace = new bool[,] {
-            { true, true, true, true, true, false, false, true, true, true, true, true},
-            { true, true, true, true, true, true, true, true, true, true, true, true},
-            { true, true, true, true, true, true, true, true, true, true, true, true},
-            { false, true, true, true, true, true, true, true, true, true, true, false},
-            { true, true, true, true, true, true, true, true, true, true, true, true},
-            { true, true, true, true, true, true, true, true, true, true, true, true},
-            { true, true, true, true, true, false, false, true, true, true, true, true}
-        };
-
-        private static bool[,] corners = new bool[,] {
-            { true, false, false, false, false, false, false, false, false, false, false, true},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { true, false, false, false, false, false, false, false, false, false, false, true}
-        };
-
-        private static bool[,] cornerBig = new bool[,] {
-            { true , true , false, false, false, false, false, false, false, false, true , true },
-            { true , false, false, false, false, false, false, false, false, false, false, true },
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { true , false, false, false, false, false, false, false, false, false, false, true },
-            { true , true , false, false, false, false, false, false, false, false, true , true }
-        };
-
-
-        private static bool[,] midOval = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, true, true, true, true, false, false, false, false},
-            { false, false, false, false, true, true, true, true, false, false, false, false},
-            { false, false, false, false, true, true, true, true, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] cross = new bool[,] {
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { true, true, true, true, true, true, true, true, true, true, true, true},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false}
-        };
-
-        private static bool[,] cornerDust = new bool[,] {
-            { true, true, true, false, false, false, false, false, false, true, true, true},
-            { true, true, false, false, false, false, false, false, false, false, true, true},
-            { true, false, false, false, false, false, false, false, false, false, false, true},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { true, false, false, false, false, false, false, false, false, false, false, true},
-            { true, true, false, false, false, false, false, false, false, false, true, true},
-            { true, true, true, false, false, false, false, false, false, true, true, true}
-        };
-
-        private static bool[,] grid = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true, false, true, false, true, true, false, true, false, true, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true, false, true, false, true, true, false, true, false, true, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true, false, true, false, true, true, false, true, false, true, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] square = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, true, true, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] doubleRectangles = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true, true, false, false, false, false, false, false, true, true, false},
-            { false, true, true, false, false, false, false, false, false, true, true, false},
-            { false, true, true, false, false, false, false, false, false, true, true, false},
-            { false, true, true, false, false, false, false, false, false, true, true, false},
-            { false, true, true, false, false, false, false, false, false, true, true, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] maze = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true , false, true , true , true , false, true , true , true , true , false},
-            { false, true , false, false, false, true , false, true , false, false, false, false},
-            { false, true , false, true , false, true , true , true , false, true , true , false},
-            { false, true , false, true , false, true , false, true , false, false, false, false},
-            { false, true , true , true , false, true , false, true , true , true , true , false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] pipe = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true, true, true, true, true, true, true, true, true, true, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true, true, true, true, true, true, true, true, true, true, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, true, true, true, true, true, true, true, true, true, true, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] merchantRoom = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, true , false, false, true , false, false, true , false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] treasure = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, true , true , false, false, false, false, false},
-            { false, false, false, false, true , true , true , true , false, false, false, false},
-            { false, false, false, true , true , true , true , true , true , false, false, false},
-            { false, false, false, false, true , true , true , true , false, false, false, false},
-            { false, false, false, false, false, true , true , false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-        private static bool[,] allFalse = new bool[,] {
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false},
-            { false, false, false, false, false, false, false, false, false, false, false, false}
-        };
-
-
-
-        public GenerateRoom()
+        public GenerateRoom(Globals.GameLevel LevelSetting)
         {
             // Setup the template 
-            dropKeys = 0;
-            dropPotions = 0;
 
             enemyList = new int[]{
              
@@ -275,7 +128,7 @@ namespace HappyDungeon
                 {
                     //if (Globals.RND.Next(100) < Threshold && !IsBlock(i, j) && Count < enemyCount && canPlace[i, j])
                     if (Globals.RND.Next(100) < Threshold
-                        && Count < enemyCount && canPlace[i, j])
+                        && Count < enemyCount && Levels.RoomDB.canPlace[i, j])
                     {
                         //room.Arrangement[i, j] = enemyList[Globals.RND.Next(enemyList.Length)];
                         Count++;
@@ -293,16 +146,16 @@ namespace HappyDungeon
 
             List<bool[,]> WalkableList = new List<bool[,]>();
             List<bool[,]> SolidList = new List<bool[,]>();
-            WalkableList.Add(cross);
-            WalkableList.Add(corners);
-            WalkableList.Add(midOval);
-            SolidList.Add(grid);
-            SolidList.Add(corners);
-            SolidList.Add(doubleRectangles);
-            SolidList.Add(square);
-            SolidList.Add(cornerDust);
-            SolidList.Add(pipe);
-            SolidList.Add(maze);
+            WalkableList.Add(Levels.RoomDB.cross);
+            WalkableList.Add(Levels.RoomDB.corners);
+            WalkableList.Add(Levels.RoomDB.midOval);
+            SolidList.Add(Levels.RoomDB.grid);
+            SolidList.Add(Levels.RoomDB.corners);
+            SolidList.Add(Levels.RoomDB.doubleRectangles);
+            SolidList.Add(Levels.RoomDB.square);
+            SolidList.Add(Levels.RoomDB.cornerDust);
+            SolidList.Add(Levels.RoomDB.pipe);
+            SolidList.Add(Levels.RoomDB.maze);
 
             walkableSpread = Math.Min(
                 (double)distFromStartup / (double)Math.Pow(room.Arrangement.GetLength(0), 2),
@@ -355,7 +208,7 @@ namespace HappyDungeon
             // Startup investment, give the player a small fortune 
             if (distFromStartup < TREASURE_RANGE && Globals.RND.Next(100) < TREASURE_POSSIBILITY)
             {
-                bool[,] ptn = Subtract(FindIndexInRange(room.Arrangement, solidBlockLIst), treasure);
+                bool[,] ptn = Subtract(FindIndexInRange(room.Arrangement, solidBlockLIst), Levels.RoomDB.treasure);
                 //PopulatePattern(ptn, Globals.RUPY_ITEM);
             }
 
@@ -392,7 +245,7 @@ namespace HappyDungeon
             {
                 for (int j = 0; j < room.Arrangement.GetLength(1); j++)
                 {
-                    if (merchantRoom[i, j])
+                    if (Levels.RoomDB.merchantRoom[i, j])
                     {
                         //room.Arrangement[i, j] = merchantItems[Globals.RND.Next(merchantItems.Length)];
                     }
@@ -434,6 +287,12 @@ namespace HappyDungeon
             //room.Arrangement[RowMid, ColMid] = Globals.BOSS_ENEMY;
         }
 
+        /// <summary>
+        /// Soft index is added to places where it's not a solid block. 
+        /// </summary>
+        /// <param name="Position">Position to try to place the index</param>
+        /// <param name="Index">Index to be placed</param>
+        /// <returns></returns>
         public bool AddSoftIndex(int[] Position, int Index)
         {
             if (IsBlock(Position[0], Position[1]))
@@ -445,16 +304,45 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Check if that position is going to spawn as a block.
+        /// </summary>
+        /// <param name="row">Meh</param>
+        /// <param name="col">Meh</param>
+        /// <returns>True if it's a block</returns>
         private bool IsBlock(int row, int col)
         {
             return (room.Arrangement[row, col] > 0);
         }
 
-        private bool IsItem(int row, int col)
+        /// <summary>
+        /// Check if that position is going to spawn as a solid block.
+        /// Solid block hiders movement. 
+        /// </summary>
+        /// <param name="row">Meh</param>
+        /// <param name="col">Meh</param>
+        /// <returns>True if that position is going to have a solid block</returns>
+        private bool IsSolidBlock(int row, int col)
         {
-            return (room.Arrangement[row, col] < -256);
+            return (room.Arrangement[row, col] > Globals.SOLID_BLOCK_BOUND);
         }
 
+        /// <summary>
+        /// Check if the given location shall spawn an item. 
+        /// </summary>
+        /// <param name="row">Meh</param>
+        /// <param name="col">Meh</param>
+        /// <returns>True if that index is an item</returns>
+        private bool IsItem(int row, int col)
+        {
+            return (room.Arrangement[row, col] < 0 && room.Arrangement[row, col] > Globals.ITEM_BOUND);
+        }
+
+        /// <summary>
+        /// Given an index, populate it into the map in a given pattern.
+        /// </summary>
+        /// <param name="Pattern">Pattern to follow</param>
+        /// <param name="Index">Index to put</param>
         private void PopulatePattern(bool[,] Pattern, int Index)
         {
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
@@ -469,6 +357,14 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Given a list of indexes, choose some of them and populate then into a pattern.
+        /// If the list has 5 indexes and MaxType is 3, then only 3 of these 5 could appear 
+        /// in the populated pattern. 
+        /// </summary>
+        /// <param name="Pattern">Pattern to follow</param>
+        /// <param name="ListOfIndex">All possible indexes that could be added</param>
+        /// <param name="MaxType">Max amount of different indexes that can appear</param>
         private void PopulatePatternRand(bool[,] Pattern, int[] ListOfIndex, int MaxType)
         {
             List<int> ActualList = new List<int>(); ;
@@ -493,17 +389,27 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Check and clear anything that could clog the doors.
+        /// </summary>
+        /// <param name="Target">The matrix to clear</param>
         private void MaskOffDoorways(bool[,] Target)
         {
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
             {
                 for (int j = 0; j < room.Arrangement.GetLength(1); j++)
                 {
-                    Target[i, j] = canPlace[i, j] && Target[i, j];
+                    Target[i, j] = Levels.RoomDB.canPlace[i, j] && Target[i, j];
                 }
             }
         }
 
+        /// <summary>
+        /// Generate a random bool matrix with given density of true.
+        /// Density is in 0-1.
+        /// </summary>
+        /// <param name="Density">Ratio of total truth values</param>
+        /// <returns>Bool matrix with random truth</returns>
         private bool[,] RandScatter(double Density)
         {
             int Threshold = (int)(Globals.RTILE_COLUMN * Globals.RTILE_ROW * Density) * 100;
@@ -528,6 +434,13 @@ namespace HappyDungeon
             return scatter;
         }
 
+        /// <summary>
+        /// Subtract one matrix from another. Not XOR.
+        /// Does not change any of the input matrices.
+        /// </summary>
+        /// <param name="m1">Substractor</param>
+        /// <param name="m2">Base</param>
+        /// <returns>Bool matrix of m2 - m1</returns>
         private bool[,] Subtract(bool[,] m1, bool[,] m2)
         {
             bool[,] result = new bool[room.Arrangement.GetLength(0), room.Arrangement.GetLength(1)];

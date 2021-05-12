@@ -56,14 +56,18 @@ namespace HappyDungeon
         public const int MAX_DIR_COMBO = 3;
 
         // ================================================================================
-        // =========================== Item and enemy indexes =============================
+        // ====================== Item, enemy, and block indexes ==========================
         // ================================================================================
         // -1 ~ -255 are items 
         public const int ITEM_TORCH = -1;
-        public const int ITEM_GOLD = -255; 
+        public const int ITEM_GOLD = -255;
 
+        public const int ITEM_BOUND = -256; 
         // -256 and smaller are enemies or NPCs 
 
+
+        // Blocks are these bigger or equal to 0
+        public const int SOLID_BLOCK_BOUND = 128; 
 
         // ================================================================================
         // ==================================== UIs =======================================
@@ -73,21 +77,33 @@ namespace HappyDungeon
         // ================================================================================
         // ================================ Draw Layers ===================================
         // ================================================================================
-        // It is quite easy for monogame to mess it up when 2 draw are in same layer
-        // so I tried to be specific 
-        public const float MAP_LAYER = 0.1f;    // The beackground/maps/rooms
-        public const float BLOCKS_LAYER = 0.2f; // Blocks and evnironments 
-        public const float ITEM_LAYER = 0.4f; 
-        public const float MC_LAYER = 0.5f;     // Main character 
-        public const float ENEMY_LAYER = 0.6f;    // items and enemies 
-        public const float FOW_LAYER = 0.7f;    // Fog of War
-        public const float UI_LAYER = 0.8f;
-        public const float UI_MINIMAP = 0.85f;
-        public const float UI_MINIMAP_PLAYER = 0.86f;
-        public const float UI_TEXT_SHADOW = 0.88f;
-        public const float UI_TEXT_LAYER = 0.89f;
-        public const float CURSOR_LAYER = 0.9f; 
-        public const float DEBUG_LAYER = 0.95f;
+        // It is quite easy for monogame to mess it up when 2 draw calls are in same layer
+        // so I tried to be as specific as possible 
+        public const float MAP_LAYER = 0.1f;         // The beackground/maps/rooms
+        public const float BLOCKS_LAYER = 0.2f;      // Blocks and evnironments 
+        public const float ITEM_LAYER = 0.45f;       // items are always beneth 
+        public const float MC_LAYER = 0.5f;          // Main character 
+        public const float ENEMY_LAYER = 0.55f;      // Enemies always "on top of" the player 
+        public const float MAP_OVERLAY = 0.6f;      // Overlay of the border for door obscure effect 
+        public const float FOW_LAYER = 0.65f;         // Fog of War
+        
+
+        public const float UI_UNDER = 0.75f;         // Down-most layer for UI
+        public const float UI_MID = 0.78f;           // Mostly for item masks 
+        public const float UI_SLOTS = 0.79f;         // Items in the slot 
+        public const float UI_LAYER = 0.8f;          // UI front panel layer
+        public const float UI_ICONS = 0.81f;         // Bag and gold icon
+
+        public const float UI_MINIMAP = 0.85f;       // Minimap layer
+        public const float UI_MINIMAP_PLAYER = 0.86f;// Player noation layer, ensure it's on top
+
+        public const float UI_TEXT_SHADOW = 0.88f;   // UI text drop shadow, nromally black 
+        public const float UI_TEXT_LAYER = 0.89f;    // UI text, normally white
+        public const float UI_ALT_TEXT = 0.891f;     // Alt display of the texts 
+
+        public const float CURSOR_RESPONSE = 0.90f;   // Effects triggered by some mouse click 
+        public const float CURSOR_LAYER = 0.91f;     // Cursor layer 
+        public const float DEBUG_LAYER = 0.95f;      // Debug layer, put on top-most 
 
 
         // ================================================================================
@@ -107,6 +123,8 @@ namespace HappyDungeon
         public enum ItemType { Primary, Usable, Junk };
         public enum Direction { Left, Right, Up, Down, None };
         public enum GameStates { TitleScreen, Running, RoomTransitioning, Setting, Bag, GameOver, Conversation }
+        public enum GameLevel { Delight, Joy, Bliss };
+        public enum GameDifficulty { Idiot, Normal };
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Dead }
 
         // Four direction iterator 

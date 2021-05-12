@@ -24,6 +24,7 @@ namespace HappyDungeon
         private bool _DEVMODE = false;
 
         public Globals.GameStates gameState;
+        public Globals.GameLevel gameLevel; 
         private int mapSize = 9;
 
         // ================================================================================
@@ -78,8 +79,8 @@ namespace HappyDungeon
         /// <returns>0 if all loaded successfually</returns>
         public int LoadClasses(int mode)
         {
-
-            roomCycler = new LevelCycling(mapSize);
+            gameLevel = Globals.GameLevel.Delight; 
+            roomCycler = new LevelCycling(mapSize, gameLevel);
 
             currentRoom = new Room(this);
             currentRoom.roomInfo = roomCycler.GetStart();
@@ -203,6 +204,15 @@ namespace HappyDungeon
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            // Keyboard and mouse always updates, but id dependent on game state in their Update method
+            foreach (IController controller in controllerList)
+            {
+                controller.Update();
+            }
+            // The cursor location is actually always on update
+            cursor.Update();
+
+
             switch (gameState)
             {
                 case Globals.GameStates.Running:
@@ -228,6 +238,7 @@ namespace HappyDungeon
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp);
 
+            // Always draw the cursor 
             cursor.Draw();
 
             switch (gameState)
@@ -256,11 +267,7 @@ namespace HappyDungeon
         /// </summary>
         private void UpdateRunning()
         {
-            foreach (IController controller in controllerList)
-            {
-                controller.Update();
-            }
-
+            
             foreach (IItem item in collectibleItemList)
             {
                 item.Update();
@@ -367,10 +374,11 @@ namespace HappyDungeon
             minimap.Draw();
         }
 
-
+        /// <summary>
+        /// Start a new generator and populate the room again 
+        /// </summary>
         private void ReloadLists()
         {
-            // Start a new generator and populate the room
             mapGenerator = new Generator(this);
             staticBlockList = mapGenerator.GetStaticBlockList();
             collectibleItemList = mapGenerator.GetCollectibleItemList(this);

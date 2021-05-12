@@ -33,9 +33,25 @@ namespace HappyDungeon
             cursorX = CurrentState.X;
             cursorY = CurrentState.Y;
 
+            // The cursor always updates its position 
             Vector2 CurrentLocation = new Vector2(cursorX, cursorY);
-
             game.cursor.SetPosition(CurrentLocation);
+
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Running:
+                    UpdateRunning(CurrentState, CurrentLocation);
+                    break;
+                default:
+                    break; 
+            }
+                    
+
+        }
+
+        private void UpdateRunning(MouseState CurrentState, Vector2 CurrentLocation)
+        {
+            
             game.headsupDisplay.CheckOnHover(CurrentLocation);
 
             if (CurrentState.LeftButton == ButtonState.Pressed)
@@ -45,7 +61,17 @@ namespace HappyDungeon
             if (CurrentState.RightButton == ButtonState.Pressed)
             {
                 game.mainChara.RightClickMove(CurrentLocation);
+
+                // If it's not in UI area, then add ground click effect 
+                if (!game.headsupDisplay.InsideUI(CurrentLocation))
+                {
+                    game.cursor.RightClick(CurrentLocation);
+                }
             }
+        }
+
+        private void UpdateTransitioning(MouseState CurrentState, Vector2 CurrentLocation)
+        {
 
         }
     }

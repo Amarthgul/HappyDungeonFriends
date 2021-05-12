@@ -86,12 +86,22 @@ namespace HappyDungeon
                 -((scaler * height / 2) - Globals.OUT_UNIT / 2));
         }
 
+        /// <summary>
+        /// Relocate the texture to fit the glitters. 
+        /// This range is not permnent and does not count into the actual range. 
+        /// </summary>
+        /// <param name="RangeWithShake">Range with shake effect.</param>
         private void SetShakyRange(float RangeWithShake)
         {
             scaler = RangeWithShake + 2;
             position = new Vector2(-((scaler * width / 2) - Globals.OUT_UNIT / 2),
                 -((scaler * height / 2) - Globals.OUT_UNIT / 2));
         }
+
+        /// <summary>
+        /// Return the steady range, regardless of weather it's currently shaky or not. 
+        /// </summary>
+        /// <returns>Visible range</returns>
         public float GetRange()
         {
             return rangeNow;

@@ -28,15 +28,19 @@ namespace HappyDungeon
         // ================================================================================
         // ================================= UI elements ==================================
         // ================================================================================ 
-        public ImageFile cursor; 
+        public ImageFile cursor;
+        public ImageFile cursorRMBClickInMap; 
+
         public ImageFile uiFront;
         public ImageFile uiBack;
         public ImageFile miniRooms;
         public ImageFile playerNote;
         public ImageFile bagOnBar;
         public ImageFile goldOnBar;
+
         public ImageFile fontDigitsSmall;
-        public ImageFile fontDigitsSmallB; 
+        public ImageFile fontDigitsSmallB;
+        public ImageFile fontLargeBR;
 
         // ================================================================================
         // =================================== Items ======================================
@@ -76,14 +80,18 @@ namespace HappyDungeon
             // --------------------------------------------------------------------------------
             // --------------------------------- UI elements ----------------------------------
             cursor = new ImageFile(content, "Images/UI/cursor", 1, 1);
+            cursorRMBClickInMap = new ImageFile(content, "Images/UI/cursorRMBInMap", 4, 4);
+
             uiFront = new ImageFile(content, "Images/UI/HeadsupUIFront", 1, 1);
             uiBack = new ImageFile(content, "Images/UI/HeadsupUIBack", 1, 1);
             miniRooms = new ImageFile(content, "Images/UI/Minimap", 4, 4);
             playerNote = new ImageFile(content, "Images/UI/playerNotation", 4, 4);
             bagOnBar = new ImageFile(content, "Images/UI/bagOnBar", 1, 2);
             goldOnBar = new ImageFile(content, "Images/UI/goldOnBar", 1, 1);
+
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);
+            fontLargeBR = new ImageFile(content, "Images/UI/Fonts/fontBigBR", 1, 1);
 
             // --------------------------------------------------------------------------------
             // ----------------------------------- Items --------------------------------------

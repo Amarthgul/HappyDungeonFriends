@@ -20,6 +20,8 @@ namespace HappyDungeon
         public float layer { get; set; }        // Layer to draw on 
         public float scaleCof { get; set; }     // Scale coefficient 
         public float opacity { get; set; }      // Draw opacity 
+        public int frameDelay { get; set; }
+
         public Vector2 positionOffset { get; set; }
 
         private int textureWidth;
@@ -57,6 +59,7 @@ namespace HappyDungeon
             opacity = 1;
             colLimitation = -1;
             positionOffset = new Vector2(0, 0);
+            frameDelay = Globals.FRAME_DELAY;
 
             textureWidth = selfTexture.Width / columnsCount;
             textureHeight = selfTexture.Height / rowCount;
@@ -69,7 +72,7 @@ namespace HappyDungeon
             if (!isStatic)
             {
                 timer = stopwatch.ElapsedMilliseconds;
-                if (timer > Globals.FRAME_DELAY)
+                if (timer > frameDelay)
                 {
                     currentFrame++;
                     stopwatch.Restart();

@@ -11,7 +11,9 @@ namespace HappyDungeon
     public class HeadsupDisplay : IUIElement
     {
         private const int BLOOD_TX_SIZE = 35;
+        private const int PANEL_HOVER_HEIGHT = 17 * Globals.SCALAR;
         private const int AREA_HEIGHT_BOUND = 48 * Globals.SCALAR;
+        private const int BLOOD_HOVER_RAD = 23 * Globals.SCALAR; // Radius of the blood area, used for UI area cauculation 
         private const int BAG_SIZE = 13; 
 
         private Game1 game;
@@ -27,6 +29,8 @@ namespace HappyDungeon
         private GeneralSprite itemMask;
         private float maskOpacity = 0.5f;
 
+        private GeneralSprite goldCountText;
+        private GeneralSprite goldCountTextShadow;
         private GeneralSprite goldIcon;
         private GeneralSprite bagIcon; 
 
@@ -35,8 +39,11 @@ namespace HappyDungeon
         private GeneralSprite health;
 
         private UI.DigitsSmall digitsGenerator;
+        private UI.LargeBR fontLBRGenerator; 
         private GeneralSprite healthText;
         private GeneralSprite healthTextDropS;
+
+        private GeneralSprite[] altDisplays; 
 
         private Texture2D bloodFill;
         private Texture2D currentBlood;
@@ -58,9 +65,18 @@ namespace HappyDungeon
             new Vector2(114, 1),
             new Vector2(135, 1),
             new Vector2(156, 1) };
-        //Location of some on hover info
+        //Location of some on-hover info
         private Vector2 bloodTextLocation = new Vector2(234, 18);
-        private Vector2 bloodTextShadowOffset = new Vector2(1, -1);
+        private Vector2 textShadowOffset = new Vector2(1, -1);
+        // Positions of the texts when pressing alt key 
+        private Vector2[] altDisplayPositions = new Vector2[] {
+                new Vector2(96, 19),
+                new Vector2(118, 16),
+                new Vector2(140, 16),
+                new Vector2(161, 16),
+                new Vector2(178, 14),
+             };
+        private Vector2 altGoldCountLocation = new Vector2(76, 14); 
 
         private Rectangle primaryRange;
         private Rectangle[] itemRange;
@@ -78,7 +94,9 @@ namespace HappyDungeon
         // ================================================================================
         private int oldHealth;
         private int oldMaxHealth;
+        private int oldGoldCount; 
         private bool onHoverHP = false;
+        private bool altDisplayOn = false; 
 
         public HeadsupDisplay(Game1 G)
         {
@@ -88,6 +106,7 @@ namespace HappyDungeon
 
             oldHealth = game.mainChara.currentHealth;
             oldMaxHealth = game.mainChara.currentMaxHP;
+            oldGoldCount = -1; // force an update at the start 
 
             primaryState = 0;
             itemStates = new int[] { 0, 0, 0 };
@@ -98,9 +117,11 @@ namespace HappyDungeon
             SetUpHealthVessel();
             SetUpMasks();
             SetUpRanges();
-
             RedrawBloodVessel();
+            // Text and auxiliary displays 
             UpdateHealthText();
+            SetUpAltDisplays();
+            CheckGoldChange();
         }
 
         /// <summary>
@@ -137,11 +158,12 @@ namespace HappyDungeon
             uiFront = new GeneralSprite(UIF.texture, UIF.C, UIF.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
             uiBack = new GeneralSprite(UIB.texture, UIB.C, UIB.R,
-                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
+
             goldIcon = new GeneralSprite(GOB.texture, GOB.C, GOB.R,
-                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS);
             bagIcon = new GeneralSprite(BOB.texture, BOB.C, BOB.R,
-                0, BOB.C * BOB.R, Globals.UI_LAYER);
+                0, BOB.C * BOB.R, Globals.UI_ICONS);
 
         }
 
@@ -156,7 +178,7 @@ namespace HappyDungeon
                 BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => transparent);
 
             health = new GeneralSprite(currentBlood, Globals.ONE_FRAME, Globals.ONE_FRAME, 
-                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
         }
 
         /// <summary>
@@ -169,11 +191,11 @@ namespace HappyDungeon
             int Singleton = 1; 
 
             primaryMask = new GeneralSprite(MaskTexture, Singleton, Singleton, 
-                Globals.WHOLE_SHEET, Singleton, Globals.UI_LAYER);
+                Globals.WHOLE_SHEET, Singleton, Globals.UI_MID);
             primaryMask.opacity = maskOpacity; 
 
             itemMask = new GeneralSprite(MaskTexture, Singleton, Singleton, 
-                Globals.WHOLE_SHEET, Singleton, Globals.UI_LAYER);
+                Globals.WHOLE_SHEET, Singleton, Globals.UI_MID);
             itemMask.opacity = maskOpacity;
         }
 
@@ -199,6 +221,30 @@ namespace HappyDungeon
                 (int)bloodPosition.Y * Globals.SCALAR,
                 BLOOD_TX_SIZE * Globals.SCALAR, BLOOD_TX_SIZE * Globals.SCALAR
                 );
+        }
+
+        /// <summary>
+        /// Setup where the alt displays shall be and what to draw.
+        /// It's set this way in case someone want to implement customized hotkeys. 
+        /// </summary>
+        private void SetUpAltDisplays()
+        {
+            fontLBRGenerator = new UI.LargeBR();
+
+            Texture2D PM = fontLBRGenerator.GetText("Q", game.GraphicsDevice);
+            Texture2D Slot1 = fontLBRGenerator.GetText("W", game.GraphicsDevice);
+            Texture2D Slot2 = fontLBRGenerator.GetText("E", game.GraphicsDevice);
+            Texture2D Slot3 = fontLBRGenerator.GetText("R", game.GraphicsDevice);
+            Texture2D BagText = fontLBRGenerator.GetText("B", game.GraphicsDevice);
+
+            altDisplays = new GeneralSprite[] {
+                new GeneralSprite(PM, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ALT_TEXT),
+                new GeneralSprite(Slot1, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ALT_TEXT),
+                new GeneralSprite(Slot2, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ALT_TEXT),
+                new GeneralSprite(Slot3, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ALT_TEXT),
+                new GeneralSprite(BagText, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ALT_TEXT),
+            };
+
         }
 
         /// <summary>
@@ -255,12 +301,62 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Check if the gold count changes, if so, redraw the count text sprite.
+        /// </summary>
+        private void CheckGoldChange()
+        {
+            if (oldGoldCount == game.goldCount)
+                return;
+
+            oldGoldCount = game.goldCount;
+
+            digitsGenerator = new UI.DigitsSmall();
+            Texture2D GC = digitsGenerator.GetText(oldGoldCount.ToString(), game.GraphicsDevice);
+            goldCountText = new GeneralSprite(GC, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_LAYER);
+
+            digitsGenerator.useBlack = true;
+            GC = digitsGenerator.GetText(oldGoldCount.ToString(), game.GraphicsDevice);
+            goldCountTextShadow = new GeneralSprite(GC, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_SHADOW);
+        }
+
+        // ================================================================================
+        // ================================= Publics ======================================
+        // ================================================================================
+
+        /// <summary>
+        /// Check if a location is within UI aera.
+        /// Consists of 3 parts: if it's in minimap, if it's in panel, and if it's in blood vessel. 
+        /// The blood vessel is calculated as a circle. 
+        /// </summary>
+        /// <param name="Location">Location to check</param>
+        /// <returns>True if it's inside UI area</returns>
+        public bool InsideUI(Vector2 Location)
+        {
+            Rectangle MiniMapArea = new Rectangle(2 * Globals.SCALAR, 3 * Globals.SCALAR,
+                58 * Globals.SCALAR, 36 * Globals.SCALAR);
+            Vector2 BloodCenter = new Vector2(232, 22) * Globals.SCALAR;
+            int Distance = (int)Math.Sqrt( Math.Pow(Location.X - BloodCenter.X, 2) + 
+                Math.Pow(Location.Y - BloodCenter.Y, 2));
+
+            return ( Location.Y < PANEL_HOVER_HEIGHT || MiniMapArea.Contains(Location) || Distance < BLOOD_HOVER_RAD); 
+        }
+
+        /// <summary>
+        /// Call to turn on alt display. 
+        /// </summary>
+        public void AltDisplayOn()
+        {
+            altDisplayOn = true;
+        }
+
+        /// <summary>
         /// Set a sprite into primary slot. 
         /// </summary>
         /// <param name="PrimarySprite">Sprite to set to</param>
         public void SetPrimary(GeneralSprite PrimarySprite)
         {
             primarySlot = PrimarySprite;
+            primarySlot.layer = Globals.UI_SLOTS; 
             primaryState = PrimarySprite.rowLimitation; 
         }
 
@@ -272,6 +368,7 @@ namespace HappyDungeon
         public void SetItemSlot(GeneralSprite ItemSprite, int Index)
         {
             itemSlots[Index] = ItemSprite;
+            itemSlots[Index].layer = Globals.UI_SLOTS; 
         }
 
         /// <summary>
@@ -320,6 +417,7 @@ namespace HappyDungeon
         public void Update()
         {
             CheckHealthChange();
+            CheckGoldChange();
 
             if (primarySlot != null)
             {
@@ -368,12 +466,25 @@ namespace HappyDungeon
             }
 
             // On hover show the amount of HP she still has 
-            if (onHoverHP)
+            if (onHoverHP || altDisplayOn)
             {
-                healthTextDropS.Draw(spriteBatch, (bloodTextLocation + bloodTextShadowOffset) * Globals.SCALAR, dropShadow);
+                healthTextDropS.Draw(spriteBatch, (bloodTextLocation + textShadowOffset) * Globals.SCALAR, dropShadow);
                 healthText.Draw(spriteBatch, bloodTextLocation * Globals.SCALAR, defaultTint);
                 onHoverHP = false;
             }
+
+            if (altDisplayOn)
+            {
+                goldCountTextShadow.Draw(spriteBatch, (altGoldCountLocation + textShadowOffset) * Globals.SCALAR, defaultTint);
+                goldCountText.Draw(spriteBatch, altGoldCountLocation * Globals.SCALAR, defaultTint);
+
+                for (int i = 0; i < altDisplays.Length; i++)
+                {
+                    altDisplays[i].Draw(spriteBatch, altDisplayPositions[i] * Globals.SCALAR, defaultTint);
+                }
+                altDisplayOn = false;
+            }
+
 
             // Set on hover effect off 
             bagIcon.rowLimitation = 0;
