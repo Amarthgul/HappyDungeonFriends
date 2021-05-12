@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 10 May 2021: 
+Update 11 May 2021: 
 
-now can be navigated by mouse and has some on hover effects.
+Levels are divided into 3, now workingn on map generation algorithms. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/wxh9xyO.png" width="512">
