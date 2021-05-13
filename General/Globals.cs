@@ -67,6 +67,8 @@ namespace HappyDungeon
 
 
         // Blocks are these bigger or equal to 0
+
+        // Solid blocks are block with index higher then 127 
         public const int SOLID_BLOCK_BOUND = 128; 
 
         // ================================================================================

@@ -78,13 +78,10 @@
     <Compile Include="Levels\LevelCycling.cs" />
     <Compile Include="Levels\RandomGeneration\GenerateLevel.cs" />
     <Compile Include="Levels\RandomGeneration\GeneratePlacement.cs" />
-    <Compile Include="Levels\RandomGeneration\GenerateRoom.cs" />
-    <Compile Include="Levels\RandomGeneration\LevelBlissGenerator.cs" />
-    <Compile Include="Levels\RandomGeneration\LevelDelightGenerator.cs" />
-    <Compile Include="Levels\RandomGeneration\LevelJoyGenerator.cs" />
+    <Compile Include="Levels\RandomGeneration\GenerateDelightRoom.cs" />
+    <Compile Include="Levels\RandomGeneration\GenerateRoomBasics.cs" />
     <Compile Include="Levels\RandomGeneration\RoomDB.cs" />
     <Compile Include="Levels\RandomGeneration\RoomGraph.cs" />
-    <Compile Include="Levels\RandomGeneration\StyledLevelGenerator.cs" />
     <Compile Include="Levels\Room.cs" />
     <Compile Include="Levels\RoomInfo.cs" />
     <Compile Include="MC\MC.cs" />
