@@ -46,6 +46,39 @@ namespace HappyDungeon.Levels
 
 
         /// <summary>
+        /// Set parameters for the current room.
+        /// </summary>
+        /// <param name="dist">Distance from the startup room</param>
+        /// <param name="rowProg">Row progression between 0-1</param>
+        /// <param name="colProg">Column progression between 0-1</param>
+        public void SetPara(int dist, double rowProg, double colProg)
+        {
+            distFromStartup = dist;
+            rowProgression = rowProg;
+            colProgression = colProg;
+        }
+
+
+        /// <summary>
+        /// Given an index, populate it into the map in a given pattern.
+        /// </summary>
+        /// <param name="Pattern">Pattern to follow</param>
+        /// <param name="Index">Index to put</param>
+        public void PopulatePattern(bool[,] Pattern, int Index)
+        {
+            for (int i = 0; i < room.Arrangement.GetLength(0); i++)
+            {
+                for (int j = 0; j < room.Arrangement.GetLength(1); j++)
+                {
+                    if (Pattern[i, j])
+                    {
+                        room.Arrangement[i, j] = Index;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Given a pattern and a list of indexes, fill part of the pattern with the index. 
         /// </summary>
         /// <param name="Pattern">Pattern to fill</param>
@@ -69,16 +102,35 @@ namespace HappyDungeon.Levels
         }
 
         /// <summary>
-        /// Set parameters for the current room.
+        /// Given a list of indexes, choose some of them and populate then into a pattern.
+        /// If the list has 5 indexes and MaxType is 3, then only 3 of these 5 could appear 
+        /// in the populated pattern. 
         /// </summary>
-        /// <param name="dist">Distance from the startup room</param>
-        /// <param name="rowProg">Row progression between 0-1</param>
-        /// <param name="colProg">Column progression between 0-1</param>
-        public void SetPara(int dist, double rowProg, double colProg)
+        /// <param name="Pattern">Pattern to follow</param>
+        /// <param name="ListOfIndex">All possible indexes that could be added</param>
+        /// <param name="MaxType">Max amount of different indexes that can appear</param>
+        public void PopulatePatternRand(bool[,] Pattern, int[] ListOfIndex, int MaxType)
         {
-            distFromStartup = dist;
-            rowProgression = rowProg;
-            colProgression = colProg;
+            List<int> ActualList = new List<int>(); ;
+
+            if (MaxType > ListOfIndex.Length)
+                for (int i = 0; i < ListOfIndex.Length; i++)
+                    ActualList.Add(ListOfIndex[i]);
+            else
+            {
+                ActualList = new List<int>(ListOfIndex);
+            }
+
+            for (int i = 0; i < room.Arrangement.GetLength(0); i++)
+            {
+                for (int j = 0; j < room.Arrangement.GetLength(1); j++)
+                {
+                    if (Pattern[i, j])
+                    {
+                        room.Arrangement[i, j] = ActualList[Globals.RND.Next(ActualList.Count)];
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -181,58 +233,6 @@ namespace HappyDungeon.Levels
         }
 
         /// <summary>
-        /// Given an index, populate it into the map in a given pattern.
-        /// </summary>
-        /// <param name="Pattern">Pattern to follow</param>
-        /// <param name="Index">Index to put</param>
-        public void PopulatePattern(bool[,] Pattern, int Index)
-        {
-            for (int i = 0; i < room.Arrangement.GetLength(0); i++)
-            {
-                for (int j = 0; j < room.Arrangement.GetLength(1); j++)
-                {
-                    if (Pattern[i, j])
-                    {
-                        room.Arrangement[i, j] = Index;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Given a list of indexes, choose some of them and populate then into a pattern.
-        /// If the list has 5 indexes and MaxType is 3, then only 3 of these 5 could appear 
-        /// in the populated pattern. 
-        /// </summary>
-        /// <param name="Pattern">Pattern to follow</param>
-        /// <param name="ListOfIndex">All possible indexes that could be added</param>
-        /// <param name="MaxType">Max amount of different indexes that can appear</param>
-        public void PopulatePatternRand(bool[,] Pattern, int[] ListOfIndex, int MaxType)
-        {
-            List<int> ActualList = new List<int>(); ;
-
-            if (MaxType > ListOfIndex.Length)
-                for (int i = 0; i < ListOfIndex.Length; i++)
-                    ActualList.Add(ListOfIndex[i]);
-            else
-            {
-                ActualList = new List<int>(ListOfIndex);
-            }
-
-            for (int i = 0; i < room.Arrangement.GetLength(0); i++)
-            {
-                for (int j = 0; j < room.Arrangement.GetLength(1); j++)
-                {
-                    if (Pattern[i, j])
-                    {
-                        room.Arrangement[i, j] = ActualList[Globals.RND.Next(ActualList.Count)];
-                    }
-                }
-            }
-        }
-
-        
-        /// <summary>
         /// Check and clear anything that could clog the doors.
         /// </summary>
         /// <param name="Target">The matrix to clear</param>
@@ -276,8 +276,6 @@ namespace HappyDungeon.Levels
 
             return scatter;
         }
-
-
 
         /// <summary>
         /// Find the positions of the index that is within given list.  

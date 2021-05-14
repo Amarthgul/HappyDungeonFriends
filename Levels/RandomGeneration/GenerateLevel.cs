@@ -397,6 +397,7 @@ namespace HappyDungeon
             int[] iter = new int[] { 0, 1, 2, 3 };
             GenerateDelightRoom RoomGen = new GenerateDelightRoom();
             RoomGen.InitRoom();
+            
 
             if (_DEVMODE)
             {
@@ -420,8 +421,10 @@ namespace HappyDungeon
 
                 int Threshold = (int)Math.Pow(L1DistanceFromStart(row, col) - BOSS_SPAWN_OFFSET, BOSS_DIST_MOD); 
 
-                if (!IsStartUpRoom(row, col) && Globals.RND.Next(100) < Threshold)
+                if (!IsStartUpRoom(row, col) && levelSet[row, col] != null &&
+                    Globals.RND.Next(100) < Threshold)
                 {
+                    RoomGen.room = levelSet[row, col]; 
                     RoomGen.SetAsBossRoom();
                     levelSet[row, col] = RoomGen.room;
                     count++;

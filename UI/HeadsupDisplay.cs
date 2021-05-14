@@ -229,6 +229,7 @@ namespace HappyDungeon
         /// </summary>
         private void SetUpAltDisplays()
         {
+            int AllSlotSize = 4; 
             fontLBRGenerator = new UI.LargeBR();
 
             Texture2D PM = fontLBRGenerator.GetText("Q", game.GraphicsDevice);
@@ -244,6 +245,12 @@ namespace HappyDungeon
                 new GeneralSprite(Slot3, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ALT_TEXT),
                 new GeneralSprite(BagText, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ALT_TEXT),
             };
+
+            // Decrease opacity for all 
+            for (int i = 0; i < AllSlotSize; i++)
+            {
+                altDisplays[i].opacity = 0.5f; 
+            }
 
         }
 
@@ -320,7 +327,7 @@ namespace HappyDungeon
         }
 
         // ================================================================================
-        // ================================= Publics ======================================
+        // ============================== Public methods ==================================
         // ================================================================================
 
         /// <summary>
@@ -355,9 +362,21 @@ namespace HappyDungeon
         /// <param name="PrimarySprite">Sprite to set to</param>
         public void SetPrimary(GeneralSprite PrimarySprite)
         {
-            primarySlot = PrimarySprite;
-            primarySlot.layer = Globals.UI_SLOTS; 
-            primaryState = PrimarySprite.rowLimitation; 
+            // If it's removing the primary 
+            if(PrimarySprite == null)
+            {
+                primarySlot = PrimarySprite;
+                altDisplays[0].opacity = 0.0f; 
+            }
+            // If it's setting up the primary 
+            else
+            {
+                primarySlot = PrimarySprite;
+                primarySlot.layer = Globals.UI_SLOTS;
+                primaryState = PrimarySprite.rowLimitation;
+                altDisplays[0].opacity = 1.0f;
+            }
+            
         }
 
         /// <summary>
@@ -473,6 +492,7 @@ namespace HappyDungeon
                 onHoverHP = false;
             }
 
+            // When Alt is being pressed, display hotkeys and stats 
             if (altDisplayOn)
             {
                 goldCountTextShadow.Draw(spriteBatch, (altGoldCountLocation + textShadowOffset) * Globals.SCALAR, defaultTint);
@@ -480,6 +500,7 @@ namespace HappyDungeon
 
                 for (int i = 0; i < altDisplays.Length; i++)
                 {
+
                     altDisplays[i].Draw(spriteBatch, altDisplayPositions[i] * Globals.SCALAR, defaultTint);
                 }
                 altDisplayOn = false;

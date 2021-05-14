@@ -116,31 +116,40 @@ namespace HappyDungeon
             int HighBound = 15; // 15 basic path tile indexes for level delight  
             int VarityCount = 5;
             int NonPathVarityCount = 8; 
-            int FillDivider = 12;
-            int Compensation = 16; 
+            int FillDivider = 12;  // Decides how much to fill up 
+            int Compensation = 16; // Path compensation blcok index start at 16 
+            int CornerTileStart = 48;
+            int CornerTileEnd = 64;
             int NonPathTileIndexOffset = 32; // The non path tiles are 16 tiles behind in the texture 
-
-            bool[,] MaskedPath = roomDB.MaskedPath(room.OpenDoors);
-            bool[,] NotPath = roomDB.NOT(MaskedPath); 
-            int[] SelectedTiles = new int[] { 0, 0, 0, 0, 0 };
-            int[] NonPathTiles = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
-            int[] CompensateTiles = new int[] { 0, 0, 0, 0, 0 };
 
             // The lowest index of the path tile 
             int LowBoundSeed = distFromStartup + VarityCount <= HighBound ? distFromStartup : HighBound - VarityCount;
             // The lowest index of the non-path tile 
             int NonPathLowBoundSeed = distFromStartup + NonPathVarityCount <= HighBound ?
-                distFromStartup : HighBound - NonPathVarityCount - Globals.RND.Next(distFromStartup/2);
-
-            int DefaultBlock = LowBoundSeed + NonPathTileIndexOffset; 
+                distFromStartup : HighBound - NonPathVarityCount - Globals.RND.Next(distFromStartup / 2);
+            CornerTileStart = CornerTileStart + distFromStartup <= CornerTileEnd ? CornerTileStart : CornerTileEnd - VarityCount; ;
+            int DefaultBlock = LowBoundSeed + NonPathTileIndexOffset;
             // Further away makes less path tiles
-            double PathFillPercent = 1 - distFromStartup / (double)FillDivider;
+            double FillPercentLinear = distFromStartup / (double)FillDivider; 
+            double PathFillPercent = 1 - FillPercentLinear;
 
+
+            bool[,] MaskedPath = roomDB.MaskedPath(room.OpenDoors);
+            bool[,] NotPath = roomDB.NOT(MaskedPath);
+            bool[,] CornerWights = roomDB.AND(roomDB.CornersWeighted(distFromStartup / 2), 
+                roomDB.RandomFill(FillPercentLinear)) ;
+            int[] SelectedTiles = new int[] { 0, 0, 0, 0, 0 };
+            int[] NonPathTiles = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            int[] CompensateTiles = new int[] { 0, 0, 0, 0, 0 };
+            int[] CornerTiles = new int[] { 0, 0, 0, 0, 0 }; 
+
+            
             // Select all tiles that would be needed for the cross pattern 
             for (int i = 0; i < VarityCount; i++)
             {
                 SelectedTiles[i] = LowBoundSeed + i;
                 CompensateTiles[i] = Globals.RND.Next(Compensation) + HighBound;
+                CornerTiles[i] = CornerTileStart + i; 
             }
             for (int i = 0; i < NonPathVarityCount; i++)
             {
@@ -152,6 +161,7 @@ namespace HappyDungeon
             FloodMap(DefaultBlock);
             PopulatePatternWeighted(NotPath, NonPathTiles, 
                 x => (Math.Max(x, x - 12) / 3), y => (Math.Max(y, y - 7)) / 3);
+            PopulatePatternRand(CornerWights, CornerTiles, CornerTiles.Length);
 
             // Add paths in the room 
             PopulatePatternPartial(MaskedPath, SelectedTiles, PathFillPercent);

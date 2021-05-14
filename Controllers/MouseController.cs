@@ -42,6 +42,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Running:
                     UpdateRunning(CurrentState, CurrentLocation);
                     break;
+                case Globals.GameStates.RoomTransitioning:
+                    UpdateTransitioning(CurrentState, CurrentLocation);
+                    break; 
                 default:
                     break; 
             }
@@ -56,8 +59,15 @@ namespace HappyDungeon
 
             if (CurrentState.LeftButton == ButtonState.Pressed)
             {
+                game.minimap.TabClick(CurrentLocation);
                 game.headsupDisplay.CheckLeftClick(CurrentLocation);
             }
+            else
+            {
+                game.minimap.TabClickRelease();
+            }
+
+
             if (CurrentState.RightButton == ButtonState.Pressed)
             {
                 game.mainChara.RightClickMove(CurrentLocation);

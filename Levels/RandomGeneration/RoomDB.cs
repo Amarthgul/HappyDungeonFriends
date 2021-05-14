@@ -197,6 +197,32 @@ namespace HappyDungeon.Levels
 
         }
 
+
+        /// <summary>
+        /// Generate a bool map of the 4 corners, the size is decided by the weight. 
+        /// </summary>
+        /// <param name="Weight">1-5 of the size of the corner</param>
+        /// <returns>Bool map of the 4 corners</returns>
+        public bool[,] CornersWeighted(int Weight)
+        {
+            bool[,] result = (bool[,])allFalse.Clone();
+
+            for (int i = 0; i < Globals.RTILE_ROW; i++)
+            {
+                for (int j = 0; j < Globals.RTILE_COLUMN; j++)
+                {
+                    int RowWeightIndex = Math.Min(i, (Globals.RTILE_ROW - 1) - i);
+                    int ColWeightIndex = Math.Min(j, (Globals.RTILE_COLUMN - 1) - j);
+                    if ((RowWeightIndex + ColWeightIndex) < Weight)
+                    {
+                        result[i, j] = true; 
+                    }
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Given the door position, cut part from the cross and make it a proper path pattern. 
         /// </summary>
@@ -212,9 +238,7 @@ namespace HappyDungeon.Levels
             if (!Doors[3]) result = Subtract(maskDown, result);
 
             return result; 
-
         }
-
 
         /// <summary>
         /// Subtract one matrix from another. This is not XOR.
@@ -236,6 +260,27 @@ namespace HappyDungeon.Levels
             return result;
         }
 
+        /// <summary>
+        /// Generate a bool map with random true and false.
+        /// </summary>
+        /// <param name="Ratio">Ratio of truth, 0.0-1.0</param>
+        /// <returns>Map of bool</returns>
+        public bool[,] RandomFill(double Ratio)
+        {
+            int Possibility = (int)(Ratio * 100);
+            bool[,] result = (bool[,])allFalse.Clone();
+
+            for (int i = 0; i < Globals.RTILE_ROW; i++)
+            {
+                for (int j = 0; j < Globals.RTILE_COLUMN; j++)
+                {
+                    if (Globals.RND.Next(100) < Possibility)
+                        result[i, j] = true; 
+                }
+            }
+            return result;
+        }
+
         public bool[,] AND(bool[,] m1, bool[,] m2)
         {
             bool[,] result = new bool[Globals.RTILE_ROW, Globals.RTILE_COLUMN];
@@ -248,7 +293,6 @@ namespace HappyDungeon.Levels
             }
             return result;
         }
-
 
         public bool[,] OR(bool[,] m1, bool[,] m2)
         {

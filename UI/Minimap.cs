@@ -60,6 +60,7 @@ namespace HappyDungeon
         private int roomColCount;
 
         // Regarding the drawing of the texture 
+        private int extraDisplayMode = 0; 
         public int[] currentFocusIndex { get; set; }
         private double clipX = 0;
         private double clipY = 0;
@@ -69,12 +70,18 @@ namespace HappyDungeon
         private Vector2 playerEdgeRelocate = new Vector2(0, 0);  // In case the player is in an edge room 
         private Vector2 tabOffsetRatio = new Vector2(0, 0);      // Offset the unexplored to avoid spoilers (range 0 - 1 )
         private Vector2 tabOffset;
-        private float layer = Globals.UI_MINIMAP; 
+        private Vector2 tabClickDelta;
+        private Vector2 tabClickLastRecord; 
+        private bool tabClicking = false;
+        private bool tabClickSameSession = false; 
 
         //Misc 
+        private float layer = Globals.UI_MINIMAP; 
         private Color defaultTint = Color.White;         // Draw() method tint 
         private Color transp = Color.Transparent;        // Texture generation placeholder colod 
         private Color fillColor = new Color(30, 28, 26); // Bridge fill color 
+
+        //--------------------------------------------------------------------------------------
 
         // Init
         public Minimap(Game1 G)
@@ -86,6 +93,9 @@ namespace HappyDungeon
 
             roomRowCount = roomCycler.currentMapSet.GetLength(0);
             roomColCount = roomCycler.currentMapSet.GetLength(1);
+
+            tabClickDelta = new Vector2(0, 0);
+            tabClickLastRecord = new Vector2(0, 0);
 
             InitlizeMinimap();
         }
@@ -206,6 +216,10 @@ namespace HappyDungeon
             tabOffset = new Vector2(tabOffsetRatio.X * minimap.Width * Globals.SCALAR ,
                 tabOffsetRatio.Y * minimap.Height * Globals.SCALAR );
         }
+
+        // ================================================================================
+        // =============================== Public Methods =================================
+        // ================================================================================
 
         /// <summary>
         /// Re-calculate the ratio of the tab display offset.
@@ -355,6 +369,40 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// Toggle options on when encountering a LMB click while tab display is on.
+        /// </summary>
+        /// <param name="NewPosition">Position of the cursor</param>
+        public void TabClick(Vector2 NewPosition)
+        {
+            
+            if (tabClicking == true)
+            {
+                tabClickDelta += (NewPosition - tabClickLastRecord);
+                tabClickLastRecord = NewPosition;
+            } else
+            {
+                tabClicking = true;
+                tabClickLastRecord = NewPosition;
+            }
+
+        }
+
+        /// <summary>
+        /// When LMB is not being pressed. 
+        /// </summary>
+        public void TabClickRelease()
+        {
+            if (extraDisplayMode == 1)
+            {
+                tabClicking = false;
+            }
+            else
+            {
+                tabClickDelta = new Vector2(0, 0);
+            }
+            
+        }
         
         /// <summary>
         /// Top-left corner minimap. 
@@ -382,11 +430,11 @@ namespace HappyDungeon
         /// For special display. 
         /// Tab display should only be avilable in running state. 
         /// </summary>
-        /// <param name="DisplayMode"></param>
+        /// <param name="DisplayMode">Either tab or a separated map view</param>
         public void DrawWholeMap(int DisplayMode)
         {
-
-            if(DisplayMode == 1)
+            extraDisplayMode = DisplayMode; 
+            if (DisplayMode == 1)
                 {
                 Vector2 PlayerDot = new Vector2(
                 (currentFocusIndex[1] * WHOLE_WIDTH + 1) * Globals.SCALAR + tabDisplayPos.X,
@@ -394,10 +442,10 @@ namespace HappyDungeon
                 ) + playerOffset;
                 
 
-                spriteBatch.Draw(minimap, tabDisplayPos - tabOffset,
+                spriteBatch.Draw(minimap, tabDisplayPos - tabOffset + tabClickDelta,
                     null, defaultTint, 0f, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, layer);
 
-                playerNotation.Draw(spriteBatch, PlayerDot - tabOffset, defaultTint);
+                playerNotation.Draw(spriteBatch, PlayerDot - tabOffset + tabClickDelta, defaultTint);
 
                 if (_DEVMODE)
                 {

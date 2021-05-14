@@ -71,6 +71,9 @@ namespace HappyDungeon
             return NewSprite;
         }
 
+        /// <summary>
+        /// Remove any item in the slot that got depleted 
+        /// </summary>
         public void Update()
         {
 

@@ -339,7 +339,9 @@ namespace HappyDungeon
 
             // Check for tab display 
             minimap.DrawWholeMap(displayWholeMinimap);
-            displayWholeMinimap = 0; // Set back to not displaying 
+
+            // Set back to not displaying 
+            displayWholeMinimap = 0; 
 
             // Dev mode debuggings 
             if (_DEVMODE)
