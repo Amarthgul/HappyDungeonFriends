@@ -18,10 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 11 May 2021: 
+Update 13 May 2021: 
 
-Alt key now displays hotkey and stats. 
-Levels are divided into 3, workingn on map generation algorithms. 
+Tab map display now can be moved around with left click in case some part of the map is out of screen. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/wxh9xyO.png" width="512">
