@@ -16,7 +16,8 @@ namespace HappyDungeon
         public PlayerBlockCollision(Game1 G)
         {
             game = G;
-            blockList = G.staticBlockList; 
+            blockList = G.staticBlockList;
+            blockList = blockList.Concat(game.dynamicBlockList).ToList();
         }
 
         public bool ValidMove(Rectangle PlayerCollisionRect)

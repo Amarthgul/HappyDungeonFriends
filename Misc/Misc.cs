@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HappyDungeon
 {
+    /// <summary>
+    /// Utility methods of many purposes 
+    /// </summary>
     public class Misc
     {
 
@@ -28,8 +31,8 @@ namespace HappyDungeon
         /// <summary>
         /// Get the opposite direction. 
         /// </summary>
-        /// <param name="Input"></param>
-        /// <returns></returns>
+        /// <param name="Input">Direction to seek</param>
+        /// <returns>The opposit direction</returns>
         public Globals.Direction Opposite(Globals.Direction Input)
         {
             switch (Input)
@@ -47,16 +50,43 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Check if the block can be seen. 
+        /// </summary>
+        /// <param name="Block">Block to be checked</param>
+        /// <param name="PlayerRect">Rectangle of the player</param>
+        /// <param name="VisibleRange">Visible range of the fog</param>
+        /// <returns>True if it can be seen</returns>
         public bool BlockFogBreaker(IBlock Block, Rectangle PlayerRect, float VisibleRange)
         {
             bool result = false;
             int Threshold = (int)(VisibleRange * Globals.OUT_UNIT);
+            Rectangle ItemRect = Block.GetRectangle();
+            Vector2 PlayerCenter = new Vector2(
+                PlayerRect.X + PlayerRect.Width / 2,
+                PlayerRect.Y + PlayerRect.Height / 2);
 
-
+            foreach (float LocX in new float[] { ItemRect.X, ItemRect.X + ItemRect.Width })
+            {
+                foreach (float LocY in new float[] { ItemRect.Y, ItemRect.Y + ItemRect.Height })
+                {
+                    if (L2Distance(new Vector2(LocX, LocY), PlayerCenter) < Threshold)
+                    {
+                        return true;
+                    }
+                }
+            }
 
             return result;
         }
 
+        /// <summary>
+        /// Check if the item can be seen. 
+        /// </summary>
+        /// <param name="Item">Item to be checked</param>
+        /// <param name="PlayerRect">Rectangle of the player</param>
+        /// <param name="VisibleRange">Visible range of the fog</param>
+        /// <returns>True if it can be seen</returns>
         public bool ItemFogBreaker(IItem Item, Rectangle PlayerRect, float VisibleRange)
         {
             bool result = false;
@@ -77,10 +107,16 @@ namespace HappyDungeon
                 }
             }
 
-
             return result; 
         }
 
+        /// <summary>
+        /// Translate the tile position of row and column to the absolute position
+        /// in the game window, as in pixel locations. 
+        /// </summary>
+        /// <param name="R">Row</param>
+        /// <param name="C">Column</param>
+        /// <returns>Vector 2 of the position in screen</returns>
         public Vector2 PositionTranslate(int R, int C)
         {
             Vector2 FinalPos = new Vector2(0, 0);
@@ -91,6 +127,12 @@ namespace HappyDungeon
             return FinalPos;
         }
 
+        /// <summary>
+        /// Euclidean distance between 2 points.
+        /// </summary>
+        /// <param name="P1">Point 1</param>
+        /// <param name="P2">Point 2</param>
+        /// <returns>Euclidean distance between point 1 and 2</returns>
         private int L2Distance(Vector2 P1, Vector2 P2)
         {
             return (int)Math.Sqrt(Math.Pow((P1.X - P2.X), 2) + Math.Pow((P1.Y - P2.Y), 2));

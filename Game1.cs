@@ -276,7 +276,8 @@ namespace HappyDungeon
 
             foreach (IBlock block in dynamicBlockList)
             {
-                block.Update();
+                if (Misc.Instance.BlockFogBreaker(block, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                    block.Update();
             }
 
             spellSlots.Update();
@@ -338,7 +339,8 @@ namespace HappyDungeon
 
             foreach (IBlock block in dynamicBlockList)
             {
-                block.Draw();
+                if (Misc.Instance.BlockFogBreaker(block, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                    block.Draw();
             }
 
             mainChara.Draw();

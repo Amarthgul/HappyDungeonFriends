@@ -148,7 +148,7 @@ namespace HappyDungeon
         public List<IBlock> GetBlockList(Game1 Game)
         {
             List<IBlock> BlockList = new List<IBlock>();
-
+            int BlockColCount = 16; 
             Vector2 Position;
 
             int[,] RoomMat = game.roomCycler.GetCurrentRoomInfo().Arrangement;
@@ -162,10 +162,10 @@ namespace HappyDungeon
                     switch (RoomMat[i, j])
                     {
                         case Globals.STARE_BLOCK_1:
-                            BlockList.Add(new StareBlock(Game, Position)); ;
+                            BlockList.Add(new StareBlock(Game, Position, RoomMat[i, j] / BlockColCount)); ;
                             break;
                         case Globals.STARE_BLOCK_2:
-                            BlockList.Add(new StareBlock(Game, Position));
+                            BlockList.Add(new StareBlock(Game, Position, RoomMat[i, j] / BlockColCount));
                             break;
                         default:
                             break;

@@ -29,9 +29,9 @@ namespace HappyDungeon
 
 
         // Updating 
-        private int currentFrame;
         public bool isStatic { get; set; } 
-        private Stopwatch stopwatch = new Stopwatch();
+        public Stopwatch stopwatch = new Stopwatch();
+        private int currentFrame;
         private long timer;
 
         private Color defaultTine = Color.White;
@@ -54,8 +54,8 @@ namespace HappyDungeon
             totalFrames = TF;
             layer = L;
 
-            isStatic = totalFrames == 1 ? true : false; // By fedault taking every sprite as dynamic/animated 
-            scaleCof = Globals.SCALAR;                  // By default using the global setting 
+            isStatic = false;             // By fedault taking every sprite as dynamic/animated 
+            scaleCof = Globals.SCALAR;    // By default using the global setting 
             opacity = 1;
             colLimitation = -1;
             positionOffset = new Vector2(0, 0);
@@ -69,6 +69,8 @@ namespace HappyDungeon
 
         public void Update()
         {
+            isStatic = (totalFrames == 1 ? true : false);
+
             if (!isStatic)
             {
                 timer = stopwatch.ElapsedMilliseconds;
@@ -89,9 +91,10 @@ namespace HappyDungeon
         {
             
             int row = rowLimitation >= 0 ? rowLimitation : (int)((float)currentFrame / (float)columnsCount);
-            int column = colLimitation >= 0? colLimitation : currentFrame % columnsCount;
+            int column = colLimitation >= 0? colLimitation + currentFrame : currentFrame % columnsCount;
 
-            Rectangle sourceRectangle = new Rectangle(textureWidth * column, textureHeight * row, textureWidth, textureHeight);
+            Rectangle sourceRectangle = new Rectangle(textureWidth * column, textureHeight * row, 
+                textureWidth, textureHeight);
 
             spriteBatch.Draw(selfTexture, location + positionOffset, sourceRectangle, defaultTine * opacity, 
                 0f, Vector2.Zero, scaleCof, SpriteEffects.None, layer);
