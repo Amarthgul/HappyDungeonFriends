@@ -62,13 +62,15 @@ namespace HappyDungeon
         public const int ITEM_TORCH = -1;
         public const int ITEM_GOLD = -255;
 
-        public const int ITEM_BOUND = -256; 
+        public const int ITEM_BOUND = -256;
         // -256 and smaller are enemies or NPCs 
 
 
         // Blocks are these bigger or equal to 0
 
         // Solid blocks are block with index higher then 127 
+        public const int STARE_BLOCK_1 = 128;
+        public const int STARE_BLOCK_2 = 144; 
         public const int SOLID_BLOCK_BOUND = 128; 
 
         // ================================================================================

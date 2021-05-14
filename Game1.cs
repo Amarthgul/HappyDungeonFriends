@@ -45,6 +45,7 @@ namespace HappyDungeon
         public LevelCycling roomCycler;
         public Room currentRoom; 
         public List<IBlock> staticBlockList;
+        public List<IBlock> dynamicBlockList; 
         public Globals.Direction transitionDir;
 
         // ================================================================================
@@ -273,6 +274,11 @@ namespace HappyDungeon
                 item.Update();
             }
 
+            foreach (IBlock block in dynamicBlockList)
+            {
+                block.Update();
+            }
+
             spellSlots.Update();
 
             mainChara.Update();
@@ -326,8 +332,13 @@ namespace HappyDungeon
 
             foreach (IItem item in collectibleItemList)
             {
-                if(Misc.Instance.ItemGofBreaker(item, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                if(Misc.Instance.ItemFogBreaker(item, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     item.Draw();
+            }
+
+            foreach (IBlock block in dynamicBlockList)
+            {
+                block.Draw();
             }
 
             mainChara.Draw();
@@ -383,7 +394,8 @@ namespace HappyDungeon
         {
             mapGenerator = new Generator(this);
             staticBlockList = mapGenerator.GetStaticBlockList();
-            collectibleItemList = mapGenerator.GetCollectibleItemList(this);
+            dynamicBlockList = mapGenerator.GetBlockList(this);
+            collectibleItemList = mapGenerator.GetItemList(this);
         }
     }
 }

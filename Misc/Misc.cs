@@ -47,7 +47,17 @@ namespace HappyDungeon
             }
         }
 
-        public bool ItemGofBreaker(IItem Item, Rectangle PlayerRect, float VisibleRange)
+        public bool BlockFogBreaker(IBlock Block, Rectangle PlayerRect, float VisibleRange)
+        {
+            bool result = false;
+            int Threshold = (int)(VisibleRange * Globals.OUT_UNIT);
+
+
+
+            return result;
+        }
+
+        public bool ItemFogBreaker(IItem Item, Rectangle PlayerRect, float VisibleRange)
         {
             bool result = false;
             int Threshold = (int)(VisibleRange * Globals.OUT_UNIT); 

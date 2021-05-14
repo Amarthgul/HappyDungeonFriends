@@ -109,7 +109,12 @@ namespace HappyDungeon
             return StaticBlockList;
         }
 
-        public List<IItem> GetCollectibleItemList(Game1 game)
+        /// <summary>
+        /// Return items  in this room that are not yet in the bag of the character.
+        /// </summary>
+        /// <param name="game">Game1 object</param>
+        /// <returns>List of items in this room</returns>
+        public List<IItem> GetItemList(Game1 Game)
         {
             List<IItem> ItemList = new List<IItem>();
             Vector2 Position; 
@@ -125,10 +130,10 @@ namespace HappyDungeon
                     switch (RoomMat[i, j])
                     {
                         case Globals.ITEM_TORCH:
-                            ItemList.Add(new Torch(game, Position)); ;
+                            ItemList.Add(new Torch(Game, Position)); ;
                             break;
                         case Globals.ITEM_GOLD:
-                            ItemList.Add(new DroppedGold(game, Position));
+                            ItemList.Add(new DroppedGold(Game, Position));
                             break; 
                         default:
                             break;
@@ -137,6 +142,38 @@ namespace HappyDungeon
             }
 
             return ItemList; 
+        }
+
+
+        public List<IBlock> GetBlockList(Game1 Game)
+        {
+            List<IBlock> BlockList = new List<IBlock>();
+
+            Vector2 Position;
+
+            int[,] RoomMat = game.roomCycler.GetCurrentRoomInfo().Arrangement;
+
+            for (int i = 0; i < RoomMat.GetLength(0); i++)
+            {
+                for (int j = 0; j < RoomMat.GetLength(1); j++)
+                {
+                    Position = Misc.Instance.PositionTranslate(i, j);
+
+                    switch (RoomMat[i, j])
+                    {
+                        case Globals.STARE_BLOCK_1:
+                            BlockList.Add(new StareBlock(Game, Position)); ;
+                            break;
+                        case Globals.STARE_BLOCK_2:
+                            BlockList.Add(new StareBlock(Game, Position));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return BlockList; 
         }
 
     }
