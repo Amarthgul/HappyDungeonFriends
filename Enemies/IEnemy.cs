@@ -18,5 +18,7 @@ namespace HappyDungeon
         void Turn(Globals.Direction NewDir);
 
         Rectangle GetRectangle();
+
+        DamageInstance DealCollisionDamage(); 
     }
 }

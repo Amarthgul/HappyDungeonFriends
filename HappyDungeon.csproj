@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Collisions\EnemyBlockCollision.cs" />
     <Compile Include="Collisions\PlayerBlockCollision.cs" />
+    <Compile Include="Collisions\PlayerEnemyCollision.cs" />
     <Compile Include="Collisions\PlayerItemCollision.cs" />
     <Compile Include="Commands\AltDisplayCommand.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Enemies\BloodBead.cs" />
     <Compile Include="Enemies\IEnemy.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="General\DamageInstance.cs" />
     <Compile Include="General\GeneralSprite.cs" />
     <Compile Include="General\Generator.cs" />
     <Compile Include="General\Globals.cs" />

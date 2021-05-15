@@ -144,6 +144,14 @@ namespace HappyDungeon
             }
         }
 
+        public DamageInstance DealCollisionDamage()
+        {
+
+            DamageInstance DMG = new DamageInstance(-5, new Globals.DamageEffect [] { Globals.DamageEffect.Knockback });
+            DMG.knowckbackDist = 8; 
+
+            return DMG;
+        }
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================

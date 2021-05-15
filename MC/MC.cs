@@ -56,8 +56,18 @@ namespace HappyDungeon
         private Vector2 startUpPosition = new Vector2(Globals.OUT_FWIDTH / 2 - Globals.OUT_UNIT / 2, 
             Globals.OUT_FHEIGHT / 2 + Globals.OUT_UNIT);
 
+        // ================================================================================
+        // =================================== Interactions ===============================
+        // ================================================================================
+
         private PlayerBlockCollision blockCollisionCheck;
         private PlayerItemCollision itemCollisionCheck;
+        private PlayerEnemyCollision enemyCollisionCheck;
+
+        private bool recoverImmunity = false; 
+        private Stopwatch damageProtectionSW;
+        private long damageRecoverTimer;
+        private int recoverTime = 1500; 
 
         // ================================================================================
         // ============================= Drawing and textures =============================
@@ -107,10 +117,15 @@ namespace HappyDungeon
             // Collisions 
             blockCollisionCheck = new PlayerBlockCollision(game);
             itemCollisionCheck = new PlayerItemCollision(game);
+            enemyCollisionCheck = new PlayerEnemyCollision(game);
 
             primaryState = primaryTypes.None;
             mcState = Globals.GeneralStates.Hold; // Start as on hold 
             isMoving = false;
+
+            damageProtectionSW = new Stopwatch();
+            damageProtectionSW.Restart();
+            damageRecoverTimer = 0; 
 
             currentHealth = (int)(MAX_HEALTH * INIT_HP_RATIO);
             currentMaxHP = MAX_HEALTH;
@@ -239,9 +254,47 @@ namespace HappyDungeon
             return primaryState == primaryTypes.Torch;
         }
 
+        /// <summary>
+        /// Get the current rectangle of the main character. 
+        /// </summary>
+        /// <returns>Current collision rectangle</returns>
         public Rectangle GetRectangle()
         {
             return collisionRect; 
+        }
+
+        /// <summary>
+        /// Let player deal with collide with enemies. 
+        /// </summary>
+        /// <param name="DMG">Damage instance object</param>
+        /// <param name="DirFrom">Which direction id the collision from</param>
+        public void TakeCollisionDamage(DamageInstance DMG, Globals.Direction DirFrom)
+        {
+            if (recoverImmunity)
+                return;
+
+            currentHealth += DMG.DamageCount;
+
+            foreach(Globals.DamageEffect FX in DMG.effects)
+            {
+                switch (FX)
+                {
+                    case Globals.DamageEffect.Break:
+                        break;
+                    case Globals.DamageEffect.Knockback:
+                        stagedMovement += MaxKnockbackDist(DirFrom, DMG.knowckbackDist);
+                        break;
+                    case Globals.DamageEffect.Stun:
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            recoverImmunity = true;
+            damageProtectionSW.Restart();
+            damageRecoverTimer = 0;
+
         }
 
         public void Refresh(Game1 G)
@@ -269,9 +322,14 @@ namespace HappyDungeon
                     break; 
             }
 
+            enemyCollisionCheck.CheckEnemyCollision(GetRectangle());
+            
             // Handle collision with blocks 
             if (blockCollisionCheck.ValidMove(GetStagedRectangle()) && CanPassDoors())
+            {
                 position += stagedMovement;
+            }
+               
             // Check and handle item pick up
             itemCollisionCheck.CheckItemCollision(GetPickupRectangle());
 
@@ -284,6 +342,7 @@ namespace HappyDungeon
 
             Regulate();
             UpdateTurnCD();
+            UpdateDamgeRecoverProtection();
 
             CheckBoundary();
 
@@ -359,6 +418,19 @@ namespace HappyDungeon
                 {
                     canTurn[i] = true;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Update the damage protection, after a certain time the player will not be protected
+        /// by the inflicted damage instance and becomes able to take damage again. 
+        /// </summary>
+        private void UpdateDamgeRecoverProtection()
+        {
+            damageRecoverTimer = damageProtectionSW.ElapsedMilliseconds; 
+            if (damageRecoverTimer > recoverTime)
+            {
+                recoverImmunity = false;
             }
         }
 
@@ -474,6 +546,33 @@ namespace HappyDungeon
             }
 
         }
+
+        private Vector2 MaxKnockbackDist(Globals.Direction DirFrom, double Dist)
+        {
+            Vector2 MaxDist = new Vector2(64, 0);
+            int RealDist = (int)Dist * Globals.SCALAR; 
+
+            switch (DirFrom)
+            {
+                case Globals.Direction.Left:
+                    MaxDist = new Vector2(- RealDist, 0);
+                    break;
+                case Globals.Direction.Right:
+                    MaxDist = new Vector2(RealDist, 0);
+                    break;
+                case Globals.Direction.Up:
+                    MaxDist = new Vector2(0, RealDist);
+                    break;
+                case Globals.Direction.Down:
+                    MaxDist = new Vector2(0, -RealDist);
+                    break;
+                default:
+                    break;
+            }
+
+            return MaxDist;
+        }
+
 
     }
 }
