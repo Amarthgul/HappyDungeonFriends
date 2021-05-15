@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 13 May 2021: 
+Update 15 May 2021: 
 
-Tab map display now can be moved around with left click in case some part of the map is out of screen. 
+Enemy class added, damges dealt by exchanging a damage instance. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/TTbbfQH.png" width="512">
