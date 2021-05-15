@@ -166,6 +166,8 @@
     <None Include="Content\Images\Enemies\enemyExtras.psd" />
     <None Include="Content\Images\Items\itemExtra.psd" />
     <None Include="Content\Images\Items\items.psd" />
+    <None Include="Enemies\README.md" />
+    <None Include="MC\README.md" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

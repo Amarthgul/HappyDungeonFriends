@@ -37,6 +37,7 @@ namespace HappyDungeon
         private GeneralSprite uiFront;
         private GeneralSprite uiBack;
         private GeneralSprite health;
+        private GeneralSprite healthSignifier;
 
         private UI.DigitsSmall digitsGenerator;
         private UI.LargeBR fontLBRGenerator; 
@@ -46,7 +47,9 @@ namespace HappyDungeon
         private GeneralSprite[] altDisplays; 
 
         private Texture2D bloodFill;
+        private Texture2D bloodSig; 
         private Texture2D currentBlood;
+        private Texture2D currentSig; 
 
         // ================================================================================
         // ================= Draw locations, on hover and click check =====================
@@ -67,6 +70,7 @@ namespace HappyDungeon
             new Vector2(156, 1) };
         //Location of some on-hover info
         private Vector2 bloodTextLocation = new Vector2(234, 18);
+        private Vector2 bloodTextLocationUpdate; 
         private Vector2 textShadowOffset = new Vector2(1, -1);
         // Positions of the texts when pressing alt key 
         private Vector2[] altDisplayPositions = new Vector2[] {
@@ -78,7 +82,7 @@ namespace HappyDungeon
              };
         private Vector2 altGoldCountLocation = new Vector2(76, 14); 
 
-        private Rectangle primaryRange;
+        private Rectangle primaryRange;   // On hover and click 
         private Rectangle[] itemRange;
         private Rectangle bagRange;
         private Rectangle bloodRange; 
@@ -87,6 +91,7 @@ namespace HappyDungeon
         private Color dropShadow = Color.Black;
         private Color bloodColor = new Color(148, 22, 20);
         private Color maskColor = new Color(50, 0, 0);
+        private Color healthSig = Color.White; 
         private Color transparent = Color.Transparent;
 
         // ================================================================================
@@ -94,7 +99,8 @@ namespace HappyDungeon
         // ================================================================================
         private int oldHealth;
         private int oldMaxHealth;
-        private int oldGoldCount; 
+        private int oldGoldCount;
+        private bool healthSignifierOn = false;
         private bool onHoverHP = false;
         private bool altDisplayOn = false; 
 
@@ -141,7 +147,7 @@ namespace HappyDungeon
             healthTextDropS = new GeneralSprite(HPT, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_SHADOW);
 
             Vector2 WidthOffset = new Vector2(HPT.Width / 2, 0);
-            bloodTextLocation -= WidthOffset;
+            bloodTextLocationUpdate = bloodTextLocation - WidthOffset;
         }
 
         /// <summary>
@@ -177,8 +183,16 @@ namespace HappyDungeon
             currentBlood = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
                 BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => transparent);
 
+            bloodSig = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
+                BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => healthSig);
+            currentSig = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
+                BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => transparent);
+
             health = new GeneralSprite(currentBlood, Globals.ONE_FRAME, Globals.ONE_FRAME, 
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+
+            healthSignifier = new GeneralSprite(currentSig, Globals.ONE_FRAME, Globals.ONE_FRAME,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_SIG);
         }
 
         /// <summary>
@@ -260,27 +274,43 @@ namespace HappyDungeon
         /// </summary>
         private void RedrawBloodVessel()
         {
-
-            double PlayerHalthRatio = game.mainChara.currentHealth / (double)game.mainChara.currentMaxHP;
-            int ClipRange = (int)(BLOOD_TX_SIZE * PlayerHalthRatio);
+            double PlayerHealthRatio = game.mainChara.currentHealth / (double)game.mainChara.currentMaxHP;
+            double PlayerSigRatio = game.mainChara.pastHealth / (double)game.mainChara.currentMaxHP; 
+            int ClipRange = (int)(BLOOD_TX_SIZE * PlayerHealthRatio);
+            int ClipRangeSig = (int)(BLOOD_TX_SIZE * PlayerSigRatio);
             int PasteDistance = BLOOD_TX_SIZE - ClipRange;
+            int PasteDistanceSiig = BLOOD_TX_SIZE - ClipRangeSig;
 
             if (ClipRange > 0) // Avoid 0 health error 
             {
                 // Clear current blood 
                 currentBlood = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
                     BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => transparent);
-
                 // Copy part of the blood 
                 Rectangle SourceRectangle = new Rectangle(0, 0, BLOOD_TX_SIZE, ClipRange);
                 Color[] data = new Color[SourceRectangle.Width * SourceRectangle.Height];
                 bloodFill.GetData<Color>(0, SourceRectangle, data, 0, data.Length);
-
                 // Paste into the current blood vessel texture 
                 currentBlood.SetData(0, new Rectangle(0, PasteDistance, BLOOD_TX_SIZE, ClipRange), data, 0, data.Length);
-
                 // Set the new texture for blood vessel sprite
                 health.selfTexture = currentBlood;
+
+                // ------------------------------------------------------------------------------------
+                // Do the same again, but for the signifier 
+                if(game.mainChara.pastHealth > 0)
+                {
+                    currentSig = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
+                    BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => transparent);
+                    // Copy part of the blood 
+                    SourceRectangle = new Rectangle(0, 0, BLOOD_TX_SIZE, ClipRangeSig);
+                    data = new Color[SourceRectangle.Width * SourceRectangle.Height];
+                    bloodSig.GetData<Color>(0, SourceRectangle, data, 0, data.Length);
+                    // Paste into the current blood vessel texture 
+                    currentSig.SetData(0, new Rectangle(0, PasteDistanceSiig, BLOOD_TX_SIZE, ClipRangeSig), data, 0, data.Length);
+                    // Set the new texture for blood vessel sprite
+                    healthSignifier.selfTexture = currentSig;
+                }
+
             }
             else // 0 health display 
             {
@@ -305,6 +335,9 @@ namespace HappyDungeon
 
                 RedrawBloodVessel();
             }
+            if (game.mainChara.pastHealth != -1)
+                healthSignifierOn = true;
+            else healthSignifierOn = false;
         }
 
         /// <summary>
@@ -454,6 +487,8 @@ namespace HappyDungeon
         {
             uiBack.Draw(spriteBatch, drawPosition, defaultTint);
 
+            if (healthSignifierOn) // When taking damage, signifying is taking damage 
+                healthSignifier.Draw(spriteBatch, bloodPosition * Globals.SCALAR, defaultTint);
             health.Draw(spriteBatch, bloodPosition * Globals.SCALAR, defaultTint);
 
             if (primarySlot != null)
@@ -487,8 +522,8 @@ namespace HappyDungeon
             // On hover show the amount of HP she still has 
             if (onHoverHP || altDisplayOn)
             {
-                healthTextDropS.Draw(spriteBatch, (bloodTextLocation + textShadowOffset) * Globals.SCALAR, dropShadow);
-                healthText.Draw(spriteBatch, bloodTextLocation * Globals.SCALAR, defaultTint);
+                healthTextDropS.Draw(spriteBatch, (bloodTextLocationUpdate + textShadowOffset) * Globals.SCALAR, dropShadow);
+                healthText.Draw(spriteBatch, bloodTextLocationUpdate * Globals.SCALAR, defaultTint);
                 onHoverHP = false;
             }
 

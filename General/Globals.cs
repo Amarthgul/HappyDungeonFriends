@@ -95,6 +95,7 @@ namespace HappyDungeon
         
 
         public const float UI_UNDER = 0.75f;         // Down-most layer for UI
+        public const float UI_SIG = 0.77f;           // Signifier when player if taking damage 
         public const float UI_MID = 0.78f;           // Mostly for item masks 
         public const float UI_SLOTS = 0.79f;         // Items in the slot 
         public const float UI_LAYER = 0.8f;          // UI front panel layer

@@ -43,9 +43,9 @@ namespace HappyDungeon
                     else
                     {
                         if (PlayerCollisionRect.X > enemy.GetRectangle().X)
-                            DamageFrom = Globals.Direction.Right;
-                        else
                             DamageFrom = Globals.Direction.Left;
+                        else
+                            DamageFrom = Globals.Direction.Right;
                     }
 
                     game.mainChara.TakeCollisionDamage(enemy.DealCollisionDamage(), DamageFrom);

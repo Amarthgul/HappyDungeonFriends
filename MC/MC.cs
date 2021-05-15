@@ -26,6 +26,7 @@ namespace HappyDungeon
         private const float RECT_HEIGHT_OFFSET = 0.3f;
         private const int NEW_ROOM_OFFSET = 2 * Globals.SCALAR;
         private const int DIRECTION_CD = 200;    // Avoid gltching direction when using mouse 
+        private const int INFLICT_MAX_COUNTER = 8; 
 
         // The limits for entering doors 
         private int leftLim = 2 * Globals.OUT_UNIT;
@@ -87,13 +88,22 @@ namespace HappyDungeon
         // ================================================================================
         // ============================= States and parameters ============================
         // ================================================================================
+        private bool Untouchable = false; // Controls damge taking, as in ContinuedHealthReduction
+
         private enum primaryTypes { None, Torch };
         private primaryTypes primaryState;
         public Globals.GeneralStates mcState { set; get; }
         public int currentHealth;
+        public int pastHealth;          // For the headsup display to signify the damage 
         public int currentMaxHP;
         public int moveSpeed;
         public int pickupDistance = 2;  // Not having to completely reach an item to pick it up. In original unit
+
+        // For decresing the HP with animation instead of suddenly drops 
+        private int damageInflictedTotal = 0;
+        private int[] DamageInflictSequence; 
+        private int damageInflictCounter = 0; // In contrast of INFLICT_MAX_COUNTER
+        private bool damageInflictionOn = false; 
 
         private Game1 game;
         private SpriteBatch spriteBatch;
@@ -128,6 +138,7 @@ namespace HappyDungeon
             damageRecoverTimer = 0; 
 
             currentHealth = (int)(MAX_HEALTH * INIT_HP_RATIO);
+            pastHealth = -1; 
             currentMaxHP = MAX_HEALTH;
             moveSpeed = 1 * Globals.SCALAR;
         }
@@ -151,6 +162,9 @@ namespace HappyDungeon
             dirStopwatches[(int)newDir].Restart();
         }
 
+        /// <summary>
+        /// Invoke the player to try to move.
+        /// </summary>
         public void Move()
         {
             isMoving = true; // Set to tru so only 1 direction is moving at a time 
@@ -176,7 +190,7 @@ namespace HappyDungeon
             }
 
             currentWalkingSprite.rowLimitation = (int)facingDir;
-            currentWalkingSprite.Update();
+            currentWalkingSprite.Update(); // so that the animation plays only when a key being pressed
 
             foreach (GeneralSprite sprite in additionalSprites)
             {
@@ -248,7 +262,7 @@ namespace HappyDungeon
         /// While holding torch (or in some other conditions),
         /// the character might drive enemies away.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>If the character is in Illuminati mode</returns>
         public bool Illuminati()
         {
             return primaryState == primaryTypes.Torch;
@@ -260,11 +274,14 @@ namespace HappyDungeon
         /// <returns>Current collision rectangle</returns>
         public Rectangle GetRectangle()
         {
-            return collisionRect; 
+            return new Rectangle(collisionRect.X, collisionRect.Y, 
+                collisionRect.Width, collisionRect.Height); ; 
         }
 
         /// <summary>
-        /// Let player deal with collide with enemies. 
+        /// Let player deal with colliding with enemies. 
+        /// Collision damage is a separated method because collisions are most likly to
+        /// have a directional knockback. 
         /// </summary>
         /// <param name="DMG">Damage instance object</param>
         /// <param name="DirFrom">Which direction id the collision from</param>
@@ -273,7 +290,7 @@ namespace HappyDungeon
             if (recoverImmunity)
                 return;
 
-            currentHealth += DMG.DamageCount;
+            MarkDamgeInfliction(DMG.DamageCount);
 
             foreach(Globals.DamageEffect FX in DMG.effects)
             {
@@ -282,7 +299,7 @@ namespace HappyDungeon
                     case Globals.DamageEffect.Break:
                         break;
                     case Globals.DamageEffect.Knockback:
-                        stagedMovement += MaxKnockbackDist(DirFrom, DMG.knowckbackDist);
+                        position += MaxKnockbackDist(DirFrom, DMG.knowckbackDist);
                         break;
                     case Globals.DamageEffect.Stun:
                         break;
@@ -318,10 +335,13 @@ namespace HappyDungeon
                     break;
                 case Globals.GeneralStates.Damaged:
                     break;
+                case Globals.GeneralStates.Broken: // Broken can not move and can do no shit
+                    return; 
                 default:
                     break; 
             }
 
+            // Check and send singal if collides with enemy 
             enemyCollisionCheck.CheckEnemyCollision(GetRectangle());
             
             // Handle collision with blocks 
@@ -333,12 +353,13 @@ namespace HappyDungeon
             // Check and handle item pick up
             itemCollisionCheck.CheckItemCollision(GetPickupRectangle());
 
-            stagedMovement = new Vector2(0, 0);
-
             collisionRect.X = (int)(position.X + collisionOffset.X);
             collisionRect.Y = (int)(position.Y + collisionOffset.Y);
 
+            stagedMovement = new Vector2(0, 0);
             isMoving = false; // Set back to false for next movement  
+
+            currentHealth += ContinuedHealthReduction(); 
 
             Regulate();
             UpdateTurnCD();
@@ -547,32 +568,108 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// When the character is being knocked back, find the maxinum amount of distance 
+        /// the cahracter can move before goes into a wall or block. 
+        /// </summary>
+        /// <param name="DirFrom">Direction from which being knocked</param>
+        /// <param name="Dist">Designated knock back distance</param>
+        /// <returns></returns>
         private Vector2 MaxKnockbackDist(Globals.Direction DirFrom, double Dist)
         {
-            Vector2 MaxDist = new Vector2(64, 0);
-            int RealDist = (int)Dist * Globals.SCALAR; 
+            Vector2 VecIter = new Vector2(0, 0);
+            int IterateStep = 1 * Globals.SCALAR;
 
-            switch (DirFrom)
+            while(Math.Abs(VecIter.X) < (int)Math.Abs(Dist) * Globals.SCALAR
+                && Math.Abs(VecIter.Y) < (int)Math.Abs(Dist) * Globals.SCALAR)
             {
-                case Globals.Direction.Left:
-                    MaxDist = new Vector2(- RealDist, 0);
+                switch (DirFrom)
+                {
+                    case Globals.Direction.Left:
+                        VecIter.X += IterateStep;
+                        break;
+                    case Globals.Direction.Right:
+                        VecIter.X -= IterateStep;
+                        break;
+                    case Globals.Direction.Up:
+                        VecIter.Y += IterateStep;
+                        break;
+                    case Globals.Direction.Down:
+                        VecIter.Y -= IterateStep;
+                        break;
+                    default:
+                        break;
+                }
+                Rectangle CheckingRect = new Rectangle(GetRectangle().X + (int)VecIter.X,
+                    GetRectangle().Y + (int)VecIter.Y, GetRectangle().Width, GetRectangle().Height);
+                if (!blockCollisionCheck.ValidMove(CheckingRect))
+                {
                     break;
-                case Globals.Direction.Right:
-                    MaxDist = new Vector2(RealDist, 0);
-                    break;
-                case Globals.Direction.Up:
-                    MaxDist = new Vector2(0, RealDist);
-                    break;
-                case Globals.Direction.Down:
-                    MaxDist = new Vector2(0, -RealDist);
-                    break;
-                default:
-                    break;
+                }
+                
             }
 
-            return MaxDist;
+            return VecIter;
         }
 
+        /// <summary>
+        /// When a damage is being delt to the character, calculate the sequence of damage 
+        /// to be delt in the following 8 updates, displays as animated health reduction. 
+        /// </summary>
+        /// <param name="TotalDamage"></param>
+        private void MarkDamgeInfliction(int TotalDamage)
+        {
+            int Division = 12; 
+            int SinglePart = TotalDamage / Division;
+            damageInflictedTotal = TotalDamage;
+            damageInflictionOn = true;
+            damageInflictCounter = 0;
+            DamageInflictSequence = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            
+            if (Math.Abs(damageInflictedTotal) < INFLICT_MAX_COUNTER)
+            {
+                for (int i = 0; i < damageInflictedTotal; i++)
+                    DamageInflictSequence[i] = 1;
+            }
+            else
+            {
+                for (int i = 0; i < INFLICT_MAX_COUNTER; i++)
+                    DamageInflictSequence[i] = Math.Min(i, INFLICT_MAX_COUNTER - 1 - i) * SinglePart;
+                // Allow me to leave 2 magic number here, it's to deal with the peak of damage
+                // And ensure the division does not reduce total damage due to remainders 
+                DamageInflictSequence[4] = damageInflictedTotal - 8 * SinglePart;
+            }
+
+        }
+
+        /// <summary>
+        /// Upon taking damage, it'll be distributed in the next 8 update cycles. 
+        /// (Depending on the machine that time varies)
+        /// This method returns the amount of health reduction in the current cycle. 
+        /// </summary>
+        /// <returns>Amount of thealth to be removed.</returns>
+        private int ContinuedHealthReduction()
+        {
+            int DamageInflictedNow = 0;
+
+            if (!damageInflictionOn || Untouchable) return 0; // Provide a chance to br damage immune 
+
+            if (damageInflictCounter >= INFLICT_MAX_COUNTER)
+            {
+                damageInflictionOn = false;
+                pastHealth = -1; 
+                return 0;
+            }
+
+            DamageInflictedNow = DamageInflictSequence[damageInflictCounter];
+
+            if (damageInflictCounter > 0)
+                pastHealth = currentHealth + DamageInflictSequence[damageInflictCounter - 1]; 
+
+            damageInflictCounter++;
+
+            return DamageInflictedNow; 
+        }
 
     }
 }

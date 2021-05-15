@@ -26,6 +26,7 @@ namespace HappyDungeon
             (int)(0.3 * Globals.SCALAR),
             (int)(0.6 * Globals.SCALAR),
             (int)(0.3 * Globals.SCALAR) };
+        private int collisionDMG = -12; 
 
         Rectangle CollisionRect;
         private int horzontalTop = 4 * Globals.SCALAR;
@@ -144,11 +145,15 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Return a damage instance of on collision. 
+        /// </summary>
+        /// <returns>DamageInstance object</returns>
         public DamageInstance DealCollisionDamage()
         {
 
-            DamageInstance DMG = new DamageInstance(-5, new Globals.DamageEffect [] { Globals.DamageEffect.Knockback });
-            DMG.knowckbackDist = 8; 
+            DamageInstance DMG = new DamageInstance(collisionDMG, new Globals.DamageEffect [] { Globals.DamageEffect.Knockback });
+            DMG.knowckbackDist = collisionDMG;
 
             return DMG;
         }
