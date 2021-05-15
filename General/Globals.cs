@@ -63,19 +63,21 @@ namespace HappyDungeon
         public const int ITEM_GOLD = -255;
 
         public const int ITEM_BOUND = -256;
-        // -256 and smaller are enemies or NPCs 
 
+        // -256 and smaller are enemies or NPCs 
+        public const int ENEMY_BEAD = -257; 
 
         // Blocks are these bigger or equal to 0
 
         // Solid blocks are block with index higher then 127 
         public const int STARE_BLOCK_1 = 128;
         public const int STARE_BLOCK_2 = 144; 
-        public const int SOLID_BLOCK_BOUND = 128; 
+        public const int SOLID_BLOCK_BOUND = 128;
 
         // ================================================================================
         // ==================================== UIs =======================================
         // ================================================================================
+        public const Language GAME_LANGUAGE = Language.English;  
         public const int SLOT_SIZE = 3;
 
         // ================================================================================
@@ -87,7 +89,7 @@ namespace HappyDungeon
         public const float BLOCKS_LAYER = 0.2f;      // Blocks and evnironments 
         public const float ITEM_LAYER = 0.45f;       // items are always beneth 
         public const float MC_LAYER = 0.5f;          // Main character 
-        public const float ENEMY_LAYER = 0.55f;      // Enemies always "on top of" the player 
+        public const float ENEMY_LAYER = 0.51f;      // Enemies always "on top of" the player 
         public const float MAP_OVERLAY = 0.6f;      // Overlay of the border for door obscure effect 
         public const float FOW_LAYER = 0.65f;         // Fog of War
         
@@ -130,6 +132,8 @@ namespace HappyDungeon
         public enum GameLevel { Delight, Joy, Bliss };
         public enum GameDifficulty { Idiot, Normal };
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Dead }
+
+        public enum Language { English, Spanish, Chinese, Japanese };
 
         // Four direction iterator 
         public static List<Direction> FourDirIter = new List<Direction>() 

@@ -45,6 +45,10 @@ namespace HappyDungeon
 
         void Draw();
 
+        /// <summary>
+        /// Rectangle for collision detection if the item is on the ground. 
+        /// </summary>
+        /// <returns>Collision rectangle of the item</returns>
         Rectangle GetRectangle();
 
         /// <summary>
@@ -82,3 +86,4 @@ namespace HappyDungeon
         Globals.ItemType SelfType();
     }
 }
+

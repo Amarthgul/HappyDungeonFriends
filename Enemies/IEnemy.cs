@@ -11,10 +11,12 @@ namespace HappyDungeon
     public interface IEnemy
     {
 
-        void Update();
+        void Update(MC MainChara);
 
         void Draw();
 
-        Rectangle getRectangle();
+        void Turn(Globals.Direction NewDir);
+
+        Rectangle GetRectangle();
     }
 }

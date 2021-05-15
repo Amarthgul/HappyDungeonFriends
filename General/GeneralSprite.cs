@@ -21,7 +21,7 @@ namespace HappyDungeon
         public float scaleCof { get; set; }     // Scale coefficient 
         public float opacity { get; set; }      // Draw opacity 
         public int frameDelay { get; set; }
-
+        public int currentFrame { get; set; }
         public Vector2 positionOffset { get; set; }
 
         private int textureWidth;
@@ -31,7 +31,7 @@ namespace HappyDungeon
         // Updating 
         public bool isStatic { get; set; } 
         public Stopwatch stopwatch = new Stopwatch();
-        private int currentFrame;
+        
         private long timer;
 
         private Color defaultTine = Color.White;

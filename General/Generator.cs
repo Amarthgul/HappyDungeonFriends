@@ -176,5 +176,34 @@ namespace HappyDungeon
             return BlockList; 
         }
 
+
+        public List<IEnemy> GetEnemyList(Game1 Game)
+        {
+            List<IEnemy> EnemyList = new List<IEnemy>();
+            Vector2 Position;
+
+            int[,] RoomMat = game.roomCycler.GetCurrentRoomInfo().Arrangement;
+
+            for (int i = 0; i < RoomMat.GetLength(0); i++)
+            {
+                for (int j = 0; j < RoomMat.GetLength(1); j++)
+                {
+                    Position = Misc.Instance.PositionTranslate(i, j);
+
+                    switch (RoomMat[i, j])
+                    {
+                        case Globals.ENEMY_BEAD:
+                            EnemyList.Add(new BloodBead(Game, Position));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            return EnemyList;
+        }
+
+
     }
 }

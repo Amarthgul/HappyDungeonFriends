@@ -22,7 +22,7 @@ namespace HappyDungeon
         // ========================= Game states and parameters ===========================
         // ================================================================================
         private bool _DEVMODE = false;
-
+        public Globals.Language gameLanguage; 
         public Globals.GameStates gameState;
         public Globals.GameLevel gameLevel; 
         private int mapSize = 9;
@@ -80,7 +80,9 @@ namespace HappyDungeon
         /// <returns>0 if all loaded successfually</returns>
         public int LoadClasses(int mode)
         {
-            gameLevel = Globals.GameLevel.Delight; 
+            gameLevel = Globals.GameLevel.Delight;
+            gameLanguage = Globals.Language.English;
+
             roomCycler = new LevelCycling(mapSize, gameLevel);
 
             currentRoom = new Room(this);
@@ -280,6 +282,12 @@ namespace HappyDungeon
                     block.Update();
             }
 
+            foreach (IEnemy enemy in enemyList)
+            {
+
+                enemy.Update(mainChara);
+            }
+
             spellSlots.Update();
 
             mainChara.Update();
@@ -343,6 +351,12 @@ namespace HappyDungeon
                     block.Draw();
             }
 
+            foreach (IEnemy enemy in enemyList)
+            {
+                
+                enemy.Draw();
+            }
+
             mainChara.Draw();
 
             fogOfWar.Draw();
@@ -373,6 +387,12 @@ namespace HappyDungeon
                     DrawRectangle ItemRect = new DrawRectangle(GraphicsDevice, spriteBatch, item.GetRectangle(), Color.Yellow);
                     ItemRect.Draw();
                 }
+
+                foreach (IEnemy enemy in enemyList)
+                {
+                    DrawRectangle enemyRect = new DrawRectangle(GraphicsDevice, spriteBatch, enemy.GetRectangle(), Color.Red);
+                    enemyRect.Draw();
+                }
             }
         }
 
@@ -395,9 +415,14 @@ namespace HappyDungeon
         private void ReloadLists()
         {
             mapGenerator = new Generator(this);
+
             staticBlockList = mapGenerator.GetStaticBlockList();
             dynamicBlockList = mapGenerator.GetBlockList(this);
+
             collectibleItemList = mapGenerator.GetItemList(this);
+
+            enemyList = mapGenerator.GetEnemyList(this);
+
         }
     }
 }

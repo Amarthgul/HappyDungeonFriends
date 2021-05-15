@@ -12,5 +12,10 @@ namespace HappyDungeon
     /// </summary>
     public interface IAgent
     {
+
+        Globals.Direction HandleBlockCollision(Globals.Direction FacingDir);
+
+        void Update(MC MainChara);
+
     }
 }

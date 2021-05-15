@@ -51,6 +51,11 @@ namespace HappyDungeon
         public ImageFile goldOnGround;
         public ImageFile goldOnGroundFX;
 
+        // ================================================================================
+        // ================================== Enemies =====================================
+        // ================================================================================ 
+        public ImageFile enemyBead; 
+
         private static TextureFactory instance = new TextureFactory();
 
         public static TextureFactory Instance {
@@ -101,6 +106,9 @@ namespace HappyDungeon
             goldOnGround = new ImageFile(content, "Images/Items/goldOnGround", 4, 4);
             goldOnGroundFX = new ImageFile(content, "Images/Items/goldOnGroundFX", 4, 4);
 
+            // --------------------------------------------------------------------------------
+            // ---------------------------------- Enemies -------------------------------------
+            enemyBead = new ImageFile(content, "Images/Enemies/bead", 4, 4);
         }
 
         /// <summary>
