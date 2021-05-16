@@ -44,6 +44,7 @@ namespace HappyDungeon
         public const int ONE_FRAME = 1;
         public const int FRAME_CYCLE = 4;  // By default each animation cycle has 4 frames 
         public static Vector2 SPRITE_OFFSET_2 = new Vector2(-2 * Globals.SCALAR, -2 * Globals.SCALAR);
+        public static Vector2 SPRITE_OFFSET_UNIT = new Vector2(-ORIG_UNIT * Globals.SCALAR, -ORIG_UNIT * Globals.SCALAR);
 
         // ================================================================================
         // ============================== Levels and Rooms ================================
@@ -90,8 +91,9 @@ namespace HappyDungeon
         public const float ITEM_LAYER = 0.45f;       // items are always beneth 
         public const float MC_LAYER = 0.5f;          // Main character 
         public const float ENEMY_LAYER = 0.51f;      // Enemies always "on top of" the player 
-        public const float MAP_OVERLAY = 0.6f;      // Overlay of the border for door obscure effect 
-        public const float FOW_LAYER = 0.65f;         // Fog of War
+        public const float ITEM_EFFECT_LAYER = 0.52f;
+        public const float MAP_OVERLAY = 0.6f;       // Overlay of the border for door obscure effect 
+        public const float FOW_LAYER = 0.65f;        // Fog of War
         
 
         public const float UI_UNDER = 0.75f;         // Down-most layer for UI

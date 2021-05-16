@@ -24,6 +24,8 @@ namespace HappyDungeon
 
         public ImageFile mcWalk;
         public ImageFile mcTorchWalk;
+        public ImageFile mcAttack;
+        public ImageFile mcAttackTorch; 
 
         // ================================================================================
         // ================================= UI elements ==================================
@@ -47,6 +49,7 @@ namespace HappyDungeon
         // ================================================================================ 
         public ImageFile itemTorch;
         public ImageFile itemTorchFlame;
+        public ImageFile itemTorchAttackFlame;
         public ImageFile itemTorchShadow;
         public ImageFile goldOnGround;
         public ImageFile goldOnGroundFX;
@@ -81,6 +84,8 @@ namespace HappyDungeon
 
             mcWalk = new ImageFile(content, "Images/MC/MC_walk", 4, 4);
             mcTorchWalk = new ImageFile(content, "Images/MC/MC_walk_Torch", 4, 4);
+            mcAttack = new ImageFile(content, "Images/MC/MC_attack_bare", 4, 4);
+            mcAttackTorch = new ImageFile(content, "Images/MC/MC_attack_torch", 4, 4);
 
             // --------------------------------------------------------------------------------
             // --------------------------------- UI elements ----------------------------------
@@ -102,9 +107,11 @@ namespace HappyDungeon
             // ----------------------------------- Items --------------------------------------
             itemTorch = new ImageFile(content, "Images/Items/item_torch", 4, 4);
             itemTorchFlame = new ImageFile(content, "Images/Items/torchFlame", 4, 4);
+            itemTorchAttackFlame = new ImageFile(content, "Images/Items/torchFlameAttack", 4, 4);
             itemTorchShadow = new ImageFile(content, "Images/Items/torchShhadows", 4, 4);
             goldOnGround = new ImageFile(content, "Images/Items/goldOnGround", 4, 4);
             goldOnGroundFX = new ImageFile(content, "Images/Items/goldOnGroundFX", 4, 4);
+            
 
             // --------------------------------------------------------------------------------
             // ---------------------------------- Enemies -------------------------------------

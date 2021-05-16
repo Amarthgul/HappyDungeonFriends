@@ -21,7 +21,7 @@ namespace HappyDungeon.Commands
             if(game.mainChara.canTurn[(int)Direction])
                 game.mainChara.ChangeDirection(Direction);
 
-            if (!game.mainChara.isMoving)
+            if (!game.mainChara.moveRestricted)
                 game.mainChara.Move();
         }
     }

@@ -26,6 +26,8 @@ namespace HappyDungeon
                 {Keys.Down, new MoveDownCommand(game)},
                 {Keys.Right, new MoveRightCommand(game)},
 
+                {Keys.A, new AttackCommand(game)},
+
                 {Keys.Tab, new DisplayMapCommand(game)},
                 {Keys.LeftAlt, new AltDisplayCommand(game)},
             };

@@ -46,7 +46,7 @@ namespace HappyDungeon
         public Vector2 position { set; get; }
         public Globals.Direction facingDir;
 
-        public bool isMoving;                   // This field is for limiting movement to only 1 direction 
+        public bool moveRestricted;                   // This field is for limiting movement to only 1 direction 
         public bool[] canTurn = new bool[] { true, true, true, true };
         private Stopwatch[] dirStopwatches = new Stopwatch[] { new Stopwatch() , new Stopwatch() , new Stopwatch() , new Stopwatch() };
         private long[] dirTimers = new long[] { 0, 0, 0, 0 }; 
@@ -68,21 +68,33 @@ namespace HappyDungeon
         private bool recoverImmunity = false; 
         private Stopwatch damageProtectionSW;
         private long damageRecoverTimer;
-        private int recoverTime = 1500; 
+        private int recoverTime = 1500;
+
+        private bool canAttack = true;
+        private Stopwatch attackSW;
+        private long attackIntervalTimer;
+        private int attackInterval = 500; 
 
         // ================================================================================
         // ============================= Drawing and textures =============================
         // ================================================================================
         private GeneralSprite walking;
-        private GeneralSprite walkingWithTorch; 
+        private GeneralSprite attack;
+        private GeneralSprite walkingWithTorch;
+        private GeneralSprite attackWithTorch; 
         // The sprite to use 
-        private GeneralSprite currentWalkingSprite;
+        private GeneralSprite currentMainSprite;
+        private GeneralSprite lastMainSprite; 
 
         private GeneralSprite torchFlame;
-        private GeneralSprite torchShadow; 
-        private List<GeneralSprite> additionalSprites; 
+        private GeneralSprite torchShadow;
+        private GeneralSprite torchAttackFlame;
+        private List<GeneralSprite> additionalSprites; // Select some and add them into this for draw and update 
+        private List<GeneralSprite> lastAddSprites; 
 
         private Color defaultTint = Color.White;
+        private Color damagedTint = Color.Red;
+        private Color tintNow; 
 
 
         // ================================================================================
@@ -131,11 +143,13 @@ namespace HappyDungeon
 
             primaryState = primaryTypes.None;
             mcState = Globals.GeneralStates.Hold; // Start as on hold 
-            isMoving = false;
+            moveRestricted = false;
 
             damageProtectionSW = new Stopwatch();
             damageProtectionSW.Restart();
-            damageRecoverTimer = 0; 
+            damageRecoverTimer = 0;
+
+            attackSW = new Stopwatch();
 
             currentHealth = (int)(MAX_HEALTH * INIT_HP_RATIO);
             pastHealth = -1; 
@@ -163,11 +177,12 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Invoke the player to try to move.
+        /// Invoke the character to try to move.
+        /// This is when the character tried to move, not being forced to displace. 
         /// </summary>
         public void Move()
         {
-            isMoving = true; // Set to tru so only 1 direction is moving at a time 
+            moveRestricted = true; // Set to tru so only 1 direction is moving at a time 
             mcState = Globals.GeneralStates.Moving;
             stagedMovement = new Vector2(0, 0);
 
@@ -189,14 +204,8 @@ namespace HappyDungeon
                     break; 
             }
 
-            currentWalkingSprite.rowLimitation = (int)facingDir;
-            currentWalkingSprite.Update(); // so that the animation plays only when a key being pressed
-
-            foreach (GeneralSprite sprite in additionalSprites)
-            {
-                sprite.rowLimitation = (int)facingDir;
-            }
-            
+            currentMainSprite.rowLimitation = (int)facingDir;
+            currentMainSprite.Update(); // so that the animation plays only when a key being pressed
             
         }
 
@@ -227,7 +236,24 @@ namespace HappyDungeon
 
         public void Attack()
         {
+            if(mcState != Globals.GeneralStates.Attack && canAttack)
+            {
+                mcState = Globals.GeneralStates.Attack;
 
+                lastMainSprite = currentMainSprite;
+                attack.rowLimitation = (int)facingDir;
+                currentMainSprite = AttackSprite();
+
+                lastAddSprites.Clear();
+                foreach (GeneralSprite GS in additionalSprites)
+                    lastAddSprites.Add(GS);
+
+                additionalSprites = AttackSpriteExtra();
+
+                attackSW.Restart();
+                attackIntervalTimer = 0; 
+                canAttack = false; 
+            }
         }
 
         /// <summary>
@@ -239,9 +265,9 @@ namespace HappyDungeon
             if(primaryState != primaryTypes.Torch)
             {
                 primaryState = primaryTypes.Torch;
-                currentWalkingSprite = walkingWithTorch;
+                currentMainSprite = walkingWithTorch;
 
-                currentWalkingSprite.rowLimitation = walking.rowLimitation;
+                currentMainSprite.rowLimitation = walking.rowLimitation;
                 torchFlame.rowLimitation = walking.rowLimitation;
                 torchShadow.rowLimitation = walking.rowLimitation;
 
@@ -251,8 +277,8 @@ namespace HappyDungeon
             else
             {
                 primaryState = primaryTypes.None;
-                currentWalkingSprite = walking;
-                currentWalkingSprite.rowLimitation = walkingWithTorch.rowLimitation;
+                currentMainSprite = walking;
+                currentMainSprite.rowLimitation = walkingWithTorch.rowLimitation;
 
                 additionalSprites.Clear();
             }
@@ -327,19 +353,17 @@ namespace HappyDungeon
 
             switch (mcState)
             {
-                case Globals.GeneralStates.Hold:
-                    break;
-                case Globals.GeneralStates.Moving:
-                    break;
+                
                 case Globals.GeneralStates.Attack:
-                    break;
-                case Globals.GeneralStates.Damaged:
+                    UpdateAttack();
                     break;
                 case Globals.GeneralStates.Broken: // Broken can not move and can do no shit
                     return; 
                 default:
                     break; 
             }
+
+            currentMainSprite.rowLimitation = (int)facingDir; 
 
             // Check and send singal if collides with enemy 
             enemyCollisionCheck.CheckEnemyCollision(GetRectangle());
@@ -357,7 +381,7 @@ namespace HappyDungeon
             collisionRect.Y = (int)(position.Y + collisionOffset.Y);
 
             stagedMovement = new Vector2(0, 0);
-            isMoving = false; // Set back to false for next movement  
+            moveRestricted = false; // Set back to false for next movement  
 
             currentHealth += ContinuedHealthReduction(); 
 
@@ -372,12 +396,18 @@ namespace HappyDungeon
 
         public void Draw()
         {
-            currentWalkingSprite.Draw(spriteBatch, position, defaultTint);
+            if (damageInflictCounter % 2 == 0 && damageInflictionOn)
+                tintNow = damagedTint;
+            else
+                tintNow = defaultTint;
+
+            currentMainSprite.Draw(spriteBatch, position, tintNow);
 
             foreach (GeneralSprite sprite in additionalSprites)
             {
                 sprite.Draw(spriteBatch, position, defaultTint);
             }
+            
         }
 
         // ================================================================================
@@ -391,16 +421,25 @@ namespace HappyDungeon
         {
             // Initlize all IMs 
             ImageFile WalkingIM = TextureFactory.Instance.mcWalk;
+            ImageFile Attack = TextureFactory.Instance.mcAttack;
             ImageFile WWT = TextureFactory.Instance.mcTorchWalk; // Walking With Torch 
+            ImageFile AWT = TextureFactory.Instance.mcAttackTorch;
+
             ImageFile iTF = TextureFactory.Instance.itemTorchFlame;
             ImageFile iTS = TextureFactory.Instance.itemTorchShadow;
+            ImageFile iTAF = TextureFactory.Instance.itemTorchAttackFlame;
 
+            lastAddSprites = new List<GeneralSprite>();
             additionalSprites = new List<GeneralSprite>();
 
             // Creating all sprites 
             walking = new GeneralSprite(WalkingIM.texture, WalkingIM.C, WalkingIM.R,
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
             walkingWithTorch = new GeneralSprite(WWT.texture, WWT.C, WWT.R,
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
+            attack = new GeneralSprite(Attack.texture, Attack.C, Attack.R,
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
+            attackWithTorch = new GeneralSprite(AWT.texture, AWT.C, AWT.R,
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
 
             torchFlame = new GeneralSprite(iTF.texture, iTF.C, iTF.R,
@@ -411,7 +450,11 @@ namespace HappyDungeon
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER - 0.01f);
             torchFlame.positionOffset = Globals.SPRITE_OFFSET_2;
 
-            currentWalkingSprite = walking;
+            torchAttackFlame = new GeneralSprite(iTAF.texture, iTAF.C, iTAF.R,
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_EFFECT_LAYER);
+            torchAttackFlame.positionOffset = Globals.SPRITE_OFFSET_UNIT;
+
+            currentMainSprite = walking;
 
         }
 
@@ -420,8 +463,10 @@ namespace HappyDungeon
         /// </summary>
         private void UpdateAllSprites()
         {
+
             foreach (GeneralSprite sprite in additionalSprites)
             {
+                sprite.rowLimitation = (int)facingDir;
                 sprite.Update();
             }
         }
@@ -453,6 +498,50 @@ namespace HappyDungeon
             {
                 recoverImmunity = false;
             }
+        }
+
+        private void UpdateAttack()
+        {
+            attackIntervalTimer = attackSW.ElapsedMilliseconds;
+            attack.Update();
+
+            if(attackIntervalTimer > attackInterval)
+            {
+                canAttack = true;
+
+                additionalSprites.Clear();
+                foreach (GeneralSprite GS in lastAddSprites)
+                    additionalSprites.Add(GS);
+
+                mcState = Globals.GeneralStates.Hold;
+                currentMainSprite = lastMainSprite;
+            }
+        }
+
+        private GeneralSprite AttackSprite()
+        {
+            switch (primaryState)
+            {
+                case primaryTypes.Torch:
+                    return attackWithTorch;
+                default:
+                    return attack;
+            }
+        }
+        private List<GeneralSprite> AttackSpriteExtra()
+        {
+            List<GeneralSprite> AttackExtraList = new List<GeneralSprite>();
+
+            switch (primaryState)
+            {
+                case primaryTypes.Torch:
+                    AttackExtraList.Add(torchAttackFlame);
+                    break;
+                default:
+                    break;
+            }
+
+            return AttackExtraList; 
         }
 
         /// <summary>
@@ -616,7 +705,7 @@ namespace HappyDungeon
         /// When a damage is being delt to the character, calculate the sequence of damage 
         /// to be delt in the following 8 updates, displays as animated health reduction. 
         /// </summary>
-        /// <param name="TotalDamage"></param>
+        /// <param name="TotalDamage">If it's dealing damage, pass a negative number</param>
         private void MarkDamgeInfliction(int TotalDamage)
         {
             int Division = 12; 
@@ -636,8 +725,10 @@ namespace HappyDungeon
                 for (int i = 0; i < INFLICT_MAX_COUNTER; i++)
                     DamageInflictSequence[i] = Math.Min(i, INFLICT_MAX_COUNTER - 1 - i) * SinglePart;
                 // Allow me to leave 2 magic number here, it's to deal with the peak of damage
-                // And ensure the division does not reduce total damage due to remainders 
-                DamageInflictSequence[4] = damageInflictedTotal - 8 * SinglePart;
+                // And ensure the division does not reduce total damage due to remainders. 
+                // One damage instance is splited into 0, 1, 2, 3, x, 2, 1, 0 parts 
+                // and this entry is the `x`
+                DamageInflictSequence[4] = damageInflictedTotal - 9 * SinglePart;
             }
 
         }
@@ -664,7 +755,7 @@ namespace HappyDungeon
             DamageInflictedNow = DamageInflictSequence[damageInflictCounter];
 
             if (damageInflictCounter > 0)
-                pastHealth = currentHealth + DamageInflictSequence[damageInflictCounter - 1]; 
+                pastHealth = currentHealth + DamageInflictSequence[damageInflictCounter - 1];
 
             damageInflictCounter++;
 

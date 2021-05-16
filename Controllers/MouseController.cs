@@ -61,6 +61,12 @@ namespace HappyDungeon
             {
                 game.minimap.TabClick(CurrentLocation);
                 game.headsupDisplay.CheckLeftClick(CurrentLocation);
+
+                if (game.displayWholeMinimap != 1)
+                {
+                    game.mainChara.Attack();
+                }
+                    
             }
             else
             {

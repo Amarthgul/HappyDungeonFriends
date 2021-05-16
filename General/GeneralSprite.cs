@@ -96,7 +96,7 @@ namespace HappyDungeon
             Rectangle sourceRectangle = new Rectangle(textureWidth * column, textureHeight * row, 
                 textureWidth, textureHeight);
 
-            spriteBatch.Draw(selfTexture, location + positionOffset, sourceRectangle, defaultTine * opacity, 
+            spriteBatch.Draw(selfTexture, location + positionOffset, sourceRectangle, color * opacity, 
                 0f, Vector2.Zero, scaleCof, SpriteEffects.None, layer);
 
         }
