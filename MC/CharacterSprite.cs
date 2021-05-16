@@ -11,21 +11,19 @@ namespace HappyDungeon
 {
     class CharacterSprite
     {
-        Game1 game; 
+        Game1 game;
+        private SpriteBatch spriteBatch;
 
         private GeneralSprite walking;
         private GeneralSprite attack;
         private GeneralSprite walkingWithTorch;
         private GeneralSprite attackWithTorch;
-        // The sprite to use 
-        private GeneralSprite currentMainSprite;
-        private GeneralSprite lastMainSprite;
 
         private GeneralSprite torchFlame;
         private GeneralSprite torchShadow;
         private GeneralSprite torchAttackFlame;
-        private List<GeneralSprite> additionalSprites;  
-        private List<GeneralSprite> lastAddSprites;
+
+        private List<GeneralSprite> allSprites; 
 
         private Color defaultTint = Color.White;
         private Color damagedTint = Color.Red;
@@ -38,6 +36,7 @@ namespace HappyDungeon
         public CharacterSprite(Game1 G)
         {
             game = G;
+            spriteBatch = game.spriteBatch;
 
             LoadAllSprites();
         }
@@ -53,9 +52,6 @@ namespace HappyDungeon
             ImageFile iTF = TextureFactory.Instance.itemTorchFlame;
             ImageFile iTS = TextureFactory.Instance.itemTorchShadow;
             ImageFile iTAF = TextureFactory.Instance.itemTorchAttackFlame;
-
-            lastAddSprites = new List<GeneralSprite>();
-            additionalSprites = new List<GeneralSprite>();
 
             // Creating all sprites 
             walking = new GeneralSprite(WalkingIM.texture, WalkingIM.C, WalkingIM.R,
@@ -79,14 +75,133 @@ namespace HappyDungeon
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_EFFECT_LAYER);
             torchAttackFlame.positionOffset = Globals.SPRITE_OFFSET_UNIT;
 
-            currentMainSprite = walking;
+            allSprites = new List<GeneralSprite>() { 
+                walking,
+                walkingWithTorch,
+                attack,
+                attackWithTorch,
+                torchFlame, 
+                torchShadow, 
+                torchAttackFlame
+            };
 
         }
 
-
-        public void Draw()
+        private void ChangeAllSpriteDir()
         {
+            foreach (GeneralSprite GS in allSprites)
+            {
+                GS.rowLimitation = (int)facingDir;
+            }
+        }
 
+        private void UpdateSelectedSprites()
+        {
+            switch (mcState)
+            {
+                case Globals.GeneralStates.Attack:
+                    attackWithTorch.Update();
+                    torchAttackFlame.Update();
+                    attack.Update();
+                    torchShadow.Update();
+                    break;
+                case Globals.GeneralStates.Broken: // Broken can not move and can do no shit
+                    break;
+                case Globals.GeneralStates.Damaged: // Broken can not move and can do no shit
+                    break;
+                case Globals.GeneralStates.Hold: // Broken can not move and can do no shit
+                    break;
+                case Globals.GeneralStates.Moving: // Broken can not move and can do no shit
+                    walking.Update();
+                    torchFlame.Update();
+                    torchShadow.Update();
+                    walkingWithTorch.Update();
+                    break;
+                case Globals.GeneralStates.Stunned: // Broken can not move and can do no shit
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private List<GeneralSprite> GetSpritesNow()
+        {
+            List<GeneralSprite> SpriteList = new List<GeneralSprite>();
+
+            switch (mcState)
+            {
+                case Globals.GeneralStates.Attack:
+                    if(primaryState == MC.primaryTypes.Torch)
+                    {
+                        SpriteList.Add(attackWithTorch);
+                        SpriteList.Add(torchAttackFlame);
+                        SpriteList.Add(torchShadow);
+                    }
+                    else
+                    {
+                        SpriteList.Add(attack);
+                    }
+                        
+                    break;
+                case Globals.GeneralStates.Broken:
+                    break;
+                case Globals.GeneralStates.Damaged:
+                    SpriteList.Add(walking);
+                    break;
+                case Globals.GeneralStates.Hold:
+                    SpriteList = HoldAndMoving();
+                    break;
+                case Globals.GeneralStates.Moving:
+                    SpriteList = HoldAndMoving();
+                    break;
+                case Globals.GeneralStates.Stunned:
+                    break;
+                default:
+                    break;
+            }
+
+            return SpriteList; 
+        }
+
+        private List<GeneralSprite> HoldAndMoving()
+        {
+            List<GeneralSprite> SpriteList = new List<GeneralSprite>();
+            if (primaryState == MC.primaryTypes.Torch)
+            {
+                SpriteList.Add(walkingWithTorch);
+                SpriteList.Add(torchFlame);
+                SpriteList.Add(torchShadow);
+            }
+            else
+            {
+                SpriteList.Add(walking);
+            }
+            return SpriteList; 
+        }
+
+
+        public void RefreshAttack()
+        {
+            attack.currentFrame = 0;
+            attackWithTorch.currentFrame = 0;
+            torchAttackFlame.currentFrame = 0;
+        }
+
+        public void Update(Globals.Direction D, Globals.GeneralStates S, MC.primaryTypes P)
+        {
+            facingDir = D;
+            mcState = S;
+            primaryState = P;
+
+            ChangeAllSpriteDir();
+            UpdateSelectedSprites();
+
+        }
+
+        public void Draw(SpriteBatch SB, Vector2 P)
+        {
+            foreach (GeneralSprite GS in GetSpritesNow())
+                GS.Draw(SB, P, defaultTint);
         }
     }
 }

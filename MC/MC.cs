@@ -11,8 +11,7 @@ namespace HappyDungeon
 {
     /// <summary>
     /// Main character. 
-    /// Due to some design flaws, there are more sprites than there should be. 
-    /// You can see this in LoadAllSprites().
+    /// Most of the code here are merely behaviral, the sprites are dealt in CharacterSprite class. 
     /// </summary>
     public class MC
     {
@@ -73,29 +72,12 @@ namespace HappyDungeon
         private bool canAttack = true;
         private Stopwatch attackSW;
         private long attackIntervalTimer;
-        private int attackInterval = 500; 
+        private int attackInterval = 500;
 
         // ================================================================================
         // ============================= Drawing and textures =============================
         // ================================================================================
-        private GeneralSprite walking;
-        private GeneralSprite attack;
-        private GeneralSprite walkingWithTorch;
-        private GeneralSprite attackWithTorch; 
-        // The sprite to use 
-        private GeneralSprite currentMainSprite;
-        private GeneralSprite lastMainSprite; 
-
-        private GeneralSprite torchFlame;
-        private GeneralSprite torchShadow;
-        private GeneralSprite torchAttackFlame;
-        private List<GeneralSprite> additionalSprites; // Select some and add them into this for draw and update 
-        private List<GeneralSprite> lastAddSprites; 
-
-        private Color defaultTint = Color.White;
-        private Color damagedTint = Color.Red;
-        private Color tintNow; 
-
+        private CharacterSprite selfSprite; 
 
         // ================================================================================
         // ============================= States and parameters ============================
@@ -134,7 +116,8 @@ namespace HappyDungeon
             collisionRect = new Rectangle((int)collisionOffset.X, (int)collisionOffset.Y, 
                 (int)((1 - RECT_WIDTH_OFFSET * 2) * Globals.OUT_UNIT), (int)((1 - RECT_HEIGHT_OFFSET) * Globals.OUT_UNIT));
 
-            LoadAllSprites();
+
+            selfSprite = new CharacterSprite(game);
             
             // Collisions 
             blockCollisionCheck = new PlayerBlockCollision(game);
@@ -183,6 +166,7 @@ namespace HappyDungeon
         public void Move()
         {
             moveRestricted = true; // Set to tru so only 1 direction is moving at a time 
+            canAttack = false; 
             mcState = Globals.GeneralStates.Moving;
             stagedMovement = new Vector2(0, 0);
 
@@ -203,9 +187,6 @@ namespace HappyDungeon
                 default:
                     break; 
             }
-
-            currentMainSprite.rowLimitation = (int)facingDir;
-            currentMainSprite.Update(); // so that the animation plays only when a key being pressed
             
         }
 
@@ -240,18 +221,11 @@ namespace HappyDungeon
             {
                 mcState = Globals.GeneralStates.Attack;
 
-                lastMainSprite = currentMainSprite;
-                attack.rowLimitation = (int)facingDir;
-                currentMainSprite = AttackSprite();
-
-                lastAddSprites.Clear();
-                foreach (GeneralSprite GS in additionalSprites)
-                    lastAddSprites.Add(GS);
-
-                additionalSprites = AttackSpriteExtra();
+                selfSprite.RefreshAttack();
 
                 attackSW.Restart();
-                attackIntervalTimer = 0; 
+                attackIntervalTimer = 0;
+                moveRestricted = true; 
                 canAttack = false; 
             }
         }
@@ -265,22 +239,12 @@ namespace HappyDungeon
             if(primaryState != primaryTypes.Torch)
             {
                 primaryState = primaryTypes.Torch;
-                currentMainSprite = walkingWithTorch;
 
-                currentMainSprite.rowLimitation = walking.rowLimitation;
-                torchFlame.rowLimitation = walking.rowLimitation;
-                torchShadow.rowLimitation = walking.rowLimitation;
-
-                additionalSprites.Add(torchFlame);
-                additionalSprites.Add(torchShadow);
             }
             else
             {
                 primaryState = primaryTypes.None;
-                currentMainSprite = walking;
-                currentMainSprite.rowLimitation = walkingWithTorch.rowLimitation;
 
-                additionalSprites.Clear();
             }
         }
 
@@ -363,7 +327,6 @@ namespace HappyDungeon
                     break; 
             }
 
-            currentMainSprite.rowLimitation = (int)facingDir; 
 
             // Check and send singal if collides with enemy 
             enemyCollisionCheck.CheckEnemyCollision(GetRectangle());
@@ -383,7 +346,9 @@ namespace HappyDungeon
             stagedMovement = new Vector2(0, 0);
             moveRestricted = false; // Set back to false for next movement  
 
-            currentHealth += ContinuedHealthReduction(); 
+            currentHealth += ContinuedHealthReduction();
+
+            selfSprite.Update(facingDir, mcState, primaryState);
 
             Regulate();
             UpdateTurnCD();
@@ -391,85 +356,21 @@ namespace HappyDungeon
 
             CheckBoundary();
 
-            UpdateAllSprites();
+            if (mcState == Globals.GeneralStates.Moving)
+            {
+                mcState = Globals.GeneralStates.Hold;
+                canAttack = true;
+            }
         }
 
         public void Draw()
         {
-            if (damageInflictCounter % 2 == 0 && damageInflictionOn)
-                tintNow = damagedTint;
-            else
-                tintNow = defaultTint;
-
-            currentMainSprite.Draw(spriteBatch, position, tintNow);
-
-            foreach (GeneralSprite sprite in additionalSprites)
-            {
-                sprite.Draw(spriteBatch, position, defaultTint);
-            }
-            
+            selfSprite.Draw(spriteBatch, position);
         }
 
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================
-
-        /// <summary>
-        /// Since there are a lot of sprites, they are being loaded in this separate method.
-        /// </summary>
-        private void LoadAllSprites()
-        {
-            // Initlize all IMs 
-            ImageFile WalkingIM = TextureFactory.Instance.mcWalk;
-            ImageFile Attack = TextureFactory.Instance.mcAttack;
-            ImageFile WWT = TextureFactory.Instance.mcTorchWalk; // Walking With Torch 
-            ImageFile AWT = TextureFactory.Instance.mcAttackTorch;
-
-            ImageFile iTF = TextureFactory.Instance.itemTorchFlame;
-            ImageFile iTS = TextureFactory.Instance.itemTorchShadow;
-            ImageFile iTAF = TextureFactory.Instance.itemTorchAttackFlame;
-
-            lastAddSprites = new List<GeneralSprite>();
-            additionalSprites = new List<GeneralSprite>();
-
-            // Creating all sprites 
-            walking = new GeneralSprite(WalkingIM.texture, WalkingIM.C, WalkingIM.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
-            walkingWithTorch = new GeneralSprite(WWT.texture, WWT.C, WWT.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
-            attack = new GeneralSprite(Attack.texture, Attack.C, Attack.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
-            attackWithTorch = new GeneralSprite(AWT.texture, AWT.C, AWT.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
-
-            torchFlame = new GeneralSprite(iTF.texture, iTF.C, iTF.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER + 0.01f);
-            torchFlame.positionOffset = Globals.SPRITE_OFFSET_2;
-
-            torchShadow = new GeneralSprite(iTS.texture, iTS.C, iTS.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER - 0.01f);
-            torchFlame.positionOffset = Globals.SPRITE_OFFSET_2;
-
-            torchAttackFlame = new GeneralSprite(iTAF.texture, iTAF.C, iTAF.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_EFFECT_LAYER);
-            torchAttackFlame.positionOffset = Globals.SPRITE_OFFSET_UNIT;
-
-            currentMainSprite = walking;
-
-        }
-
-        /// <summary>
-        /// Since player is always visible, additional sprites can be updated all the time. 
-        /// </summary>
-        private void UpdateAllSprites()
-        {
-
-            foreach (GeneralSprite sprite in additionalSprites)
-            {
-                sprite.rowLimitation = (int)facingDir;
-                sprite.Update();
-            }
-        }
 
         /// <summary>
         /// Release the directions frozen if enough time have passed.
@@ -503,45 +404,14 @@ namespace HappyDungeon
         private void UpdateAttack()
         {
             attackIntervalTimer = attackSW.ElapsedMilliseconds;
-            attack.Update();
+
 
             if(attackIntervalTimer > attackInterval)
             {
                 canAttack = true;
-
-                additionalSprites.Clear();
-                foreach (GeneralSprite GS in lastAddSprites)
-                    additionalSprites.Add(GS);
-
+                moveRestricted = false;
                 mcState = Globals.GeneralStates.Hold;
-                currentMainSprite = lastMainSprite;
             }
-        }
-
-        private GeneralSprite AttackSprite()
-        {
-            switch (primaryState)
-            {
-                case primaryTypes.Torch:
-                    return attackWithTorch;
-                default:
-                    return attack;
-            }
-        }
-        private List<GeneralSprite> AttackSpriteExtra()
-        {
-            List<GeneralSprite> AttackExtraList = new List<GeneralSprite>();
-
-            switch (primaryState)
-            {
-                case primaryTypes.Torch:
-                    AttackExtraList.Add(torchAttackFlame);
-                    break;
-                default:
-                    break;
-            }
-
-            return AttackExtraList; 
         }
 
         /// <summary>

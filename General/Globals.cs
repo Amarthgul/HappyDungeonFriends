@@ -134,8 +134,9 @@ namespace HappyDungeon
         public enum GameStates { TitleScreen, Running, RoomTransitioning, Setting, Bag, GameOver, Conversation }
         public enum GameLevel { Delight, Joy, Bliss };
         public enum GameDifficulty { Idiot, Normal };
-        public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Dead }
+        public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Stunned, Dead }
         public enum DamageEffect { Stun, Knockback, Break, None };
+        public enum DamageType { None, Burn };
 
         public enum Language { English, Spanish, Chinese, Japanese };
 

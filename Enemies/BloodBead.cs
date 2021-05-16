@@ -39,7 +39,9 @@ namespace HappyDungeon
         private GeneralSprite beadSprite;
         private Color defaultTint = Color.White;
         private float layerOnTop = Globals.ENEMY_LAYER;
-        private float layerAtBack = Globals.ENEMY_LAYER - 0.02f; 
+        private float layerAtBack = Globals.ENEMY_LAYER - 0.02f;
+
+        private Globals.EnemyTypes selfType = Globals.EnemyTypes.Minion;
 
         public BloodBead(Game1 G, Vector2 P)
         {
