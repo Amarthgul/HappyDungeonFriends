@@ -102,7 +102,7 @@ namespace HappyDungeon
         // ================================================================================
         private bool Untouchable = false; // Controls damge taking, as in ContinuedHealthReduction
 
-        private enum primaryTypes { None, Torch };
+        public enum primaryTypes { None, Torch };
         private primaryTypes primaryState;
         public Globals.GeneralStates mcState { set; get; }
         public int currentHealth;

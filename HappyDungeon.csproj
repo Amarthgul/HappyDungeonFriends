@@ -89,6 +89,7 @@
     <Compile Include="Levels\RandomGeneration\RoomGraph.cs" />
     <Compile Include="Levels\Room.cs" />
     <Compile Include="Levels\RoomInfo.cs" />
+    <Compile Include="MC\CharacterSprite.cs" />
     <Compile Include="MC\MC.cs" />
     <Compile Include="Misc\DrawRectangle.cs" />
     <Compile Include="Misc\Misc.cs" />
