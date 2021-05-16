@@ -77,6 +77,15 @@ namespace HappyDungeon
         {
             return 0; 
         }
+        public General.Modifiers.IModifier GetPickupModifier()
+        {
+            return null;
+        }
+
+        public General.Modifiers.IModifier GetOutputModifier()
+        {
+            return null;
+        }
 
         public Globals.ItemType SelfType()
         {

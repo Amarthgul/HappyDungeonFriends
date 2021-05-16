@@ -34,7 +34,7 @@ namespace HappyDungeon
         private int sideShrink = 2 * Globals.SCALAR;
         private Rectangle movingHorizontal;
         private Rectangle movingVertical;
-        private EnemyBlockCollision enemyBlockCollison; // Stupid think it's the MC 
+        private EnemyBlockCollision enemyBlockCollison; 
 
         private GeneralSprite beadSprite;
         private Color defaultTint = Color.White;
@@ -42,6 +42,10 @@ namespace HappyDungeon
         private float layerAtBack = Globals.ENEMY_LAYER - 0.02f;
 
         private Globals.EnemyTypes selfType = Globals.EnemyTypes.Minion;
+
+        private Enemies.EnemyHealthBar HPBar; 
+        private int totalHealth = 20;
+        private int currentHealth = 20; 
 
         public BloodBead(Game1 G, Vector2 P)
         {
@@ -52,6 +56,8 @@ namespace HappyDungeon
 
             LoadSprites();
             UpdateRect();
+
+            HPBar = new Enemies.EnemyHealthBar(game, selfType);
 
             brainAgent = new Enemies.AgentStupid(this);
             enemyBlockCollison = new EnemyBlockCollision(game);
@@ -107,6 +113,7 @@ namespace HappyDungeon
             beadSprite.layer = DrawLayer;
 
             brainAgent.Update(MainChara);
+            HPBar.Update(totalHealth, currentHealth) ;
 
             Move();
             if (enemyBlockCollison.ValidMove(GetStagedRectangle()))
@@ -128,6 +135,8 @@ namespace HappyDungeon
         public void Draw()
         {
             beadSprite.Draw(spriteBatch, position, defaultTint);
+
+            HPBar.Draw(position);
         }
 
         public Rectangle GetRectangle()

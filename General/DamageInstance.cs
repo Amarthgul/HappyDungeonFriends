@@ -13,7 +13,9 @@ namespace HappyDungeon
 
         public int DamageCount;
 
-        public Globals.DamageEffect[] effects;
+        public Globals.DamageEffect[] effects; // Can have more than 1 damage effect
+
+        public Globals.DamageType damageType;  // Cannot have more than 1 damage type
 
         public double knowckbackDist = 0;
 

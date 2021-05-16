@@ -57,7 +57,7 @@ namespace HappyDungeon
             Globals.OUT_FHEIGHT / 2 + Globals.OUT_UNIT);
 
         // ================================================================================
-        // =================================== Interactions ===============================
+        // ================================= Interactions =================================
         // ================================================================================
 
         private PlayerBlockCollision blockCollisionCheck;
@@ -70,27 +70,33 @@ namespace HappyDungeon
         private int recoverTime = 1500;
 
         private bool canAttack = true;
-        private Stopwatch attackSW;
-        private long attackIntervalTimer;
-        private int attackInterval = 500;
+        private Stopwatch attackInternalSW;
+        private long attackInternalCDTimer;
+        private int attackInternalCD = 500;
+
+        private Stopwatch attackExternalSW;
+        private int attackExternalCD = 1500;
 
         // ================================================================================
         // ============================= Drawing and textures =============================
         // ================================================================================
-        private CharacterSprite selfSprite; 
+        private CharacterSprite selfSprite; // Shit's a own class
 
         // ================================================================================
         // ============================= States and parameters ============================
         // ================================================================================
         private bool Untouchable = false; // Controls damge taking, as in ContinuedHealthReduction
-
-        public enum primaryTypes { None, Torch };
-        private primaryTypes primaryState;
+        
+        public Globals.primaryTypes primaryState;
         public Globals.GeneralStates mcState { set; get; }
         public int currentHealth;
         public int pastHealth;          // For the headsup display to signify the damage 
         public int currentMaxHP;
-        public int moveSpeed;
+
+        public int moveSpeedBaseline = 1 * Globals.SCALAR;
+        public int attackDamageBaseline = 5;
+        public int meleeRangeBaseline = 8; // Half of a unit 
+
         public int pickupDistance = 2;  // Not having to completely reach an item to pick it up. In original unit
 
         // For decresing the HP with animation instead of suddenly drops 
@@ -124,7 +130,7 @@ namespace HappyDungeon
             itemCollisionCheck = new PlayerItemCollision(game);
             enemyCollisionCheck = new PlayerEnemyCollision(game);
 
-            primaryState = primaryTypes.None;
+            primaryState = Globals.primaryTypes.None;
             mcState = Globals.GeneralStates.Hold; // Start as on hold 
             moveRestricted = false;
 
@@ -132,12 +138,13 @@ namespace HappyDungeon
             damageProtectionSW.Restart();
             damageRecoverTimer = 0;
 
-            attackSW = new Stopwatch();
+            attackExternalSW = new Stopwatch();
+            attackInternalSW = new Stopwatch();
+            attackExternalSW.Restart();
 
             currentHealth = (int)(MAX_HEALTH * INIT_HP_RATIO);
             pastHealth = -1; 
             currentMaxHP = MAX_HEALTH;
-            moveSpeed = 1 * Globals.SCALAR;
         }
 
         // ================================================================================
@@ -170,19 +177,21 @@ namespace HappyDungeon
             mcState = Globals.GeneralStates.Moving;
             stagedMovement = new Vector2(0, 0);
 
+            int StagedMove = moveSpeedBaseline;
+
             switch (facingDir)
             {
                 case Globals.Direction.Left:
-                    stagedMovement.X -= moveSpeed;
+                    stagedMovement.X -= StagedMove;
                     break;
                 case Globals.Direction.Right:
-                    stagedMovement.X += moveSpeed;
+                    stagedMovement.X += StagedMove;
                     break;
                 case Globals.Direction.Up:
-                    stagedMovement.Y -= moveSpeed;
+                    stagedMovement.Y -= StagedMove;
                     break;
                 case Globals.Direction.Down:
-                    stagedMovement.Y += moveSpeed;
+                    stagedMovement.Y += StagedMove;
                     break;
                 default:
                     break; 
@@ -215,6 +224,11 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// Try to issue an attack. 
+        /// If holding an ranged primary item, then this issues an projectile.
+        /// If holding an melee primary item, the collision is being performed in other methods.
+        /// </summary>
         public void Attack()
         {
             if(mcState != Globals.GeneralStates.Attack && canAttack)
@@ -223,8 +237,8 @@ namespace HappyDungeon
 
                 selfSprite.RefreshAttack();
 
-                attackSW.Restart();
-                attackIntervalTimer = 0;
+                attackInternalSW.Restart();
+                attackInternalCDTimer = 0;
                 moveRestricted = true; 
                 canAttack = false; 
             }
@@ -236,14 +250,14 @@ namespace HappyDungeon
         /// </summary>
         public void ToggleTorch()
         {
-            if(primaryState != primaryTypes.Torch)
+            if(primaryState != Globals.primaryTypes.Torch)
             {
-                primaryState = primaryTypes.Torch;
+                primaryState = Globals.primaryTypes.Torch;
 
             }
             else
             {
-                primaryState = primaryTypes.None;
+                primaryState = Globals.primaryTypes.None;
 
             }
         }
@@ -255,7 +269,7 @@ namespace HappyDungeon
         /// <returns>If the character is in Illuminati mode</returns>
         public bool Illuminati()
         {
-            return primaryState == primaryTypes.Torch;
+            return primaryState == Globals.primaryTypes.Torch;
         }
 
         /// <summary>
@@ -288,7 +302,7 @@ namespace HappyDungeon
                 {
                     case Globals.DamageEffect.Break:
                         break;
-                    case Globals.DamageEffect.Knockback:
+                    case Globals.DamageEffect.Knockback: // instant knockback
                         position += MaxKnockbackDist(DirFrom, DMG.knowckbackDist);
                         break;
                     case Globals.DamageEffect.Stun:
@@ -304,10 +318,16 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// On entering a new room, refresh the player to basic status
+        /// </summary>
+        /// <param name="G">Game 1 refresher</param>
         public void Refresh(Game1 G)
         {
             game = G;
             blockCollisionCheck = new PlayerBlockCollision(game);
+            enemyCollisionCheck = new PlayerEnemyCollision(game);
+            itemCollisionCheck = new PlayerItemCollision(game);
 
             mcState = Globals.GeneralStates.Hold;
         }
@@ -320,6 +340,7 @@ namespace HappyDungeon
                 
                 case Globals.GeneralStates.Attack:
                     UpdateAttack();
+                    MeleeAttackCheck();
                     break;
                 case Globals.GeneralStates.Broken: // Broken can not move and can do no shit
                     return; 
@@ -328,30 +349,15 @@ namespace HappyDungeon
             }
 
 
-            // Check and send singal if collides with enemy 
-            enemyCollisionCheck.CheckEnemyCollision(GetRectangle());
-            
-            // Handle collision with blocks 
-            if (blockCollisionCheck.ValidMove(GetStagedRectangle()) && CanPassDoors())
-            {
-                position += stagedMovement;
-            }
-               
-            // Check and handle item pick up
-            itemCollisionCheck.CheckItemCollision(GetPickupRectangle());
+            UpdateCollisionsAndMovements();
 
-            collisionRect.X = (int)(position.X + collisionOffset.X);
-            collisionRect.Y = (int)(position.Y + collisionOffset.Y);
+            currentHealth += ContinuedHealthReduction(); // TODO: make it into a method
 
-            stagedMovement = new Vector2(0, 0);
-            moveRestricted = false; // Set back to false for next movement  
-
-            currentHealth += ContinuedHealthReduction();
-
-            selfSprite.Update(facingDir, mcState, primaryState);
+            // Update sprites 
+            selfSprite.Update(facingDir, mcState, primaryState, damageInflictionOn);
 
             Regulate();
-            UpdateTurnCD();
+            UpdateCD();
             UpdateDamgeRecoverProtection();
 
             CheckBoundary();
@@ -359,7 +365,7 @@ namespace HappyDungeon
             if (mcState == Globals.GeneralStates.Moving)
             {
                 mcState = Globals.GeneralStates.Hold;
-                canAttack = true;
+                moveRestricted = false; // Set back to false for next movement  
             }
         }
 
@@ -373,9 +379,33 @@ namespace HappyDungeon
         // ================================================================================
 
         /// <summary>
+        /// Check all collision realted stuff, including movement 
+        /// </summary>
+        private void UpdateCollisionsAndMovements()
+        {
+            // Handle collision with blocks 
+            if (blockCollisionCheck.ValidMove(GetStagedRectangle()) && CanPassDoors())
+            {
+                position += stagedMovement;
+            }
+
+            collisionRect.X = (int)(position.X + collisionOffset.X);
+            collisionRect.Y = (int)(position.Y + collisionOffset.Y);
+
+            // Clear off the staged movement
+            stagedMovement = new Vector2(0, 0);
+
+            // Check and handle item pick up
+            itemCollisionCheck.CheckItemCollision(GetPickupRectangle());
+
+            // Check and send singal if collides with enemy 
+            enemyCollisionCheck.CheckEnemyCollision(GetRectangle());
+        }
+
+        /// <summary>
         /// Release the directions frozen if enough time have passed.
         /// </summary>
-        private void UpdateTurnCD()
+        private void UpdateCD()
         {
             for (int i = 0; i < dirTimers.Length; i++)
             {
@@ -385,6 +415,12 @@ namespace HappyDungeon
                 {
                     canTurn[i] = true;
                 }
+            }
+
+            if (attackExternalSW.ElapsedMilliseconds > attackExternalCD)
+            {
+                canAttack = true;
+                attackExternalSW.Restart();
             }
         }
 
@@ -401,17 +437,24 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// When an attck is issued, the character goes into attack state. 
+        /// This methods checks if the attack is over. 
+        /// </summary>
         private void UpdateAttack()
         {
-            attackIntervalTimer = attackSW.ElapsedMilliseconds;
+            attackInternalCDTimer = attackInternalSW.ElapsedMilliseconds;
 
-
-            if(attackIntervalTimer > attackInterval)
+            if(attackInternalCDTimer > attackInternalCD)
             {
-                canAttack = true;
                 moveRestricted = false;
                 mcState = Globals.GeneralStates.Hold;
             }
+        }
+
+        private void MeleeAttackCheck()
+        {
+
         }
 
         /// <summary>
@@ -574,14 +617,15 @@ namespace HappyDungeon
         /// <summary>
         /// When a damage is being delt to the character, calculate the sequence of damage 
         /// to be delt in the following 8 updates, displays as animated health reduction. 
+        /// The input is for INSTANT DAMGE only, DoT are counted separately. 
         /// </summary>
         /// <param name="TotalDamage">If it's dealing damage, pass a negative number</param>
         private void MarkDamgeInfliction(int TotalDamage)
         {
             int Division = 12; 
-            int SinglePart = TotalDamage / Division;
+            int SinglePart = game.spellSlots.DamageReceivingModifier(TotalDamage) / Division;
             damageInflictedTotal = TotalDamage;
-            damageInflictionOn = true;
+            damageInflictionOn = true; // TODO: overlaping damge 
             damageInflictCounter = 0;
             DamageInflictSequence = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
             

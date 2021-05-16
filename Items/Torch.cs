@@ -133,6 +133,19 @@ namespace HappyDungeon
             return selfIndex;
         }
 
+        public General.Modifiers.IModifier GetPickupModifier()
+        {
+            return new General.Modifiers.ModifierTorch();
+        }
+
+        public General.Modifiers.IModifier GetOutputModifier()
+        {
+            if (game.mainChara.primaryState != Globals.primaryTypes.Torch)
+                return null; 
+
+            return new General.Modifiers.ModifierBurn(5);
+        }
+
         public Globals.ItemType SelfType()
         {
             return selfType;

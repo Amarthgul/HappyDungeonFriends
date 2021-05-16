@@ -127,6 +127,8 @@ namespace HappyDungeon
 
         public static Random RND = new Random();
 
+        public enum primaryTypes { None, Torch };
+
         public enum RoomTypes { Start, Boss, Merchant, Normal };
         public enum EnemyTypes { Minion, Elite, Boss };
         public enum ItemType { Primary, Usable, Junk };
@@ -135,6 +137,7 @@ namespace HappyDungeon
         public enum GameLevel { Delight, Joy, Bliss };
         public enum GameDifficulty { Idiot, Normal };
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Stunned, Dead }
+        public enum AttackType { Melee, Ranged, Target, None };
         public enum DamageEffect { Stun, Knockback, Break, None };
         public enum DamageType { None, Burn };
 

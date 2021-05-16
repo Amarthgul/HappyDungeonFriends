@@ -25,6 +25,8 @@ namespace HappyDungeon
         private bool primaryReady = true;
         private bool[] itemsReady = new bool[] { true, true, true };
 
+        private ModifierCollection modifiers;
+
         private Stopwatch stopwatch = new Stopwatch();
         private long timer;
 
@@ -88,9 +90,13 @@ namespace HappyDungeon
             {
                 if (itemSlots[i] != null && itemSlots[i].GetCount() <= 0)
                 {
+                    if (itemSlots[i].GetPickupModifier() != null)
+                        modifiers.Remove(itemSlots[i].GetPickupModifier());
+
                     itemSlots[i] = null;
                     game.headsupDisplay.SetItemSlot(null, i);
                     game.bagItemList.Remove(itemSlots[i]);
+                    
                 }
             }
 
@@ -115,7 +121,9 @@ namespace HappyDungeon
                 {
                     if (CanPutInUsable(Item) && itemSlots[i] == null)
                     {
-                        itemSlots[i] = Item; 
+                        itemSlots[i] = Item;
+                        if(Item.GetPickupModifier() != null)
+                            modifiers.Add(Item.GetPickupModifier());
                     }
                 }
             }
@@ -141,6 +149,11 @@ namespace HappyDungeon
                 primaryReady = true;
                 timer = 0; 
             }
+        }
+
+        public int DamageReceivingModifier(int IncomingDamage)
+        {
+            return IncomingDamage; 
         }
     }
 }

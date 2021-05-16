@@ -64,6 +64,10 @@ namespace HappyDungeon
         /// <returns>Count of the item</returns>
         int GetCount();
 
+        General.Modifiers.IModifier GetPickupModifier();
+
+        General.Modifiers.IModifier GetOutputModifier();
+
         /// <summary>
         /// Each item has an item index denoting what it is,
         /// note that this index is not unique per item in game. 

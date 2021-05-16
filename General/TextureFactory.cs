@@ -57,6 +57,7 @@ namespace HappyDungeon
         // ================================================================================
         // ================================== Enemies =====================================
         // ================================================================================ 
+        public ImageFile healthBarMinions; 
         public ImageFile enemyBead; 
 
         private static TextureFactory instance = new TextureFactory();
@@ -111,10 +112,11 @@ namespace HappyDungeon
             itemTorchShadow = new ImageFile(content, "Images/Items/torchShhadows", 4, 4);
             goldOnGround = new ImageFile(content, "Images/Items/goldOnGround", 4, 4);
             goldOnGroundFX = new ImageFile(content, "Images/Items/goldOnGroundFX", 4, 4);
-            
+
 
             // --------------------------------------------------------------------------------
             // ---------------------------------- Enemies -------------------------------------
+            healthBarMinions = new ImageFile(content, "Images/Enemies/HPBM", 1, 1);
             enemyBead = new ImageFile(content, "Images/Enemies/bead", 4, 4);
         }
 

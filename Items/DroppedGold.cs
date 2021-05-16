@@ -149,6 +149,15 @@ namespace HappyDungeon
             return selfIndex;
         }
 
+        public General.Modifiers.IModifier GetPickupModifier()
+        {
+            return null; 
+        }
+        public General.Modifiers.IModifier GetOutputModifier()
+        {
+            return null; 
+        }
+
         public Globals.ItemType SelfType()
         {
             return selfType;
