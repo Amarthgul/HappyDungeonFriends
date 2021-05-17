@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 15 May 2021: 
+Update 17 May 2021: 
 
-Enemy class added, damges dealt by exchanging a damage instance. 
+Can now attack and deal damage to the enemies. A health bar is displayed on top of enemy is damaged. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/TTbbfQH.png" width="512">
