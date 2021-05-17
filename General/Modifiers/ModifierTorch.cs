@@ -35,6 +35,11 @@ namespace HappyDungeon.General.Modifiers
             return 5;
         }
 
+        public Globals.DamageEffect DamageDealtEffects()
+        {
+            return Globals.DamageEffect.None;
+        }
+
         public int MeleeRangeModifier()
         {
             return 8;

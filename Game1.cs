@@ -353,8 +353,8 @@ namespace HappyDungeon
 
             foreach (IEnemy enemy in enemyList)
             {
-                
-                enemy.Draw();
+                if (Misc.Instance.EnemyFogBreaker(enemy, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                    enemy.Draw();
             }
 
             mainChara.Draw();

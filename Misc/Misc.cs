@@ -111,6 +111,36 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Check if an enemy can be seen. 
+        /// </summary>
+        /// <param name="Enemy">Enemy to be checked</param>
+        /// <param name="PlayerRect">Rectangle of the player</param>
+        /// <param name="VisibleRange">Visible range of the fog</param>
+        /// <returns>True if it can be seen</returns>
+        public bool EnemyFogBreaker(IEnemy Enemy, Rectangle PlayerRect, float VisibleRange)
+        {
+            bool result = false;
+            int Threshold = (int)(VisibleRange * Globals.OUT_UNIT);
+            Rectangle EnemyRect = Enemy.GetRectangle();
+            Vector2 PlayerCenter = new Vector2(
+                PlayerRect.X + PlayerRect.Width / 2,
+                PlayerRect.Y + PlayerRect.Height / 2);
+
+            foreach (float LocX in new float[] { EnemyRect.X, EnemyRect.X + EnemyRect.Width })
+            {
+                foreach (float LocY in new float[] { EnemyRect.Y, EnemyRect.Y + EnemyRect.Height })
+                {
+                    if (L2Distance(new Vector2(LocX, LocY), PlayerCenter) < Threshold)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Translate the tile position of row and column to the absolute position
         /// in the game window, as in pixel locations. 
         /// </summary>

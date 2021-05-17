@@ -46,6 +46,7 @@
     <Compile Include="Collisions\PlayerBlockCollision.cs" />
     <Compile Include="Collisions\PlayerEnemyCollision.cs" />
     <Compile Include="Collisions\PlayerItemCollision.cs" />
+    <Compile Include="Collisions\PlayerMeleeAttackCollision.cs" />
     <Compile Include="Commands\AltDisplayCommand.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DisplayMapCommand.cs" />

@@ -17,6 +17,8 @@ namespace HappyDungeon.General.Modifiers
 
         int DamageDealtModifer();
 
+        Globals.DamageEffect DamageDealtEffects();
+
         int DamageOverTime();
 
         Globals.AttackType AttackModifier();

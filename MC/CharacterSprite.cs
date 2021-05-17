@@ -69,6 +69,7 @@ namespace HappyDungeon
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
             attackWithTorch = new GeneralSprite(AWT.texture, AWT.C, AWT.R,
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER);
+            attackWithTorch.frameDelay = 50; 
 
             torchFlame = new GeneralSprite(iTF.texture, iTF.C, iTF.R,
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.MC_LAYER + 0.01f);
@@ -81,6 +82,7 @@ namespace HappyDungeon
             torchAttackFlame = new GeneralSprite(iTAF.texture, iTAF.C, iTAF.R,
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_EFFECT_LAYER);
             torchAttackFlame.positionOffset = Globals.SPRITE_OFFSET_UNIT;
+            torchAttackFlame.frameDelay = 50;
 
             allSprites = new List<GeneralSprite>() { 
                 walking,

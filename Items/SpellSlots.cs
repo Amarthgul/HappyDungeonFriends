@@ -33,6 +33,8 @@ namespace HappyDungeon
         public SpellSlots(Game1 G)
         {
             game = G;
+
+            modifiers = new ModifierCollection();
         }
 
         /// <summary>
@@ -114,6 +116,9 @@ namespace HappyDungeon
             {
                 primary = Item;
                 game.headsupDisplay.SetPrimary(CopySprite(Item));
+
+                if (Item.GetPickupModifier() != null)
+                    modifiers.Add(Item.GetPickupModifier());
             }
             else
             {
@@ -154,6 +159,41 @@ namespace HappyDungeon
         public int DamageReceivingModifier(int IncomingDamage)
         {
             return IncomingDamage; 
+        }
+
+        /// <summary>
+        /// Find the attack type of the character. 
+        /// If no modifier is on then by default returns none. 
+        /// </summary>
+        /// <returns>Type of attack, mainly melee or ranged</returns>
+        public Globals.AttackType GetAttackType()
+        {
+            if (modifiers.IsEmpty()) return Globals.AttackType.Melee;
+
+            return modifiers.AttackTypeModifier();
+        }
+
+        /// <summary>
+        /// Find out the melee attack range of the character.
+        /// </summary>
+        /// <returns>Melee range bounus by all modifiers</returns>
+        public int GetMeleeAttackRange()
+        {
+            return modifiers.MeleeRangeModifier();
+        }
+
+        /// <summary>
+        /// Create a damage instance for the chsracter's melee attack. 
+        /// </summary>
+        /// <param name="MeleeDamge">Baseline damage</param>
+        /// <returns>A damage instance with modifier effects</returns>
+        public DamageInstance PlayerMeleeDamageInstance(int MeleeDamge)
+        {
+            int TotalInstantDamage = MeleeDamge + modifiers.DamageDealtModifer();
+
+            DamageInstance DMG = new DamageInstance(-TotalInstantDamage, modifiers.DamageDealtEffectModifer());
+
+            return DMG; 
         }
     }
 }

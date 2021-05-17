@@ -29,7 +29,6 @@ namespace HappyDungeon
         private int toleranceDistance = 1 * Globals.SCALAR;
         private int rowChoice;
         private bool expressionOn = false;
-        private bool experssionProtection = false;
         private Stopwatch stopwatch = new Stopwatch();
         private int interval = 5000;
         private int experssionLastingTime = 1000; 
@@ -62,19 +61,19 @@ namespace HappyDungeon
 
         public void Update()
         {
+
             if (expressionOn)
             {
-                // If it's doinf the face 
-                blockSprite.colLimitation = 9;
+                // If it's doing the face 
                 blockSprite.Update();
 
                 timer = stopwatch.ElapsedMilliseconds; 
-
                 if (timer > experssionLastingTime)
                 {
-                    blockSprite.totalFrames = 1; 
+                    blockSprite.totalFrames = 1;
+                    blockSprite.colLimitation = -1;
+                    blockSprite.currentFrame = 0;
                     expressionOn = false;
-                    experssionProtection = false;
 
                     interval = Globals.RND.Next(RAND_MIN, RAND_MAX);
                     stopwatch.Restart();
@@ -109,11 +108,13 @@ namespace HappyDungeon
                     else blockSprite.colLimitation = 2; // At Right 
                 }
 
-                timer = stopwatch.ElapsedMilliseconds; 
-                if (timer > interval && !experssionProtection && Globals.RND.Next(100) < POSSIBILITY)
-                {
+                // If enought time has passed, do the faces again
+                timer = stopwatch.ElapsedMilliseconds;
+                if (timer > interval && Globals.RND.Next(100) < POSSIBILITY)
+                {   // Start doing the face 
                     expressionOn = true;
-                    experssionProtection = true;
+                    blockSprite.colLimitation = 9;
+                    blockSprite.currentFrame = 0;
                     blockSprite.totalFrames = 7;
                     blockSprite.stopwatch.Restart();
 
@@ -121,15 +122,15 @@ namespace HappyDungeon
                     timer = 0;
                 }
             }
+
         }
 
 
         public void Draw()
         {
             
-            blockSprite.Draw(spriteBatch, position, defaultTint);
 
-            blockSprite.colLimitation = 0; // Switch back to 
+            blockSprite.Draw(spriteBatch, position, defaultTint);
         }
 
         public Rectangle GetRectangle()

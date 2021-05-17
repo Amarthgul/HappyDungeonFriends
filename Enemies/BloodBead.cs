@@ -45,7 +45,9 @@ namespace HappyDungeon
 
         private Enemies.EnemyHealthBar HPBar; 
         private int totalHealth = 20;
-        private int currentHealth = 20; 
+        private int currentHealth = 20;
+        private Stopwatch damageProtectionSW = new Stopwatch();
+        private int recoverTime = 1000;
 
         public BloodBead(Game1 G, Vector2 P)
         {
@@ -65,6 +67,8 @@ namespace HappyDungeon
             currentMoveIndex = 0;
             facingDir = (Globals.Direction)(Globals.RND.Next() % 4);
             beadSprite.rowLimitation = (int)facingDir;
+
+            damageProtectionSW.Restart();
         }
 
         public void Turn(Globals.Direction NewDir)
@@ -96,6 +100,16 @@ namespace HappyDungeon
 
             beadSprite.rowLimitation = (int)facingDir;
             beadSprite.Update();
+        }
+
+        public void TakeDamage(DamageInstance Damage)
+        {
+            if(damageProtectionSW.ElapsedMilliseconds > recoverTime)
+            {
+                currentHealth += Damage.DamageCount;
+                damageProtectionSW.Restart();
+            }
+            
         }
 
         public void Update(MC MainChara)
@@ -136,7 +150,10 @@ namespace HappyDungeon
         {
             beadSprite.Draw(spriteBatch, position, defaultTint);
 
-            HPBar.Draw(position);
+            if(currentHealth != totalHealth)
+            {
+                HPBar.Draw(position);
+            }
         }
 
         public Rectangle GetRectangle()

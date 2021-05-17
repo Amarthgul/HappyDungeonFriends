@@ -19,6 +19,11 @@ namespace HappyDungeon
             modifierList = new List<General.Modifiers.IModifier>();
         }
 
+        public bool IsEmpty()
+        {
+            return modifierList.Count == 0; 
+        }
+
         public int Regen()
         {
             int TotalRegen = 0;
@@ -61,10 +66,37 @@ namespace HappyDungeon
 
             foreach (General.Modifiers.IModifier M in modifierList)
             {
-                DamageBonus += M.Regen();
+                DamageBonus += M.DamageDealtModifer();
             }
 
             return DamageBonus;
+        }
+
+        public int MeleeRangeModifier()
+        {
+            int RangeBonus = 0;
+
+            foreach (General.Modifiers.IModifier M in modifierList)
+            {
+                RangeBonus += M.MeleeRangeModifier();
+            }
+
+            return RangeBonus;
+        }
+
+        public Globals.DamageEffect[] DamageDealtEffectModifer()
+        {
+            List<Globals.DamageEffect> EffectList = new List<Globals.DamageEffect>(); ;
+
+            foreach (General.Modifiers.IModifier M in modifierList)
+            {
+                if(M.DamageDealtEffects() != Globals.DamageEffect.None)
+                {
+                    EffectList.Add(M.DamageDealtEffects());
+                }
+            }
+
+            return EffectList.ToArray();
         }
 
         public int DamageOverTime()
@@ -79,7 +111,7 @@ namespace HappyDungeon
             return DoT;
         }
 
-        public Globals.AttackType AttackModifier()
+        public Globals.AttackType AttackTypeModifier()
         {
             Globals.AttackType defaultType = Globals.AttackType.None;
 

@@ -70,12 +70,13 @@ namespace HappyDungeon
         private int recoverTime = 1500;
 
         private bool canAttack = true;
+        private bool canRangedAttack = false;
         private Stopwatch attackInternalSW;
         private long attackInternalCDTimer;
-        private int attackInternalCD = 500;
+        private int attackInternalCD = 250;
 
         private Stopwatch attackExternalSW;
-        private int attackExternalCD = 1500;
+        private int attackExternalCD = 500;
 
         // ================================================================================
         // ============================= Drawing and textures =============================
@@ -337,10 +338,9 @@ namespace HappyDungeon
 
             switch (mcState)
             {
-                
                 case Globals.GeneralStates.Attack:
                     UpdateAttack();
-                    MeleeAttackCheck();
+                    CommitAttack();
                     break;
                 case Globals.GeneralStates.Broken: // Broken can not move and can do no shit
                     return; 
@@ -439,22 +439,34 @@ namespace HappyDungeon
 
         /// <summary>
         /// When an attck is issued, the character goes into attack state. 
-        /// This methods checks if the attack is over. 
+        /// This methods checks if the attack hits anything and if it is over. 
         /// </summary>
         private void UpdateAttack()
         {
             attackInternalCDTimer = attackInternalSW.ElapsedMilliseconds;
-
             if(attackInternalCDTimer > attackInternalCD)
             {
                 moveRestricted = false;
                 mcState = Globals.GeneralStates.Hold;
+                if (game.spellSlots.GetAttackType() == Globals.AttackType.Ranged)
+                    canRangedAttack = true;
             }
+
+            if (game.spellSlots.GetAttackType() == Globals.AttackType.Melee)
+            {
+                new PlayerMeleeAttackCollision(game).CheckMeleeAttack(facingDir, meleeRangeBaseline,
+                    attackDamageBaseline, position);
+            }
+
         }
 
-        private void MeleeAttackCheck()
+        private void CommitAttack()
         {
-
+            if (game.spellSlots.GetAttackType() == Globals.AttackType.Ranged)
+            {
+                // Add projectile here 
+                canRangedAttack = false;
+            }
         }
 
         /// <summary>
