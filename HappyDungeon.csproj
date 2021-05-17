@@ -89,12 +89,13 @@
     <Compile Include="Levels\LevelCycling.cs" />
     <Compile Include="Levels\RandomGeneration\GenerateLevel.cs" />
     <Compile Include="Levels\RandomGeneration\GeneratePlacement.cs" />
-    <Compile Include="Levels\RandomGeneration\GenerateDelightRoom.cs" />
+    <Compile Include="Levels\RandomGeneration\GenerateRoomDelight.cs" />
     <Compile Include="Levels\RandomGeneration\GenerateRoomBasics.cs" />
     <Compile Include="Levels\RandomGeneration\RoomDB.cs" />
     <Compile Include="Levels\RandomGeneration\RoomGraph.cs" />
     <Compile Include="Levels\Room.cs" />
     <Compile Include="Levels\RoomInfo.cs" />
+    <Compile Include="Levels\RoomTextureGenerator.cs" />
     <Compile Include="MC\CharacterSprite.cs" />
     <Compile Include="MC\MC.cs" />
     <Compile Include="Misc\DrawRectangle.cs" />

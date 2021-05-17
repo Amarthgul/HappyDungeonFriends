@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace HappyDungeon
 {
     /// <summary>
-    /// Utility methods of many purposes 
+    /// Utility methods of many purposes. 
     /// </summary>
     public class Misc
     {
@@ -49,6 +49,13 @@ namespace HappyDungeon
                     return Globals.Direction.None;
             }
         }
+
+        // ================================================================================
+        // ============================= Distance calculation =============================
+        // ================================================================================
+
+        // Splitting items, blocks, and enemies because some of the special cases
+        // might require special treatment 
 
         /// <summary>
         /// Check if the block can be seen. 
@@ -139,6 +146,10 @@ namespace HappyDungeon
 
             return result;
         }
+
+        // ================================================================================
+        // ==================================== Misc ======================================
+        // ================================================================================
 
         /// <summary>
         /// Translate the tile position of row and column to the absolute position

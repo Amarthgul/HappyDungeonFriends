@@ -12,13 +12,13 @@ namespace HappyDungeon
     /// <summary>
     /// Generate or modify a single room in level delight 
     /// </summary>
-    class GenerateDelightRoom : Levels.GenerateRoomBasics
+    class GenerateRoomDelight : Levels.GenerateRoomBasics
     {
-        private bool _DEVMODE = true;
+        private bool _DEVMODE = false;
 
         public int[] tileList { get; set; } // For level delight
 
-        public GenerateDelightRoom()
+        public GenerateRoomDelight()
         {
             // Setup the template 
             roomDB = new Levels.RoomDB();
