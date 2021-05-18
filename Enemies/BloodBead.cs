@@ -49,6 +49,10 @@ namespace HappyDungeon
         private Stopwatch damageProtectionSW = new Stopwatch();
         private int recoverTime = 1000;
 
+        private bool startOfEnd = false; 
+        private Stopwatch deathSW = new Stopwatch();
+        private int lingeringTime = 750; 
+
         public BloodBead(Game1 G, Vector2 P)
         {
             game = G;
@@ -126,24 +130,39 @@ namespace HappyDungeon
             }
             beadSprite.layer = DrawLayer;
 
-            brainAgent.Update(MainChara);
-            HPBar.Update(totalHealth, currentHealth) ;
-
-            Move();
-            if (enemyBlockCollison.ValidMove(GetStagedRectangle()))
+            // Deal with live and die 
+            if (currentHealth <= 0)
             {
-                beadSprite.Update();
-                currentMoveIndex = beadSprite.currentFrame % Globals.FRAME_CYCLE;
-
-                position += stagedMovement;
-                stagedMovement = new Vector2(0, 0);
+                UpdateDeath();
             }
             else
             {
-                Turn(brainAgent.HandleBlockCollision(facingDir)) ;
+                // Change movement depending on player's stats 
+                brainAgent.Update(MainChara);
+
+
+                // Try to move 
+                Move();
+                // Turn if hit a block
+                if (enemyBlockCollison.ValidMove(GetStagedRectangle()))
+                {
+                    beadSprite.Update();
+                    currentMoveIndex = beadSprite.currentFrame % Globals.FRAME_CYCLE;
+
+                    position += stagedMovement;
+                    stagedMovement = new Vector2(0, 0);
+                }
+                else
+                {
+                    Turn(brainAgent.HandleBlockCollision(facingDir));
+                }
+
             }
 
+            // Update collision to follow the movement 
             UpdateRect();
+            // Update HP if necessary 
+            HPBar.Update(totalHealth, currentHealth);
         }
 
         public void Draw()
@@ -173,18 +192,27 @@ namespace HappyDungeon
             }
         }
 
+        public bool IsDead()
+        {
+            return (startOfEnd && deathSW.ElapsedMilliseconds > lingeringTime); 
+        }
+
         /// <summary>
         /// Return a damage instance of on collision. 
         /// </summary>
         /// <returns>DamageInstance object</returns>
         public DamageInstance DealCollisionDamage()
         {
+            if (currentHealth == 0)
+                return null; 
 
             DamageInstance DMG = new DamageInstance(collisionDMG, new Globals.DamageEffect [] { Globals.DamageEffect.Knockback });
             DMG.knowckbackDist = collisionDMG;
 
             return DMG;
         }
+
+
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================
@@ -240,6 +268,36 @@ namespace HappyDungeon
                 default:
                     CollisionRect = movingHorizontal;
                     break;
+            }
+        }
+
+        private void UpdateDeath()
+        {
+            if(!startOfEnd)
+            {
+                startOfEnd = true;
+                deathSW.Restart();
+                ImageFile BD = TextureFactory.Instance.enemyBeadDeath;
+                beadSprite = new GeneralSprite(BD.texture, BD.C, BD.R,
+                    Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
+                beadSprite.rowLimitation = (int)facingDir;
+                beadSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
+                beadSprite.currentFrame = 0; 
+            }
+            else
+            {
+                if(beadSprite.currentFrame != 3)
+                    beadSprite.Update();
+                else if(beadSprite.opacity > 0f)
+                {
+                    beadSprite.opacity -= 0.05f;
+                }
+
+                // Gradually fade out 
+                if(deathSW.ElapsedMilliseconds > lingeringTime)
+                {
+                    position = new Vector2(- Globals.OUT_UNIT, - Globals.OUT_UNIT); 
+                }
             }
         }
 

@@ -26,6 +26,10 @@ namespace HappyDungeon
 
             foreach (IEnemy enemy in enemyList)
             {
+                // Skip this one if it's dead 
+                if (enemy.IsDead())
+                    continue;
+
                 Rectangle Intersection = Rectangle.Intersect(PlayerCollisionRect, enemy.GetRectangle());
 
                 if (Intersection.Width > 0)

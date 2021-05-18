@@ -61,7 +61,8 @@ namespace HappyDungeon
         // ================================== Enemies =====================================
         // ================================================================================ 
         public ImageFile healthBarMinions; 
-        public ImageFile enemyBead; 
+        public ImageFile enemyBead;
+        public ImageFile enemyBeadDeath;
 
         private static TextureFactory instance = new TextureFactory();
 
@@ -129,6 +130,8 @@ namespace HappyDungeon
             // ---------------------------------- Enemies -------------------------------------
             healthBarMinions = new ImageFile(content, "Images/Enemies/HPBM", 1, 1);
             enemyBead = new ImageFile(content, "Images/Enemies/bead", 4, 4);
+            enemyBeadDeath = new ImageFile(content, "Images/Enemies/beadDeath", 4, 4);
+
         }
 
         /// <summary>

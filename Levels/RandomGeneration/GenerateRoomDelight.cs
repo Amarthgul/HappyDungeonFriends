@@ -14,7 +14,7 @@ namespace HappyDungeon
     /// </summary>
     class GenerateRoomDelight : Levels.GenerateRoomBasics
     {
-        private bool _DEVMODE = false;
+        private bool _DEVMODE = true;
 
         public int[] tileList { get; set; } // For level delight
 

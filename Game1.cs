@@ -284,7 +284,6 @@ namespace HappyDungeon
 
             foreach (IEnemy enemy in enemyList)
             {
-
                 enemy.Update(mainChara);
             }
 

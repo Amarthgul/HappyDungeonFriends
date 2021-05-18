@@ -21,6 +21,8 @@ namespace HappyDungeon
 
         Rectangle GetRectangle();
 
+        bool IsDead();
+
         DamageInstance DealCollisionDamage(); 
     }
 }

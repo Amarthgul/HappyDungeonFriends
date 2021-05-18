@@ -292,7 +292,8 @@ namespace HappyDungeon
         /// <param name="DirFrom">Which direction id the collision from</param>
         public void TakeCollisionDamage(DamageInstance DMG, Globals.Direction DirFrom)
         {
-            if (recoverImmunity)
+            // In some cases the collision damge might be a null
+            if (recoverImmunity || DMG == null)
                 return;
 
             MarkDamgeInfliction(DMG.DamageCount);
