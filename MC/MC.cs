@@ -460,6 +460,9 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// Start an attack, if the current type is ranged attack. 
+        /// </summary>
         private void CommitAttack()
         {
             if (game.spellSlots.GetAttackType() == Globals.AttackType.Ranged)

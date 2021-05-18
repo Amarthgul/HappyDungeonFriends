@@ -34,8 +34,10 @@ namespace HappyDungeon.Levels
         public Texture2D levelTexture;     // Can be accessed to make map transitioning 
         private Texture2D roomOverlay;
         private Texture2D blockAllMight;   // Containing all blocks 
+        private Texture2D groundOverlay; 
 
         private Color defaultColor = Color.Black;
+        private Color defaultTint = Color.White;
 
         public RoomTextureGenerator(Game1 G, RoomInfo RI)
         {
@@ -53,6 +55,7 @@ namespace HappyDungeon.Levels
             AlterTexture();
             UpdateDrawDoors();
             GenerateOverlay();
+
         }
 
         private void Load()
@@ -61,6 +64,10 @@ namespace HappyDungeon.Levels
                 Globals.ORIG_GWIDTH, Globals.ORIG_GHEIGHT, pixel => defaultColor);
 
             blockAllMight = TextureFactory.Instance.blockAllMight.texture;
+
+            groundOverlay = TextureFactory.Instance.roomDelightDirts[Globals.RND.Next() %
+                TextureFactory.Instance.roomDelightDirts.Length].texture;
+
         }
 
         /// <summary>
@@ -226,5 +233,12 @@ namespace HappyDungeon.Levels
             GenerateTexture();
             return levelTexture;
         }
+
+        public void DrawGroundOverlays()
+        {
+            spriteBatch.Draw(groundOverlay, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint,
+                    0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.GROUND_EFFECTS);
+        }
+
     }
 }

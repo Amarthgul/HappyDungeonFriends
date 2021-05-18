@@ -108,6 +108,7 @@
     <Compile Include="UI\Minimap.cs" />
     <Compile Include="UI\MouseCursor.cs" />
     <Compile Include="Items\TextDB\JunkItemTexts.cs" />
+    <Compile Include="UI\ScreenFX.cs" />
     <Compile Include="UI\TextGenerators\DigitsSmall.cs" />
     <Compile Include="UI\TextGenerators\IText.cs" />
     <Compile Include="UI\TextGenerators\LargeBR.cs" />

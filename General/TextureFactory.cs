@@ -14,11 +14,14 @@ namespace HappyDungeon
     {
         // Made all of them public b/c I'm lazy
 
+        public ImageFile screenDebug;
+
         // ================================================================================
         // ============================== Levels and env ==================================
         // ================================================================================ 
         public ImageFile blockAllMight;
         public ImageFile[] roomBorder;
+        public ImageFile[] roomDelightDirts; 
         public ImageFile roomDoors;
         public ImageFile fogOfWar;
 
@@ -74,10 +77,18 @@ namespace HappyDungeon
 
         public void LoadAll(ContentManager content){
 
+            screenDebug = new ImageFile(content, "Images/Levels/ScreenDebug", 1, 1);
+
             blockAllMight = new ImageFile(content, "Images/Levels/blockAllMight", 16, 16);
             roomBorder =  new ImageFile[] { 
                 new ImageFile(content, "Images/Levels/bloodBorder1", 1, 1), 
                 new ImageFile(content, "Images/Levels/bloodBorder2", 1, 1)
+                };
+            roomDelightDirts = new ImageFile[] {
+                new ImageFile(content, "Images/Levels/DelightDirt1", 1, 1),
+                new ImageFile(content, "Images/Levels/DelightDirt2", 1, 1),
+                new ImageFile(content, "Images/Levels/DelightDirt3", 1, 1),
+                new ImageFile(content, "Images/Levels/DelightDirt4", 1, 1)
                 };
             roomDoors = new ImageFile(content, "Images/Levels/bloodDoors", 4, 5);
             fogOfWar = new ImageFile(content, "Images/Levels/FoW", 1, 1);

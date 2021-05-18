@@ -159,6 +159,8 @@ namespace HappyDungeon
                 spriteBatch.Draw(levelTexture, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint, 
                     0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_LAYER);
 
+                roomTexture.DrawGroundOverlays();
+
                 spriteBatch.Draw(roomOverlay, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint,
                     0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_OVERLAY);
             }

@@ -87,6 +87,7 @@ namespace HappyDungeon
         // It is quite easy for monogame to mess it up when 2 draw calls are in same layer
         // so I tried to be as specific as possible 
         public const float MAP_LAYER = 0.1f;         // The beackground/maps/rooms
+        public const float GROUND_EFFECTS = 0.11f; 
         public const float BLOCKS_LAYER = 0.2f;      // Blocks and evnironments 
         public const float ITEM_LAYER = 0.45f;       // items are always beneth 
         public const float MC_LAYER = 0.5f;          // Main character 
