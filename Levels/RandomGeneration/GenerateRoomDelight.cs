@@ -16,6 +16,8 @@ namespace HappyDungeon
     {
         private bool _DEVMODE = true;
 
+        private const int DELIGHT_ENEMY_MAX = 5; 
+
         public int[] tileList { get; set; } // For level delight
 
         public GenerateRoomDelight()
@@ -24,7 +26,7 @@ namespace HappyDungeon
             roomDB = new Levels.RoomDB();
 
             enemyList = new int[]{
-             
+                Globals.ENEMY_BEAD
             };
             itemList = new int[] {
              
@@ -83,8 +85,8 @@ namespace HappyDungeon
 
 
             // Amount of enemy in this room 
-            int enemyCount = (int)(ENEMY_MAX * (
-                (double)distFromStartup / Math.Pow(room.Arrangement.GetLength(0), 1)));
+            int enemyCount = (int)(DELIGHT_ENEMY_MAX * ((double)distFromStartup 
+                / Math.Pow(room.Arrangement.GetLength(0), 1)));
 
             int Count = 0;
             int Threshold = (int)(enemyCount / Globals.RTILE_ROW * Globals.RTILE_COLUMN) + ENEMY_SPAWN_BIAS;
@@ -93,11 +95,12 @@ namespace HappyDungeon
             {
                 for (int j = 0; j < room.Arrangement.GetLength(1); j++)
                 {
-                    //if (Globals.RND.Next(100) < Threshold && !IsBlock(i, j) && Count < enemyCount && canPlace[i, j])
-                    if (Globals.RND.Next(100) < Threshold
-                        && Count < enemyCount && roomDB.canPlaceDirect[i, j])
+                    if (Globals.RND.Next(100) < Threshold 
+                        && roomDB.NOT(roomDB.MaskedPath(room.OpenDoors))[i, j] 
+                        && Count < enemyCount 
+                        && roomDB.canPlaceDirect[i, j])
                     {
-                        //room.Arrangement[i, j] = enemyList[Globals.RND.Next(enemyList.Length)];
+                        room.Arrangement[i, j] = enemyList[Globals.RND.Next(enemyList.Length)];
                         Count++;
                     }
                 }

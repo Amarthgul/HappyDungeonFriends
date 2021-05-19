@@ -51,7 +51,8 @@ namespace HappyDungeon
 
         private bool startOfEnd = false; 
         private Stopwatch deathSW = new Stopwatch();
-        private int lingeringTime = 750; 
+        private int fadeStartTime = 1000;
+        private int lingeringTime = 1500; 
 
         public BloodBead(Game1 G, Vector2 P)
         {
@@ -288,7 +289,7 @@ namespace HappyDungeon
             {
                 if(beadSprite.currentFrame != 3)
                     beadSprite.Update();
-                else if(beadSprite.opacity > 0f)
+                else if(beadSprite.opacity > 0f && deathSW.ElapsedMilliseconds > fadeStartTime)
                 {
                     beadSprite.opacity -= 0.05f;
                 }
