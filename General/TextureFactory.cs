@@ -47,6 +47,8 @@ namespace HappyDungeon
         public ImageFile fontDigitsSmallB;
         public ImageFile fontLargeBR;
 
+        public ImageFile SFX_fly; 
+
         // ================================================================================
         // =================================== Items ======================================
         // ================================================================================ 
@@ -115,6 +117,8 @@ namespace HappyDungeon
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);
             fontLargeBR = new ImageFile(content, "Images/UI/Fonts/fontBigBR", 1, 1);
+
+            SFX_fly = new ImageFile(content, "Images/UI/fly", 4, 4);
 
             // --------------------------------------------------------------------------------
             // ----------------------------------- Items --------------------------------------

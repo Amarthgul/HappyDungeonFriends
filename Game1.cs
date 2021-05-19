@@ -53,7 +53,8 @@ namespace HappyDungeon
         // ================================================================================
         public HeadsupDisplay headsupDisplay; 
         public Minimap minimap;
-        public MouseCursor cursor; 
+        public MouseCursor cursor;
+        public ScreenFX screenFX; 
         public int displayWholeMinimap { set; get; }
 
         // ================================================================================
@@ -104,6 +105,7 @@ namespace HappyDungeon
             minimap.FlagExplored(roomCycler.GetCurrentLocationIndex());
             displayWholeMinimap = 0;
 
+            screenFX = new ScreenFX(this);
             headsupDisplay = new HeadsupDisplay(this);
             cursor = new MouseCursor(this);
 
@@ -293,6 +295,7 @@ namespace HappyDungeon
 
             fogOfWar.Update();
 
+            screenFX.Update();
             minimap.Update();
             headsupDisplay.Update();
         }
@@ -360,6 +363,7 @@ namespace HappyDungeon
 
             fogOfWar.Draw();
 
+            screenFX.Draw(mainChara.position);
             headsupDisplay.Draw();
             minimap.Draw();
 
