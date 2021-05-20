@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 19 May 2021: 
+Update 20 May 2021: 
 
-Flikers in visible area, enemy dies and fades away after killed. 
+Nothing gets done, I spent the whole day rewatching Gundam.  
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
