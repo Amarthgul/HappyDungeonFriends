@@ -182,6 +182,16 @@ namespace HappyDungeon.Levels
             { false, false, false, false, false, false, false, false, false, false, false, false}
         };
 
+        public bool[,] shihonzuki = new bool[,] {
+            { false, false, false, false, false, false, false, false, false, false, false, false},
+            { false, false, false, false, false, false, false, false, false, false, false, false},
+            { false, false, false, false, true , false, false, true , false, false, false, false},
+            { false, false, false, false, false, false, false, false, false, false, false, false},
+            { false, false, false, false, true , false, false, true , false, false, false, false},
+            { false, false, false, false, false, false, false, false, false, false, false, false},
+            { false, false, false, false, false, false, false, false, false, false, false, false}
+        };
+
         public bool[,] allFalse = new bool[,] {
             { false, false, false, false, false, false, false, false, false, false, false, false},
             { false, false, false, false, false, false, false, false, false, false, false, false},

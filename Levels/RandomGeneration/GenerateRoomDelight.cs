@@ -136,7 +136,6 @@ namespace HappyDungeon
             double FillPercentLinear = distFromStartup / (double)FillDivider; 
             double PathFillPercent = 1 - FillPercentLinear;
 
-
             bool[,] MaskedPath = roomDB.MaskedPath(room.OpenDoors);
             bool[,] NotPath = roomDB.NOT(MaskedPath);
             bool[,] CornerWights = roomDB.AND(roomDB.CornersWeighted(distFromStartup / 2), 
@@ -144,8 +143,11 @@ namespace HappyDungeon
             int[] SelectedTiles = new int[] { 0, 0, 0, 0, 0 };
             int[] NonPathTiles = new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
             int[] CompensateTiles = new int[] { 0, 0, 0, 0, 0 };
-            int[] CornerTiles = new int[] { 0, 0, 0, 0, 0 }; 
+            int[] CornerTiles = new int[] { 0, 0, 0, 0, 0 };
 
+            int[] StareBlocks = new int[] { Globals.STARE_BLOCK_1, Globals.STARE_BLOCK_2 };
+            int StareBlockThreshold = 6;
+            int StareBlockPossibility = 40; 
             
             // Select all tiles that would be needed for the cross pattern 
             for (int i = 0; i < VarityCount; i++)
@@ -165,6 +167,15 @@ namespace HappyDungeon
             PopulatePatternWeighted(NotPath, NonPathTiles, 
                 x => (Math.Max(x, x - 12) / 3), y => (Math.Max(y, y - 7)) / 3);
             PopulatePatternRand(CornerWights, CornerTiles, CornerTiles.Length);
+
+            // Put some stare blocks around the start up room 
+            if (Globals.RND.Next(100) < StareBlockPossibility && distFromStartup < StareBlockThreshold)
+            {
+                if (Globals.RND.Next(100) < 50)
+                    PopulatePattern(roomDB.shihonzuki, StareBlocks[Globals.RND.Next() % StareBlocks.Length]);
+                else
+                    PopulatePattern(roomDB.corners, StareBlocks[Globals.RND.Next() % StareBlocks.Length]);
+            }
 
             // Add paths in the room 
             PopulatePatternPartial(MaskedPath, SelectedTiles, PathFillPercent);
