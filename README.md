@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 20 May 2021: 
+Update 21 May 2021: 
 
-Nothing gets done, I spent the whole day rewatching Gundam.  
+Another day of doing nothing. Swords are fun to play. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
