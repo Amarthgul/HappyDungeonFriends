@@ -20,7 +20,7 @@ Currently still work in progress.
 
 Update 21 May 2021: 
 
-Another day of doing nothing. Swords are fun to play. 
+My ebay packages have arrived so another day of doing nothing. Cheers. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
