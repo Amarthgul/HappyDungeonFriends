@@ -156,6 +156,34 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// The first pass of damage instance processing. 
+        /// This methods examines all the modifiers and see if this whole damage instance need
+        /// to be changed, if so ,perform the change and return it. 
+        /// </summary>
+        /// <param name="DMGI">Original incoming damage instance</param>
+        /// <returns>Damage instance after modified</returns>
+        public DamageInstance IncomingDamageGernealModifier(DamageInstance DMGI)
+        {
+            DamageInstance Result = new DamageInstance(0, new Globals.DamageEffect[] { Globals.DamageEffect.None });
+
+            // If the incoming damge can be nullified, then return this nullified instance 
+            foreach (IItem Item in itemSlots)
+            {
+                if (Item.GetOutputModifier() is General.Modifiers.ModifierNullify)
+                {
+                    Item.CountFlux(-1);
+                    return Result;
+                }  
+            }
+
+            // TODO: add more conditions 
+            Result.DamageCount = DMGI.DamageCount;
+            Result.effects = DMGI.effects;
+
+            return Result; 
+        }
+
         public int DamageReceivingModifier(int IncomingDamage)
         {
             return IncomingDamage; 
@@ -195,5 +223,7 @@ namespace HappyDungeon
 
             return DMG; 
         }
+
+
     }
 }

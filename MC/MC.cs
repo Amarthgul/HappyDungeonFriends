@@ -284,19 +284,21 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Let player deal with colliding with enemies. 
-        /// Collision damage is a separated method because collisions are most likly to
-        /// have a directional knockback. 
+        /// Let player deal with incoming damages. 
+        /// For collisions, the DirFrom is the direction from which collision occurs. 
+        /// None collision may not have knockback effects or distance. 
         /// </summary>
         /// <param name="DMG">Damage instance object</param>
         /// <param name="DirFrom">Which direction id the collision from</param>
-        public void TakeCollisionDamage(DamageInstance DMG, Globals.Direction DirFrom)
+        public void TakeDamage(DamageInstance DMG, Globals.Direction DirFrom)
         {
             // In some cases the collision damge might be a null
             if (recoverImmunity || DMG == null)
                 return;
 
-            MarkDamgeInfliction(DMG.DamageCount);
+            DamageInstance ReceivedInstance = game.spellSlots.IncomingDamageGernealModifier(DMG);
+
+            MarkDamgeInfliction(ReceivedInstance.DamageCount);
 
             foreach(Globals.DamageEffect FX in DMG.effects)
             {
@@ -305,7 +307,7 @@ namespace HappyDungeon
                     case Globals.DamageEffect.Break:
                         break;
                     case Globals.DamageEffect.Knockback: // instant knockback
-                        position += MaxKnockbackDist(DirFrom, DMG.knowckbackDist);
+                        position += MaxKnockbackDist(DirFrom, ReceivedInstance.knowckbackDist);
                         break;
                     case Globals.DamageEffect.Stun:
                         break;

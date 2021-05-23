@@ -65,6 +65,7 @@
     <Compile Include="Controllers\MouseController.cs" />
     <Compile Include="Enemies\Agent\AgentStupid.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
+    <Compile Include="Enemies\Unburied.cs" />
     <Compile Include="Enemies\BloodBead.cs" />
     <Compile Include="Enemies\EnemyHealthBar.cs" />
     <Compile Include="Enemies\IEnemy.cs" />
@@ -74,11 +75,13 @@
     <Compile Include="General\Generator.cs" />
     <Compile Include="General\Globals.cs" />
     <Compile Include="General\Modifiers\IModifier.cs" />
+    <Compile Include="General\Modifiers\ModifierNullify.cs" />
     <Compile Include="General\Modifiers\ModifierBurn.cs" />
     <Compile Include="General\Modifiers\ModifierCollection.cs" />
     <Compile Include="General\Modifiers\ModifierTorch.cs" />
     <Compile Include="Items\DroppedGold.cs" />
     <Compile Include="Items\IItem.cs" />
+    <Compile Include="Items\LikenSphere.cs" />
     <Compile Include="Items\ItemTemplate.cs" />
     <Compile Include="Items\SpellSlots.cs" />
     <Compile Include="Items\Torch.cs" />

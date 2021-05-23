@@ -52,7 +52,7 @@ namespace HappyDungeon
                             DamageFrom = Globals.Direction.Right;
                     }
 
-                    game.mainChara.TakeCollisionDamage(enemy.DealCollisionDamage(), DamageFrom);
+                    game.mainChara.TakeDamage(enemy.DealCollisionDamage(), DamageFrom);
                 }
             }
 

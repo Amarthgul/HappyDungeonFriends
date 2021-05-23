@@ -37,6 +37,7 @@ namespace HappyDungeon
         /// <summary>
         /// Alter the count of the item. 
         /// Can either add or subtract. 
+        /// Some items also uses this to restart cooldown. 
         /// </summary>
         /// <param name="Count">Change amount</param>
         void CountFlux(int Count);
@@ -64,8 +65,19 @@ namespace HappyDungeon
         /// <returns>Count of the item</returns>
         int GetCount();
 
+        /// <summary>
+        /// Pick up modifier is static. 
+        /// This is added once this item is picked up and added into item slots. 
+        /// May contains passive effects. 
+        /// </summary>
+        /// <returns>Modifers on pick up</returns>
         General.Modifiers.IModifier GetPickupModifier();
 
+        /// <summary>
+        /// Output modifier is dynamic.
+        /// The result of this method depends on the state of the item.
+        /// </summary>
+        /// <returns>Modifer depends on situation</returns>
         General.Modifiers.IModifier GetOutputModifier();
 
         /// <summary>
@@ -79,11 +91,11 @@ namespace HappyDungeon
 
         /// <summary>
         /// Unlike index, type designates the usage of the item as defined in Globals.ItemType,.
-        /// Primary items can be used, and when put into primary slot, 
+        /// *Primary* items can be used, and when put into primary slot, 
         /// can also affect the main character's behavior and appearance. 
-        /// Usable items cannot be put into primary slot, and dspite their only 
+        /// *Usable* items cannot be put into primary slot, and dspite their only 
         /// usage, does not affect how the player acts or displays. 
-        /// Junk cannot be put into any spell/item slots and remains in the bag,
+        /// *Junk* cannot be put into any spell/item slots and remains in the bag,
         /// either for entertainment or for plot purpose (if there are any). 
         /// </summary>
         /// <returns>The type of the itm</returns>
