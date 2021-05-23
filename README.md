@@ -18,9 +18,12 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 21 May 2021: 
+Update 22 May 2021: 
 
-My ebay packages have arrived so another day of doing nothing. Cheers. 
+FedEx did not deliver my package. Guess they really don't care about things without an extra twenty bucks' 
+"prority".
+
+Anyways, I'm starting to add more enemies and items and modifiers. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
