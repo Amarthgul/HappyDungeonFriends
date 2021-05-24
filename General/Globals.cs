@@ -61,6 +61,7 @@ namespace HappyDungeon
         // ================================================================================
         // -1 ~ -255 are items 
         public const int ITEM_TORCH = -1;
+        public const int ITEM_LINKEN = -10; 
         public const int ITEM_GOLD = -255;
 
         public const int ITEM_BOUND = -256;

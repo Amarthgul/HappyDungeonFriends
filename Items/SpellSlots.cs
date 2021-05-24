@@ -127,8 +127,12 @@ namespace HappyDungeon
                     if (CanPutInUsable(Item) && itemSlots[i] == null)
                     {
                         itemSlots[i] = Item;
+                        game.headsupDisplay.SetItemSlot(Item.GetSprite(), i);
+
                         if(Item.GetPickupModifier() != null)
                             modifiers.Add(Item.GetPickupModifier());
+
+                        break; 
                     }
                 }
             }
@@ -170,7 +174,9 @@ namespace HappyDungeon
             // If the incoming damge can be nullified, then return this nullified instance 
             foreach (IItem Item in itemSlots)
             {
-                if (Item.GetOutputModifier() is General.Modifiers.ModifierNullify)
+                if (Item == null) continue;
+                if (Item.GetOutputModifier() != null &&
+                    Item.GetOutputModifier() is General.Modifiers.ModifierNullify)
                 {
                     Item.CountFlux(-1);
                     return Result;

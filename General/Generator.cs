@@ -132,6 +132,9 @@ namespace HappyDungeon
                         case Globals.ITEM_TORCH:
                             ItemList.Add(new Torch(Game, Position)); ;
                             break;
+                        case Globals.ITEM_LINKEN:
+                            ItemList.Add(new LinkenSphere(Game, Position)); 
+                            break;
                         case Globals.ITEM_GOLD:
                             ItemList.Add(new DroppedGold(Game, Position));
                             break; 

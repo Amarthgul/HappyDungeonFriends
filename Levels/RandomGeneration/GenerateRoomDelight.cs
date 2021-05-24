@@ -248,7 +248,7 @@ namespace HappyDungeon
             if (_DEVMODE)
             {
                 room.Arrangement = new int[,] {
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                { 0, 0, Globals.ITEM_LINKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 { 0, 0, Globals.ITEM_GOLD, 0, 0, 0, 0, 0, 0, Globals.STARE_BLOCK_2, 0, 0},
                 { 0, 0, 0, 0, 0, 0, 0, Globals.ITEM_TORCH, 0, 0, 0, 0},
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},

@@ -28,15 +28,31 @@ namespace HappyDungeon
         private long timer;
         private bool cooldownFinished;
 
-        public LinkenSphere(Game1 G)
+        private Color defaultTint = Color.White;
+
+        public LinkenSphere(Game1 G, Vector2 P)
         {
-            game = G; 
+            game = G;
+            position = P;
+
+            spriteBatch = game.spriteBatch;
+
+            collisionRect = new Rectangle((int)P.X, (int)P.Y, Globals.OUT_UNIT, Globals.OUT_UNIT);
+
+            ImageFile LS = TextureFactory.Instance.itemLikenSphere;
+            ImageFile LSS = TextureFactory.Instance.itemLikenSphereShield;
+
+            likenSphereSprite = new GeneralSprite(LS.texture, 1, 1, 
+                Globals.WHOLE_SHEET, 1, Globals.ITEM_LAYER);
+
+            stopwatch.Restart();
+            cooldownFinished = false;
 
         }
 
         public bool Collectible()
         {
-            return true; 
+            return cooldownFinished; 
         }
 
         public IItem Collect()
@@ -71,23 +87,25 @@ namespace HappyDungeon
 
         public void Draw()
         {
-
+            likenSphereSprite.Draw(spriteBatch, position, defaultTint);
         }
 
 
         public Rectangle GetRectangle()
         {
-            return new Rectangle();
+            return collisionRect;
         }
 
         public GeneralSprite GetSprite()
         {
-            return likenSphereSprite; 
+            ImageFile LSOB = TextureFactory.Instance.itemLikenSphereOnBar; 
+            
+            return new GeneralSprite(LSOB.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.ITEM_LAYER); 
         }
 
         public int SelfIndex()
         {
-            return 0; 
+            return Globals.ITEM_LINKEN; 
         }
         public General.Modifiers.IModifier GetPickupModifier()
         {
@@ -101,7 +119,7 @@ namespace HappyDungeon
 
         public Globals.ItemType SelfType()
         {
-            return Globals.ItemType.Junk;
+            return Globals.ItemType.Usable;
         }
 
     }

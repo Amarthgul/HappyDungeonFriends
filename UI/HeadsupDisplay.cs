@@ -80,7 +80,9 @@ namespace HappyDungeon
                 new Vector2(161, 16),
                 new Vector2(178, 14),
              };
-        private Vector2 altGoldCountLocation = new Vector2(76, 14); 
+        private Vector2 altGoldCountLocation = new Vector2(76, 14);
+
+        private float disabledOpacity = 0.5f; 
 
         private Rectangle primaryRange;   // On hover and click 
         private Rectangle[] itemRange;
@@ -263,7 +265,7 @@ namespace HappyDungeon
             // Decrease opacity for all 
             for (int i = 0; i < AllSlotSize; i++)
             {
-                altDisplays[i].opacity = 0.5f; 
+                altDisplays[i].opacity = disabledOpacity; 
             }
 
         }
@@ -395,16 +397,16 @@ namespace HappyDungeon
         /// <param name="PrimarySprite">Sprite to set to</param>
         public void SetPrimary(GeneralSprite PrimarySprite)
         {
+            primarySlot = PrimarySprite;
+
             // If it's removing the primary 
-            if(PrimarySprite == null)
+            if (PrimarySprite == null)
             {
-                primarySlot = PrimarySprite;
-                altDisplays[0].opacity = 0.0f; 
+                altDisplays[0].opacity = disabledOpacity; 
             }
             // If it's setting up the primary 
             else
             {
-                primarySlot = PrimarySprite;
                 primarySlot.layer = Globals.UI_SLOTS;
                 primaryState = PrimarySprite.rowLimitation;
                 altDisplays[0].opacity = 1.0f;
@@ -420,7 +422,17 @@ namespace HappyDungeon
         public void SetItemSlot(GeneralSprite ItemSprite, int Index)
         {
             itemSlots[Index] = ItemSprite;
-            itemSlots[Index].layer = Globals.UI_SLOTS; 
+            
+
+            if(ItemSprite == null)
+            {
+                altDisplays[Index + 1].opacity = disabledOpacity; 
+            }
+            else
+            {
+                itemSlots[Index].layer = Globals.UI_SLOTS;
+                altDisplays[Index + 1].opacity = 1.0f; 
+            }
         }
 
         /// <summary>
