@@ -18,12 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 22 May 2021: 
+Update 23 May 2021: 
 
-FedEx did not deliver my package. Guess they really don't care about things without an extra twenty bucks' 
-"prority".
-
-Anyways, I'm starting to add more enemies and items and modifiers. 
+Linken sphere can now be picked up. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
