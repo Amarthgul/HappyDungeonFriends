@@ -56,6 +56,9 @@ namespace HappyDungeon
         public ImageFile itemTorchFlame;
         public ImageFile itemTorchAttackFlame;
         public ImageFile itemTorchShadow;
+        public ImageFile itemLikenSphere;
+        public ImageFile itemLikenSphereShield;
+
         public ImageFile goldOnGround;
         public ImageFile goldOnGroundFX;
 
@@ -126,6 +129,9 @@ namespace HappyDungeon
             itemTorchFlame = new ImageFile(content, "Images/Items/torchFlame", 4, 4);
             itemTorchAttackFlame = new ImageFile(content, "Images/Items/torchFlameAttack", 4, 4);
             itemTorchShadow = new ImageFile(content, "Images/Items/torchShhadows", 4, 4);
+            itemLikenSphere = new ImageFile(content, "Images/Items/LinkenSphere", 1, 1);
+            itemLikenSphereShield = new ImageFile(content, "Images/Items/LinkenSphereShield", 4, 4);
+
             goldOnGround = new ImageFile(content, "Images/Items/goldOnGround", 4, 4);
             goldOnGroundFX = new ImageFile(content, "Images/Items/goldOnGroundFX", 4, 4);
 
