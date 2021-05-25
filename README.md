@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 23 May 2021: 
+Update 24 May 2021: 
 
-Linken sphere can now be picked up. 
+Linken sphere on-hover effect added. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
