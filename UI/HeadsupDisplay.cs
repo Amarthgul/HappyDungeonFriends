@@ -226,6 +226,24 @@ namespace HappyDungeon
                 Globals.OUT_UNIT, Globals.OUT_UNIT
                 );
 
+            itemRange = new Rectangle[] {
+                new Rectangle(
+                    (int)itemLocations[0].X * Globals.SCALAR,
+                    (int)itemLocations[0].Y * Globals.SCALAR,
+                    Globals.OUT_UNIT, Globals.OUT_UNIT
+                    ),
+                new Rectangle(
+                    (int)itemLocations[1].X * Globals.SCALAR,
+                    (int)itemLocations[1].Y * Globals.SCALAR,
+                    Globals.OUT_UNIT, Globals.OUT_UNIT
+                    ),
+                new Rectangle(
+                    (int)itemLocations[2].X * Globals.SCALAR,
+                    (int)itemLocations[2].Y * Globals.SCALAR,
+                    Globals.OUT_UNIT, Globals.OUT_UNIT
+                    )
+            };
+
             bagRange = new Rectangle(
                 (int)bagLocation.X * Globals.SCALAR,
                 (int)bagLocation.Y * Globals.SCALAR,
@@ -237,6 +255,8 @@ namespace HappyDungeon
                 (int)bloodPosition.Y * Globals.SCALAR,
                 BLOOD_TX_SIZE * Globals.SCALAR, BLOOD_TX_SIZE * Globals.SCALAR
                 );
+
+
         }
 
         /// <summary>
@@ -431,7 +451,7 @@ namespace HappyDungeon
             else
             {
                 itemSlots[Index].layer = Globals.UI_SLOTS;
-                altDisplays[Index + 1].opacity = 1.0f; 
+                altDisplays[Index + 1].opacity = 1.0f;
             }
         }
 
@@ -450,10 +470,19 @@ namespace HappyDungeon
                 bagIcon.rowLimitation = 1;
             }
 
+            // Primary and 3 item slots' on hover effects 
             if (primarySlot != null && primaryRange.Contains(CursorLoc))
             {
-                primarySlot.rowLimitation = primaryState + 1; 
+                primarySlot.rowLimitation = primaryState + 1;
             }
+            for (int i = 0; i < 3; i++)
+            {
+                if(itemSlots[i] != null && itemRange[i].Contains(CursorLoc))
+                {
+                    itemSlots[i].rowLimitation = 1;
+                }
+            }
+
 
             if (bloodRange.Contains(CursorLoc))
             {
@@ -516,6 +545,8 @@ namespace HappyDungeon
                 {
                     itemMask.Draw(spriteBatch, itemLocations[i] * Globals.SCALAR, defaultTint);
                     itemSlots[i].Draw(spriteBatch, itemLocations[i] * Globals.SCALAR, defaultTint);
+
+                    itemSlots[i].rowLimitation = 0;
                 }
             }
                 

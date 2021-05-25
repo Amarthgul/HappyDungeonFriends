@@ -131,7 +131,7 @@ namespace HappyDungeon
             itemTorchAttackFlame = new ImageFile(content, "Images/Items/torchFlameAttack", 4, 4);
             itemTorchShadow = new ImageFile(content, "Images/Items/torchShhadows", 4, 4);
             itemLikenSphere = new ImageFile(content, "Images/Items/LinkenSphere", 1, 1);
-            itemLikenSphereOnBar = new ImageFile(content, "Images/Items/LinkenSphereOnBar", 1, 1);
+            itemLikenSphereOnBar = new ImageFile(content, "Images/Items/LinkenSphereOnBar", 4, 4);
             itemLikenSphereShield = new ImageFile(content, "Images/Items/LinkenSphereShield", 4, 4);
 
             goldOnGround = new ImageFile(content, "Images/Items/goldOnGround", 4, 4);

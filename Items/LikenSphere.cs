@@ -100,7 +100,8 @@ namespace HappyDungeon
         {
             ImageFile LSOB = TextureFactory.Instance.itemLikenSphereOnBar; 
             
-            return new GeneralSprite(LSOB.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.ITEM_LAYER); 
+            return new GeneralSprite(LSOB.texture, LSOB.C, LSOB.R, 
+                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_LAYER); 
         }
 
         public int SelfIndex()
