@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 24 May 2021: 
+Update 25 May 2021: 
 
-Linken sphere on-hover effect added. 
+Liken sphere use added, althought use produces nothing yet. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
