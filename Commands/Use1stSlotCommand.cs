@@ -17,7 +17,7 @@ namespace HappyDungeon
         }
         public void execute()
         {
-            
+            game.spellSlots.UseItems(0);
         }
     }
 }

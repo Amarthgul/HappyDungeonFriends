@@ -28,8 +28,8 @@ namespace HappyDungeon
         private SpriteBatch spriteBatch;
 
         // Item cooldown and pickup protection  
-        private int itemEffectiveTime = 8000; // 8 seconds 
-        private int itemCoolDown = 12000;     // 12 Seconds
+        private int itemEffectiveTime = 8000;  // 8 seconds 
+        private int itemCoolDown = 12000;      // 12 Seconds
         private Stopwatch stopwatch = new Stopwatch();
         private bool shieldOn = false;
         private bool pickupProtection = false;
@@ -94,11 +94,10 @@ namespace HappyDungeon
             }
         }
 
-        public int GetCount()
-        {
-            return 1;
-        }
-
+        /// <summary>
+        /// Updates pick up protection when it's on the ground.
+        /// After being picked up, updates cooldown when being used. 
+        /// </summary>
         public void Update()
         {
             if (stopwatch.ElapsedMilliseconds > Globals.ITEM_HOLD && pickupProtection == false)
@@ -108,11 +107,13 @@ namespace HappyDungeon
                 stopwatch.Stop();
             }
 
+            // Mark the shield as epxired when it exceeds the lasting time 
             if(stopwatch.ElapsedMilliseconds > itemEffectiveTime && shieldOn)
             {
                 shieldOn = false;
             }
 
+            // mark the item useablt again after cooldown 
             if( stopwatch.ElapsedMilliseconds > itemCoolDown)
             {
                 cooldownFinished = true;
@@ -124,6 +125,9 @@ namespace HappyDungeon
             likenSphereSprite.Draw(spriteBatch, position, defaultTint);
         }
 
+        /// <summary>
+        /// Draw the shield effect. Also updates the sprite for animation. 
+        /// </summary>
         public void DrawEffects()
         {
 
@@ -175,6 +179,12 @@ namespace HappyDungeon
         {
             return Globals.ItemType.Usable;
         }
+
+        public int GetCount()
+        {
+            return 1;
+        }
+
 
     }
 }

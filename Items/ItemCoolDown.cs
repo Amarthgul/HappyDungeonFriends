@@ -10,7 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 namespace HappyDungeon.Items
 {
     /// <summary>
-    /// Shows item cooldown 
+    /// Shows item cooldown.
+    /// Used in HeadsupDisplay class. 
     /// </summary>
     class ItemCoolDown
     {

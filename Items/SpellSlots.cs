@@ -208,6 +208,7 @@ namespace HappyDungeon
         /// <returns>Damage instance after modified</returns>
         public DamageInstance IncomingDamageGernealModifier(DamageInstance DMGI)
         {
+            // Creates a blank damage instance with all things nullified 
             DamageInstance Result = new DamageInstance(0, new Globals.DamageEffect[] { Globals.DamageEffect.None });
 
             // If the incoming damge can be nullified, then return this nullified instance 
@@ -224,10 +225,8 @@ namespace HappyDungeon
             }
 
             // TODO: add more conditions 
-            Result.DamageCount = DMGI.DamageCount;
-            Result.effects = DMGI.effects;
 
-            return Result; 
+            return DMGI; 
         }
 
         /// <summary>
