@@ -62,6 +62,16 @@ namespace HappyDungeon
 
         }
 
+        public void DrawEffects()
+        {
+
+        }
+
+
+        public double CooldownRate()
+        {
+            return 0;
+        }
 
         public Rectangle GetRectangle()
         {

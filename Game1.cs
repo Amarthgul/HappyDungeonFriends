@@ -277,6 +277,11 @@ namespace HappyDungeon
             {
                 item.Update();
             }
+            foreach (IItem item in bagItemList)
+            {
+                item.Update();
+            }
+
 
             foreach (IBlock block in dynamicBlockList)
             {
@@ -345,6 +350,10 @@ namespace HappyDungeon
             {
                 if(Misc.Instance.ItemFogBreaker(item, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     item.Draw();
+            }
+            foreach (IItem item in bagItemList)
+            {
+                item.DrawEffects();
             }
 
             foreach (IBlock block in dynamicBlockList)

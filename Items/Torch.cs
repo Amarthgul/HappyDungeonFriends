@@ -105,12 +105,16 @@ namespace HappyDungeon
                 cooldownFinished = true;
             }
 
-            torchSprite.Update();
         }
 
         public void Draw()
         {
             torchSprite.Draw(spriteBatch, position, defaultTint);
+        }
+
+        public void DrawEffects()
+        {
+
         }
 
         public bool Collectible()
@@ -127,7 +131,10 @@ namespace HappyDungeon
         {
             return torchSprite;
         }
-
+        public double CooldownRate()
+        {
+            return 0;
+        }
         public int SelfIndex()
         {
             return selfIndex;

@@ -17,16 +17,23 @@ namespace HappyDungeon
     class LinkenSphere :IItem
     {
         private GeneralSprite likenSphereSprite;
+        private GeneralSprite likenShieldSprite;
+        private Vector2 shieldOffset = new Vector2(-2, -2) * Globals.SCALAR;
+
+        // When item is on the ground 
         private Rectangle collisionRect;
         private Vector2 position;
 
         private Game1 game;
         private SpriteBatch spriteBatch;
 
-        // Item hold 
+        // Item cooldown and pickup protection  
+        private int itemEffectiveTime = 8000; // 8 seconds 
+        private int itemCoolDown = 12000;     // 12 Seconds
         private Stopwatch stopwatch = new Stopwatch();
-        private long timer;
-        private bool cooldownFinished;
+        private bool shieldOn = false;
+        private bool pickupProtection = false;
+        private bool cooldownFinished = true; 
 
         private Color defaultTint = Color.White;
 
@@ -44,15 +51,16 @@ namespace HappyDungeon
 
             likenSphereSprite = new GeneralSprite(LS.texture, 1, 1, 
                 Globals.WHOLE_SHEET, 1, Globals.ITEM_LAYER);
+            likenShieldSprite = new GeneralSprite(LSS.texture, LSS.C, LSS.R,
+                Globals.WHOLE_SHEET, LSS.C * LSS.R, Globals.ITEM_EFFECT_LAYER);
 
             stopwatch.Restart();
-            cooldownFinished = false;
 
         }
 
         public bool Collectible()
         {
-            return cooldownFinished; 
+            return pickupProtection; 
         }
 
         public IItem Collect()
@@ -62,11 +70,28 @@ namespace HappyDungeon
 
         public void UseItem()
         {
+            if(cooldownFinished && !shieldOn)
+            {
+                shieldOn = true;
+                cooldownFinished = false;
 
+                stopwatch.Restart();
+            }
         }
+
+        /// <summary>
+        /// Liken sphere's count flex marks a nullification. 
+        /// Thus terminates the shield. 
+        /// </summary>
+        /// <param name="Count"></param>
         public void CountFlux(int Count)
         {
-
+            // 1 means the sheild has been triggered 
+            // Triggered in SpellSlots IncomingDamageGernealModifier()
+            if (Count == 1)
+            {
+                shieldOn = false; 
+            }
         }
 
         public int GetCount()
@@ -76,13 +101,22 @@ namespace HappyDungeon
 
         public void Update()
         {
-            timer = stopwatch.ElapsedMilliseconds;
-            if (timer > Globals.ITEM_HOLD)
+            if (stopwatch.ElapsedMilliseconds > Globals.ITEM_HOLD && pickupProtection == false)
+            {
+                pickupProtection = true;
+                stopwatch.Restart();
+                stopwatch.Stop();
+            }
+
+            if(stopwatch.ElapsedMilliseconds > itemEffectiveTime && shieldOn)
+            {
+                shieldOn = false;
+            }
+
+            if( stopwatch.ElapsedMilliseconds > itemCoolDown)
             {
                 cooldownFinished = true;
             }
-
-
         }
 
         public void Draw()
@@ -90,6 +124,15 @@ namespace HappyDungeon
             likenSphereSprite.Draw(spriteBatch, position, defaultTint);
         }
 
+        public void DrawEffects()
+        {
+
+            if (shieldOn)
+            {
+                likenShieldSprite.Draw(spriteBatch, game.mainChara.position + shieldOffset, defaultTint);
+                likenShieldSprite.Update();
+            }
+        }
 
         public Rectangle GetRectangle()
         {
@@ -103,6 +146,13 @@ namespace HappyDungeon
             return new GeneralSprite(LSOB.texture, LSOB.C, LSOB.R, 
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_LAYER); 
         }
+        public double CooldownRate()
+        {
+            if (cooldownFinished)
+                return 1.0;
+            else 
+                return stopwatch.ElapsedMilliseconds / (double)itemCoolDown;
+        }
 
         public int SelfIndex()
         {
@@ -115,7 +165,10 @@ namespace HappyDungeon
 
         public General.Modifiers.IModifier GetOutputModifier()
         {
-            return null;
+            if (shieldOn)
+                return new General.Modifiers.ModifierNullify();
+            else
+                return null;
         }
 
         public Globals.ItemType SelfType()

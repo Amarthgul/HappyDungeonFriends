@@ -81,6 +81,10 @@ namespace HappyDungeon
         // ================================================================================
         public const Language GAME_LANGUAGE = Language.English;  
         public const int SLOT_SIZE = 3;
+        public static Vector2[] itemSlotsLocation = new Vector2[] {
+            new Vector2(114, 1),
+            new Vector2(135, 1),
+            new Vector2(156, 1) };
 
         // ================================================================================
         // ================================ Draw Layers ===================================
@@ -97,11 +101,11 @@ namespace HappyDungeon
         public const float MAP_OVERLAY = 0.6f;       // Overlay of the border for door obscure effect 
         public const float FOW_LAYER = 0.65f;        // Fog of War
         
-
         public const float UI_UNDER = 0.75f;         // Down-most layer for UI
         public const float UI_SIG = 0.77f;           // Signifier when player if taking damage 
         public const float UI_MID = 0.78f;           // Mostly for item masks 
         public const float UI_SLOTS = 0.79f;         // Items in the slot 
+        public const float UI_SLOTS_CD = 0.795f;     // Item CDs 
         public const float UI_LAYER = 0.8f;          // UI front panel layer
         public const float UI_ICONS = 0.81f;         // Bag and gold icon
 

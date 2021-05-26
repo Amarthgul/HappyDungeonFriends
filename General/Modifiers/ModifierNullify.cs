@@ -14,7 +14,7 @@ namespace HappyDungeon.General.Modifiers
     class ModifierNullify : IModifier
     {
 
-        public ModifierNullify(int TotalDMG)
+        public ModifierNullify()
         {
 
         }

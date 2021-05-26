@@ -47,6 +47,19 @@ namespace HappyDungeon
         void Draw();
 
         /// <summary>
+        /// Some items has a cooldown after ebing used. 
+        /// This methods provides a way to find the CD progression. 
+        /// Returns 0-1, where 1 means finsihed. 
+        /// </summary>
+        /// <returns>Progression of the CD</returns>
+        double CooldownRate();
+
+        /// <summary>
+        /// Mainly to draw some effects for thoes in item slots. 
+        /// </summary>
+        void DrawEffects();
+
+        /// <summary>
         /// Rectangle for collision detection if the item is on the ground. 
         /// </summary>
         /// <returns>Collision rectangle of the item</returns>

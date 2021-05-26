@@ -76,6 +76,10 @@ namespace HappyDungeon
             return NewSprite;
         }
 
+        // ================================================================================
+        // ============================== Public methods ==================================
+        // ================================================================================
+
         /// <summary>
         /// Remove any item in the slot that got depleted 
         /// </summary>
@@ -173,13 +177,26 @@ namespace HappyDungeon
                 itemsReady[Slot] = false;
                 itemsSW[Slot].Restart();
 
-                primary.CountFlux(-1);
+                itemSlots[Slot].CountFlux(-1);
             }
 
             if (itemsSW[Slot].ElapsedMilliseconds > Globals.KEYBOARD_HOLD)
             {
                 itemsReady[Slot] = true;
             }
+        }
+
+        /// <summary>
+        /// For other classes to make inquries about the items. 
+        /// </summary>
+        /// <param name="Index">Index of item in slots, negative for the primary</param>
+        /// <returns>The item in the slot</returns>
+        public IItem GetItem(int Index)
+        {
+            if (Index < 0)
+                return primary;
+            else
+                return itemSlots[Index]; 
         }
 
         /// <summary>
@@ -197,10 +214,11 @@ namespace HappyDungeon
             foreach (IItem Item in itemSlots)
             {
                 if (Item == null) continue;
+
                 if (Item.GetOutputModifier() != null &&
                     Item.GetOutputModifier() is General.Modifiers.ModifierNullify)
                 {
-                    Item.CountFlux(-1);
+                    Item.CountFlux(1); // 1 marks a successful absorption 
                     return Result;
                 }  
             }
@@ -212,6 +230,11 @@ namespace HappyDungeon
             return Result; 
         }
 
+        /// <summary>
+        /// Modifies incoming damage. 
+        /// </summary>
+        /// <param name="IncomingDamage"></param>
+        /// <returns></returns>
         public int DamageReceivingModifier(int IncomingDamage)
         {
             return IncomingDamage; 

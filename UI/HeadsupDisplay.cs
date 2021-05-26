@@ -64,10 +64,7 @@ namespace HappyDungeon
         private Vector2 bagLocation = new Vector2(175, 1);
         //Location of the slots 
         private Vector2 primaryLocation = new Vector2(91, 3);
-        private Vector2[] itemLocations = new Vector2[] {
-            new Vector2(114, 1),
-            new Vector2(135, 1),
-            new Vector2(156, 1) };
+        
         //Location of some on-hover info
         private Vector2 bloodTextLocation = new Vector2(234, 18);
         private Vector2 bloodTextLocationUpdate; 
@@ -95,6 +92,11 @@ namespace HappyDungeon
         private Color maskColor = new Color(50, 0, 0);
         private Color healthSig = Color.White; 
         private Color transparent = Color.Transparent;
+
+        // --------------------------------------------------------------------------------
+        // ------------------------------ Item Cooldown -----------------------------------
+        private Items.ItemCoolDown primaryCD;
+        private Items.ItemCoolDown[] slotsCD;
 
         // ================================================================================
         // ================================= Parameters ===================================
@@ -126,6 +128,7 @@ namespace HappyDungeon
             SetUpMasks();
             SetUpRanges();
             RedrawBloodVessel();
+            SetUpCooldown();
             // Text and auxiliary displays 
             UpdateHealthText();
             SetUpAltDisplays();
@@ -228,18 +231,18 @@ namespace HappyDungeon
 
             itemRange = new Rectangle[] {
                 new Rectangle(
-                    (int)itemLocations[0].X * Globals.SCALAR,
-                    (int)itemLocations[0].Y * Globals.SCALAR,
+                    (int)Globals.itemSlotsLocation[0].X * Globals.SCALAR,
+                    (int)Globals.itemSlotsLocation[0].Y * Globals.SCALAR,
                     Globals.OUT_UNIT, Globals.OUT_UNIT
                     ),
                 new Rectangle(
-                    (int)itemLocations[1].X * Globals.SCALAR,
-                    (int)itemLocations[1].Y * Globals.SCALAR,
+                    (int)Globals.itemSlotsLocation[1].X * Globals.SCALAR,
+                    (int)Globals.itemSlotsLocation[1].Y * Globals.SCALAR,
                     Globals.OUT_UNIT, Globals.OUT_UNIT
                     ),
                 new Rectangle(
-                    (int)itemLocations[2].X * Globals.SCALAR,
-                    (int)itemLocations[2].Y * Globals.SCALAR,
+                    (int)Globals.itemSlotsLocation[2].X * Globals.SCALAR,
+                    (int)Globals.itemSlotsLocation[2].Y * Globals.SCALAR,
                     Globals.OUT_UNIT, Globals.OUT_UNIT
                     )
             };
@@ -288,6 +291,19 @@ namespace HappyDungeon
                 altDisplays[i].opacity = disabledOpacity; 
             }
 
+        }
+
+        /// <summary>
+        /// Set up the cooldown counters, mainly their position. 
+        /// </summary>
+        private void SetUpCooldown()
+        {
+            primaryCD = new Items.ItemCoolDown(game, primaryLocation);
+            slotsCD = new Items.ItemCoolDown[] {
+                    new Items.ItemCoolDown(game, Globals.itemSlotsLocation[0]),
+                    new Items.ItemCoolDown(game, Globals.itemSlotsLocation[1]),
+                    new Items.ItemCoolDown(game, Globals.itemSlotsLocation[2]),
+                };
         }
 
         /// <summary>
@@ -381,6 +397,24 @@ namespace HappyDungeon
             goldCountTextShadow = new GeneralSprite(GC, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_SHADOW);
         }
 
+        private void CheckItemCooldown()
+        {
+            for (int i = 0; i < Globals.SLOT_SIZE; i++)
+            {
+                if (itemSlots[i] != null)
+                {
+                    if (game.spellSlots.GetItem(i).CooldownRate() < 1)
+                    {
+                        altDisplays[i+1].opacity = disabledOpacity;
+                    } 
+                    else if (game.spellSlots.GetItem(i).CooldownRate() >= 1.0) // CD finished 
+                    {
+                        altDisplays[i+1].opacity = 1;
+                    }
+                }
+            }
+        }
+
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
@@ -441,8 +475,7 @@ namespace HappyDungeon
         /// <param name="Index">Indicating which slot is the target</param>
         public void SetItemSlot(GeneralSprite ItemSprite, int Index)
         {
-            itemSlots[Index] = ItemSprite;
-            
+            itemSlots[Index] = ItemSprite; 
 
             if(ItemSprite == null)
             {
@@ -450,6 +483,7 @@ namespace HappyDungeon
             }
             else
             {
+
                 itemSlots[Index].layer = Globals.UI_SLOTS;
                 altDisplays[Index + 1].opacity = 1.0f;
             }
@@ -478,8 +512,17 @@ namespace HappyDungeon
             for (int i = 0; i < 3; i++)
             {
                 if(itemSlots[i] != null && itemRange[i].Contains(CursorLoc))
-                {
-                    itemSlots[i].rowLimitation = 1;
+                { 
+                    // If the item is in CD, then the on hover would be a balck rim 
+                    if (game.spellSlots.GetItem(i).CooldownRate() < 1)
+                    {
+                        itemSlots[i].rowLimitation = 3;
+                    }
+                    // Is the item is fresh for use, show white rim 
+                    else
+                    {
+                        itemSlots[i].rowLimitation = 1;
+                    }
                 }
             }
 
@@ -500,11 +543,13 @@ namespace HappyDungeon
             if (CursorLoc.Y > AREA_HEIGHT_BOUND)
                 return;
 
+            // Use primary 
             if (primarySlot != null && primaryRange.Contains(CursorLoc))
             {
                 game.spellSlots.UsePrimary();
             }
 
+            // Use other items 
             for (int i = 0; i < 3; i++)
             {
                 if (itemSlots[i] != null && itemRange[i].Contains(CursorLoc))
@@ -519,6 +564,7 @@ namespace HappyDungeon
         {
             CheckHealthChange();
             CheckGoldChange();
+            CheckItemCooldown();
 
             if (primarySlot != null)
             {
@@ -551,10 +597,12 @@ namespace HappyDungeon
             {
                 if (itemSlots[i] != null)
                 {
-                    itemMask.Draw(spriteBatch, itemLocations[i] * Globals.SCALAR, defaultTint);
-                    itemSlots[i].Draw(spriteBatch, itemLocations[i] * Globals.SCALAR, defaultTint);
+                    itemMask.Draw(spriteBatch, Globals.itemSlotsLocation[i] * Globals.SCALAR, defaultTint);
+                    itemSlots[i].Draw(spriteBatch, Globals.itemSlotsLocation[i] * Globals.SCALAR, defaultTint);
 
                     itemSlots[i].rowLimitation = 0;
+
+                    slotsCD[i].Draw(game.spellSlots.GetItem(i).CooldownRate()); // Fucking ugly 
                 }
             }
                 

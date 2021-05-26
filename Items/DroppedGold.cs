@@ -114,8 +114,6 @@ namespace HappyDungeon
 
         public void Draw()
         {
-            
-
             if (game.mainChara.Illuminati())
             {
                 // Add gold glowing FX 
@@ -129,9 +127,17 @@ namespace HappyDungeon
             {
                 goldOnGround.colLimitation = 0; 
             }
-
             goldOnGround.Draw(spriteBatch, position, defaultTint);
 
+        }
+
+        public void DrawEffects()
+        {
+
+        }
+        public double CooldownRate()
+        {
+            return 0;
         }
 
         public Rectangle GetRectangle()
