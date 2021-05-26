@@ -28,6 +28,7 @@ namespace HappyDungeon
         private ModifierCollection modifiers;
 
         private Stopwatch stopwatch = new Stopwatch();
+        private Stopwatch[] itemsSW = new Stopwatch[] { new Stopwatch(), new Stopwatch(), new Stopwatch()};
         private long timer;
 
         public SpellSlots(Game1 G)
@@ -157,6 +158,27 @@ namespace HappyDungeon
             {
                 primaryReady = true;
                 timer = 0; 
+            }
+        }
+
+        /// <summary>
+        /// Try use the items in the item slots 
+        /// </summary>
+        /// <param name="Slot">Slot marker</param>
+        public void UseItems(int Slot)
+        {
+            if (itemSlots[Slot] != null && itemsReady[Slot])
+            {
+                itemSlots[Slot].UseItem();
+                itemsReady[Slot] = false;
+                itemsSW[Slot].Restart();
+
+                primary.CountFlux(-1);
+            }
+
+            if (itemsSW[Slot].ElapsedMilliseconds > Globals.KEYBOARD_HOLD)
+            {
+                itemsReady[Slot] = true;
             }
         }
 

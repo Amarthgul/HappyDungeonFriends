@@ -16,7 +16,9 @@ namespace HappyDungeon
     /// </summary>
     class MouseController : IController
     {
-        private Game1 game; 
+        private Game1 game;
+
+        private Rectangle gameArea = new Rectangle(0, Globals.OUT_HEADSUP, Globals.OUT_FWIDTH, Globals.OUT_FHEIGHT);
 
         private int cursorX;
         private int cursorY;
@@ -62,7 +64,7 @@ namespace HappyDungeon
                 game.minimap.TabClick(CurrentLocation);
                 game.headsupDisplay.CheckLeftClick(CurrentLocation);
 
-                if (game.displayWholeMinimap != 1)
+                if (game.displayWholeMinimap != 1 && gameArea.Contains(CurrentLocation))
                 {
                     game.mainChara.Attack();
                 }

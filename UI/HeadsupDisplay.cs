@@ -505,6 +505,14 @@ namespace HappyDungeon
                 game.spellSlots.UsePrimary();
             }
 
+            for (int i = 0; i < 3; i++)
+            {
+                if (itemSlots[i] != null && itemRange[i].Contains(CursorLoc))
+                {
+                    game.spellSlots.UseItems(i);
+                }
+            }
+
         }
 
         public void Update()
