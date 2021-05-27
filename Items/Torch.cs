@@ -133,7 +133,7 @@ namespace HappyDungeon
         }
         public double CooldownRate()
         {
-            return 0;
+            return 1; // Always out of CD 
         }
         public int SelfIndex()
         {

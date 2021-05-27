@@ -110,6 +110,8 @@ namespace HappyDungeon
         /// <summary>
         /// Depending on the state of the character and what she's holding,
         /// update some of the sprites.
+        /// NOTE: special sprites are for primary items only, thus usable items' 
+        /// effects are in their own item class and shall not be added here. 
         /// </summary>
         private void UpdateSelectedSprites()
         {

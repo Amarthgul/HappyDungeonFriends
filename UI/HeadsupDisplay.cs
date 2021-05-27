@@ -8,6 +8,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace HappyDungeon
 {
+    /// <summary>
+    /// Headsup display deals with display and player interactions.
+    /// It does not process any logistic questions despite would try to call 
+    /// on methods that deal with such problems in other classes. 
+    /// </summary>
     public class HeadsupDisplay : IUIElement
     {
         private const int BLOOD_TX_SIZE = 35;
@@ -397,8 +402,26 @@ namespace HappyDungeon
             goldCountTextShadow = new GeneralSprite(GC, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_SHADOW);
         }
 
+        /// <summary>
+        /// Check the cooldown of items, if they are in cooldown, then
+        /// make the opcaity of aly hotkey display gray. 
+        /// </summary>
         private void CheckItemCooldown()
         {
+            // Check promary slot 
+            if (primarySlot != null)
+            {
+                if (game.spellSlots.GetItem(-1).CooldownRate() >= 1.0)
+                {
+                    altDisplays[0].opacity = 1;
+                } 
+                else if (game.spellSlots.GetItem(-1).CooldownRate() < 1.0)
+                {
+                    altDisplays[0].opacity = disabledOpacity;
+                }
+            }
+
+            // Check item slots 
             for (int i = 0; i < Globals.SLOT_SIZE; i++)
             {
                 if (itemSlots[i] != null)
