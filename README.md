@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 25 May 2021: 
+Update 26 May 2021: 
 
-Liken sphere use added, althought use produces nothing yet. 
+Liken sphere can now be used to activate a shield that nullify a damage instance. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
