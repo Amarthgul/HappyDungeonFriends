@@ -263,6 +263,7 @@ namespace HappyDungeon
             base.Draw(gameTime);
         }
 
+
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================
@@ -317,7 +318,7 @@ namespace HappyDungeon
             minimap.Update();
             headsupDisplay.Update();
 
-            if (currentRoom.TransitionListener())
+            if (currentRoom.TransitionListener()) // True if the transition is finished 
             {
                 roomCycler.MoveIntoRoom(transitionDir);
 

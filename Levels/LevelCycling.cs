@@ -15,7 +15,7 @@ namespace HappyDungeon
         private GenerateLevel levelRNG;
 
         public RoomInfo[,] currentMapSet;
-        public int[] currentLocationIndex;
+        public int[] currentLocationIndex { get; set; }
 
         public LevelCycling(int MapSize, Globals.GameLevel Level)
         {
@@ -128,6 +128,83 @@ namespace HappyDungeon
             }
         }
 
-        
+        /// <summary>
+        /// Open a set of mystery doors in this room at the direction. 
+        /// </summary>
+        /// <param name="Direction">Direction of the mys door</param>
+        public void OpenMysDoor(Globals.Direction Direction)
+        {
+            currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].MysteryDoors[(int)Direction] = false;
+            currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].OpenDoors[(int)Direction] = true;
+
+            OpenAllDoorsInNextRoom(Direction);
+        }
+
+        /// <summary>
+        /// Mark all the doors in the next room as open. 
+        /// If that direction can be opened. 
+        /// </summary>
+        /// <param name="Direction">Target room direction</param>
+        public void OpenAllDoorsInNextRoom(Globals.Direction Direction)
+        {
+            int[] Index = NextRoomIndex(Direction);
+
+            for (int i = 0; i < 4; i++)
+            {
+                if(currentMapSet[Index[0], Index[1]].MysteryDoors[i])
+                {
+                    OpenDoorInRoom(Index, (Globals.Direction)i); 
+                }
+            }
+
+        }
+
+        // ================================================================================
+        // ================================ Private methods ===============================
+        // ================================================================================
+
+        /// <summary>
+        /// For inqurying the index of room at that direction. 
+        /// Does not consider whether or not if there's a room at all. 
+        /// </summary>
+        /// <param name="Direction">The target direction</param>
+        /// <returns>Index of the room at given direction</returns>
+        private int[] NextRoomIndex(Globals.Direction Direction)
+        {
+            switch (Direction)
+            {
+                case Globals.Direction.Up:
+                    return new int[] { currentLocationIndex[0] - 1, currentLocationIndex[1] };
+
+                case Globals.Direction.Down:
+                    return new int[] { currentLocationIndex[0] + 1, currentLocationIndex[1] };
+
+                case Globals.Direction.Left:
+                    return new int[] { currentLocationIndex[0], currentLocationIndex[1] - 1 };
+
+                case Globals.Direction.Right:
+                    return new int[] { currentLocationIndex[0], currentLocationIndex[1] + 1 };
+
+                default:
+                    return new int[] { currentLocationIndex[0], currentLocationIndex[1] };
+            }
+        }
+
+        /// <summary>
+        /// Open door at a direction in a room.
+        /// </summary>
+        /// <param name="Pivot">Index of the room</param>
+        /// <param name="Direction">Direction to open</param>
+        private void OpenDoorInRoom(int[] Pivot, Globals.Direction Direction)
+        {
+            currentMapSet[Pivot[0], Pivot[1]].MysteryDoors[(int)Direction] = false;
+            currentMapSet[Pivot[0], Pivot[1]].Holes[(int)Direction] = false;
+
+            currentMapSet[Pivot[0], Pivot[1]].OpenDoors[(int)Direction] = true;
+
+        }
+
+
+
     }
 }

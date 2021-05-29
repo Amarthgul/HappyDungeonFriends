@@ -521,39 +521,65 @@ namespace HappyDungeon
             bool CanPass = true;
 
             RoomInfo currentInfo = game.currentRoom.roomInfo;
-            
+            Globals.Direction Dir = Globals.Direction.None; 
 
             if (GetStagedRectangle().X < leftLim)
             {
-                CanPass = currentInfo.OpenDoors[(int)Globals.Direction.Left]
-                    || currentInfo.Holes[(int)Globals.Direction.Left];
+                Dir = Globals.Direction.Left; 
+                CanPass = currentInfo.OpenDoors[(int)Dir]
+                    || currentInfo.Holes[(int)Dir];
+                TryOpenMysDoor(Dir);
             }
 
 
             if (GetStagedRectangle().X > rightLim)
             {
-                CanPass = currentInfo.OpenDoors[(int)Globals.Direction.Right]
-                      || currentInfo.Holes[(int)Globals.Direction.Right];
+                Dir = Globals.Direction.Right;
+                CanPass = currentInfo.OpenDoors[(int)Dir]
+                      || currentInfo.Holes[(int)Dir];
+                TryOpenMysDoor(Dir);
             }
 
             if (GetStagedRectangle().Y < topLim)
             {
-                CanPass = currentInfo.OpenDoors[(int)Globals.Direction.Up]
-                      || currentInfo.Holes[(int)Globals.Direction.Up];
+                Dir = Globals.Direction.Up;
+                CanPass = currentInfo.OpenDoors[(int)Dir]
+                      || currentInfo.Holes[(int)Dir];
+                TryOpenMysDoor(Dir);
             }
 
             if (GetStagedRectangle().Y > botLim)
             {
-                CanPass = currentInfo.OpenDoors[(int)Globals.Direction.Down]
-                      || currentInfo.Holes[(int)Globals.Direction.Down];
+                Dir = Globals.Direction.Down;
+                CanPass = currentInfo.OpenDoors[(int)Dir]
+                      || currentInfo.Holes[(int)Dir];
+                TryOpenMysDoor(Dir);
             }
 
             return CanPass;
         }
 
         /// <summary>
+        /// Detects the character's facing direction, if facing the door and has money
+        /// then open it. 
+        /// </summary>
+        /// <param name="Dir"></param>
+        private void TryOpenMysDoor(Globals.Direction Dir)
+        {
+            if (game.mainChara.facingDir == Dir 
+                && game.currentRoom.roomInfo.MysteryDoors[(int)Dir]
+                && game.goldCount > 0)
+            {
+                game.currentRoom.OpenMysDoor((int)Dir);
+
+                game.goldCount -= game.goldCount / 5; 
+            }
+        }
+
+        /// <summary>
         /// Check if the MC goes beyond the walls. 
-        /// By contract, if she does, then there must be another room she can go to. 
+        /// By contract, displace effect would not knock MC into blocks or aether area.  
+        /// Thus, if she reaches boundary, then there must be another room she can go to. 
         /// </summary>
         private void CheckBoundary()
         {

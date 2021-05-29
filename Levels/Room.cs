@@ -100,8 +100,11 @@ namespace HappyDungeon
         // Open a mys door 
         public void OpenMysDoor(int Dir)
         {
-            doorOpen[Dir] = true;
-            doorMys[Dir] = false;
+            game.roomCycler.OpenMysDoor((Globals.Direction)Dir);
+
+            doorOpen = game.roomCycler.GetCurrentRoomInfo().OpenDoors;
+            doorMys = game.roomCycler.GetCurrentRoomInfo().MysteryDoors;
+
             levelTexture = roomTexture.UpdateDrawDoors();
         }
 
