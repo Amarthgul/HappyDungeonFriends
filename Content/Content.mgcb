@@ -361,6 +361,30 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/bagOnBar.png
 
+#begin Images/UI/BagViewBasic.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/BagViewBasic.png
+
+#begin Images/UI/BagViewUnderlay.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/BagViewUnderlay.png
+
 #begin Images/UI/cursor.png
 /importer:TextureImporter
 /processor:TextureProcessor

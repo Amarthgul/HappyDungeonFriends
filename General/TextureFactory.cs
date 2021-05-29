@@ -43,6 +43,9 @@ namespace HappyDungeon
         public ImageFile bagOnBar;
         public ImageFile goldOnBar;
 
+        public ImageFile BagViewBasic;
+        public ImageFile BagViewUnderlay; 
+
         public ImageFile fontDigitsSmall;
         public ImageFile fontDigitsSmallB;
         public ImageFile fontLargeBR;
@@ -117,6 +120,9 @@ namespace HappyDungeon
             playerNote = new ImageFile(content, "Images/UI/playerNotation", 4, 4);
             bagOnBar = new ImageFile(content, "Images/UI/bagOnBar", 1, 2);
             goldOnBar = new ImageFile(content, "Images/UI/goldOnBar", 1, 1);
+
+            BagViewBasic = new ImageFile(content, "Images/UI/BagViewBasic", 1, 1);
+            BagViewUnderlay = new ImageFile(content, "Images/UI/BagViewUnderlay", 1, 1);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);
