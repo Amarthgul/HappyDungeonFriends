@@ -18,10 +18,10 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 26 May 2021: 
+Update 28 May 2021: 
 
-Liken sphere can now be used to activate a shield that nullify a damage instance. 
+Door can now be opened if paying gold. 
 
 <p align="center">
-	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/c2ebJ5P.png" width="512">
+	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">
 </p>
