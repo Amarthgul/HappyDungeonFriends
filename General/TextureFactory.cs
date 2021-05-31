@@ -154,12 +154,13 @@ namespace HappyDungeon
 
         /// <summary>
         /// Generate a blank texture filled with given color. 
+        /// Proper use may decrease need for extra Photoshoping and loading. 
         /// </summary>
-        /// <param name="Graphics"></param>
-        /// <param name="Width"></param>
-        /// <param name="Height"></param>
-        /// <param name="Paint"></param>
-        /// <returns></returns>
+        /// <param name="Graphics">Unfortunately this requires a GraphicDevice class</param>
+        /// <param name="Width">Width of the texture in pixel</param>
+        /// <param name="Height">Height of the texture in pixel</param>
+        /// <param name="Paint">Fill color, can be transparent</param>
+        /// <returns>Generated texture</returns>
         public Texture2D GenerateTexture(GraphicsDevice Graphics, int Width, int Height, Func<int, Color> Paint)
         {
             Texture2D texture = new Texture2D(Graphics, Width, Height);
