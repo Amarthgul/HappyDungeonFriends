@@ -18,9 +18,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 28 May 2021: 
+Update 1 June 2021: 
 
-Door can now be opened if paying gold. 
+Can now open the bag.
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">
