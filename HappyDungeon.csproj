@@ -84,6 +84,7 @@
     <Compile Include="Items\DroppedGold.cs" />
     <Compile Include="Items\IItem.cs" />
     <Compile Include="Items\ItemCoolDown.cs" />
+    <Compile Include="Items\NoteSetOne.cs" />
     <Compile Include="Items\LikenSphere.cs" />
     <Compile Include="Items\ItemTemplate.cs" />
     <Compile Include="Items\SpellSlots.cs" />
