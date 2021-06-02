@@ -9,7 +9,10 @@ using System.Diagnostics;
 
 namespace HappyDungeon.UI.Displays
 {
-
+    /// <summary>
+    /// Dependent on 2 things:
+    /// headsup display, and items in bag 
+    /// </summary>
     class BagDisplay
     {
         private Game1 game;
@@ -39,7 +42,7 @@ namespace HappyDungeon.UI.Displays
         // ============================== On hover regions ================================
         // ================================================================================
 
-
+        // Init 
         public BagDisplay(Game1 G)
         {
             game = G;
@@ -49,6 +52,9 @@ namespace HappyDungeon.UI.Displays
             LoadSprites();
         }
 
+        /// <summary>
+        /// Load and initlize all the sprites 
+        /// </summary>
         private void LoadSprites()
         {
             ImageFile BDO = TextureFactory.Instance.BagViewBasic;
@@ -65,6 +71,7 @@ namespace HappyDungeon.UI.Displays
 
         public void Update()
         {
+            // Updates sprites in slots from the headsup 
             primarySlot = game.headsupDisplay.GetSprite(-1);
             for(int i = 0; i < Globals.SLOT_SIZE; i++)
             {
