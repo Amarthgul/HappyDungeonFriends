@@ -35,6 +35,10 @@ namespace HappyDungeon.UI.Displays
         private Vector2 drawPosition = new Vector2(0, 0);
         private Color defaultTint = Color.White;
 
+        // ================================================================================
+        // ============================== On hover regions ================================
+        // ================================================================================
+
 
         public BagDisplay(Game1 G)
         {

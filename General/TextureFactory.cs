@@ -43,12 +43,14 @@ namespace HappyDungeon
         public ImageFile bagOnBar;
         public ImageFile goldOnBar;
 
+        public ImageFile SelectionNote;
         public ImageFile BagViewBasic;
         public ImageFile BagViewUnderlay; 
 
         public ImageFile fontDigitsSmall;
         public ImageFile fontDigitsSmallB;
         public ImageFile fontLargeBR;
+        public ImageFile fontLargeWR;
 
         public ImageFile SFX_fly; 
 
@@ -121,12 +123,14 @@ namespace HappyDungeon
             bagOnBar = new ImageFile(content, "Images/UI/bagOnBar", 1, 2);
             goldOnBar = new ImageFile(content, "Images/UI/goldOnBar", 1, 1);
 
+            SelectionNote = new ImageFile(content, "Images/UI/selectionNote", 1, 1);
             BagViewBasic = new ImageFile(content, "Images/UI/BagViewBasic", 1, 1);
             BagViewUnderlay = new ImageFile(content, "Images/UI/BagViewUnderlay", 1, 1);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);
             fontLargeBR = new ImageFile(content, "Images/UI/Fonts/fontBigBR", 1, 1);
+            fontLargeWR = new ImageFile(content, "Images/UI/Fonts/fontBigWR", 1, 1);
 
             SFX_fly = new ImageFile(content, "Images/UI/fly", 4, 4);
 
