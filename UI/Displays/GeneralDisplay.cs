@@ -49,6 +49,7 @@ namespace HappyDungeon
             switch (game.gameState)
             {
                 case Globals.GameStates.Bag:
+                    bagDisplay.Update();
                     break;
                 case Globals.GameStates.TitleScreen:
                     break;

@@ -511,6 +511,21 @@ namespace HappyDungeon
                 altDisplays[Index + 1].opacity = 1.0f;
             }
         }
+        
+        /// <summary>
+        /// For other classes, mainly BagDisplay, to make inquries about the item's sprite. 
+        /// </summary>
+        /// <param name="Index">Index of item in slots, negative for the primary</param>
+        /// <returns>The item sprite in the slot</returns>
+        public GeneralSprite GetSprite(int Index)
+        {
+            if (Index < 0)
+                return primarySlot;
+            else if (Index >= 0 && Index < Globals.SLOT_SIZE)
+                return itemSlots[Index];
+            else
+                return null; 
+        }
 
         /// <summary>
         /// Check if the cursor location is on top some functioning icons,
