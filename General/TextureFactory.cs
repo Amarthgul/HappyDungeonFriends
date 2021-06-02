@@ -64,6 +64,7 @@ namespace HappyDungeon
         public ImageFile itemLikenSphere;
         public ImageFile itemLikenSphereOnBar;
         public ImageFile itemLikenSphereShield;
+        public ImageFile itemNoteSetOne; 
 
         public ImageFile goldOnGround;
         public ImageFile goldOnGroundFX;
@@ -143,6 +144,7 @@ namespace HappyDungeon
             itemLikenSphere = new ImageFile(content, "Images/Items/LinkenSphere", 1, 1);
             itemLikenSphereOnBar = new ImageFile(content, "Images/Items/LinkenSphereOnBar", 4, 4);
             itemLikenSphereShield = new ImageFile(content, "Images/Items/LinkenSphereShield", 4, 4);
+            itemNoteSetOne = new ImageFile(content, "Images/Items/NoteSetOne", 4, 4);
 
             goldOnGround = new ImageFile(content, "Images/Items/goldOnGround", 4, 4);
             goldOnGroundFX = new ImageFile(content, "Images/Items/goldOnGroundFX", 4, 4);
