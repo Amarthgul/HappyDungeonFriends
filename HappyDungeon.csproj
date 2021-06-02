@@ -49,6 +49,8 @@
     <Compile Include="Collisions\PlayerMeleeAttackCollision.cs" />
     <Compile Include="Commands\AltDisplayCommand.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
+    <Compile Include="Commands\DisplayBagCommand.cs" />
+    <Compile Include="Commands\EscCommand.cs" />
     <Compile Include="Commands\DisplayMapCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />

@@ -27,7 +27,9 @@ namespace HappyDungeon
                 {Keys.Right, new MoveRightCommand(game)},
 
                 {Keys.A, new AttackCommand(game)},
+                {Keys.B, new DisplayBagCommand(game)},
 
+                {Keys.Escape, new EscCommand(game)},
                 {Keys.Tab, new DisplayMapCommand(game)},
                 {Keys.LeftAlt, new AltDisplayCommand(game)},
             };
@@ -36,25 +38,16 @@ namespace HappyDungeon
 
         public void Update()
         {
-            switch (game.gameState)
-            {
-                case Globals.GameStates.Running:
-                    Keys[] PressedKeys = Keyboard.GetState().GetPressedKeys();
-
-                    foreach (Keys key in PressedKeys)
-                    {
-                        if (controllerMappings.ContainsKey(key))
-                        {
-                            controllerMappings[key].execute();
-                        }
-                    }
-                    break;
-                case Globals.GameStates.TitleScreen:
-                    break;
-                default:
-                    break; 
-            }
             
+            Keys[] PressedKeys = Keyboard.GetState().GetPressedKeys();
+
+            foreach (Keys key in PressedKeys)
+            {
+                if (controllerMappings.ContainsKey(key))
+                {
+                    controllerMappings[key].execute();
+                }
+            }
 
         }
     }

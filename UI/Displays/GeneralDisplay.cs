@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace HappyDungeon
 {
-    class GeneralDisplay
+    public class GeneralDisplay
     {
 
         private Game1 game;
@@ -34,6 +34,16 @@ namespace HappyDungeon
 
         }
 
+        public void ResumeToRunning()
+        {
+            game.gameState = Globals.GameStates.Running;
+        }
+
+        public void UpdateCursorPos(Vector2 CursorPos)
+        {
+
+        }
+
         public void Update()
         {
             switch (game.gameState)
@@ -52,6 +62,7 @@ namespace HappyDungeon
             switch (game.gameState)
             {
                 case Globals.GameStates.Bag:
+                    bagDisplay.Draw();
                     break;
                 case Globals.GameStates.TitleScreen:
                     break;

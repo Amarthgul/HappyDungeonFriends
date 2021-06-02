@@ -127,9 +127,10 @@ namespace HappyDungeon
         // Speed metre 
         public const int SPEED_BASELINE = 1 * SCALAR;
         // Time realted 
-        public const int ITEM_HOLD = 100;    // Items cannot be picked up before this time ends 
-        public const int KEYBOARD_HOLD = 100;
-        public const int FRAME_DELAY = 125;  // 8 fps 
+        public const int ITEM_HOLD = 100;     // Items cannot be picked up before this time ends 
+        public const int KEYBOARD_HOLD = 100; // Keys are pressed may become protected for this amount of time
+        public const int KB_STATE_HOLD = 200; // For keys that triggers game state change
+        public const int FRAME_DELAY = 125;   // 8 fps 
 
         public static Random RND = new Random();
 

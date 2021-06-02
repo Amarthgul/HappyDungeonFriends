@@ -51,7 +51,8 @@ namespace HappyDungeon
         // ================================================================================
         // ============================= UIs and Screens ==================================
         // ================================================================================
-        public HeadsupDisplay headsupDisplay; 
+        public HeadsupDisplay headsupDisplay;
+        public GeneralDisplay generalDisplay; 
         public Minimap minimap;
         public MouseCursor cursor;
         public ScreenFX screenFX; 
@@ -107,6 +108,7 @@ namespace HappyDungeon
 
             screenFX = new ScreenFX(this);
             headsupDisplay = new HeadsupDisplay(this);
+            generalDisplay = new GeneralDisplay(this);
             cursor = new MouseCursor(this);
 
             goldCount = 0;
@@ -206,8 +208,6 @@ namespace HappyDungeon
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
 
             // Keyboard and mouse always updates, but id dependent on game state in their Update method
             foreach (IController controller in controllerList)
@@ -225,6 +225,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.RoomTransitioning:
                     UpdateRoomTransit();
+                    break;
+                case Globals.GameStates.Bag:
+                    UpdateBagView();
                     break;
                 default:
                     break; 
@@ -253,6 +256,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.RoomTransitioning:
                     DrawTransitioning();
+                    break;
+                case Globals.GameStates.Bag:
+                    DrawBagView();
                     break;
                 default:
                     break;
@@ -340,6 +346,11 @@ namespace HappyDungeon
         }
 
 
+        private void UpdateBagView()
+        {
+            generalDisplay.Update();
+        }
+
         /// <summary>
         /// Draw method for when the game is runnning 
         /// </summary>
@@ -421,6 +432,13 @@ namespace HappyDungeon
             headsupDisplay.Draw();
             minimap.Draw();
         }
+
+
+        private void DrawBagView()
+        {
+            generalDisplay.Draw();
+        }
+
 
         /// <summary>
         /// Start a new generator and populate the room again 

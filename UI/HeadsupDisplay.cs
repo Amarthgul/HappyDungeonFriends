@@ -566,6 +566,11 @@ namespace HappyDungeon
             if (CursorLoc.Y > AREA_HEIGHT_BOUND)
                 return;
 
+            if (bagRange.Contains(CursorLoc))
+            {
+                game.gameState = Globals.GameStates.Bag;
+            }
+
             // Use primary 
             if (primarySlot != null && primaryRange.Contains(CursorLoc))
             {
