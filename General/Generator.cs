@@ -137,7 +137,10 @@ namespace HappyDungeon
                             break;
                         case Globals.ITEM_GOLD:
                             ItemList.Add(new DroppedGold(Game, Position));
-                            break; 
+                            break;
+                        case Globals.ITEM_NOTE_SO:
+                            ItemList.Add(new NoteSetOne(Game, Position));
+                            break;
                         default:
                             break;
                     }

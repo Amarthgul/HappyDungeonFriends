@@ -44,6 +44,20 @@ namespace HappyDungeon
 
         }
 
+        public void UpdateMousePosition(Vector2 CursorPos)
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    bagDisplay.UpdateOnhover(CursorPos);
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public void Update()
         {
             switch (game.gameState)

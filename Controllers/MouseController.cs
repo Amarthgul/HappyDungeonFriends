@@ -46,7 +46,10 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.RoomTransitioning:
                     UpdateTransitioning(CurrentState, CurrentLocation);
-                    break; 
+                    break;
+                case Globals.GameStates.Bag:
+                    UpdateBagView(CurrentState, CurrentLocation);
+                    break;
                 default:
                     break; 
             }
@@ -54,6 +57,15 @@ namespace HappyDungeon
 
         }
 
+        // ================================================================================
+        // ============================= Private methods ==================================
+        // ================================================================================
+
+        /// <summary>
+        /// Updates during normal game run
+        /// </summary>
+        /// <param name="CurrentState">Mouse state</param>
+        /// <param name="CurrentLocation">Position, for easier access</param>
         private void UpdateRunning(MouseState CurrentState, Vector2 CurrentLocation)
         {
             
@@ -90,7 +102,19 @@ namespace HappyDungeon
 
         private void UpdateTransitioning(MouseState CurrentState, Vector2 CurrentLocation)
         {
+            // Nothing to do here
+        }
+
+        /// <summary>
+        /// Update when in the bag view 
+        /// </summary>
+        /// <param name="CurrentState">Mouse state</param>
+        /// <param name="CurrentLocation">Position, for easier access</param>
+        private void UpdateBagView(MouseState CurrentState, Vector2 CurrentLocation)
+        {
+            game.generalDisplay.UpdateCursorPos(CurrentLocation);
 
         }
+
     }
 }

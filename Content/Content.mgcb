@@ -145,6 +145,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/Items/LinkenSphereShield.png
 
+#begin Images/Items/NoteSetOne.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/Items/NoteSetOne.png
+
 #begin Images/Items/torchFlame.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -457,6 +469,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/Fonts/fontBigBR.png
 
+#begin Images/UI/Fonts/fontBigWR.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/Fonts/fontBigWR.png
+
 #begin Images/UI/goldOnBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -516,4 +540,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/UI/playerNotation.png
+
+#begin Images/UI/selectionNote.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/selectionNote.png
 

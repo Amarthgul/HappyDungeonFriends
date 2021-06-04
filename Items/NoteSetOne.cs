@@ -16,7 +16,8 @@ namespace HappyDungeon
     class NoteSetOne :IItem
     {
         private GeneralSprite itemSprite;
-        private Vector2 position;
+        private Vector2 position; 
+        private Rectangle collisionRect;
 
 
         private Game1 game;
@@ -27,16 +28,27 @@ namespace HappyDungeon
         private long timer;
         private bool cooldownFinished;
 
+        private Color defaultTint = Color.White; 
+
         public NoteSetOne(Game1 G, Vector2 P)
         {
             game = G;
             spriteBatch = game.spriteBatch;
             position = P;
+
+            collisionRect = new Rectangle((int)P.X, (int)P.Y, Globals.OUT_UNIT, Globals.OUT_UNIT);
+
+            ImageFile NSO = TextureFactory.Instance.itemNoteSetOne;
+            itemSprite = new GeneralSprite(NSO.texture, NSO.C, NSO.R, 
+                Globals.RND.Next(Globals.FRAME_CYCLE - 1), Globals.FRAME_CYCLE, Globals.ITEM_LAYER);
+
+            stopwatch.Restart();
+            cooldownFinished = false;
         }
 
         public bool Collectible()
         {
-            return true; 
+            return cooldownFinished; 
         }
 
         public IItem Collect()
@@ -71,7 +83,7 @@ namespace HappyDungeon
 
         public void Draw()
         {
-
+            itemSprite.Draw(spriteBatch, position, defaultTint);
         }
 
         public void DrawEffects()
@@ -87,7 +99,7 @@ namespace HappyDungeon
 
         public Rectangle GetRectangle()
         {
-            return new Rectangle();
+            return collisionRect;
         }
 
         public GeneralSprite GetSprite()

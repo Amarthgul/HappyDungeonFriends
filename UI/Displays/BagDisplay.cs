@@ -27,6 +27,8 @@ namespace HappyDungeon.UI.Displays
         private GeneralSprite bagViewBasic;
         private GeneralSprite bagViewUnderlay;
 
+        private GeneralSprite onHoverNote; 
+
         private GeneralSprite primarySlot;
         private GeneralSprite[] itemSlots;
         private Vector2 primaryLoc = new Vector2(112, 69) * Globals.SCALAR;
@@ -41,6 +43,10 @@ namespace HappyDungeon.UI.Displays
         // ================================================================================
         // ============================== On hover regions ================================
         // ================================================================================
+        private Rectangle primaryRange;
+        private Rectangle[] itemsRange;
+        private Rectangle bagRange; 
+
 
         // Init 
         public BagDisplay(Game1 G)
@@ -50,6 +56,7 @@ namespace HappyDungeon.UI.Displays
             spriteBatch = game.spriteBatch;
 
             LoadSprites();
+            SetupRectangles();
         }
 
         /// <summary>
@@ -59,14 +66,57 @@ namespace HappyDungeon.UI.Displays
         {
             ImageFile BDO = TextureFactory.Instance.BagViewBasic;
             ImageFile BDU = TextureFactory.Instance.BagViewUnderlay;
+            ImageFile OHN = TextureFactory.Instance.SelectionNote; 
 
             bagViewBasic = new GeneralSprite(BDO.texture, BDO.C, BDO.R, 
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
             bagViewUnderlay = new GeneralSprite(BDU.texture, BDU.C, BDU.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
+            onHoverNote = new GeneralSprite(OHN.texture, OHN.C, OHN.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
 
             primarySlot = null; 
             itemSlots = new GeneralSprite[] { null, null, null }; 
+        }
+
+        /// <summary>
+        /// Setup the rectangle ranges for onhover check 
+        /// </summary>
+        private void SetupRectangles()
+        {
+            primaryRange = new Rectangle(
+                (int)primaryLoc.X, (int)primaryLoc.Y,
+                Globals.OUT_UNIT, Globals.OUT_UNIT
+                ) ;
+
+            itemsRange = new Rectangle[] {
+                new Rectangle(
+                    (int)itemsLoc[0].X, (int)itemsLoc[0].Y,
+                    Globals.OUT_UNIT, Globals.OUT_UNIT
+                    ),
+                new Rectangle(
+                    (int)itemsLoc[1].X, (int)itemsLoc[1].Y,
+                    Globals.OUT_UNIT, Globals.OUT_UNIT
+                    ),
+                new Rectangle(
+                    (int)itemsLoc[2].X, (int)itemsLoc[2].Y,
+                    Globals.OUT_UNIT, Globals.OUT_UNIT
+                    )
+                };
+
+            bagRange = new Rectangle(
+                112 * Globals.SCALAR, 96 * Globals.SCALAR,
+                Globals.OUT_UNIT, Globals.OUT_UNIT
+                );
+        }
+
+        // ================================================================================
+        // ============================== Public methods ==================================
+        // ================================================================================
+
+        public void UpdateOnhover(Vector2 CursorPos)
+        {
+
         }
 
         public void Update()
