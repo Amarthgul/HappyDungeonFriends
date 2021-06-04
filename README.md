@@ -10,7 +10,8 @@ filled with rainbow, flowers, and unicorn.
 By the end it should have all codes, images (include PSDs), and music available.
 
 Note that this project has a strong personal flavour, I do try to keep the naming, comments, and implementation 
-consistent, but it is not strictly bound to any design pattern or strategy.
+consistent, but it is not strictly bound to any design pattern or strategy. Like sometimes the word "level" and 
+"room" is used as if they are same, "mouse" and "cursor" can also be interchangeable in the naming.
 
 Currently still work in progress. 
 

@@ -35,7 +35,7 @@ namespace HappyDungeon.UI.Displays
         private Vector2[] itemsLoc = new Vector2[] {
                 new Vector2(137, 70) * Globals.SCALAR,
                 new Vector2(158, 70) * Globals.SCALAR,
-                new Vector2(177, 70) * Globals.SCALAR };
+                new Vector2(179, 70) * Globals.SCALAR };
 
         private Vector2 drawPosition = new Vector2(0, 0);
         private Color defaultTint = Color.White;
@@ -45,8 +45,13 @@ namespace HappyDungeon.UI.Displays
         // ================================================================================
         private Rectangle primaryRange;
         private Rectangle[] itemsRange;
-        private Rectangle bagRange; 
+        private Rectangle bagRange;
 
+        private bool primaryOnHover = false;
+        private bool[] itemsOnHover = new bool[] { false, false, false };
+        private bool bagOnHover = false;
+
+        private Vector2 bagOnHoverIndexedLoc = new Vector2(0, 0); // Determining which slot will the hover not be in
 
         // Init 
         public BagDisplay(Game1 G)
@@ -73,7 +78,7 @@ namespace HappyDungeon.UI.Displays
             bagViewUnderlay = new GeneralSprite(BDU.texture, BDU.C, BDU.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
             onHoverNote = new GeneralSprite(OHN.texture, OHN.C, OHN.R,
-                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS);
 
             primarySlot = null; 
             itemSlots = new GeneralSprite[] { null, null, null }; 
@@ -106,8 +111,15 @@ namespace HappyDungeon.UI.Displays
 
             bagRange = new Rectangle(
                 112 * Globals.SCALAR, 96 * Globals.SCALAR,
-                Globals.OUT_UNIT, Globals.OUT_UNIT
+                Globals.OUT_UNIT* 6, Globals.OUT_UNIT * 4
                 );
+        }
+
+        private void ResetAllOnHover()
+        {
+            primaryOnHover = false;
+            itemsOnHover = new bool[] { false, false, false };
+            bagOnHover = false;
         }
 
         // ================================================================================
@@ -116,7 +128,24 @@ namespace HappyDungeon.UI.Displays
 
         public void UpdateOnhover(Vector2 CursorPos)
         {
+            if (primaryRange.Contains(CursorPos))
+                primaryOnHover = true;
 
+            for (int i = 0; i < Globals.SLOT_SIZE; i++)
+            {
+                if (itemsRange[i].Contains(CursorPos))
+                    itemsOnHover[i] = true;
+            }
+
+            if (bagRange.Contains(CursorPos))
+            {
+                bagOnHoverIndexedLoc = new Vector2(
+                    Globals.OUT_UNIT * (int)(CursorPos.X / Globals.OUT_UNIT),
+                    Globals.OUT_UNIT * (int)(CursorPos.Y / Globals.OUT_UNIT)
+                    );
+                bagOnHover = true;
+            }
+                
         }
 
         public void Update()
@@ -144,6 +173,21 @@ namespace HappyDungeon.UI.Displays
             }
 
             bagViewBasic.Draw(spriteBatch, drawPosition, defaultTint);
+
+
+            // On hover selection notes
+            if (primaryOnHover)
+                onHoverNote.Draw(spriteBatch, primaryLoc, defaultTint);
+            for (int i = 0; i < Globals.SLOT_SIZE; i++)
+            {
+                if (itemsOnHover[i])
+                    onHoverNote.Draw(spriteBatch, itemsLoc[i], defaultTint);
+            }
+            if (bagOnHover)
+                onHoverNote.Draw(spriteBatch, bagOnHoverIndexedLoc, defaultTint);
+
+            // Revoke all on hover effects for next time 
+            ResetAllOnHover();
         }
 
     }

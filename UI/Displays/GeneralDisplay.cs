@@ -41,11 +41,6 @@ namespace HappyDungeon
 
         public void UpdateCursorPos(Vector2 CursorPos)
         {
-
-        }
-
-        public void UpdateMousePosition(Vector2 CursorPos)
-        {
             switch (game.gameState)
             {
                 case Globals.GameStates.Bag:
@@ -57,6 +52,7 @@ namespace HappyDungeon
                     break;
             }
         }
+
 
         public void Update()
         {
