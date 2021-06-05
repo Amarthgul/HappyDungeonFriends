@@ -17,11 +17,11 @@ namespace HappyDungeon
     {
         private Game1 game;
 
-        public IItem[] bag { set; get; } 
+        public IItem[] bag { set; get; }
 
         // Slots
-        private IItem primary = null;
-        private IItem[] itemSlots = new IItem[Globals.SLOT_SIZE] { null, null, null};
+        public IItem primary = null;
+        public IItem[] itemSlots = new IItem[Globals.SLOT_SIZE] { null, null, null};
 
         private bool primaryReady = true;
         private bool[] itemsReady = new bool[] { true, true, true };
@@ -42,26 +42,7 @@ namespace HappyDungeon
             for (int i = 0; i < Globals.SLOT_SIZE; i++) bag[i] = null; 
         }
 
-        /// <summary>
-        /// Only primary items can be put into primary slot.
-        /// </summary>
-        /// <param name="Item">item to check</param>
-        /// <returns>True if it can be squeezed into primary</returns>
-        private bool CanPutInPrimary(IItem Item)
-        {
-            return Item.SelfType() == Globals.ItemType.Primary;
-        }
-
-        /// <summary>
-        /// Both primary and usable type can be put into normal spell/item slots.
-        /// </summary>
-        /// <param name="Item">Item to check</param>
-        /// <returns>True if that item can be put into item/spell slot</returns>
-        private bool CanPutInUsable(IItem Item)
-        {
-            return (Item.SelfType() == Globals.ItemType.Primary || Item.SelfType() == Globals.ItemType.Usable);
-        }
-
+        
         /// <summary>
         /// Copy the sprite of an item. 
         /// Create a new onr instead of a reference.
@@ -85,10 +66,89 @@ namespace HappyDungeon
         // ================================================================================
 
         /// <summary>
+        /// Only primary items can be put into primary slot.
+        /// </summary>
+        /// <param name="Item">item to check</param>
+        /// <returns>True if it can be squeezed into primary</returns>
+        public bool CanPutInPrimary(IItem Item)
+        {
+            return Item.SelfType() == Globals.ItemType.Primary;
+        }
+
+        /// <summary>
+        /// Both primary and usable type can be put into normal spell/item slots.
+        /// </summary>
+        /// <param name="Item">Item to check</param>
+        /// <returns>True if that item can be put into item/spell slot</returns>
+        public bool CanPutInUsable(IItem Item)
+        {
+            return (Item.SelfType() == Globals.ItemType.Primary || Item.SelfType() == Globals.ItemType.Usable);
+        }
+
+        /// <summary>
+        /// Put an item into primary. 
+        /// If this is called, it's pre-assumed that the item can be put into primary. 
+        /// </summary>
+        /// <param name="Item">Item to be placed</param>
+        public void PutIntoPrimary(IItem Item)
+        {
+            primary = Item;
+
+            if (Item != null)
+            {
+                game.headsupDisplay.SetPrimary(CopySprite(Item));
+
+                if (Item.GetPickupModifier() != null)
+                    modifiers.Add(Item.GetPickupModifier());
+            }
+            else
+            {
+                game.headsupDisplay.SetPrimary(null);
+            }
+        }
+
+        /// <summary>
+        /// Put an item into one of the three useablt slots.
+        /// If this is called, it's pre-assumed that the item can be put into useable. 
+        /// </summary>
+        /// <param name="Item">Item to be placed</param>
+        /// <param name="Index">Which index to be put into</param>
+        public void PutIntoUsable(IItem Item, int Index)
+        {
+            itemSlots[Index] = Item;
+
+            if(Item != null)
+            {
+                game.headsupDisplay.SetItemSlot(Item.GetSprite(), Index);
+
+                if (Item.GetPickupModifier() != null)
+                    modifiers.Add(Item.GetPickupModifier());
+            }
+            else
+            {
+                game.headsupDisplay.SetItemSlot(null, Index);
+            }
+        }
+        
+        /// <summary>
+        /// Put an item into the bag.
+        /// </summary>
+        /// <param name="Item">Item to be placed</param>
+        /// <param name="Index">Which index to be put into</param>
+        public void PutIntoBag(IItem Item, int Index)
+        {
+            bag[Index] = Item;
+        }
+
+        /// <summary>
         /// Remove any item in the slot that got depleted 
         /// </summary>
         public void Update()
         {
+            if(primary == null)
+            {
+                game.headsupDisplay.SetPrimary(null);
+            }
 
             if (primary != null && primary.GetCount() <= 0)
             {
@@ -107,7 +167,8 @@ namespace HappyDungeon
                     itemSlots[i] = null;
                     game.headsupDisplay.SetItemSlot(null, i);
                     game.bagItemList.Remove(itemSlots[i]);
-                    
+
+                    itemSlots[i].Update();
                 }
             }
 
@@ -119,15 +180,12 @@ namespace HappyDungeon
         /// is capable of being put into that slot. 
         /// </summary>
         /// <param name="Item">Item to try</param>
-        public void TryAddingItem(IItem Item)
+        public bool TryAddingItem(IItem Item)
         {
             if(CanPutInPrimary(Item) && primary == null)
             {
-                primary = Item;
-                game.headsupDisplay.SetPrimary(CopySprite(Item));
-
-                if (Item.GetPickupModifier() != null)
-                    modifiers.Add(Item.GetPickupModifier());
+                PutIntoPrimary(Item);
+                return true;
             }
             else if(CanPutInUsable(Item))
             {
@@ -135,13 +193,8 @@ namespace HappyDungeon
                 {
                     if (itemSlots[i] == null)
                     {
-                        itemSlots[i] = Item;
-                        game.headsupDisplay.SetItemSlot(Item.GetSprite(), i);
-
-                        if(Item.GetPickupModifier() != null)
-                            modifiers.Add(Item.GetPickupModifier());
-
-                        break; 
+                        PutIntoUsable(Item, i);
+                        return true;
                     }
                 }
             }
@@ -151,13 +204,14 @@ namespace HappyDungeon
                 {
                     if (bag[i] == null && !(Item is DroppedGold))
                     {
-                        bag[i] = Item;
-                        break; 
+                        PutIntoBag(Item, i);
+                        game.bagItemList.Add(Item);
+                        return true;
                     }
                 }
             }
 
-
+            return false; 
         }
 
         /// <summary>
@@ -214,6 +268,20 @@ namespace HappyDungeon
                 return primary;
             else
                 return itemSlots[Index]; 
+        }
+
+        /// <summary>
+        /// Find the item in bag at the given index. 
+        /// Null if there's nothing. 
+        /// </summary>
+        /// <param name="Index">index of the item</param>
+        /// <returns>Item if there are any</returns>
+        public IItem GetBagItem(int Index)
+        {
+            if (Index < Globals.BAG_SIZE && bag[Index] != null)
+                return bag[Index];
+            else
+                return null; 
         }
 
         /// <summary>

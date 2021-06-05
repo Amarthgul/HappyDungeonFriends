@@ -25,6 +25,7 @@ namespace HappyDungeon
             foreach (IItem item in game.collectibleItemList)
             {
                 Rectangle Intersection = Rectangle.Intersect(PlayerCollisionRect, item.GetRectangle());
+                bool Success = false;
 
                 if (Intersection.Width > 0)
                 {
@@ -33,18 +34,22 @@ namespace HappyDungeon
                     if (Duplicate != null) // If this item is already in the bag 
                     {
                         Duplicate.CountFlux(item.GetCount());
+                        Success = true;
                     }
                     else
                     {
-                        game.bagItemList.Add(item.Collect());
-
-                        game.spellSlots.TryAddingItem(item);
+                        Success = game.spellSlots.TryAddingItem(item);
                     }
 
                     if (item is DroppedGold)
+                    {   // Dropped gold also marks a success collection 
                         game.goldCount += item.GetCount();
+                        Success = true; // Disable this for fast gold farming lol 
+                    }
+                        
 
-                    ToBeRemoved.Add(item);
+                    if(Success) // If that item is "pciked up", remove it 
+                        ToBeRemoved.Add(item);
                 }
             }
 

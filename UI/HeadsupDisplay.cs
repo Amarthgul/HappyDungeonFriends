@@ -479,7 +479,8 @@ namespace HappyDungeon
             // If it's removing the primary 
             if (PrimarySprite == null)
             {
-                altDisplays[0].opacity = disabledOpacity; 
+                altDisplays[0].opacity = disabledOpacity;
+                primarySlot = null; 
             }
             // If it's setting up the primary 
             else
@@ -502,7 +503,8 @@ namespace HappyDungeon
 
             if(ItemSprite == null)
             {
-                altDisplays[Index + 1].opacity = disabledOpacity; 
+                altDisplays[Index + 1].opacity = disabledOpacity;
+                itemSlots[Index] = null; 
             }
             else
             {

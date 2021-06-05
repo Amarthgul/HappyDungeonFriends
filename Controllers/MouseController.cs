@@ -100,6 +100,11 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// For during the room transitioning 
+        /// </summary>
+        /// <param name="CurrentState">meh</param>
+        /// <param name="CurrentLocation">meh</param>
         private void UpdateTransitioning(MouseState CurrentState, Vector2 CurrentLocation)
         {
             // Nothing to do here
@@ -113,6 +118,16 @@ namespace HappyDungeon
         private void UpdateBagView(MouseState CurrentState, Vector2 CurrentLocation)
         {
             game.generalDisplay.UpdateCursorPos(CurrentLocation);
+
+            // For left click 
+            if (CurrentState.LeftButton == ButtonState.Pressed)
+            {
+                game.generalDisplay.LeftClickEvent(CurrentLocation);
+            }
+            else
+            {
+                game.generalDisplay.LeftClickRelease(CurrentLocation);
+            }
 
         }
 

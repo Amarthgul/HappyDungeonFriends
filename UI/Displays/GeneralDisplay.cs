@@ -39,6 +39,38 @@ namespace HappyDungeon
             game.gameState = Globals.GameStates.Running;
         }
 
+        public void LeftClickRelease(Vector2 CursorPos)
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    bagDisplay.LeftClickRelease(CursorPos);
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void LeftClickEvent(Vector2 CursorPos)
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    bagDisplay.LeftClickEvent(CursorPos);
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Update cursor position mostly for on hover effects 
+        /// </summary>
+        /// <param name="CursorPos">Curosr position</param>
         public void UpdateCursorPos(Vector2 CursorPos)
         {
             switch (game.gameState)
@@ -52,7 +84,6 @@ namespace HappyDungeon
                     break;
             }
         }
-
 
         public void Update()
         {
