@@ -40,7 +40,8 @@ namespace HappyDungeon
 
             ImageFile NSO = TextureFactory.Instance.itemNoteSetOne;
             itemSprite = new GeneralSprite(NSO.texture, NSO.C, NSO.R, 
-                Globals.RND.Next(Globals.FRAME_CYCLE - 1), Globals.FRAME_CYCLE, Globals.ITEM_LAYER);
+                0, Globals.FRAME_CYCLE, Globals.ITEM_LAYER);
+            itemSprite.colLimitation = Globals.RND.Next() % Globals.FRAME_CYCLE;
 
             stopwatch.Restart();
             cooldownFinished = false;

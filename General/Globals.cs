@@ -82,6 +82,7 @@ namespace HappyDungeon
         // ================================================================================
         public const Language GAME_LANGUAGE = Language.English;  
         public const int SLOT_SIZE = 3;
+        public const int BAG_SIZE = 24; 
         public static Vector2[] itemSlotsLocation = new Vector2[] {
             new Vector2(114, 1),
             new Vector2(135, 1),

@@ -18,6 +18,10 @@ namespace HappyDungeon.UI.Displays
         private Game1 game;
         private SpriteBatch spriteBatch;
 
+        // ================================================================================
+        // ============================= Parameters and data ==============================
+        // ================================================================================
+
 
 
         // ================================================================================
@@ -31,11 +35,14 @@ namespace HappyDungeon.UI.Displays
 
         private GeneralSprite primarySlot;
         private GeneralSprite[] itemSlots;
+        private GeneralSprite[] bagSlots; 
+
         private Vector2 primaryLoc = new Vector2(112, 69) * Globals.SCALAR;
         private Vector2[] itemsLoc = new Vector2[] {
                 new Vector2(137, 70) * Globals.SCALAR,
                 new Vector2(158, 70) * Globals.SCALAR,
                 new Vector2(179, 70) * Globals.SCALAR };
+        private Vector2 bagLoc = new Vector2(112, 96) * Globals.SCALAR;
 
         private Vector2 drawPosition = new Vector2(0, 0);
         private Color defaultTint = Color.White;
@@ -81,7 +88,10 @@ namespace HappyDungeon.UI.Displays
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS);
 
             primarySlot = null; 
-            itemSlots = new GeneralSprite[] { null, null, null }; 
+            itemSlots = new GeneralSprite[] { null, null, null };
+            bagSlots = new GeneralSprite[Globals.BAG_SIZE];
+
+            for (int i = 0; i < Globals.BAG_SIZE; i++) bagSlots[i] = null; 
         }
 
         /// <summary>
@@ -157,6 +167,15 @@ namespace HappyDungeon.UI.Displays
                 itemSlots[i] = game.headsupDisplay.GetSprite(i);
             }
 
+
+            for (int i = 0; i < Globals.BAG_SIZE; i++)
+            {
+                if (game.spellSlots.bag[i] != null)
+                {
+                    bagSlots[i] = game.spellSlots.bag[i].GetSprite();
+                    bagSlots[i].layer = Globals.UI_SLOTS;
+                }
+            }
         }
 
         public void Draw()
@@ -170,6 +189,19 @@ namespace HappyDungeon.UI.Displays
             {
                 if (itemSlots[i] != null)
                     itemSlots[i].Draw(spriteBatch, itemsLoc[i], defaultTint);
+            }
+
+            // Draw items in the bag 
+            for (int i = 0; i < Globals.BAG_SIZE; i++)
+            {
+                if (bagSlots[i] != null)
+                {
+                    Vector2 ItemDrawPos = new Vector2(
+                        (i / 6) * Globals.SCALAR,
+                        (i % 6) * Globals.SCALAR
+                        ) + bagLoc;
+                    bagSlots[i].Draw(spriteBatch, ItemDrawPos, defaultTint);
+                }
             }
 
             bagViewBasic.Draw(spriteBatch, drawPosition, defaultTint);

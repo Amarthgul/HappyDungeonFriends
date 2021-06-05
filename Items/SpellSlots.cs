@@ -17,6 +17,7 @@ namespace HappyDungeon
     {
         private Game1 game;
 
+        public IItem[] bag { set; get; } 
 
         // Slots
         private IItem primary = null;
@@ -36,6 +37,9 @@ namespace HappyDungeon
             game = G;
 
             modifiers = new ModifierCollection();
+
+            bag = new IItem[24];
+            for (int i = 0; i < Globals.SLOT_SIZE; i++) bag[i] = null; 
         }
 
         /// <summary>
@@ -125,11 +129,11 @@ namespace HappyDungeon
                 if (Item.GetPickupModifier() != null)
                     modifiers.Add(Item.GetPickupModifier());
             }
-            else
+            else if(CanPutInUsable(Item))
             {
                 for (int i = 0; i < Globals.SLOT_SIZE; i++)
                 {
-                    if (CanPutInUsable(Item) && itemSlots[i] == null)
+                    if (itemSlots[i] == null)
                     {
                         itemSlots[i] = Item;
                         game.headsupDisplay.SetItemSlot(Item.GetSprite(), i);
@@ -141,6 +145,19 @@ namespace HappyDungeon
                     }
                 }
             }
+            else // Put into bag 
+            {
+                for ( int i = 0; i < Globals.BAG_SIZE; i++)
+                {
+                    if (bag[i] == null && !(Item is DroppedGold))
+                    {
+                        bag[i] = Item;
+                        break; 
+                    }
+                }
+            }
+
+
         }
 
         /// <summary>
