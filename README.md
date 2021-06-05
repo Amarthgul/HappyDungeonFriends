@@ -19,9 +19,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 1 June 2021: 
+Update 4 June 2021: 
 
-Can now open the bag.
+Bags can now be opened with key `B` or click on icon, it displays the items currently in possess. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">
