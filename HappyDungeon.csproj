@@ -125,6 +125,9 @@
     <Compile Include="UI\TextGenerators\DigitsSmall.cs" />
     <Compile Include="UI\TextGenerators\IText.cs" />
     <Compile Include="UI\TextGenerators\LargeBR.cs" />
+    <Compile Include="UI\Texts\ITDB.cs" />
+    <Compile Include="UI\Texts\TDB_en_US.cs" />
+    <Compile Include="UI\Texts\TextBridge.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

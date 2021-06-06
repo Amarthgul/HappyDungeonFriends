@@ -24,7 +24,7 @@ namespace HappyDungeon
         private bool _DEVMODE = false;
         public Globals.Language gameLanguage; 
         public Globals.GameStates gameState;
-        public Globals.GameLevel gameLevel; 
+        public Globals.GameLevel gameLevel;
         private int mapSize = 9;
 
         // ================================================================================
@@ -84,6 +84,7 @@ namespace HappyDungeon
         {
             gameLevel = Globals.GameLevel.Delight;
             gameLanguage = Globals.Language.English;
+            TextBridge.Instance.Init(this);
 
             roomCycler = new LevelCycling(mapSize, gameLevel);
 

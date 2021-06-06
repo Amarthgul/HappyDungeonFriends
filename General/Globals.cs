@@ -72,7 +72,7 @@ namespace HappyDungeon
 
         // Blocks are these bigger or equal to 0
 
-        // Solid blocks are block with index higher then 127 
+        // Solid blocks are block with index higher than 127 
         public const int STARE_BLOCK_1 = 128;
         public const int STARE_BLOCK_2 = 144; 
         public const int SOLID_BLOCK_BOUND = 128;
@@ -152,6 +152,8 @@ namespace HappyDungeon
         public enum DamageEffect { Stun, Knockback, Break, None };
         public enum DamageType { None, Burn };
 
+        // Chinese and Japanese sprites are too difficult to make and I don't speak Spanish
+        // So English is the only one currently supports 
         public enum Language { English, Spanish, Chinese, Japanese };
 
         // Four direction iterator 
