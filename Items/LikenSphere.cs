@@ -185,6 +185,9 @@ namespace HappyDungeon
             return 1;
         }
 
-
+        public string GetItemDescription()
+        {
+            return "hello world";
+        }
     }
 }

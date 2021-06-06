@@ -258,6 +258,18 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Provides MC method to inquiry current primary 
+        /// </summary>
+        /// <returns>Type of current primary</returns>
+        public Globals.primaryTypes GetPrimaryType()
+        {
+            if (primary is Torch)
+                return Globals.primaryTypes.Torch;
+            else
+                return Globals.primaryTypes.None;
+        }
+
+        /// <summary>
         /// For other classes to make inquries about the items. 
         /// </summary>
         /// <param name="Index">Index of item in slots, negative for the primary</param>

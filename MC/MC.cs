@@ -254,12 +254,10 @@ namespace HappyDungeon
             if(primaryState != Globals.primaryTypes.Torch)
             {
                 primaryState = Globals.primaryTypes.Torch;
-
             }
             else
             {
                 primaryState = Globals.primaryTypes.None;
-
             }
         }
 
@@ -477,6 +475,7 @@ namespace HappyDungeon
 
         /// <summary>
         /// Regulate parameters to avoid impossible values.
+        /// Also updates the stats. 
         /// </summary>
         private void Regulate()
         {

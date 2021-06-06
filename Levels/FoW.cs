@@ -29,12 +29,11 @@ namespace HappyDungeon
         private float scaler;
         private int width;
         private int height;
-        private bool shakyMode = false;
         private double shakyRange = 0.4;
         private int nextUpdateTime;
-        private bool clairvoyantMode = false;
         private float clairvoyantRange = 0;
-
+        public bool clairvoyantMode { set; get; }
+        public bool shakyMode { set; get; }
         // ================================================================================
         // ===================== Regarding the drawing of the fog =========================
         // ================================================================================
@@ -65,7 +64,8 @@ namespace HappyDungeon
             nextUpdateTime = Globals.RND.Next(SHAKY_MIN, SHAKY_MAX);
             stopwatch.Restart();
 
-            
+            shakyMode = false;
+            clairvoyantMode = false;
             rangeBaseline = 1; 
             SetRange(rangeBaseline); // Set default fog range 
             rangeNow = rangeBaseline; 
@@ -137,10 +137,6 @@ namespace HappyDungeon
             clairvoyantRange = Expansion;
             clairvoyantMode = !clairvoyantMode; 
 
-            if (!clairvoyantMode)
-            {
-                SetRange(rangeBaseline);
-            }
         }
 
         public void Update()
@@ -148,6 +144,10 @@ namespace HappyDungeon
             if (clairvoyantMode)
             {
                 rangeNow = clairvoyantRange + rangeBaseline;
+            }
+            else
+            {
+                SetRange(rangeBaseline);
             }
             if (shakyMode)
             {

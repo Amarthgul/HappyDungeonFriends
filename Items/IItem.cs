@@ -113,6 +113,12 @@ namespace HappyDungeon
         /// </summary>
         /// <returns>The type of the itm</returns>
         Globals.ItemType SelfType();
+
+        /// <summary>
+        /// Item description, does not include stats 
+        /// </summary>
+        /// <returns>Some short sentences</returns>
+        string GetItemDescription();
     }
 }
 

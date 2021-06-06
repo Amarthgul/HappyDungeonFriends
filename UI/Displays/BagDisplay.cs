@@ -160,6 +160,17 @@ namespace HappyDungeon.UI.Displays
             bagOnHover = false;
         }
 
+        private void SpecialCasesPrimary(IItem Item)
+        {
+            if (Item is Torch && ((Torch)Item).torchOn)
+            {
+                ((Torch)Item).torchOn = false; 
+                game.mainChara.primaryState = Globals.primaryTypes.None;
+                game.fogOfWar.clairvoyantMode = false;
+                game.fogOfWar.shakyMode = false;
+            }
+            
+        }
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
@@ -260,11 +271,13 @@ namespace HappyDungeon.UI.Displays
                     {
                         game.spellSlots.PutIntoPrimary(null);
                         game.spellSlots.PutIntoBag(itemSelected, TBP);
+                        SpecialCasesPrimary(itemSelected);
                     }
                     else if (game.spellSlots.CanPutInPrimary(game.spellSlots.GetBagItem(TBP)))
                     {
                         game.spellSlots.PutIntoPrimary(game.spellSlots.GetBagItem(TBP));
                         game.spellSlots.PutIntoBag(itemSelected, TBP);
+                        SpecialCasesPrimary(itemSelected);
                     }
                 } 
                 else if (slotSelected.Contains(true)) // Move from usable slots 
@@ -299,6 +312,7 @@ namespace HappyDungeon.UI.Displays
                         {   // If that thing can exchange with primary 
                             game.spellSlots.PutIntoPrimary(game.spellSlots.GetItem(i));
                             game.spellSlots.PutIntoUsable(itemSelected, i);
+                            SpecialCasesPrimary(itemSelected);
                         }
                         else if (slotSelected.Contains(true)) // Move inbetween usable slots 
                         {

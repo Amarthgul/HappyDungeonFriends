@@ -126,6 +126,9 @@ namespace HappyDungeon
         {
             return Globals.ItemType.Junk;
         }
-
+        public string GetItemDescription()
+        {
+            return "hello world";
+        }
     }
 }

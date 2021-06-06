@@ -19,10 +19,18 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 4 June 2021: 
+Update 6 June 2021: 
 
-Bags can now be opened with key `B` or click on icon, it displays the items currently in possess. 
+Fixed the torch bug of mismatching state.
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">
 </p>
+
+--------------------------------------------------------
+
+Dev logs
+
+* Items count CD on its own and still counts when in the bag, it seems possible to quickly 
+switch item in and out of slots and thus drastically increase the ability of the character.
+I don't really want to change that, it feels fun. 

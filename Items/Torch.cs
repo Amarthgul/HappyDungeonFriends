@@ -30,7 +30,7 @@ namespace HappyDungeon
         private Globals.ItemType selfType = Globals.ItemType.Primary;
         private int selfIndex = Globals.ITEM_TORCH;
 
-        private bool torchOn = false;
+        public bool torchOn { set; get; }
 
         public Torch(Game1 G, Vector2 P)
         {
@@ -44,6 +44,7 @@ namespace HappyDungeon
             torchSprite = new GeneralSprite(TS.texture, TS.C, TS.R, 0, Globals.ONE_FRAME, Globals.ITEM_LAYER);
 
             torchCount = 1; // Theoretically never change 
+            torchOn = false;
 
             stopwatch.Restart();
             cooldownFinished = false;
@@ -159,6 +160,9 @@ namespace HappyDungeon
         }
 
 
-
+        public string GetItemDescription()
+        {
+            return "hello world";
+        }
     }
 }

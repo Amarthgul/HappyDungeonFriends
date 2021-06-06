@@ -170,7 +170,8 @@ namespace HappyDungeon
             switch (mcState)
             {
                 case Globals.GeneralStates.Attack:
-                    if(primaryState == Globals.primaryTypes.Torch)
+                    if(primaryState == Globals.primaryTypes.Torch
+                        && ((Torch)game.spellSlots.GetItem(-1)).torchOn)
                     {
                         SpriteList.Add(attackWithTorch);
                         SpriteList.Add(torchAttackFlame);
@@ -210,7 +211,9 @@ namespace HappyDungeon
         private List<GeneralSprite> HoldAndMoving()
         {
             List<GeneralSprite> SpriteList = new List<GeneralSprite>();
-            if (primaryState == Globals.primaryTypes.Torch)
+
+            if (primaryState == Globals.primaryTypes.Torch
+                && ((Torch)game.spellSlots.GetItem(-1)).torchOn)
             {
                 SpriteList.Add(walkingWithTorch);
                 SpriteList.Add(torchFlame);
