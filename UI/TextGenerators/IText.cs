@@ -9,6 +9,10 @@ using Microsoft.Xna.Framework;
 
 namespace HappyDungeon.UI
 {
+    /// <summary>
+    /// I text is for text sprite generation. 
+    /// Only generates words, control characters like new line and tab are not considered. 
+    /// </summary>
     public interface IText
     {
         Texture2D GetText(string Text, GraphicsDevice G);

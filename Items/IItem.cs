@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework;
 
 namespace HappyDungeon
 {
+    /// <summary>
+    /// Since items are quite diverse, there's no one single formula or prototype. 
+    /// Each item is implemented on their own. 
+    /// </summary>
     public interface IItem
     {
         /// <summary>

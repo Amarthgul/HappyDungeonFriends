@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace HappyDungeon.UI.Texts
 {
-    class TDB_en_US : ITDB
+    class TDB_ja_JP : ITDB
     {
 
         private Dictionary<int, string> indexedDescription = new Dictionary<int, string> {
-            {Globals.ITEM_TORCH, "A simple wooden stick with fabrics tied on top" },
-            {Globals.ITEM_LINKEN, "It wispers" },
-            {Globals.ITEM_NOTE_SO, "torch" },
-            
+
         };
 
-        public TDB_en_US()
+        public TDB_ja_JP()
         {
 
         }

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
 
 namespace HappyDungeon
 {
@@ -14,7 +18,7 @@ namespace HappyDungeon
     {
         public Globals.Language Language { set; get; }
 
-
+        private GraphicsDevice graphicsDevice;
         private string notFound = "TextNotFound";
         private UI.Texts.TDB_en_US TDB_English;
         
@@ -31,6 +35,7 @@ namespace HappyDungeon
         public void Init(Game1 G)
         {
             Language = G.gameLanguage;
+            graphicsDevice = G.GraphicsDevice;
             TDB_English = new UI.Texts.TDB_en_US();
         }
 

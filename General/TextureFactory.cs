@@ -49,6 +49,7 @@ namespace HappyDungeon
 
         public ImageFile fontDigitsSmall;
         public ImageFile fontDigitsSmallB;
+        public ImageFile fontLarge;
         public ImageFile fontLargeBR;
         public ImageFile fontLargeWR;
 
@@ -130,6 +131,7 @@ namespace HappyDungeon
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);
+            fontLarge = new ImageFile(content, "Images/UI/Fonts/fontBig", 1, 1);
             fontLargeBR = new ImageFile(content, "Images/UI/Fonts/fontBigBR", 1, 1);
             fontLargeWR = new ImageFile(content, "Images/UI/Fonts/fontBigWR", 1, 1);
 

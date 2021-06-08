@@ -169,5 +169,10 @@ namespace HappyDungeon
             return selfType;
         }
 
+        public string GetItemDescription()
+        {
+            return TextBridge.Instance.GetIndexedDescrption(SelfIndex()); ;
+        }
+
     }
 }

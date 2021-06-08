@@ -154,7 +154,7 @@ namespace HappyDungeon
 
         // Chinese and Japanese sprites are too difficult to make and I don't speak Spanish
         // So English is the only one currently supports 
-        public enum Language { English, Spanish, Chinese, Japanese };
+        public enum Language { English, Spanish, Chinese, Japanese, French };
 
         // Four direction iterator 
         public static List<Direction> FourDirIter = new List<Direction>() 

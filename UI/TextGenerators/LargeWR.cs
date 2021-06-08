@@ -10,14 +10,14 @@ using Microsoft.Xna.Framework;
 namespace HappyDungeon.UI
 {
     /// <summary>
-    /// Larger font with black rims
+    /// Larger font with white rims
     /// </summary>
-    public class LargeBR : Large
+    public class LargeWR : Large
     {
 
-        public LargeBR()
+        public LargeWR()
         {
-            sourceTexts = TextureFactory.Instance.fontLargeBR.texture;
+            sourceTexts = TextureFactory.Instance.fontLargeWR.texture;
 
         }
 

@@ -124,8 +124,14 @@
     <Compile Include="UI\ScreenFX.cs" />
     <Compile Include="UI\TextGenerators\DigitsSmall.cs" />
     <Compile Include="UI\TextGenerators\IText.cs" />
+    <Compile Include="UI\TextGenerators\Large.cs" />
+    <Compile Include="UI\TextGenerators\LargeWR.cs" />
     <Compile Include="UI\TextGenerators\LargeBR.cs" />
     <Compile Include="UI\Texts\ITDB.cs" />
+    <Compile Include="UI\Texts\TDB_es.cs" />
+    <Compile Include="UI\Texts\TDB_fr_FR.cs" />
+    <Compile Include="UI\Texts\TDB_ja_JP.cs" />
+    <Compile Include="UI\Texts\TDB_zh_CN.cs" />
     <Compile Include="UI\Texts\TDB_en_US.cs" />
     <Compile Include="UI\Texts\TextBridge.cs" />
   </ItemGroup>

@@ -162,7 +162,7 @@ namespace HappyDungeon
 
         public string GetItemDescription()
         {
-            return "hello world";
+            return TextBridge.Instance.GetIndexedDescrption(SelfIndex()); ;
         }
     }
 }
