@@ -68,7 +68,8 @@ namespace HappyDungeon
         public const int ITEM_BOUND = -256;
 
         // -256 and smaller are enemies or NPCs 
-        public const int ENEMY_BEAD = -257; 
+        public const int ENEMY_STD = -256;
+        public const int ENEMY_BEAD = -257;
 
         // Blocks are these bigger or equal to 0
 

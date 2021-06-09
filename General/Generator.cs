@@ -201,6 +201,9 @@ namespace HappyDungeon
                         case Globals.ENEMY_BEAD:
                             EnemyList.Add(new BloodBead(Game, Position));
                             break;
+                        case Globals.ENEMY_STD:
+                            EnemyList.Add(new IEnemySTD(Game, Position));
+                            break;
                         default:
                             break;
                     }

@@ -67,6 +67,7 @@
     <Compile Include="Controllers\MouseController.cs" />
     <Compile Include="Enemies\Agent\AgentStupid.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
+    <Compile Include="Enemies\IEnemySTD.cs" />
     <Compile Include="Enemies\Unburied.cs" />
     <Compile Include="Enemies\BloodBead.cs" />
     <Compile Include="Enemies\EnemyHealthBar.cs" />

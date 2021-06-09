@@ -10,56 +10,31 @@ using System.Diagnostics;
 
 namespace HappyDungeon
 {
-    class BloodBead : IEnemy
+    class BloodBead : IEnemySTD
     {
 
-        private Game1 game;
-        private SpriteBatch spriteBatch;
-
-        private IAgent brainAgent; 
-        private Vector2 position;
-        private Vector2 stagedMovement; 
-        public Globals.Direction facingDir;
-        private int currentMoveIndex; 
-        private int[] moveSpeed = new int[] {
-            (int)(0.1 * Globals.SCALAR),
-            (int)(0.3 * Globals.SCALAR),
-            (int)(0.6 * Globals.SCALAR),
-            (int)(0.3 * Globals.SCALAR) };
-        private int collisionDMG = -12; 
-
-        Rectangle CollisionRect;
-        private int horzontalTop = 4 * Globals.SCALAR;
-        private int horzontalBot = 3 * Globals.SCALAR;
-        private int sideShrink = 2 * Globals.SCALAR;
-        private Rectangle movingHorizontal;
-        private Rectangle movingVertical;
-        private EnemyBlockCollision enemyBlockCollison; 
-
-        private GeneralSprite beadSprite;
-        private Color defaultTint = Color.White;
-        private float layerOnTop = Globals.ENEMY_LAYER;
-        private float layerAtBack = Globals.ENEMY_LAYER - 0.02f;
-
-        private Globals.EnemyTypes selfType = Globals.EnemyTypes.Minion;
-
-        private Enemies.EnemyHealthBar HPBar; 
-        private int totalHealth = 20;
-        private int currentHealth = 20;
-        private Stopwatch damageProtectionSW = new Stopwatch();
-        private int recoverTime = 1000;
-
-        private bool startOfEnd = false; 
-        private Stopwatch deathSW = new Stopwatch();
-        private int fadeStartTime = 1000;
-        private int lingeringTime = 1500; 
-
-        public BloodBead(Game1 G, Vector2 P)
+        public BloodBead(Game1 G, Vector2 P) : base( G,  P) 
         {
             game = G;
             position = P;
-
             spriteBatch = game.spriteBatch;
+
+            // ------------------------------------------------------------------
+            // -------------------- Difference from STD--------------------------
+            segmentedSpeed = new int[] {
+                (int)(0.1 * Globals.SCALAR),
+                (int)(0.3 * Globals.SCALAR),
+                (int)(0.6 * Globals.SCALAR),
+                (int)(0.3 * Globals.SCALAR) };
+            collisionDMG = -12;
+            horizontalTop = 4 * Globals.SCALAR;
+            horizontalBot = 3 * Globals.SCALAR;
+            sideShrink = 2 * Globals.SCALAR;
+            useSegmentedSpeed = true;              // Speed varies with animation
+            startWithHibernate = false;            // Not hibernating 
+            isVisible = true;                      // Born visible
+            selfState = Globals.GeneralStates.Moving; 
+            // ------------------------------------------------------------------
 
             LoadSprites();
             UpdateRect();
@@ -71,53 +46,12 @@ namespace HappyDungeon
 
             currentMoveIndex = 0;
             facingDir = (Globals.Direction)(Globals.RND.Next() % 4);
-            beadSprite.rowLimitation = (int)facingDir;
+            movingSprite.rowLimitation = (int)facingDir;
 
             damageProtectionSW.Restart();
         }
 
-        public void Turn(Globals.Direction NewDir)
-        {
-            facingDir = NewDir; 
-        }
-
-        public void Move()
-        {
-            stagedMovement = new Vector2(0, 0);
-
-            switch (facingDir)
-            {
-                case Globals.Direction.Left:
-                    stagedMovement.X -= moveSpeed[currentMoveIndex];
-                    break;
-                case Globals.Direction.Right:
-                    stagedMovement.X += moveSpeed[currentMoveIndex];
-                    break;
-                case Globals.Direction.Up:
-                    stagedMovement.Y -= moveSpeed[currentMoveIndex];
-                    break;
-                case Globals.Direction.Down:
-                    stagedMovement.Y += moveSpeed[currentMoveIndex];
-                    break;
-                default:
-                    break;
-            }
-
-            beadSprite.rowLimitation = (int)facingDir;
-            beadSprite.Update();
-        }
-
-        public void TakeDamage(DamageInstance Damage)
-        {
-            if(damageProtectionSW.ElapsedMilliseconds > recoverTime)
-            {
-                currentHealth += Damage.DamageCount;
-                damageProtectionSW.Restart();
-            }
-            
-        }
-
-        public void Update(MC MainChara)
+        public override void Update(MC MainChara)
         {
             // Change draw layers if player is lower in screen 
             float DrawLayer; 
@@ -129,7 +63,7 @@ namespace HappyDungeon
             {
                 DrawLayer = layerOnTop;
             }
-            beadSprite.layer = DrawLayer;
+            mainSprite.layer = DrawLayer;
 
             // Deal with live and die 
             if (currentHealth <= 0)
@@ -147,8 +81,8 @@ namespace HappyDungeon
                 // Turn if hit a block
                 if (enemyBlockCollison.ValidMove(GetStagedRectangle()))
                 {
-                    beadSprite.Update();
-                    currentMoveIndex = beadSprite.currentFrame % Globals.FRAME_CYCLE;
+                    mainSprite.Update();
+                    currentMoveIndex = mainSprite.currentFrame % Globals.FRAME_CYCLE;
 
                     position += stagedMovement;
                     stagedMovement = new Vector2(0, 0);
@@ -166,43 +100,11 @@ namespace HappyDungeon
             HPBar.Update(totalHealth, currentHealth);
         }
 
-        public void Draw()
-        {
-            beadSprite.Draw(spriteBatch, position, defaultTint);
-
-            if(currentHealth != totalHealth)
-            {
-                HPBar.Draw(position);
-            }
-        }
-
-        public Rectangle GetRectangle()
-        {
-            switch (facingDir)
-            {
-                case Globals.Direction.Left:
-                    return movingHorizontal;
-                case Globals.Direction.Right:
-                    return movingHorizontal;
-                case Globals.Direction.Up:
-                    return movingVertical;
-                case Globals.Direction.Down:
-                    return movingVertical;
-                default:
-                    return CollisionRect;
-            }
-        }
-
-        public bool IsDead()
-        {
-            return (startOfEnd && deathSW.ElapsedMilliseconds > lingeringTime); 
-        }
-
         /// <summary>
         /// Return a damage instance of on collision. 
         /// </summary>
         /// <returns>DamageInstance object</returns>
-        public DamageInstance DealCollisionDamage()
+        public override DamageInstance DealCollisionDamage()
         {
             if (currentHealth == 0)
                 return null; 
@@ -218,89 +120,22 @@ namespace HappyDungeon
         // ================================ Private methods ===============================
         // ================================================================================
 
-        private Rectangle GetStagedRectangle()
-        {
-            return new Rectangle(
-                CollisionRect.X + (int)stagedMovement.X,
-                CollisionRect.Y + (int)stagedMovement.Y,
-                CollisionRect.Width,
-                CollisionRect.Height
-                );
-        }
-
-        private void LoadSprites()
+        protected override void LoadSprites()
         {
             ImageFile BB = TextureFactory.Instance.enemyBead;
+            ImageFile BD = TextureFactory.Instance.enemyBeadDeath;
 
-            beadSprite = new GeneralSprite(BB.texture, BB.C, BB.R,
+            movingSprite = new GeneralSprite(BB.texture, BB.C, BB.R,
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
-            beadSprite.frameDelay = 250; 
-        }
+            movingSprite.frameDelay = 250;
 
-        private void UpdateRect()
-        {
-            movingHorizontal = new Rectangle(
-                (int)position.X,
-                (int)position.Y + horzontalTop,
-                Globals.OUT_UNIT,
-                Globals.OUT_UNIT - horzontalTop - horzontalBot
-                );
-            movingVertical = new Rectangle(
-                (int)position.X + sideShrink,
-                (int)position.Y,
-                Globals.OUT_UNIT - 2 * sideShrink,
-                Globals.OUT_UNIT
-                );
-
-            switch (facingDir)
-            {
-                case Globals.Direction.Left:
-                    CollisionRect = movingHorizontal; 
-                    break; 
-                case Globals.Direction.Right:
-                    CollisionRect = movingHorizontal;
-                    break;
-                case Globals.Direction.Up:
-                    CollisionRect = movingVertical;
-                    break;
-                case Globals.Direction.Down:
-                    CollisionRect = movingVertical;
-                    break;
-                default:
-                    CollisionRect = movingHorizontal;
-                    break;
-            }
-        }
-
-        private void UpdateDeath()
-        {
-            if(!startOfEnd)
-            {
-                startOfEnd = true;
-                deathSW.Restart();
-                ImageFile BD = TextureFactory.Instance.enemyBeadDeath;
-                beadSprite = new GeneralSprite(BD.texture, BD.C, BD.R,
+            deathSprite = new GeneralSprite(BD.texture, BD.C, BD.R,
                     Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
-                beadSprite.rowLimitation = (int)facingDir;
-                beadSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
-                beadSprite.currentFrame = 0; 
-            }
-            else
-            {
-                if(beadSprite.currentFrame != 3)
-                    beadSprite.Update();
-                else if(beadSprite.opacity > 0f && deathSW.ElapsedMilliseconds > fadeStartTime)
-                {
-                    beadSprite.opacity -= 0.05f;
-                }
+            deathSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
 
-                // Gradually fade out 
-                if(deathSW.ElapsedMilliseconds > lingeringTime)
-                {
-                    position = new Vector2(- Globals.OUT_UNIT, - Globals.OUT_UNIT); 
-                }
-            }
+            mainSprite = movingSprite; 
         }
+
 
     }
 }

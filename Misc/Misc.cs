@@ -50,10 +50,7 @@ namespace HappyDungeon
             }
         }
 
-        // ================================================================================
-        // ============================= Distance calculation =============================
-        // ================================================================================
-
+        
         // Splitting items, blocks, and enemies because some of the special cases
         // might require special treatment 
 
@@ -169,12 +166,27 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Given a position, reverse translate it into the column and row tile index.
+        /// In relative only to the room area, i.e. 2 offsets on all sides. 
+        /// </summary>
+        /// <param name="AbsPos">Absolute position in screen</param>
+        /// <returns>Tile index of row and col</returns>
+        public int[] PositionReverse(Vector2 AbsPos)
+        {
+            int[] Rev = new int[] { 0, 0 };
+
+
+
+            return Rev;
+        }
+
+        /// <summary>
         /// Euclidean distance between 2 points.
         /// </summary>
         /// <param name="P1">Point 1</param>
         /// <param name="P2">Point 2</param>
         /// <returns>Euclidean distance between point 1 and 2</returns>
-        private int L2Distance(Vector2 P1, Vector2 P2)
+        public int L2Distance(Vector2 P1, Vector2 P2)
         {
             return (int)Math.Sqrt(Math.Pow((P1.X - P2.X), 2) + Math.Pow((P1.Y - P2.Y), 2));
         }

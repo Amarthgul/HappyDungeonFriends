@@ -77,6 +77,10 @@ namespace HappyDungeon
         public ImageFile enemyBead;
         public ImageFile enemyBeadDeath;
 
+        public ImageFile enemySTD;
+        public ImageFile enemySTDDie;
+        public ImageFile enemySTDBurrow;
+
         private static TextureFactory instance = new TextureFactory();
 
         public static TextureFactory Instance {
@@ -155,6 +159,12 @@ namespace HappyDungeon
             // --------------------------------------------------------------------------------
             // ---------------------------------- Enemies -------------------------------------
             healthBarMinions = new ImageFile(content, "Images/Enemies/HPBM", 1, 1);
+            
+            // Standard enemy base, used for debug and meta behavior test 
+            enemySTD = new ImageFile(content, "Images/Enemies/enemyStd", 4, 4);
+            enemySTDDie = new ImageFile(content, "Images/Enemies/enemyStdDie", 4, 4);
+            enemySTDBurrow = new ImageFile(content, "Images/Enemies/enemyStdBurrow", 4, 4);
+
             enemyBead = new ImageFile(content, "Images/Enemies/bead", 4, 4);
             enemyBeadDeath = new ImageFile(content, "Images/Enemies/beadDeath", 4, 4);
 

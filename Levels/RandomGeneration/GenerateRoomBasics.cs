@@ -8,17 +8,17 @@ namespace HappyDungeon.Levels
 {
     public class GenerateRoomBasics
     {
-        public const int ENEMY_MAX = 8;
-        public const int ENEMY_SPAWN_BIAS = 15;
-        public const int PATTERNED_BIAS = -10;
-        public const int ITEM_TOLERANCE = 6;
-        public const int ITEM_MAX = 4;
-        public const double WALKABLE_SPREAD_MAX = 0.6;
-        public const double SOLID_SPREAD_MAX = 0.2;
-        public const int MESSY_THRESHOLD = 4;
-        public const double MESSY_DIVIDER = 2;
-        public const int TREASURE_POSSIBILITY = 20;
-        public const int TREASURE_RANGE = 3;
+        protected const int ENEMY_MAX = 8;
+        protected const int ENEMY_SPAWN_BIAS = 15;
+        protected const int PATTERNED_BIAS = -10;
+        protected const int ITEM_TOLERANCE = 6;
+        protected const int ITEM_MAX = 4;
+        protected const double WALKABLE_SPREAD_MAX = 0.6;
+        protected const double SOLID_SPREAD_MAX = 0.2;
+        protected const int MESSY_THRESHOLD = 4;
+        protected const double MESSY_DIVIDER = 2;
+        protected const int TREASURE_POSSIBILITY = 20;
+        protected const int TREASURE_RANGE = 3;
 
         public double walkableSpread;
         public double solidSpread;
@@ -198,13 +198,17 @@ namespace HappyDungeon.Levels
             }
         }
 
+        // ================================================================================
+        // =============================== Private methods ================================
+        // ================================================================================
+
         /// <summary>
         /// Check if that position is going to spawn as a block.
         /// </summary>
         /// <param name="row">Meh</param>
         /// <param name="col">Meh</param>
         /// <returns>True if it's a block</returns>
-        public bool IsBlock(int row, int col)
+        protected bool IsBlock(int row, int col)
         {
             return (room.Arrangement[row, col] > 0);
         }
@@ -216,7 +220,7 @@ namespace HappyDungeon.Levels
         /// <param name="row">Meh</param>
         /// <param name="col">Meh</param>
         /// <returns>True if that position is going to have a solid block</returns>
-        public bool IsSolidBlock(int row, int col)
+        protected bool IsSolidBlock(int row, int col)
         {
             return (room.Arrangement[row, col] > Globals.SOLID_BLOCK_BOUND);
         }
@@ -227,7 +231,7 @@ namespace HappyDungeon.Levels
         /// <param name="row">Meh</param>
         /// <param name="col">Meh</param>
         /// <returns>True if that index is an item</returns>
-        public bool IsItem(int row, int col)
+        protected bool IsItem(int row, int col)
         {
             return (room.Arrangement[row, col] < 0 && room.Arrangement[row, col] > Globals.ITEM_BOUND);
         }
@@ -236,7 +240,7 @@ namespace HappyDungeon.Levels
         /// Check and clear anything that could clog the doors.
         /// </summary>
         /// <param name="Target">The matrix to clear</param>
-        public void MaskOffDoorways(bool[,] Target)
+        protected void MaskOffDoorways(bool[,] Target)
         {
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
             {
@@ -253,7 +257,7 @@ namespace HappyDungeon.Levels
         /// </summary>
         /// <param name="Density">Ratio of total truth values</param>
         /// <returns>Bool matrix with random truth</returns>
-        public bool[,] RandScatter(double Density)
+        protected bool[,] RandScatter(double Density)
         {
             int Threshold = (int)(Globals.RTILE_COLUMN * Globals.RTILE_ROW * Density) * 100;
             Threshold /= (Globals.RTILE_COLUMN * Globals.RTILE_ROW);
@@ -283,7 +287,7 @@ namespace HappyDungeon.Levels
         /// <param name="Matrix">Target matrix</param>
         /// <param name="RangeList">Target list</param>
         /// <returns>Matrix of bool, true if that position is in the list.</returns>
-        public bool[,] FindIndexInRange(int[,] Matrix, int[] RangeList)
+        protected bool[,] FindIndexInRange(int[,] Matrix, int[] RangeList)
         {
             bool[,] result = new bool[room.Arrangement.GetLength(0), room.Arrangement.GetLength(1)];
             List<int> lst = new List<int>(RangeList);
@@ -303,7 +307,7 @@ namespace HappyDungeon.Levels
         /// Flood the arrangement matrix with one single index. 
         /// </summary>
         /// <param name="Index">Flooding index.</param>
-        public void FloodMap(int Index)
+        protected void FloodMap(int Index)
         {
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
             {
