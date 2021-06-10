@@ -65,10 +65,12 @@
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="Controllers\MouseController.cs" />
+    <Compile Include="Enemies\Agent\AgentMoth.cs" />
+    <Compile Include="Enemies\Agent\AgentDarkArcher.cs" />
+    <Compile Include="Enemies\Agent\AgentVampire.cs" />
     <Compile Include="Enemies\Agent\AgentStupid.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
     <Compile Include="Enemies\IEnemySTD.cs" />
-    <Compile Include="Enemies\Unburied.cs" />
     <Compile Include="Enemies\BloodBead.cs" />
     <Compile Include="Enemies\EnemyHealthBar.cs" />
     <Compile Include="Enemies\IEnemy.cs" />
@@ -88,6 +90,8 @@
     <Compile Include="Items\NoteSetOne.cs" />
     <Compile Include="Items\LikenSphere.cs" />
     <Compile Include="Items\ItemTemplate.cs" />
+    <Compile Include="Items\Projectile\IProjectile.cs" />
+    <Compile Include="Items\Projectile\IProjectileStandard.cs" />
     <Compile Include="Items\SpellSlots.cs" />
     <Compile Include="Items\Torch.cs" />
     <Compile Include="Levels\Blocks\BlockInvis.cs" />

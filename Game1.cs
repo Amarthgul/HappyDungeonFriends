@@ -34,7 +34,8 @@ namespace HappyDungeon
         public MC mainChara;
         public List<IEnemy> enemyList { get; set; }           // Refreshes with every room
         public List<IItem> collectibleItemList { get; set; }  // Refreshes with every room 
-        public List<IItem> bagItemList { get; set; }
+        public List<IItem> bagItemList { get; set; }          // Stays same in each game session 
+        public List<IProjectile> projList { get; set; }       // Cleans after entering new room
         public int goldCount { get; set; }
 
         // ================================================================================
@@ -51,12 +52,12 @@ namespace HappyDungeon
         // ================================================================================
         // ============================= UIs and Screens ==================================
         // ================================================================================
-        public HeadsupDisplay headsupDisplay;
-        public GeneralDisplay generalDisplay; 
-        public Minimap minimap;
-        public MouseCursor cursor;
-        public ScreenFX screenFX; 
-        public int displayWholeMinimap { set; get; }
+        public HeadsupDisplay headsupDisplay;  // The bar on top
+        public GeneralDisplay generalDisplay;  // Such as title screen, bag, settings, etc.
+        public Minimap minimap;                // Map on top-left and when pressing tab 
+        public MouseCursor cursor;             // Replacement for displayMouse option 
+        public ScreenFX screenFX;              // All minor special effects
+        public int displayWholeMinimap { set; get; }  // For tab and other minimap display 
 
         // ================================================================================
         // =========================== Controls and logic =================================

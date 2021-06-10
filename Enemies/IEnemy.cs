@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace HappyDungeon
 {
+
     public interface IEnemy
     {
 
@@ -18,6 +19,8 @@ namespace HappyDungeon
         void Turn(Globals.Direction NewDir);
 
         void TakeDamage(DamageInstance Damage);
+
+        void Attack();
 
         Rectangle GetRectangle();
 

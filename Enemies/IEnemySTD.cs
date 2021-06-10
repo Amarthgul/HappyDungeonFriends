@@ -61,6 +61,8 @@ namespace HappyDungeon
         protected GeneralSprite movingSprite;
         protected GeneralSprite deathSprite;
         protected GeneralSprite wakeupSprite;
+        protected GeneralSprite attackSprite;
+        protected GeneralSprite projectileSprite; 
 
         protected bool isVisible = false; 
 
@@ -85,6 +87,9 @@ namespace HappyDungeon
         protected Enemies.EnemyHealthBar HPBar;
         protected int totalHealth = 20;
         protected int currentHealth = 20;
+        protected int regenAmount = 1;
+        protected int regenInterval = 200;  // Pretty much the min number that can be killed  
+        protected Stopwatch regenSW = new Stopwatch();
         protected Stopwatch damageProtectionSW = new Stopwatch();
         protected int recoverTime = 1000;
 
@@ -123,6 +128,7 @@ namespace HappyDungeon
             movingSprite.rowLimitation = (int)facingDir;
 
             damageProtectionSW.Restart();
+            regenSW.Restart();
         }
 
         public void Turn(Globals.Direction NewDir)
@@ -202,6 +208,9 @@ namespace HappyDungeon
                 case Globals.GeneralStates.Moving:
                     UpdateMoving(MainChara);
                     break;
+                case Globals.GeneralStates.Attack:
+                    UpdateAttack();
+                    break; 
                 case Globals.GeneralStates.Dead:
                     UpdateDeath();
                     break;
@@ -225,6 +234,11 @@ namespace HappyDungeon
             {
                 HPBar.Draw(position);
             }
+        }
+
+        public virtual void Attack()
+        {
+
         }
 
         public virtual Rectangle GetRectangle()
@@ -292,20 +306,33 @@ namespace HappyDungeon
         {
             ImageFile STD = TextureFactory.Instance.enemySTD;
             ImageFile STDD = TextureFactory.Instance.enemySTDDie;
-            ImageFile STDB = TextureFactory.Instance.enemySTDBurrow; 
+            ImageFile STDB = TextureFactory.Instance.enemySTDBurrow;
+            ImageFile STDA = TextureFactory.Instance.enemySTDAttack;
+            ImageFile AP = TextureFactory.Instance.enemySTDProjectile;
 
+            // Normal moving 
             movingSprite = new GeneralSprite(STD.texture, STD.C, STD.R,
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
             movingSprite.frameDelay = 250;
 
+            // Death or effect 
             deathSprite = new GeneralSprite(STDD.texture, STDD.C, STDD.R,
                     Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
             deathSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
 
+            // Wake up from hibernation animation 
             wakeupSprite = new GeneralSprite(STDB.texture, STDB.C, STDB.R,
                     Globals.WHOLE_SHEET, STDB.C * STDB.R, Globals.ENEMY_LAYER);
             wakeupSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
             wakeupSprite.frameDelay = 100;
+
+            // Attack animation 
+            attackSprite = new GeneralSprite(STDA.texture, STDA.C, STDA.R,
+                    Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
+            attackSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
+
+            projectileSprite = new GeneralSprite(AP.texture, AP.C, AP.R,
+                    Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
 
             mainSprite = movingSprite; // Avoid null init 
         }
@@ -350,6 +377,21 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Update health and regenerate HP.
+        /// </summary>
+        protected virtual void UpdateRegen()
+        {
+            if (regenSW.ElapsedMilliseconds > regenInterval)
+            {
+                currentHealth += regenAmount;
+                if (currentHealth > totalHealth)
+                    currentHealth = totalHealth;
+
+                regenSW.Restart();
+            }
+        }
+
+        /// <summary>
         /// Update when this enemy is burrowed underground.
         /// Mostly about how this enemy is woke up from hobernation. 
         /// </summary>
@@ -369,6 +411,7 @@ namespace HappyDungeon
             }
 
             wakeupSprite.Update();
+            UpdateRegen();
 
             if (wakeupSW.ElapsedMilliseconds > wakeupTime)
             {
@@ -377,9 +420,9 @@ namespace HappyDungeon
             }
         }
 
-
         /// <summary>
-        /// The ordinary update method when the enemy is out and moving
+        /// The ordinary update method when the enemy is out and moving.
+        /// It could changed into attack from here. 
         /// </summary>
         /// <param name="MainChara">Info about the player character</param>
         protected virtual void UpdateMoving(MC MainChara)
@@ -404,6 +447,14 @@ namespace HappyDungeon
             {
                 Turn(brainAgent.HandleBlockCollision(facingDir));
             }
+
+            UpdateRegen();
+        }
+
+
+        protected virtual void UpdateAttack()
+        {
+
         }
 
         /// <summary>
@@ -418,18 +469,18 @@ namespace HappyDungeon
                 deathSW.Restart();
 
                 // Swap the sprite, by default the death sprite is 2 pixel wider than normal 
-                movingSprite = deathSprite; 
+                mainSprite = deathSprite;
 
-                movingSprite.rowLimitation = (int)facingDir;
-                movingSprite.currentFrame = 0;
+                mainSprite.rowLimitation = (int)facingDir;
+                mainSprite.currentFrame = 0;
             }
             else
             {
-                if (movingSprite.currentFrame != 3)
-                    movingSprite.Update();
-                else if (movingSprite.opacity > 0f && deathSW.ElapsedMilliseconds > fadeStartTime)
+                if (mainSprite.currentFrame != 3)
+                    mainSprite.Update();
+                else if (mainSprite.opacity > 0f && deathSW.ElapsedMilliseconds > fadeStartTime)
                 {
-                    movingSprite.opacity -= 0.05f;
+                    mainSprite.opacity -= 0.05f;
                 }
 
                 // Gradually fade out 

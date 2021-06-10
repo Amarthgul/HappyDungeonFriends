@@ -80,6 +80,8 @@ namespace HappyDungeon
         public ImageFile enemySTD;
         public ImageFile enemySTDDie;
         public ImageFile enemySTDBurrow;
+        public ImageFile enemySTDAttack;
+        public ImageFile enemySTDProjectile; 
 
         private static TextureFactory instance = new TextureFactory();
 
@@ -164,6 +166,8 @@ namespace HappyDungeon
             enemySTD = new ImageFile(content, "Images/Enemies/enemyStd", 4, 4);
             enemySTDDie = new ImageFile(content, "Images/Enemies/enemyStdDie", 4, 4);
             enemySTDBurrow = new ImageFile(content, "Images/Enemies/enemyStdBurrow", 4, 4);
+            enemySTDAttack = new ImageFile(content, "Images/Enemies/enemyStdAttack", 4, 4);
+            enemySTDProjectile = new ImageFile(content, "Images/Enemies/enemyStdProjectile", 4, 4);
 
             enemyBead = new ImageFile(content, "Images/Enemies/bead", 4, 4);
             enemyBeadDeath = new ImageFile(content, "Images/Enemies/beadDeath", 4, 4);
