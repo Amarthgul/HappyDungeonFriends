@@ -20,7 +20,11 @@ namespace HappyDungeon
 
         void TakeDamage(DamageInstance Damage);
 
+        bool CanAttack();
+
         void Attack();
+
+        void SetAttackInterval(int Pattern);
 
         Rectangle GetRectangle();
 

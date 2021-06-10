@@ -10,8 +10,12 @@ using System.Diagnostics;
 
 namespace HappyDungeon
 {
+    /// <summary>
+    /// The earliest enemy came to be in this project, so some parts remains out-dated.  
+    /// </summary>
     class BloodBead : IEnemySTD
     {
+        private int beadKnockbackDist = 16;
 
         public BloodBead(Game1 G, Vector2 P) : base( G,  P) 
         {
@@ -33,6 +37,7 @@ namespace HappyDungeon
             useSegmentedSpeed = true;              // Speed varies with animation
             startWithHibernate = false;            // Not hibernating 
             isVisible = true;                      // Born visible
+            canAttack = false;                     // Does not attack 
             selfState = Globals.GeneralStates.Moving; 
             // ------------------------------------------------------------------
 
@@ -51,6 +56,10 @@ namespace HappyDungeon
             damageProtectionSW.Restart();
         }
 
+        /// <summary>
+        /// Since blood bead basic is rather stupid, its update method is simplified.  
+        /// </summary>
+        /// <param name="MainChara">Not used</param>
         public override void Update(MC MainChara)
         {
             // Change draw layers if player is lower in screen 
@@ -110,7 +119,7 @@ namespace HappyDungeon
                 return null; 
 
             DamageInstance DMG = new DamageInstance(collisionDMG, new Globals.DamageEffect [] { Globals.DamageEffect.Knockback });
-            DMG.knowckbackDist = collisionDMG;
+            DMG.knowckbackDist = beadKnockbackDist;
 
             return DMG;
         }

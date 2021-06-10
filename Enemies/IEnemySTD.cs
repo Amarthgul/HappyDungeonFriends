@@ -30,7 +30,7 @@ namespace HappyDungeon
         protected Globals.EnemyTypes selfType = Globals.EnemyTypes.Minion;
 
         // ================================================================================
-        // ================================== Movements ===================================
+        // ============================= Movements and attack =============================
         // ================================================================================
         protected int currentMoveIndex;
         protected int baseMovementSpeed = (int)(0.4 * Globals.SCALAR); 
@@ -40,7 +40,19 @@ namespace HappyDungeon
             (int)(0.2 * Globals.SCALAR),
             (int)(0.2 * Globals.SCALAR),
             (int)(0.2 * Globals.SCALAR) };
-        protected int collisionDMG = -8;
+        protected int collisionDMG = -8;        // Well collision damage is sort of an attack 
+
+        protected bool canAttack = true;        // Overall bool to enable or disable attack  
+        protected bool canRangedAttack = true;  // By default perfrom ranged, if cannot, perform melee
+        protected bool holdOnAttack = true;     // Wether attack will make it stop moving 
+        protected int rangedAttackDistance = 4 * Globals.OUT_UNIT;
+        protected int meleeAttackRange = 1 * Globals.OUT_UNIT;
+        protected int attackDamage = 10;
+        protected int attackLastingTime = 400;  // If hold on attack, then that's the time it stops 
+        protected int attackIntervalMin = 2000; // 2 seconds' interval at least 
+        protected int attackIntervalMax = 8000; // Some perform attack randomly, that's the longest interval time
+        protected int attackInterval; 
+        protected Stopwatch attackSW = new Stopwatch();
 
         // ================================================================================
         // ================================= Collisions ===================================
@@ -90,7 +102,7 @@ namespace HappyDungeon
         protected int regenAmount = 1;
         protected int regenInterval = 200;  // Pretty much the min number that can be killed  
         protected Stopwatch regenSW = new Stopwatch();
-        protected Stopwatch damageProtectionSW = new Stopwatch();
+        protected Stopwatch damageProtectionSW = new Stopwatch();  // Avoid being 1 shot
         protected int recoverTime = 1000;
 
         // ================================================================================
@@ -118,17 +130,19 @@ namespace HappyDungeon
 
             HPBar = new Enemies.EnemyHealthBar(game, selfType);
 
-            brainAgent = new Enemies.AgentStupid(this);
+            brainAgent = new Enemies.AgenTest(this);
             enemyBlockCollison = new EnemyBlockCollision(game);
 
-            selfState = startWithHibernate ? Globals.GeneralStates.Hold : Globals.GeneralStates.Moving; 
-            
+            selfState = startWithHibernate ? Globals.GeneralStates.Hold : Globals.GeneralStates.Moving;
+
+            attackInterval = Globals.RND.Next(attackIntervalMin, attackIntervalMax);
             currentMoveIndex = 0; 
             facingDir = (Globals.Direction)(Globals.RND.Next() % 4);
             movingSprite.rowLimitation = (int)facingDir;
 
             damageProtectionSW.Restart();
             regenSW.Restart();
+            attackSW.Restart();
         }
 
         public void Turn(Globals.Direction NewDir)
@@ -210,6 +224,8 @@ namespace HappyDungeon
                     break;
                 case Globals.GeneralStates.Attack:
                     UpdateAttack();
+                    if (!holdOnAttack)
+                        UpdateMoving(MainChara);
                     break; 
                 case Globals.GeneralStates.Dead:
                     UpdateDeath();
@@ -236,9 +252,25 @@ namespace HappyDungeon
             }
         }
 
+        public virtual bool CanAttack()
+        {
+            return attackSW.ElapsedMilliseconds > attackInterval;
+        }
+
         public virtual void Attack()
         {
+            if (!canAttack) return;  // Fail-safe 
 
+            DamageInstance DmgIns = new DamageInstance(10, null);
+            projectileSprite.rowLimitation = (int)facingDir;
+            IProjectileStandard proj = new IProjectileStandard(game, projectileSprite, DmgIns, AttackOffset(), facingDir);
+            game.projList.Add(proj);
+
+            selfState = Globals.GeneralStates.Attack; 
+
+            attackSprite.currentFrame = 0;
+            attackSprite.rowLimitation = (int)facingDir;
+            mainSprite = attackSprite;
         }
 
         public virtual Rectangle GetRectangle()
@@ -280,6 +312,22 @@ namespace HappyDungeon
             return DMG;
         }
 
+        /// <summary>
+        /// Reset the interval for next attack attempt. 
+        /// </summary>
+        /// <param name="Pattern">0 for random range, positive number for fixed min time</param>
+        public virtual void SetAttackInterval(int Pattern)
+        {
+            if (Pattern == 0)
+            {
+                attackInterval = Globals.RND.Next(attackIntervalMin, attackIntervalMax);
+            }
+            else if (Pattern > 0)
+            {
+                attackInterval = attackIntervalMin; 
+            }
+            attackSW.Restart();
+        }
 
         // ================================================================================
         // ================================ Private methods ===============================
@@ -330,6 +378,7 @@ namespace HappyDungeon
             attackSprite = new GeneralSprite(STDA.texture, STDA.C, STDA.R,
                     Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
             attackSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
+            attackSprite.frameDelay = (attackLastingTime / Globals.FRAME_CYCLE);
 
             projectileSprite = new GeneralSprite(AP.texture, AP.C, AP.R,
                     Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
@@ -430,7 +479,6 @@ namespace HappyDungeon
             // Change movement depending on player's stats 
             brainAgent.Update(MainChara);
 
-
             // Try to move 
             Move();
 
@@ -451,10 +499,18 @@ namespace HappyDungeon
             UpdateRegen();
         }
 
-
+        /// <summary>
+        /// Update method during attack and switch back to moving state when appropriate. 
+        /// </summary>
         protected virtual void UpdateAttack()
         {
+            attackSprite.Update();
 
+            if (attackSW.ElapsedMilliseconds > attackLastingTime)
+            {
+                selfState = Globals.GeneralStates.Moving;
+                mainSprite = movingSprite;
+            }
         }
 
         /// <summary>
@@ -489,6 +545,36 @@ namespace HappyDungeon
                     position = new Vector2(-Globals.OUT_UNIT, -Globals.OUT_UNIT);
                 }
             }
+        }
+
+        /// <summary>
+        /// Instead of creating a projectile (melee or not) at the it's own position,
+        /// creating it in front of the current position.
+        /// </summary>
+        /// <returns>Position of projectile with offset</returns>
+        protected virtual Vector2 AttackOffset()
+        {
+            Vector2 AO = new Vector2(position.X, position.Y);
+
+            switch (facingDir)
+            {
+                case Globals.Direction.Left:
+                    AO.X -= Globals.OUT_UNIT;
+                    break;
+                case Globals.Direction.Right:
+                    AO.X += Globals.OUT_UNIT;
+                    break;
+                case Globals.Direction.Up:
+                    AO.Y -= Globals.OUT_UNIT;
+                    break;
+                case Globals.Direction.Down:
+                    AO.Y += Globals.OUT_UNIT;
+                    break;
+                default:
+                    break;
+            }
+
+            return AO;
         }
 
     }

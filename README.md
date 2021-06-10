@@ -10,8 +10,8 @@ filled with rainbow, flowers, and unicorn.
 By the end it should have all codes, images (include PSDs), and musics available.
 
 Note that this project has a strong personal flavour, I do try to keep the naming, comments, and implementation 
-consistent, but it is not strictly bound to any design pattern or strategy. Like sometimes the word "level" and 
-"room" is used as if they are same, "mouse" and "cursor" can also be interchangeable in the naming.
+consistent, but it is not strictly bound to any design pattern or strategy. Like some words are used interchangeably 
+and the inner structure of a file, like what fileds goes first or how to sort the methods, are not the same.
 
 Currently still work in progress. 
 
@@ -19,9 +19,10 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 6 June 2021: 
+Update 10 June 2021: 
 
-Fixed the torch bug of mismatching state.
+There is now a standard enemy template (not to be used in final product) that can perform most actions 
+a minion class could do. 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">

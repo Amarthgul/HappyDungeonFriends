@@ -11,7 +11,7 @@ namespace HappyDungeon.Enemies
     /// Vampire is afraid of illuminati, but will follow and attack the player character
     /// when illuminati is not on. 
     /// </summary>
-    class AgentVampire : IAgent
+    class AgenTest : IAgent
     {
         private const int DELAY_MAX = 8000;
         private const int DELAY_MIN = 4000;
@@ -22,7 +22,7 @@ namespace HappyDungeon.Enemies
         private long timer;
         private long nextTurn; 
 
-        public AgentVampire(IEnemy FindMyself)
+        public AgenTest(IEnemy FindMyself)
         {
             self = FindMyself;
 
@@ -51,7 +51,11 @@ namespace HappyDungeon.Enemies
             }
 
             if (self.CanAttack())
+            {
                 self.Attack();
+                self.SetAttackInterval(0);
+            }
+                
 
         }
 

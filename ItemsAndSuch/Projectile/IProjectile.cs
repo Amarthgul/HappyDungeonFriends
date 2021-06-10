@@ -16,6 +16,8 @@ namespace HappyDungeon
 
         void Draw();
 
+        bool Expired();
+
         Rectangle GetRectangle();
 
         DamageInstance GetDamageInstance();

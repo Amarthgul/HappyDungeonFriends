@@ -8,7 +8,8 @@ using System.Linq;
 namespace HappyDungeon
 {
     /// <summary>
-    /// This is the main type for your game.
+    /// This is the game class. 
+    /// My lazy ass did not rename it, and when I want to , it's too late. 
     /// </summary>
     public class Game1 : Game
     {
@@ -282,8 +283,7 @@ namespace HappyDungeon
         private void UpdateRunning()
         {
             
-            foreach (IItem item in collectibleItemList)
-            {
+            foreach (IItem item in collectibleItemList) {
                 item.Update();
             }
             foreach (IItem item in spellSlots.itemSlots)
@@ -299,9 +299,11 @@ namespace HappyDungeon
                     block.Update();
             }
 
-            foreach (IEnemy enemy in enemyList)
-            {
+            foreach (IEnemy enemy in enemyList) {
                 enemy.Update(mainChara);
+            }
+            foreach (IProjectile proj in projList) {
+                proj.Update();
             }
 
             spellSlots.Update();
@@ -313,6 +315,8 @@ namespace HappyDungeon
             screenFX.Update();
             minimap.Update();
             headsupDisplay.Update();
+
+            ClearLists();
         }
 
         /// <summary>
@@ -348,7 +352,6 @@ namespace HappyDungeon
 
         }
 
-
         private void UpdateBagView()
         {
             generalDisplay.Update();
@@ -382,6 +385,10 @@ namespace HappyDungeon
             {
                 if (Misc.Instance.EnemyFogBreaker(enemy, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     enemy.Draw();
+            }
+            foreach (IProjectile proj in projList)
+            {
+                proj.Draw();
             }
 
             mainChara.Draw();
@@ -437,12 +444,13 @@ namespace HappyDungeon
             minimap.Draw();
         }
 
-
+        /// <summary>
+        /// Draw method when in bag view 
+        /// </summary>
         private void DrawBagView()
         {
             generalDisplay.Draw();
         }
-
 
         /// <summary>
         /// Start a new generator and populate the room again 
@@ -458,6 +466,16 @@ namespace HappyDungeon
 
             enemyList = mapGenerator.GetEnemyList(this);
 
+            projList = new List<IProjectile>();
+
+        }
+
+        /// <summary>
+        /// Clear expired things in lists
+        /// </summary>
+        private void ClearLists()
+        {
+            projList.RemoveAll(x => x.Expired() == true);
         }
     }
 }
