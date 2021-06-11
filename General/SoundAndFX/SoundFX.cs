@@ -36,6 +36,14 @@ namespace HappyDungeon
         // ================================= Levels and env ===============================
         // ================================================================================
 
+
+        // ================================================================================
+        // ======================================= UI =====================================
+        // ================================================================================
+        private SoundEffect[] bagLMBSlect;
+        private SoundEffect[] bagLMBRelease;
+        private SoundEffect[] bagOnhover;
+
         private static SoundFX instance = new SoundFX();
         public static SoundFX Instance {
             get { return instance; }
@@ -65,6 +73,19 @@ namespace HappyDungeon
                 Content.Load<SoundEffect>("SFX/enemyBBMove4"),
                 Content.Load<SoundEffect>("SFX/enemyBBMove5"),
                 Content.Load<SoundEffect>("SFX/enemyBBMove6")
+            };
+
+
+            // --------------------------------------------------------------------------------
+            // ----------------------------------- UI  ----------------------------------------
+            bagLMBSlect = new SoundEffect[] {    
+                Content.Load<SoundEffect>("SFX/bagLMBClick1"),
+            };
+            bagLMBRelease = new SoundEffect[] {    
+                Content.Load<SoundEffect>("SFX/bagLMBRelease1"),
+            };
+            bagOnhover = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/bagOnhover1"),
             };
         }
 
@@ -141,5 +162,17 @@ namespace HappyDungeon
 
         }
 
+        public void PlayBagLMBSelect()
+        {
+            RandPick(bagLMBSlect).Play();
+        }
+        public void PlayBagLMBRelease()
+        {
+            RandPick(bagLMBRelease).Play();
+        }
+        public void PlayBagItemOnhover()
+        {
+            RandPick(bagOnhover).Play();
+        }
     }
 }

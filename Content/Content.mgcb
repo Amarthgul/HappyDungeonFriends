@@ -631,29 +631,17 @@
 /processorParam:Quality=Best
 /build:SFX/bagLMBClick1.wav
 
-#begin SFX/bagLMBClick1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/bagLMBClick1.wav
-
 #begin SFX/bagLMBRelease1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/bagLMBRelease1.wav
 
-#begin SFX/bagLMBRelease1.wav
+#begin SFX/bagOnhover1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/bagLMBRelease1.wav
-
-#begin SFX/enemyBBDie1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBDie1.wav
+/build:SFX/bagOnhover1.wav
 
 #begin SFX/enemyBBDie1.wav
 /importer:WavImporter
@@ -667,29 +655,11 @@
 /processorParam:Quality=Best
 /build:SFX/enemyBBDie2.wav
 
-#begin SFX/enemyBBDie2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBDie2.wav
-
 #begin SFX/enemyBBDie3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/enemyBBDie3.wav
-
-#begin SFX/enemyBBDie3.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBDie3.wav
-
-#begin SFX/enemyBBDie4.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBDie4.wav
 
 #begin SFX/enemyBBDie4.wav
 /importer:WavImporter
@@ -703,29 +673,11 @@
 /processorParam:Quality=Best
 /build:SFX/enemyBBMove1.wav
 
-#begin SFX/enemyBBMove1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBMove1.wav
-
 #begin SFX/enemyBBMove2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/enemyBBMove2.wav
-
-#begin SFX/enemyBBMove2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBMove2.wav
-
-#begin SFX/enemyBBMove3.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBMove3.wav
 
 #begin SFX/enemyBBMove3.wav
 /importer:WavImporter
@@ -739,29 +691,11 @@
 /processorParam:Quality=Best
 /build:SFX/enemyBBMove4.wav
 
-#begin SFX/enemyBBMove4.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBMove4.wav
-
 #begin SFX/enemyBBMove5.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/enemyBBMove5.wav
-
-#begin SFX/enemyBBMove5.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBMove5.wav
-
-#begin SFX/enemyBBMove6.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/enemyBBMove6.wav
 
 #begin SFX/enemyBBMove6.wav
 /importer:WavImporter
@@ -870,24 +804,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/itemGoldLose1.wav
-
-#begin SFX/itemGoldLose1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/itemGoldLose1.wav
-
-#begin SFX/itemGoldPickup1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/itemGoldPickup1.wav
-
-#begin SFX/itemGoldPickup1.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SFX/itemGoldPickup1.wav
 
 #begin SFX/itemGoldPickup1.wav
 /importer:WavImporter

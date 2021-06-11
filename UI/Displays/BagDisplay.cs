@@ -52,6 +52,7 @@ namespace HappyDungeon.UI.Displays
         private bool primaryOnHover = false;
         private bool[] itemsOnHover = new bool[] { false, false, false };
         private bool bagOnHover = false;
+        private bool[] bagOnHoverSFX = new bool[Globals.BAG_SIZE];
 
         private Vector2 bagOnHoverIndexedLoc = new Vector2(0, 0); // Determining which slot will the hover not be in
 
@@ -150,14 +151,47 @@ namespace HappyDungeon.UI.Displays
         }
 
         /// <summary>
-        /// Mark all on hover effect as false. 
-        /// Used to recover and refresh from on hover.
+        /// Reset certain on hover effects. 
+        /// 0 for reset all;
+        /// 1 for reset all but primary;
+        /// 2 for reset all but items;
+        /// 3 for reset all but bag view;
         /// </summary>
-        private void ResetAllOnHover()
+        /// <param name="Mode">Different mode flag</param>
+        private void ResetOnHover(int Mode)
         {
-            primaryOnHover = false;
-            itemsOnHover = new bool[] { false, false, false };
-            bagOnHover = false;
+            switch (Mode)
+            {
+                case 0:
+                    itemsOnHover = new bool[] { false, false, false };
+                    bagOnHover = false;
+                    primaryOnHover = false;
+                    ResetBagOnHoverSFX(-1);
+                    break;
+                case 1:
+                    itemsOnHover = new bool[] { false, false, false };
+                    bagOnHover = false;
+                    break;
+                case 2:
+                    primaryOnHover = false;
+                    bagOnHover = false;
+                    break;
+                case 3:
+                    itemsOnHover = new bool[] { false, false, false };
+                    primaryOnHover = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ResetBagOnHoverSFX(int Excemption)
+        {
+            for (int i = 0; i < Globals.BAG_SIZE; i++)
+            {
+                if (i != Excemption)
+                    bagOnHoverSFX[i] = false;
+            }
         }
 
         private void SpecialCasesPrimary(IItem Item)
@@ -182,6 +216,8 @@ namespace HappyDungeon.UI.Displays
         /// <param name="CursorPos">Position of the cursor</param>
         public void LeftClickEvent(Vector2 CursorPos)
         {
+            bool Selected = false;
+
             if (leftClickInProcess) // Update the offset if something is already selected 
             {
                 selectionOffset = CursorPos - lastRecoredCursor;
@@ -192,6 +228,7 @@ namespace HappyDungeon.UI.Displays
                 primarySelected = true;
                 primarySlot.layer = Globals.UI_ICONS;
                 itemSelected = game.spellSlots.GetItem(-1);
+                Selected = true; 
 
                 leftClickInProcess = true;
                 lastRecoredCursor = CursorPos;
@@ -203,6 +240,7 @@ namespace HappyDungeon.UI.Displays
                     + (int)((CursorPos.Y - bagLoc.Y) / Globals.OUT_UNIT) * Globals.BAG_COL;
                 if (bagSlots[bagItemSelectionIndex] == null) return;
                 itemSelected = game.spellSlots.GetBagItem(bagItemSelectionIndex);
+                Selected = true;
 
                 bagslotSelected[bagItemSelectionIndex] = true;
                 bagSlots[bagItemSelectionIndex].layer = Globals.UI_ICONS;
@@ -218,11 +256,16 @@ namespace HappyDungeon.UI.Displays
                         slotSelected[i] = true;
                         itemSlots[i].layer = Globals.UI_ICONS;
                         itemSelected = game.spellSlots.GetItem(i);
+                        Selected = true;
 
                         leftClickInProcess = true;
                         lastRecoredCursor = CursorPos;
                     }
                 }
+            }
+
+            if (Selected) {
+                SoundFX.Instance.PlayBagLMBSelect();
             }
             
         }
@@ -235,6 +278,8 @@ namespace HappyDungeon.UI.Displays
         /// <param name="CursorPos">Where the cursor is released</param>
         public void LeftClickRelease(Vector2 CursorPos)
         {
+            bool Released = false;
+
             if (!leftClickInProcess) return;
             // Quit if it's not yet a left click session
 
@@ -272,12 +317,14 @@ namespace HappyDungeon.UI.Displays
                         game.spellSlots.PutIntoPrimary(null);
                         game.spellSlots.PutIntoBag(itemSelected, TBP);
                         SpecialCasesPrimary(itemSelected);
+                        Released = true;
                     }
                     else if (game.spellSlots.CanPutInPrimary(game.spellSlots.GetBagItem(TBP)))
                     {
                         game.spellSlots.PutIntoPrimary(game.spellSlots.GetBagItem(TBP));
                         game.spellSlots.PutIntoBag(itemSelected, TBP);
                         SpecialCasesPrimary(itemSelected);
+                        Released = true;
                     }
                 } 
                 else if (slotSelected.Contains(true)) // Move from usable slots 
@@ -287,17 +334,20 @@ namespace HappyDungeon.UI.Displays
                     {
                         game.spellSlots.PutIntoUsable(null, TBE);
                         game.spellSlots.PutIntoBag(itemSelected, TBP);
+                        Released = true;
                     }
                     else if (game.spellSlots.CanPutInUsable(game.spellSlots.GetBagItem(TBP)))
                     {
                         game.spellSlots.PutIntoUsable(game.spellSlots.GetBagItem(TBP), TBE);
                         game.spellSlots.PutIntoBag(itemSelected, TBP);
+                        Released = true;
                     }
                 } 
                 else if (bagslotSelected.Contains(true)) // move between bag items 
                 {
                     game.spellSlots.PutIntoBag(game.spellSlots.GetBagItem(TBP), bagItemSelectionIndex);
                     game.spellSlots.PutIntoBag(itemSelected, TBP);
+                    Released = true;
                 }
 
             }
@@ -313,13 +363,16 @@ namespace HappyDungeon.UI.Displays
                             game.spellSlots.PutIntoPrimary(game.spellSlots.GetItem(i));
                             game.spellSlots.PutIntoUsable(itemSelected, i);
                             SpecialCasesPrimary(itemSelected);
+                            Released = true;
                         }
                         else if (slotSelected.Contains(true)) // Move inbetween usable slots 
                         {
                             int TBE = slotSelected.ToList().FindIndex(x => x == true);
                             game.spellSlots.PutIntoUsable(game.spellSlots.GetItem(i), TBE);
                             game.spellSlots.PutIntoUsable(itemSelected, i);
-                        } else if (bagslotSelected.Contains(true))
+                            Released = true;
+                        } 
+                        else if (bagslotSelected.Contains(true))
                         {
                             int TBE = bagslotSelected.ToList().FindIndex(x => x == true);
                             if (game.spellSlots.CanPutInUsable(game.spellSlots.GetBagItem(TBE)))
@@ -327,9 +380,11 @@ namespace HappyDungeon.UI.Displays
                                 
                                 if (game.spellSlots.GetItem(i) == null) {
                                     game.spellSlots.PutIntoBag(null, TBE);
+                                    Released = true;
                                 }
                                 else {
                                     game.spellSlots.PutIntoBag(game.spellSlots.GetItem(i), TBE);
+                                    Released = true;
                                 }
                                 game.spellSlots.PutIntoUsable(itemSelected, i);
                             }
@@ -344,6 +399,10 @@ namespace HappyDungeon.UI.Displays
             UnselectAll();
             leftClickInProcess = false;
             selectionOffset = new Vector2(0, 0);
+
+            if (Released) {
+                SoundFX.Instance.PlayBagLMBRelease();
+            }
         }
 
         /// <summary>
@@ -352,24 +411,56 @@ namespace HappyDungeon.UI.Displays
         /// <param name="CursorPos">Position of the cursor</param>
         public void UpdateOnhover(Vector2 CursorPos)
         {
+            bool OnHoverSFX = false;
+            bool OnHoverDetected = false; 
+
             if (primaryRange.Contains(CursorPos))
+            {
+                if (!primaryOnHover) OnHoverSFX = true;
+
                 primaryOnHover = true;
-
-            for (int i = 0; i < Globals.SLOT_SIZE; i++)
-            {
-                if (itemsRange[i].Contains(CursorPos))
-                    itemsOnHover[i] = true;
+                OnHoverDetected = true;
+                ResetOnHover(1);
             }
-
-            if (bagRange.Contains(CursorPos))
+            else if (bagRange.Contains(CursorPos))
             {
+                int TBP = (int)((CursorPos.X - bagLoc.X) / Globals.OUT_UNIT)
+                    + (int)((CursorPos.Y - bagLoc.Y) / Globals.OUT_UNIT) * Globals.BAG_COL;
                 bagOnHoverIndexedLoc = new Vector2(
                     Globals.OUT_UNIT * (int)(CursorPos.X / Globals.OUT_UNIT),
                     Globals.OUT_UNIT * (int)(CursorPos.Y / Globals.OUT_UNIT)
                     );
                 bagOnHover = true;
+
+                if (!bagOnHoverSFX[TBP]) {
+                    OnHoverSFX = true;
+                    bagOnHoverSFX[TBP] = true;
+                    ResetBagOnHoverSFX(TBP);
+                }
+
+                OnHoverDetected = true;
+                ResetOnHover(3);
             }
-                
+            else
+            {
+                for (int i = 0; i < Globals.SLOT_SIZE; i++){
+                    if (itemsRange[i].Contains(CursorPos)) {
+                        if (!itemsOnHover[i]) OnHoverSFX = true;
+
+                        itemsOnHover[i] = true;
+                        OnHoverDetected = true;
+                        ResetOnHover(2);
+                    }   
+                }
+            }
+
+            if (!OnHoverDetected) {
+                ResetOnHover(0);
+            }
+
+            if (OnHoverSFX) {
+                SoundFX.Instance.PlayBagItemOnhover();
+            } 
         }
 
         public void Update()
@@ -459,8 +550,6 @@ namespace HappyDungeon.UI.Displays
             if (bagOnHover)
                 onHoverNote.Draw(spriteBatch, bagOnHoverIndexedLoc, defaultTint);
 
-            // Revoke all on hover effects for next time 
-            ResetAllOnHover();
         }
 
     }
