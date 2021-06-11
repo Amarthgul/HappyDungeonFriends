@@ -28,6 +28,8 @@ namespace HappyDungeon
 
         Rectangle GetRectangle();
 
+        int GetIndex();
+
         bool IsDead();
 
         DamageInstance DealCollisionDamage(); 

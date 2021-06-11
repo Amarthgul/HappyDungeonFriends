@@ -190,6 +190,7 @@ namespace HappyDungeon
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             TextureFactory.Instance.LoadAll(Content);
+            SoundFX.Instance.LoadAll(Content);
 
             LoadClasses(0);
             // TODO: use this.Content to load your game content here

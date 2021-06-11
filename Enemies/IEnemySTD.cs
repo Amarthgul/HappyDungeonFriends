@@ -29,6 +29,8 @@ namespace HappyDungeon
 
         protected Globals.EnemyTypes selfType = Globals.EnemyTypes.Minion;
 
+        protected int selfIndex = Globals.ENEMY_STD;
+
         // ================================================================================
         // ============================= Movements and attack =============================
         // ================================================================================
@@ -67,7 +69,7 @@ namespace HappyDungeon
         protected EnemyBlockCollision enemyBlockCollison;
 
         // ================================================================================
-        // ============================= Drawing of the enemy =============================
+        // =================== Drawing and the sound of the enemy =========================
         // ================================================================================
         protected GeneralSprite mainSprite; 
         protected GeneralSprite movingSprite;
@@ -83,6 +85,13 @@ namespace HappyDungeon
         // Drawing layer, used to create depth effect in comparasion to the player character 
         protected float layerOnTop = Globals.ENEMY_LAYER;
         protected float layerAtBack = Globals.ENEMY_LAYER - 0.02f;
+
+        protected int moveSoundIntervalBaseline = 1000;
+        protected int moveSoundIntervalFlau = 200;
+        protected int moveSoundInterval = 1000;
+        protected Stopwatch soundSW = new Stopwatch();
+        private float maxVolume = .2f;
+        private int audibleRange = 3 * Globals.OUT_UNIT;
 
         // ================================================================================
         // ========================= Being alive and healthy ==============================
@@ -150,7 +159,7 @@ namespace HappyDungeon
             facingDir = NewDir;
         }
 
-        public virtual void Move()
+        public virtual void Move(MC MainChara)
         {
             stagedMovement = new Vector2(0, 0);
 
@@ -173,6 +182,8 @@ namespace HappyDungeon
                 default:
                     break;
             }
+
+            PlaySounds(MainChara, 0);
 
             movingSprite.rowLimitation = (int)facingDir;
             movingSprite.Update();
@@ -223,12 +234,12 @@ namespace HappyDungeon
                     UpdateMoving(MainChara);
                     break;
                 case Globals.GeneralStates.Attack:
-                    UpdateAttack();
+                    UpdateAttack(MainChara);
                     if (!holdOnAttack)
                         UpdateMoving(MainChara);
                     break; 
                 case Globals.GeneralStates.Dead:
-                    UpdateDeath();
+                    UpdateDeath(MainChara);
                     break;
                 default:
                     break; 
@@ -252,9 +263,15 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Different from the `canAttack` field. This method provides info for outside
+        /// inquiry, while the filed `canAttack` is the inside view indicating whether or
+        /// not this enemy has the ability to attack at all. 
+        /// </summary>
+        /// <returns>True of this enemy is capable of attack now</returns>
         public virtual bool CanAttack()
         {
-            return attackSW.ElapsedMilliseconds > attackInterval;
+            return attackSW.ElapsedMilliseconds > attackInterval && canAttack;
         }
 
         public virtual void Attack()
@@ -327,6 +344,11 @@ namespace HappyDungeon
                 attackInterval = attackIntervalMin; 
             }
             attackSW.Restart();
+        }
+
+        public virtual int GetIndex()
+        {
+            return selfIndex; 
         }
 
         // ================================================================================
@@ -480,7 +502,7 @@ namespace HappyDungeon
             brainAgent.Update(MainChara);
 
             // Try to move 
-            Move();
+            Move(MainChara);
 
             // If it's valid, then move 
             if (enemyBlockCollison.ValidMove(GetStagedRectangle()))
@@ -502,7 +524,7 @@ namespace HappyDungeon
         /// <summary>
         /// Update method during attack and switch back to moving state when appropriate. 
         /// </summary>
-        protected virtual void UpdateAttack()
+        protected virtual void UpdateAttack(MC MainChara)
         {
             attackSprite.Update();
 
@@ -517,7 +539,7 @@ namespace HappyDungeon
         /// This method is uesd after the health of the enemy drops under 0. 
         /// Can either be death animation, or something like haunting.  
         /// </summary>
-        protected virtual void UpdateDeath()
+        protected virtual void UpdateDeath(MC MainChara)
         {
             if (!startOfEnd) // Mark the start of the death process 
             {
@@ -529,6 +551,8 @@ namespace HappyDungeon
 
                 mainSprite.rowLimitation = (int)facingDir;
                 mainSprite.currentFrame = 0;
+
+                PlaySounds(MainChara, 1);
             }
             else
             {
@@ -577,5 +601,40 @@ namespace HappyDungeon
             return AO;
         }
 
+        /// <summary>
+        /// Since many sound effects requires position parameters to make them stereo
+        /// play sound is a separated method here to calculate its positon. 
+        /// </summary>
+        /// <param name="MainChara">Info about player</param>
+        /// <param name="Mode">0 for moving sound, 1 for death</param>
+        protected virtual void PlaySounds(MC MainChara, int Mode)
+        {
+            int Dist = Misc.Instance.L2Distance(position, MainChara.position);
+            if (Dist > audibleRange) return;
+
+            if (soundSW.ElapsedMilliseconds > moveSoundInterval || Mode != 0)
+            {
+                float Vol = (float)(maxVolume * ((double)Dist / audibleRange));
+                float Pan = (float)((position.X - MainChara.position.X) / (double)(audibleRange));
+
+                switch (Mode)
+                {
+                    case 0:
+                        SoundFX.Instance.PlayEnemyMoveSFX(selfIndex, Vol, Pan);
+                        break;
+                    case 1:
+                        Vol = (Vol + .2f < 1f) ? Vol + .2f: Vol;
+                        SoundFX.Instance.PlayEnemyDieSFX(selfIndex, Vol, Pan);
+                        break;
+                    default:
+                        break; 
+                }
+                
+                soundSW.Restart();
+
+                moveSoundInterval = Globals.RND.Next(moveSoundIntervalBaseline - moveSoundIntervalFlau,
+                    moveSoundIntervalBaseline + moveSoundIntervalFlau); 
+            }
+        }
     }
 }

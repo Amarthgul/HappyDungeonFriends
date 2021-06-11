@@ -47,6 +47,7 @@
     <Compile Include="Collisions\PlayerEnemyCollision.cs" />
     <Compile Include="Collisions\PlayerItemCollision.cs" />
     <Compile Include="Collisions\PlayerMeleeAttackCollision.cs" />
+    <Compile Include="Collisions\ProjectileCollision.cs" />
     <Compile Include="Commands\AltDisplayCommand.cs" />
     <Compile Include="Commands\AttackCommand.cs" />
     <Compile Include="Commands\DisplayBagCommand.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="General\Modifiers\ModifierBurn.cs" />
     <Compile Include="General\Modifiers\ModifierCollection.cs" />
     <Compile Include="General\Modifiers\ModifierTorch.cs" />
+    <Compile Include="General\SoundAndFX\SoundFX.cs" />
     <Compile Include="ItemsAndSuch\Items\DroppedGold.cs" />
     <Compile Include="ItemsAndSuch\Items\IItem.cs" />
     <Compile Include="ItemsAndSuch\ItemCoolDown.cs" />
@@ -222,6 +224,7 @@
     <Content Include="Content\Images\MC\MC_walk.png" />
     <Content Include="Content\Images\UI\HeadsupUIBack.png" />
     <Content Include="Content\Images\UI\HeadsupUIFront.png" />
+    <Content Include="Content\SFX\itemGoldPickup1.wav" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

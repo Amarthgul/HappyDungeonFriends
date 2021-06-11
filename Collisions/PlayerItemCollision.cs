@@ -43,6 +43,7 @@ namespace HappyDungeon
 
                     if (item is DroppedGold)
                     {   // Dropped gold also marks a success collection 
+                        SoundFX.Instance.PlayGoldPickupSFX();
                         game.goldCount += item.GetCount();
                         Success = true; // Disable this for fast gold farming lol 
                     }

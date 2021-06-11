@@ -25,6 +25,7 @@ namespace HappyDungeon
 
             // ------------------------------------------------------------------
             // -------------------- Difference from STD--------------------------
+            selfIndex = Globals.ENEMY_BEAD;
             segmentedSpeed = new int[] {
                 (int)(0.1 * Globals.SCALAR),
                 (int)(0.3 * Globals.SCALAR),
@@ -54,6 +55,7 @@ namespace HappyDungeon
             movingSprite.rowLimitation = (int)facingDir;
 
             damageProtectionSW.Restart();
+            soundSW.Restart();
         }
 
         /// <summary>
@@ -77,16 +79,16 @@ namespace HappyDungeon
             // Deal with live and die 
             if (currentHealth <= 0)
             {
-                UpdateDeath();
+                UpdateDeath(MainChara);
             }
             else
             {
                 // Change movement depending on player's stats 
                 brainAgent.Update(MainChara);
 
-
                 // Try to move 
-                Move();
+                Move(MainChara);
+
                 // Turn if hit a block
                 if (enemyBlockCollison.ValidMove(GetStagedRectangle()))
                 {
@@ -144,7 +146,6 @@ namespace HappyDungeon
 
             mainSprite = movingSprite; 
         }
-
 
     }
 }

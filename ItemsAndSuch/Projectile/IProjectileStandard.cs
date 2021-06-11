@@ -31,6 +31,7 @@ namespace HappyDungeon
         protected int collisionWidth = 8;
         protected int collisionHeight = 8; 
         protected Rectangle collisionRect;
+        protected ProjectileCollision collisionDect;
 
         protected bool expired = false;
 
@@ -51,6 +52,7 @@ namespace HappyDungeon
             isMelee = false;
             isTargetProjectile = false;
             isCurved = false;
+            collisionDect = new ProjectileCollision(game);
 
             UpdateRectangle();
             moveSW.Restart();
@@ -58,15 +60,20 @@ namespace HappyDungeon
 
         public  virtual void Update()
         {
-            if (isCurved)
-            {
+            // This part deals with its movement 
+            if (isCurved) {
 
             }
-            else
-            {
+            else {
                 UpdateProjectileDefault();
-
             }
+
+
+            if (collisionDect.CollidedWithPlayer())
+            {
+                game.mainChara.TakeDamage(damageInstance, Misc.Instance.Opposite(facingDir));
+            }
+
         }
 
         public virtual void Draw()
@@ -125,10 +132,11 @@ namespace HappyDungeon
             }
             currentTravelDistance += moveSpeed;
 
-            if (currentTravelDistance > TotalravelDistance)
+            UpdateRectangle();
+
+            if (currentTravelDistance > TotalravelDistance || collisionDect.CollidedWithEnv(collisionRect))
                 expired = true;
 
-            UpdateRectangle();
             selfSprite.Update();
             moveSW.Restart();
         }
