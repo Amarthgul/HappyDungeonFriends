@@ -28,6 +28,8 @@ namespace HappyDungeon
 
         Rectangle GetRectangle();
 
+        Vector2 GetPosition();
+
         int GetIndex();
 
         bool IsDead();

@@ -45,8 +45,9 @@ namespace HappyDungeon
         protected int collisionDMG = -8;        // Well collision damage is sort of an attack 
 
         protected bool canAttack = true;        // Overall bool to enable or disable attack  
-        protected bool canRangedAttack = true;  // By default perfrom ranged, if cannot, perform melee
-        protected bool holdOnAttack = true;     // Wether attack will make it stop moving 
+        protected bool canRangedAttack = false;  // By default perfrom ranged, if cannot, perform melee
+        protected bool holdOnAttack = false;     // Wether attack will make it stop moving 
+        protected bool meleeShowProjectile = true; // If melee projectile draw the sprite 
         protected int rangedAttackDistance = 4 * Globals.OUT_UNIT;
         protected int meleeAttackRange = 1 * Globals.OUT_UNIT;
         protected int attackDamage = 10;
@@ -279,8 +280,23 @@ namespace HappyDungeon
             if (!canAttack) return;  // Fail-safe 
 
             DamageInstance DmgIns = new DamageInstance(10, null);
-            projectileSprite.rowLimitation = (int)facingDir;
-            IProjectileStandard proj = new IProjectileStandard(game, projectileSprite, DmgIns, AttackOffset(), facingDir);
+            GeneralSprite ProjSpeite = null; 
+
+            if(canRangedAttack || meleeShowProjectile)
+            {
+                projectileSprite.rowLimitation = (int)facingDir;
+                ProjSpeite = projectileSprite; 
+            }
+            
+            IProjectileStandard proj = new IProjectileStandard(game, ProjSpeite, DmgIns, 
+                AttackOffset(), facingDir);
+            proj.totalravelDistance = canRangedAttack ? rangedAttackDistance : meleeAttackRange;
+            if (!canRangedAttack)
+            {
+                proj.MarkAsMelee(this);
+                proj.meleeLastingTime = attackLastingTime;
+            }
+
             game.projList.Add(proj);
 
             selfState = Globals.GeneralStates.Attack; 
@@ -307,6 +323,11 @@ namespace HappyDungeon
                 default:
                     return CollisionRect;
             }
+        }
+
+        public virtual Vector2 GetPosition()
+        {
+            return position;
         }
 
         public virtual bool IsDead()

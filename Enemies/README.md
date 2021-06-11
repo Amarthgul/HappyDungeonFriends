@@ -16,6 +16,25 @@ since an enemy cannot attack faster than its physical ability.
 Standard enemy is the meta/template for other minion classes. Standard has most of the features needed
 for other classes, such as segmented movement, burrow, etc. Can be enabled or disabled with bool fields. 
 
+### STD attack 
+
+* Can this enemy attack? `canAttack`
+  * Yes
+    Is is ranged attack? `canRangedAttack`
+    * Yes
+      How long will the projecile reach? `rangedAttackDistance`
+    * No
+      In what range is the melee attack effective? `meleeAttackRange`
+      Does the melee attack shows a specific sprite? `meleeShowProjectile`
+      * Yes
+      * No
+    How long does this attack action last? `attackLastingTime`
+    Does the enemy need to stop to commit an attack? `holdOnAttack`
+     * Yes
+     * No
+  * No
+    Nothing to do here. 
+
 ## Blood Bead 
 
 Blood bead is a low level slim-like creature. It does not actively do anything, but inflicts damage to

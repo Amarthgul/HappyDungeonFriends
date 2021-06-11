@@ -185,6 +185,11 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        /// <summary>
+        /// Reset the sound effect flags for bag slots. 
+        /// With either 1 or no exemption. 
+        /// </summary>
+        /// <param name="Excemption">Excluded slot index, negative for no excemption</param>
         private void ResetBagOnHoverSFX(int Excemption)
         {
             for (int i = 0; i < Globals.BAG_SIZE; i++)

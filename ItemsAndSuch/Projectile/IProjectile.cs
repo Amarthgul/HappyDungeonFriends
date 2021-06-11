@@ -11,6 +11,7 @@ namespace HappyDungeon
 {
     public interface IProjectile
     {
+        void MarkAsMelee(Object Source);
 
         void Update();
 
