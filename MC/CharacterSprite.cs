@@ -37,12 +37,17 @@ namespace HappyDungeon
 
         public bool healthInflicting { set; get; }
 
+        private Stopwatch torchSFXSW = new Stopwatch();
+        private int torchSoundInterval = 900; 
+
         public CharacterSprite(Game1 G)
         {
             game = G;
             spriteBatch = game.spriteBatch;
 
             LoadAllSprites();
+
+            torchSFXSW.Restart();
         }
 
         /// <summary>
@@ -236,6 +241,27 @@ namespace HappyDungeon
             return result;
         }
 
+        private void UpdateSounds()
+        {
+            // Update for when the player character is holding the torch 
+            if (primaryState == Globals.primaryTypes.Torch
+                && ((Torch)game.spellSlots.GetItem(-1)).torchOn)
+            {   
+                // Note that 900 interval will accumulate some of the sound, making it louder by time 
+                // It is assumed that player won't stay in the same room for too long
+                // Or hold the torch for too long for it to become overly loud 
+                if(torchSFXSW.ElapsedMilliseconds > torchSoundInterval)
+                {
+                    SoundFX.Instance.PlayMCTorchOn();
+                    torchSFXSW.Restart();
+                }
+            }
+        }
+
+        // ================================================================================
+        // ================================= Public methods ===============================
+        // ================================================================================
+
         /// <summary>
         /// Since attack sprites are updated in some other cases, it might cause new attack
         /// to start from the middle of the animation, thus a refresh is needed to reset 
@@ -257,6 +283,8 @@ namespace HappyDungeon
 
             ChangeAllSpriteDir();
             UpdateSelectedSprites();
+
+            UpdateSounds();
 
         }
 

@@ -2,6 +2,4 @@
 
 This is the logistics documentation of the main character class. 
 
-## Basic 
-
-The main character 
+* Sound FX are scattered between MC and MC Sprite class. 

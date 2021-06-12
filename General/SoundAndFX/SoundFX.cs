@@ -21,6 +21,12 @@ namespace HappyDungeon
         public float panDefault { set; get; }
 
         // ================================================================================
+        // ================================ Main character ================================
+        // ================================================================================
+        private SoundEffect[] mcAttackWithTorch;
+        private SoundEffect[] mcWalkWithTorch; 
+
+        // ================================================================================
         // ===================================== items ====================================
         // ================================================================================
         private SoundEffect[] itemGoldPickup;
@@ -58,34 +64,66 @@ namespace HappyDungeon
 
         public void LoadAll(ContentManager Content)
         {
-            itemGoldPickup = new SoundEffect[] { Content.Load<SoundEffect>("SFX/itemGoldPickup1") };
+            // --------------------------------------------------------------------------------
+            // ------------------------------ Main character ----------------------------------
+            mcAttackWithTorch = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/MC/mcAttackTorch1"),
+                Content.Load<SoundEffect>("SFX/MC/mcAttackTorch2"),
+                Content.Load<SoundEffect>("SFX/MC/mcAttackTorch3")
+            };
+            mcWalkWithTorch = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch1"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch2"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch3"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch4"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch5"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch6"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch7"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch8"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch9"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch10"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch11"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch12")
+            };
 
+            // --------------------------------------------------------------------------------
+            // --------------------------------- Items ----------------------------------------
+            itemGoldPickup = new SoundEffect[] { 
+                Content.Load<SoundEffect>("SFX/Items/itemGoldPickup1"),
+                Content.Load<SoundEffect>("SFX/Items/itemGoldPickup2"),
+                Content.Load<SoundEffect>("SFX/Items/itemGoldPickup3"),
+                Content.Load<SoundEffect>("SFX/Items/itemGoldPickup4"),
+                Content.Load<SoundEffect>("SFX/Items/itemGoldPickup5")
+            };
+
+            // --------------------------------------------------------------------------------
+            // -------------------------------- Enemies ---------------------------------------
             enemyBBDie = new SoundEffect[] {    // All mono
-                Content.Load<SoundEffect>("SFX/enemyBBDie1"),
-                Content.Load<SoundEffect>("SFX/enemyBBDie2"),
-                Content.Load<SoundEffect>("SFX/enemyBBDie3"),
-                Content.Load<SoundEffect>("SFX/enemyBBDie4")
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBDie1"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBDie2"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBDie3"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBDie4")
             };
             enemyBBMove = new SoundEffect[] {   // All mono
-                Content.Load<SoundEffect>("SFX/enemyBBMove1"),
-                Content.Load<SoundEffect>("SFX/enemyBBMove2"),
-                Content.Load<SoundEffect>("SFX/enemyBBMove3"),
-                Content.Load<SoundEffect>("SFX/enemyBBMove4"),
-                Content.Load<SoundEffect>("SFX/enemyBBMove5"),
-                Content.Load<SoundEffect>("SFX/enemyBBMove6")
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBMove1"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBMove2"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBMove3"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBMove4"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBMove5"),
+                Content.Load<SoundEffect>("SFX/Enemies/enemyBBMove6")
             };
 
 
             // --------------------------------------------------------------------------------
             // ----------------------------------- UI  ----------------------------------------
             bagLMBSlect = new SoundEffect[] {    
-                Content.Load<SoundEffect>("SFX/bagLMBClick1"),
+                Content.Load<SoundEffect>("SFX/UI/bagLMBClick1"),
             };
             bagLMBRelease = new SoundEffect[] {    
-                Content.Load<SoundEffect>("SFX/bagLMBRelease1"),
+                Content.Load<SoundEffect>("SFX/UI/bagLMBRelease1"),
             };
             bagOnhover = new SoundEffect[] {
-                Content.Load<SoundEffect>("SFX/bagOnhover1"),
+                Content.Load<SoundEffect>("SFX/UI/bagOnhover1"),
             };
         }
 
@@ -120,10 +158,26 @@ namespace HappyDungeon
         // ================================ Public methods ================================
         // ================================================================================
 
+        public void PlayMCAttack(MC Player)
+        {
+            switch (Player.primaryState)
+            {
+                case Globals.primaryTypes.Torch:
+                    RandPick(mcAttackWithTorch).Play();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void PlayMCTorchOn()
+        {
+            RandPick(mcWalkWithTorch).Play();
+        }
+
         public void PlayGoldPickupSFX()
         {
-            SoundEffect GPU = RandPick(itemGoldPickup); ;
-            PlaySFX(GPU);
+            RandPick(itemGoldPickup).Play();
         }
 
         public void PlayEnemyMoveSFX(int Index, float Volume, float Pan)

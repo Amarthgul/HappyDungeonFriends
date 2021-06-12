@@ -625,213 +625,327 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/selectionNote.png
 
-#begin SFX/bagLMBClick1.wav
+#begin SFX/Enemies/enemyBBDie1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/bagLMBClick1.wav
+/build:SFX/Enemies/enemyBBDie1.wav
 
-#begin SFX/bagLMBRelease1.wav
+#begin SFX/Enemies/enemyBBDie2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/bagLMBRelease1.wav
+/build:SFX/Enemies/enemyBBDie2.wav
 
-#begin SFX/bagOnhover1.wav
+#begin SFX/Enemies/enemyBBDie3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/bagOnhover1.wav
+/build:SFX/Enemies/enemyBBDie3.wav
 
-#begin SFX/enemyBBDie1.wav
+#begin SFX/Enemies/enemyBBDie4.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBDie1.wav
+/build:SFX/Enemies/enemyBBDie4.wav
 
-#begin SFX/enemyBBDie2.wav
+#begin SFX/Enemies/enemyBBMove1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBDie2.wav
+/build:SFX/Enemies/enemyBBMove1.wav
 
-#begin SFX/enemyBBDie3.wav
+#begin SFX/Enemies/enemyBBMove2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBDie3.wav
+/build:SFX/Enemies/enemyBBMove2.wav
 
-#begin SFX/enemyBBDie4.wav
+#begin SFX/Enemies/enemyBBMove3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBDie4.wav
+/build:SFX/Enemies/enemyBBMove3.wav
 
-#begin SFX/enemyBBMove1.wav
+#begin SFX/Enemies/enemyBBMove4.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBMove1.wav
+/build:SFX/Enemies/enemyBBMove4.wav
 
-#begin SFX/enemyBBMove2.wav
+#begin SFX/Enemies/enemyBBMove5.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBMove2.wav
+/build:SFX/Enemies/enemyBBMove5.wav
 
-#begin SFX/enemyBBMove3.wav
+#begin SFX/Enemies/enemyBBMove6.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBMove3.wav
+/build:SFX/Enemies/enemyBBMove6.wav
 
-#begin SFX/enemyBBMove4.wav
+#begin SFX/Env/envBurn1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBMove4.wav
+/build:SFX/Env/envBurn1.wav
 
-#begin SFX/enemyBBMove5.wav
+#begin SFX/Env/envChain1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBMove5.wav
+/build:SFX/Env/envChain1.wav
 
-#begin SFX/enemyBBMove6.wav
+#begin SFX/Env/envDistantEcho1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/enemyBBMove6.wav
+/build:SFX/Env/envDistantEcho1.wav
 
-#begin SFX/envBurn1.wav
+#begin SFX/Env/envDistantEcho2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envBurn1.wav
+/build:SFX/Env/envDistantEcho2.wav
 
-#begin SFX/envChain1.wav
+#begin SFX/Env/envDistantHit1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envChain1.wav
+/build:SFX/Env/envDistantHit1.wav
 
-#begin SFX/envDistantEcho1.wav
+#begin SFX/Env/envDistantHit2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envDistantEcho1.wav
+/build:SFX/Env/envDistantHit2.wav
 
-#begin SFX/envDistantEcho2.wav
+#begin SFX/Env/envDistantHit3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envDistantEcho2.wav
+/build:SFX/Env/envDistantHit3.wav
 
-#begin SFX/envDistantHit1.wav
+#begin SFX/Env/envMetalScreech1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envDistantHit1.wav
+/build:SFX/Env/envMetalScreech1.wav
 
-#begin SFX/envDistantHit2.wav
+#begin SFX/Env/envMetalScreech2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envDistantHit2.wav
+/build:SFX/Env/envMetalScreech2.wav
 
-#begin SFX/envDistantHit3.wav
+#begin SFX/Env/envRockFall.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envDistantHit3.wav
+/build:SFX/Env/envRockFall.wav
 
-#begin SFX/envMetalScreech1.wav
+#begin SFX/Env/envRockFall1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envMetalScreech1.wav
+/build:SFX/Env/envRockFall1.wav
 
-#begin SFX/envMetalScreech2.wav
+#begin SFX/Env/envRockFall3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envMetalScreech2.wav
+/build:SFX/Env/envRockFall3.wav
 
-#begin SFX/envRockFall.wav
+#begin SFX/Env/envShellHit1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envRockFall.wav
+/build:SFX/Env/envShellHit1.wav
 
-#begin SFX/envRockFall1.wav
+#begin SFX/Env/envShellHit2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envRockFall1.wav
+/build:SFX/Env/envShellHit2.wav
 
-#begin SFX/envRockFall3.wav
+#begin SFX/Env/envWoodHit1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envRockFall3.wav
+/build:SFX/Env/envWoodHit1.wav
 
-#begin SFX/envShellHit1.wav
+#begin SFX/Env/envWoodHit2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envShellHit1.wav
+/build:SFX/Env/envWoodHit2.wav
 
-#begin SFX/envShellHit2.wav
+#begin SFX/Env/roomDoorOpen0.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envShellHit2.wav
+/build:SFX/Env/roomDoorOpen0.wav
 
-#begin SFX/envWoodHit1.wav
+#begin SFX/Env/roomDoorOpen1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envWoodHit1.wav
+/build:SFX/Env/roomDoorOpen1.wav
 
-#begin SFX/envWoodHit2.wav
+#begin SFX/Env/roomDoorOpen2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/envWoodHit2.wav
+/build:SFX/Env/roomDoorOpen2.wav
 
-#begin SFX/itemGoldLose1.wav
+#begin SFX/Env/roomDoorOpen3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/itemGoldLose1.wav
+/build:SFX/Env/roomDoorOpen3.wav
 
-#begin SFX/itemGoldPickup1.wav
+#begin SFX/Items/itemGoldLose1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/itemGoldPickup1.wav
+/build:SFX/Items/itemGoldLose1.wav
 
-#begin SFX/roomDoorOpen0.wav
+#begin SFX/Items/itemGoldPickup1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/roomDoorOpen0.wav
+/build:SFX/Items/itemGoldPickup1.wav
 
-#begin SFX/roomDoorOpen1.wav
+#begin SFX/Items/itemGoldPickup2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/roomDoorOpen1.wav
+/build:SFX/Items/itemGoldPickup2.wav
 
-#begin SFX/roomDoorOpen2.wav
+#begin SFX/Items/itemGoldPickup3.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/roomDoorOpen2.wav
+/build:SFX/Items/itemGoldPickup3.wav
 
-#begin SFX/roomDoorOpen3.wav
+#begin SFX/Items/itemGoldPickup4.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:SFX/roomDoorOpen3.wav
+/build:SFX/Items/itemGoldPickup4.wav
+
+#begin SFX/Items/itemGoldPickup5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemGoldPickup5.wav
+
+#begin SFX/MC/mcAttackTorch1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcAttackTorch1.wav
+
+#begin SFX/MC/mcAttackTorch2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcAttackTorch2.wav
+
+#begin SFX/MC/mcAttackTorch3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcAttackTorch3.wav
+
+#begin SFX/MC/mcWalkWithTorch1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch1.wav
+
+#begin SFX/MC/mcWalkWithTorch10.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch10.wav
+
+#begin SFX/MC/mcWalkWithTorch11.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch11.wav
+
+#begin SFX/MC/mcWalkWithTorch12.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch12.wav
+
+#begin SFX/MC/mcWalkWithTorch2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch2.wav
+
+#begin SFX/MC/mcWalkWithTorch3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch3.wav
+
+#begin SFX/MC/mcWalkWithTorch4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch4.wav
+
+#begin SFX/MC/mcWalkWithTorch5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch5.wav
+
+#begin SFX/MC/mcWalkWithTorch6.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch6.wav
+
+#begin SFX/MC/mcWalkWithTorch7.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch7.wav
+
+#begin SFX/MC/mcWalkWithTorch8.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch8.wav
+
+#begin SFX/MC/mcWalkWithTorch9.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkWithTorch9.wav
+
+#begin SFX/UI/bagLMBClick1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/UI/bagLMBClick1.wav
+
+#begin SFX/UI/bagLMBRelease1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/UI/bagLMBRelease1.wav
+
+#begin SFX/UI/bagOnhover1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/UI/bagOnhover1.wav
 

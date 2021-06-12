@@ -241,7 +241,9 @@ namespace HappyDungeon
                 attackInternalSW.Restart();
                 attackInternalCDTimer = 0;
                 moveRestricted = true; 
-                canAttack = false; 
+                canAttack = false;
+
+                SoundFX.Instance.PlayMCAttack(this);
             }
         }
 

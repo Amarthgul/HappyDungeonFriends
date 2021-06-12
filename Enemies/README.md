@@ -40,7 +40,7 @@ Can be enabled or disabled with bool fields.
 
     How long does this attack action last? `attackLastingTime`
 
-    Does the enemy need to stop to commit an attack? `holdOnAttack`
+    Does the enemy need to stop moving to commit an attack? `holdOnAttack`
 
      * *Yes*.
 
