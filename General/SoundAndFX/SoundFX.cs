@@ -24,12 +24,16 @@ namespace HappyDungeon
         // ================================ Main character ================================
         // ================================================================================
         private SoundEffect[] mcAttackWithTorch;
-        private SoundEffect[] mcWalkWithTorch; 
+        private SoundEffect[] mcWalkWithTorch;
+        private SoundEffect[] mcWalkLDelight; 
 
         // ================================================================================
         // ===================================== items ====================================
         // ================================================================================
         private SoundEffect[] itemGoldPickup;
+        private SoundEffect[] itemLinkenOn;
+        private SoundEffect[] itemLinkenBreak;
+        private SoundEffect[] itemLikenRad; 
 
         // ================================================================================
         // ==================================== Enemies ===================================
@@ -86,6 +90,17 @@ namespace HappyDungeon
                 Content.Load<SoundEffect>("SFX/MC/mcWalkWithTorch12")
             };
 
+            mcWalkLDelight = new SoundEffect[] { // Single footstep, boot, soft and gentle on concrete
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight1"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight2"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight3"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight4"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight5"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight6"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight7"),
+                Content.Load<SoundEffect>("SFX/MC/mcWalkDelight8")
+            };
+
             // --------------------------------------------------------------------------------
             // --------------------------------- Items ----------------------------------------
             itemGoldPickup = new SoundEffect[] { 
@@ -95,6 +110,25 @@ namespace HappyDungeon
                 Content.Load<SoundEffect>("SFX/Items/itemGoldPickup4"),
                 Content.Load<SoundEffect>("SFX/Items/itemGoldPickup5")
             };
+            itemLinkenOn = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/Items/itemLinkenOn1"),
+                Content.Load<SoundEffect>("SFX/Items/itemLinkenOn2")
+            };
+            itemLinkenBreak = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/Items/itemLinkenBreak1"),
+                Content.Load<SoundEffect>("SFX/Items/itemLinkenBreak2"),
+                Content.Load<SoundEffect>("SFX/Items/itemLinkenBreak3"),
+                Content.Load<SoundEffect>("SFX/Items/itemLinkenBreak4")
+            };
+            itemLikenRad = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/Items/ItemLikenRadiating1"),
+                Content.Load<SoundEffect>("SFX/Items/ItemLikenRadiating2"),
+                Content.Load<SoundEffect>("SFX/Items/ItemLikenRadiating3"),
+                Content.Load<SoundEffect>("SFX/Items/ItemLikenRadiating4"),
+                Content.Load<SoundEffect>("SFX/Items/ItemLikenRadiating5"),
+                Content.Load<SoundEffect>("SFX/Items/ItemLikenRadiating6")
+            };
+
 
             // --------------------------------------------------------------------------------
             // -------------------------------- Enemies ---------------------------------------
@@ -127,9 +161,9 @@ namespace HappyDungeon
             };
         }
 
-        private void PlaySFX(SoundEffect SFX)
+        private void PlayInVolume(SoundEffect SFX, float Volume)
         {
-            SFX.Play(volume, pitchDefault, panDefault);
+            SFX.Play(Volume, pitchDefault, panDefault);
         }
 
         private SoundEffect RandPick(SoundEffect[] List)
@@ -175,9 +209,29 @@ namespace HappyDungeon
             RandPick(mcWalkWithTorch).Play();
         }
 
+        public void PlayMCWalkLevelDelight()
+        {
+            PlayInVolume(RandPick(mcWalkLDelight), .15f);
+        }
+
         public void PlayGoldPickupSFX()
         {
             RandPick(itemGoldPickup).Play();
+        }
+
+        public void PlayItemLikenOn()
+        {
+            PlayInVolume(RandPick(itemLinkenOn), .5f);
+        }
+
+        public void PlayItemLinkenBreak()
+        {
+            PlayInVolume(RandPick(itemLinkenBreak), .5f);
+        }
+
+        public void PlayitemLinkenRadiating()
+        {
+            PlayInVolume(RandPick(itemLikenRad), .025f);
         }
 
         public void PlayEnemyMoveSFX(int Index, float Volume, float Pan)

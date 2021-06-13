@@ -37,6 +37,9 @@ namespace HappyDungeon
 
         private Color defaultTint = Color.White;
 
+        private Stopwatch radiatingSFXSW = new Stopwatch();
+        private int radSoundInterval = 400; 
+
         public LinkenSphere(Game1 G, Vector2 P)
         {
             game = G;
@@ -55,7 +58,7 @@ namespace HappyDungeon
                 Globals.WHOLE_SHEET, LSS.C * LSS.R, Globals.ITEM_EFFECT_LAYER);
 
             stopwatch.Restart();
-
+            radiatingSFXSW.Restart();
         }
 
         public bool Collectible()
@@ -74,6 +77,7 @@ namespace HappyDungeon
             {
                 shieldOn = true;
                 cooldownFinished = false;
+                SoundFX.Instance.PlayItemLikenOn();
 
                 stopwatch.Restart();
             }
@@ -90,7 +94,8 @@ namespace HappyDungeon
             // Triggered in SpellSlots IncomingDamageGernealModifier()
             if (Count == 1)
             {
-                shieldOn = false; 
+                shieldOn = false;
+                SoundFX.Instance.PlayItemLinkenBreak();
             }
         }
 
@@ -130,9 +135,13 @@ namespace HappyDungeon
         /// </summary>
         public void DrawEffects()
         {
-
             if (shieldOn)
             {
+                if (radiatingSFXSW.ElapsedMilliseconds > radSoundInterval)
+                {
+                    radiatingSFXSW.Restart();
+                    SoundFX.Instance.PlayitemLinkenRadiating();
+                }
                 likenShieldSprite.Draw(spriteBatch, game.mainChara.position + shieldOffset, defaultTint);
                 likenShieldSprite.Update();
             }

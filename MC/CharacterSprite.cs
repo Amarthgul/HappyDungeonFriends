@@ -38,7 +38,10 @@ namespace HappyDungeon
         public bool healthInflicting { set; get; }
 
         private Stopwatch torchSFXSW = new Stopwatch();
-        private int torchSoundInterval = 900; 
+        private int torchSoundInterval = 900;
+
+        private Stopwatch walkSFXSW = new Stopwatch();
+        private int walkSoundInterval = Globals.FRAME_DELAY; 
 
         public CharacterSprite(Game1 G)
         {
@@ -48,6 +51,7 @@ namespace HappyDungeon
             LoadAllSprites();
 
             torchSFXSW.Restart();
+            walkSFXSW.Restart();
         }
 
         /// <summary>
@@ -143,6 +147,7 @@ namespace HappyDungeon
                     torchFlame.Update();
                     torchShadow.Update();
                     walkingWithTorch.Update();
+                    UpdateWalkingSounds();
                     break;
                 case Globals.GeneralStates.Stunned: // Broken can not move and can do no shit
                     break;
@@ -241,7 +246,7 @@ namespace HappyDungeon
             return result;
         }
 
-        private void UpdateSounds()
+        private void UpdatePrimarySounds()
         {
             // Update for when the player character is holding the torch 
             if (primaryState == Globals.primaryTypes.Torch
@@ -254,6 +259,22 @@ namespace HappyDungeon
                 {
                     SoundFX.Instance.PlayMCTorchOn();
                     torchSFXSW.Restart();
+                }
+            }
+        }
+
+        private void UpdateWalkingSounds()
+        {
+            if (walkSFXSW.ElapsedMilliseconds > walkSoundInterval)
+            {
+                walkSFXSW.Restart();
+                switch (game.gameLevel)
+                {
+                    case Globals.GameLevel.Delight:
+                        SoundFX.Instance.PlayMCWalkLevelDelight();
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -284,7 +305,7 @@ namespace HappyDungeon
             ChangeAllSpriteDir();
             UpdateSelectedSprites();
 
-            UpdateSounds();
+            UpdatePrimarySounds();
 
         }
 

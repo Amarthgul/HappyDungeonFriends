@@ -841,6 +841,78 @@
 /processorParam:Quality=Best
 /build:SFX/Items/itemGoldPickup5.wav
 
+#begin SFX/Items/ItemLikenRadiating1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/ItemLikenRadiating1.wav
+
+#begin SFX/Items/ItemLikenRadiating2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/ItemLikenRadiating2.wav
+
+#begin SFX/Items/ItemLikenRadiating3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/ItemLikenRadiating3.wav
+
+#begin SFX/Items/ItemLikenRadiating4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/ItemLikenRadiating4.wav
+
+#begin SFX/Items/ItemLikenRadiating5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/ItemLikenRadiating5.wav
+
+#begin SFX/Items/ItemLikenRadiating6.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/ItemLikenRadiating6.wav
+
+#begin SFX/Items/itemLinkenBreak1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemLinkenBreak1.wav
+
+#begin SFX/Items/itemLinkenBreak2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemLinkenBreak2.wav
+
+#begin SFX/Items/itemLinkenBreak3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemLinkenBreak3.wav
+
+#begin SFX/Items/itemLinkenBreak4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemLinkenBreak4.wav
+
+#begin SFX/Items/itemLinkenOn1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemLinkenOn1.wav
+
+#begin SFX/Items/itemLinkenOn2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemLinkenOn2.wav
+
 #begin SFX/MC/mcAttackTorch1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -858,6 +930,54 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/MC/mcAttackTorch3.wav
+
+#begin SFX/MC/mcWalkDelight1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight1.wav
+
+#begin SFX/MC/mcWalkDelight2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight2.wav
+
+#begin SFX/MC/mcWalkDelight3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight3.wav
+
+#begin SFX/MC/mcWalkDelight4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight4.wav
+
+#begin SFX/MC/mcWalkDelight5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight5.wav
+
+#begin SFX/MC/mcWalkDelight6.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight6.wav
+
+#begin SFX/MC/mcWalkDelight7.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight7.wav
+
+#begin SFX/MC/mcWalkDelight8.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/MC/mcWalkDelight8.wav
 
 #begin SFX/MC/mcWalkWithTorch1.wav
 /importer:WavImporter
