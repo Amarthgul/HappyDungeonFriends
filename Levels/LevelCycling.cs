@@ -140,28 +140,39 @@ namespace HappyDungeon
             OpenAllDoorsInNextRoom(Direction);
         }
 
+        // ================================================================================
+        // ================================ Private methods ===============================
+        // ================================================================================
+
         /// <summary>
         /// Mark all the doors in the next room as open. 
         /// If that direction can be opened. 
         /// </summary>
         /// <param name="Direction">Target room direction</param>
-        public void OpenAllDoorsInNextRoom(Globals.Direction Direction)
+        private void OpenAllDoorsInNextRoom(Globals.Direction Direction)
         {
-            int[] Index = NextRoomIndex(Direction);
+            int[] Index = NextRoomIndex(currentLocationIndex, Direction);
 
             for (int i = 0; i < 4; i++)
             {
                 if(currentMapSet[Index[0], Index[1]].MysteryDoors[i])
                 {
-                    OpenDoorInRoom(Index, (Globals.Direction)i); 
+                    OpenDoorInRoom(Index, (Globals.Direction)i);
+                    if (HasNectRoom(Index, (Globals.Direction)i))
+                    {
+                        OpenDoorInRoom(NextRoomIndex(currentLocationIndex,
+                            (Globals.Direction)i), Misc.Instance.Opposite((Globals.Direction)i));
+                    } 
                 }
             }
 
         }
 
-        // ================================================================================
-        // ================================ Private methods ===============================
-        // ================================================================================
+        private bool HasNectRoom(int[] Pivot, Globals.Direction Dir)
+        {
+            int[] NextIndex = NextRoomIndex(Pivot, Dir);
+            return currentMapSet[NextIndex[0], NextIndex[1]] != null;
+        }
 
         /// <summary>
         /// For inqurying the index of room at that direction. 
@@ -169,24 +180,24 @@ namespace HappyDungeon
         /// </summary>
         /// <param name="Direction">The target direction</param>
         /// <returns>Index of the room at given direction</returns>
-        private int[] NextRoomIndex(Globals.Direction Direction)
+        private int[] NextRoomIndex(int[] Pivot, Globals.Direction Direction)
         {
             switch (Direction)
             {
                 case Globals.Direction.Up:
-                    return new int[] { currentLocationIndex[0] - 1, currentLocationIndex[1] };
+                    return new int[] { Pivot[0] - 1, Pivot[1] };
 
                 case Globals.Direction.Down:
-                    return new int[] { currentLocationIndex[0] + 1, currentLocationIndex[1] };
+                    return new int[] { Pivot[0] + 1, Pivot[1] };
 
                 case Globals.Direction.Left:
-                    return new int[] { currentLocationIndex[0], currentLocationIndex[1] - 1 };
+                    return new int[] { Pivot[0], Pivot[1] - 1 };
 
                 case Globals.Direction.Right:
-                    return new int[] { currentLocationIndex[0], currentLocationIndex[1] + 1 };
+                    return new int[] { Pivot[0], Pivot[1] + 1 };
 
                 default:
-                    return new int[] { currentLocationIndex[0], currentLocationIndex[1] };
+                    return new int[] { Pivot[0], Pivot[1] };
             }
         }
 

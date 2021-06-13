@@ -11,6 +11,9 @@ in brain agent, since an enemy can turn at any time and should be decided by the
 and which direction it turn to. Attack timer, on the other hand, is in the physical class, 
 since an enemy cannot attack faster than its physical ability. 
 
+Note that to add an enemy, not only will it need an index, this index also need to be added
+in the generator's get enemy list. 
+
 ## Enemy Standard 
 
 Standard enemy is the meta/template for other minion classes. Standard has most of the features needed

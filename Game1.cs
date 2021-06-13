@@ -22,7 +22,7 @@ namespace HappyDungeon
         // ================================================================================
         // ========================= Game states and parameters ===========================
         // ================================================================================
-        private bool _DEVMODE = false;
+        private bool _DEVMODE = true;
         public Globals.Language gameLanguage; 
         public Globals.GameStates gameState;
         public Globals.GameLevel gameLevel;

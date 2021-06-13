@@ -31,6 +31,7 @@ namespace HappyDungeon
         // ===================================== items ====================================
         // ================================================================================
         private SoundEffect[] itemGoldPickup;
+        private SoundEffect[] itemLikenPickup; 
         private SoundEffect[] itemLinkenOn;
         private SoundEffect[] itemLinkenBreak;
         private SoundEffect[] itemLikenRad; 
@@ -45,7 +46,7 @@ namespace HappyDungeon
         // ================================================================================
         // ================================= Levels and env ===============================
         // ================================================================================
-
+        private SoundEffect[] envOpenMysDoor; 
 
         // ================================================================================
         // ======================================= UI =====================================
@@ -110,6 +111,9 @@ namespace HappyDungeon
                 Content.Load<SoundEffect>("SFX/Items/itemGoldPickup4"),
                 Content.Load<SoundEffect>("SFX/Items/itemGoldPickup5")
             };
+            itemLikenPickup = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/Items/itemLinkenPickup1")
+            };
             itemLinkenOn = new SoundEffect[] {
                 Content.Load<SoundEffect>("SFX/Items/itemLinkenOn1"),
                 Content.Load<SoundEffect>("SFX/Items/itemLinkenOn2")
@@ -147,6 +151,14 @@ namespace HappyDungeon
                 Content.Load<SoundEffect>("SFX/Enemies/enemyBBMove6")
             };
 
+            // --------------------------------------------------------------------------------
+            // ------------------------------- Level and env ----------------------------------
+            envOpenMysDoor = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/Env/roomDoorOpen0"),
+                Content.Load<SoundEffect>("SFX/Env/roomDoorOpen1"),
+                Content.Load<SoundEffect>("SFX/Env/roomDoorOpen2"),
+                Content.Load<SoundEffect>("SFX/Env/roomDoorOpen3")
+            };
 
             // --------------------------------------------------------------------------------
             // ----------------------------------- UI  ----------------------------------------
@@ -219,6 +231,22 @@ namespace HappyDungeon
             RandPick(itemGoldPickup).Play();
         }
 
+        public void PlayitemPickup(int Index)
+        {
+            switch (Index)
+            {
+                case Globals.ITEM_LINKEN:
+                    PlayInVolume(RandPick(itemLikenPickup), .25f);
+                    break;
+                case Globals.ITEM_NOTE_SO:
+                    break;
+                case Globals.ITEM_TORCH:
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public void PlayItemLikenOn()
         {
             PlayInVolume(RandPick(itemLinkenOn), .5f);
@@ -281,6 +309,11 @@ namespace HappyDungeon
         public void PlayBagItemOnhover()
         {
             RandPick(bagOnhover).Play();
+        }
+
+        public void PlayEnvOpenMysDoor(Globals.Direction Dir)
+        {
+            PlayInVolume(envOpenMysDoor[(int)Dir], 1f);
         }
     }
 }

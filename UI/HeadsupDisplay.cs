@@ -322,7 +322,7 @@ namespace HappyDungeon
             int ClipRange = (int)(BLOOD_TX_SIZE * PlayerHealthRatio);
             int ClipRangeSig = (int)(BLOOD_TX_SIZE * PlayerSigRatio);
             int PasteDistance = BLOOD_TX_SIZE - ClipRange;
-            int PasteDistanceSiig = BLOOD_TX_SIZE - ClipRangeSig;
+            int PasteDistanceSig = BLOOD_TX_SIZE - ClipRangeSig;
 
             if (ClipRange > 0) // Avoid 0 health error 
             {
@@ -340,7 +340,7 @@ namespace HappyDungeon
 
                 // ------------------------------------------------------------------------------------
                 // Do the same again, but for the signifier 
-                if(game.mainChara.pastHealth > 0)
+                if(game.mainChara.pastHealth > 0 && ClipRange > 0)
                 {
                     currentSig = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
                     BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => transparent);
@@ -349,7 +349,7 @@ namespace HappyDungeon
                     data = new Color[SourceRectangle.Width * SourceRectangle.Height];
                     bloodSig.GetData<Color>(0, SourceRectangle, data, 0, data.Length);
                     // Paste into the current blood vessel texture 
-                    currentSig.SetData(0, new Rectangle(0, PasteDistanceSiig, BLOOD_TX_SIZE, ClipRangeSig), data, 0, data.Length);
+                    currentSig.SetData(0, new Rectangle(0, PasteDistanceSig, BLOOD_TX_SIZE, ClipRangeSig), data, 0, data.Length);
                     // Set the new texture for blood vessel sprite
                     healthSignifier.selfTexture = currentSig;
                 }

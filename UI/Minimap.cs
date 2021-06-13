@@ -182,6 +182,8 @@ namespace HappyDungeon
         /// <param name="Direction">Direction of that bridge</param>
         private void AddBridge(Globals.Direction Direction)
         {
+            if (game.gameLevel == Globals.GameLevel.Bliss) return; // Bliss need no bridge on minimap 
+
             const int HORIZONTAL_OFFST = 6;
             const int VERTICAL_OFFSET = 4;
 

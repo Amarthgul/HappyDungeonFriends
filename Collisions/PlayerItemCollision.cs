@@ -40,6 +40,7 @@ namespace HappyDungeon
                     {
                         Success = game.spellSlots.TryAddingItem(item);
                     }
+                    SoundFX.Instance.PlayitemPickup(item.SelfIndex());
 
                     if (item is DroppedGold)
                     {   // Dropped gold also marks a success collection 

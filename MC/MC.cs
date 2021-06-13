@@ -56,6 +56,11 @@ namespace HappyDungeon
         private Vector2 startUpPosition = new Vector2(Globals.OUT_FWIDTH / 2 - Globals.OUT_UNIT / 2, 
             Globals.OUT_FHEIGHT / 2 + Globals.OUT_UNIT);
 
+        // New room protection is used to give time for the MC stats to warm-up 
+        private bool newRoomProtectionOn;  
+        private Stopwatch newRoomProtectSW = new Stopwatch();
+        private int newRoomProtectTime = 100; 
+
         // ================================================================================
         // ================================= Interactions =================================
         // ================================================================================
@@ -143,6 +148,9 @@ namespace HappyDungeon
             attackInternalSW = new Stopwatch();
             attackExternalSW.Restart();
 
+            newRoomProtectionOn = true;
+            newRoomProtectSW.Restart();
+
             currentHealth = (int)(MAX_HEALTH * INIT_HP_RATIO);
             pastHealth = -1; 
             currentMaxHP = MAX_HEALTH;
@@ -173,6 +181,9 @@ namespace HappyDungeon
         /// </summary>
         public void Move()
         {
+            if (newRoomProtectSW.ElapsedMilliseconds < newRoomProtectTime)
+                return;
+
             moveRestricted = true; // Set to tru so only 1 direction is moving at a time 
             canAttack = false; 
             mcState = Globals.GeneralStates.Moving;
@@ -332,6 +343,8 @@ namespace HappyDungeon
             blockCollisionCheck = new PlayerBlockCollision(game);
             enemyCollisionCheck = new PlayerEnemyCollision(game);
             itemCollisionCheck = new PlayerItemCollision(game);
+
+            newRoomProtectSW.Restart();
 
             mcState = Globals.GeneralStates.Hold;
         }
@@ -519,6 +532,14 @@ namespace HappyDungeon
         /// <returns>True if the door is open or not colliding with any doors.</returns>
         private bool CanPassDoors()
         {
+            if (newRoomProtectSW.ElapsedMilliseconds < newRoomProtectTime && newRoomProtectionOn)
+            {
+                return true;
+            } else
+            {
+                newRoomProtectionOn = false;
+            }
+
             bool CanPass = true;
 
             RoomInfo currentInfo = game.currentRoom.roomInfo;
@@ -572,8 +593,8 @@ namespace HappyDungeon
                 && game.goldCount > 0)
             {
                 game.currentRoom.OpenMysDoor((int)Dir);
-
-                game.goldCount -= game.goldCount / 5; 
+                game.goldCount -= game.goldCount / 5;
+                SoundFX.Instance.PlayEnvOpenMysDoor(Dir);
             }
         }
 
@@ -587,7 +608,7 @@ namespace HappyDungeon
 
             if (GetStagedRectangle().X < leftTrigger)
             {
-                position = new Vector2(rightTrigger - NEW_ROOM_OFFSET, position.Y);
+                position = new Vector2(rightTrigger - NEW_ROOM_OFFSET * 2, position.Y);
 
                 game.reset((int)Globals.Direction.Left);
             }

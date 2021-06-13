@@ -913,6 +913,12 @@
 /processorParam:Quality=Best
 /build:SFX/Items/itemLinkenOn2.wav
 
+#begin SFX/Items/itemLinkenPickup1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/Items/itemLinkenPickup1.wav
+
 #begin SFX/MC/mcAttackTorch1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

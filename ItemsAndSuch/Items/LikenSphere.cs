@@ -13,7 +13,7 @@ namespace HappyDungeon
     /// Liken Sphere (should be called Liken's Sphere) is a reference of DotA 2's item. 
     /// Here it can be used to activate a shield that nullifies next incoming damage instance.  
     /// The shield lasts 8 seconds and has a 12 seconds' colldaown. 
-    /// </summary>
+    /// </summary> 
     class LinkenSphere :IItem
     {
         private GeneralSprite likenSphereSprite;
