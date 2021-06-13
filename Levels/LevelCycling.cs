@@ -158,9 +158,9 @@ namespace HappyDungeon
                 if(currentMapSet[Index[0], Index[1]].MysteryDoors[i])
                 {
                     OpenDoorInRoom(Index, (Globals.Direction)i);
-                    if (HasNectRoom(Index, (Globals.Direction)i))
+                    if (HasNextRoom(Index, (Globals.Direction)i))
                     {
-                        OpenDoorInRoom(NextRoomIndex(currentLocationIndex,
+                        OpenDoorInRoom(NextRoomIndex(Index,
                             (Globals.Direction)i), Misc.Instance.Opposite((Globals.Direction)i));
                     } 
                 }
@@ -168,7 +168,7 @@ namespace HappyDungeon
 
         }
 
-        private bool HasNectRoom(int[] Pivot, Globals.Direction Dir)
+        private bool HasNextRoom(int[] Pivot, Globals.Direction Dir)
         {
             int[] NextIndex = NextRoomIndex(Pivot, Dir);
             return currentMapSet[NextIndex[0], NextIndex[1]] != null;

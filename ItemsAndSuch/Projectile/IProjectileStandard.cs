@@ -116,9 +116,31 @@ namespace HappyDungeon
             return expired;
         }
 
+        public virtual bool IsMelee()
+        {
+            return isMelee;
+        }
+
         public virtual Rectangle GetRectangle()
         {
             return new Rectangle();
+        }
+
+        /// <summary>
+        /// Return the rectangle of the source of this projectile. 
+        /// In most cases it's an enemy. 
+        /// </summary>
+        /// <returns>Rectangle of the one produced this rectangle</returns>
+        public virtual Rectangle GetSrcRectangle()
+        {
+            if (source is IEnemy)
+            {
+                return ((IEnemy)source).GetRectangle();
+            }
+            else
+            {
+                return new Rectangle() ; 
+            }
         }
 
         public virtual DamageInstance GetDamageInstance()

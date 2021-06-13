@@ -340,7 +340,7 @@ namespace HappyDungeon
 
                 // ------------------------------------------------------------------------------------
                 // Do the same again, but for the signifier 
-                if(game.mainChara.pastHealth > 0 && ClipRange > 0)
+                if(game.mainChara.pastHealth > 0 && ClipRangeSig > 0)
                 {
                     currentSig = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
                     BLOOD_TX_SIZE, BLOOD_TX_SIZE, pixel => transparent);

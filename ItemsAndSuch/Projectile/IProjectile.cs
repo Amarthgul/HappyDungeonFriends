@@ -19,7 +19,11 @@ namespace HappyDungeon
 
         bool Expired();
 
+        bool IsMelee();
+
         Rectangle GetRectangle();
+
+        Rectangle GetSrcRectangle();
 
         DamageInstance GetDamageInstance();
     }

@@ -68,8 +68,6 @@ namespace HappyDungeon
                     break; 
             }
 
-            
-
             return levelSet;
         }
 
@@ -358,7 +356,7 @@ namespace HappyDungeon
                 int row = Globals.RND.Next(levelSet.GetLength(0));
                 int col = Globals.RND.Next(levelSet.GetLength(1));
 
-                if (!IsStartUpRoom(row, col))
+                if (!IsStartUpRoom(row, col) && levelSet[row, col] != null)
                 {
                     GenerateRoomDelight RoomGen = new GenerateRoomDelight();
                     RoomGen.InitRoom();

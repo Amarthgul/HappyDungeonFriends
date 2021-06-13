@@ -60,13 +60,24 @@ namespace HappyDungeon.Levels
 
         private void Load()
         {
-            levelTexture = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
-                Globals.ORIG_GWIDTH, Globals.ORIG_GHEIGHT, pixel => defaultColor);
-
+            
             blockAllMight = TextureFactory.Instance.blockAllMight.texture;
 
-            groundOverlay = TextureFactory.Instance.roomDelightDirts[Globals.RND.Next() %
-                TextureFactory.Instance.roomDelightDirts.Length].texture;
+            switch (game.gameLevel)
+            {
+                case Globals.GameLevel.Delight:
+                    levelTexture = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
+                        Globals.ORIG_GWIDTH, Globals.ORIG_GHEIGHT, pixel => defaultColor);
+                    groundOverlay = TextureFactory.Instance.roomDelightDirts[Globals.RND.Next() %
+                        TextureFactory.Instance.roomDelightDirts.Length].texture;
+                    break;
+                case Globals.GameLevel.Joy:
+                    break;
+                case Globals.GameLevel.Bliss:
+                    break;
+                default:
+                    break; 
+            }
 
         }
 
@@ -234,6 +245,9 @@ namespace HappyDungeon.Levels
             return levelTexture;
         }
 
+        /// <summary>
+        /// An overlay on top of the ground for dirt effect 
+        /// </summary>
         public void DrawGroundOverlays()
         {
             spriteBatch.Draw(groundOverlay, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint,

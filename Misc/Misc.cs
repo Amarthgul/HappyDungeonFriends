@@ -144,6 +144,36 @@ namespace HappyDungeon
             return result;
         }
 
+        public bool ProjectileFogBreaker(IProjectile Proj, Rectangle PlayerRect, float VisibleRange)
+        {
+            bool result = false;
+            int Threshold = (int)(VisibleRange * Globals.OUT_UNIT);
+            Rectangle ProjRect;
+
+            // melee attack can be seen as along as the enemy can be seen 
+            if (Proj.IsMelee())
+                ProjRect = Proj.GetSrcRectangle();
+            else 
+                ProjRect = Proj.GetRectangle();
+
+            Vector2 PlayerCenter = new Vector2(
+                PlayerRect.X + PlayerRect.Width / 2,
+                PlayerRect.Y + PlayerRect.Height / 2);
+
+            foreach (float LocX in new float[] { ProjRect.X, ProjRect.X + ProjRect.Width })
+            {
+                foreach (float LocY in new float[] { ProjRect.Y, ProjRect.Y + ProjRect.Height })
+                {
+                    if (L2Distance(new Vector2(LocX, LocY), PlayerCenter) < Threshold)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return result;
+        }
+
         // ================================================================================
         // ==================================== Misc ======================================
         // ================================================================================
