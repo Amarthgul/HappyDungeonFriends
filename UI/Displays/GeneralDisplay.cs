@@ -143,7 +143,7 @@ namespace HappyDungeon
                     bagDisplay.Update();
                     break;
                 case Globals.GameStates.TitleScreen:
-                    
+                    titleDisplay.Update();
                     break;
                 default:
                     break;

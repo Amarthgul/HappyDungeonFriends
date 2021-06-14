@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace HappyDungeon
 {
@@ -23,7 +24,7 @@ namespace HappyDungeon
         // ========================= Game states and parameters ===========================
         // ================================================================================
         private bool _DEVMODE = false;
-        public Globals.Language gameLanguage; 
+        public Globals.Language gameLanguage;
         public Globals.GameStates gameState;
         public Globals.GameLevel gameLevel;
         private int mapSize = 9;
@@ -45,9 +46,9 @@ namespace HappyDungeon
         private Generator mapGenerator;
         public FoW fogOfWar;
         public LevelCycling roomCycler;
-        public Room currentRoom; 
+        public Room currentRoom;
         public List<IBlock> staticBlockList;
-        public List<IBlock> dynamicBlockList; 
+        public List<IBlock> dynamicBlockList;
         public Globals.Direction transitionDir;
 
         // ================================================================================
@@ -60,13 +61,14 @@ namespace HappyDungeon
         public ScreenFX screenFX;              // All minor special effects
         public int displayWholeMinimap { set; get; }  // For tab and other minimap display 
 
+        public bool[] transitionProgress { get; set; }
+
+
         // ================================================================================
         // =========================== Controls and logic =================================
         // ================================================================================
         List<Object> controllerList;
         public SpellSlots spellSlots; 
-
-
 
         // ================================================================================
         // ================================= Methods ======================================
@@ -114,6 +116,7 @@ namespace HappyDungeon
             generalDisplay = new GeneralDisplay(this);
             cursor = new MouseCursor(this);
 
+            transitionProgress = new bool[] { false, false, false };
             goldCount = 0;
 
             return 0; 
@@ -220,7 +223,7 @@ namespace HappyDungeon
             }
             // The cursor location is actually always on update
             cursor.Update();
-
+            screenFX.Update();
 
             switch (gameState)
             {
@@ -232,6 +235,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Bag:
                     UpdateBagView();
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    UpdateTitleScreen();
                     break;
                 default:
                     break; 
@@ -252,6 +258,7 @@ namespace HappyDungeon
 
             // Always draw the cursor 
             cursor.Draw();
+            screenFX.Draw();
 
             switch (gameState)
             {
@@ -316,7 +323,6 @@ namespace HappyDungeon
 
             fogOfWar.Update();
 
-            screenFX.Update();
             minimap.Update();
             headsupDisplay.Update();
 
@@ -361,6 +367,11 @@ namespace HappyDungeon
             generalDisplay.Update();
         }
 
+        private void UpdateTitleScreen()
+        {
+            generalDisplay.Update();
+        }
+
         /// <summary>
         /// Draw method for when the game is runnning 
         /// </summary>
@@ -400,7 +411,7 @@ namespace HappyDungeon
 
             fogOfWar.Draw();
 
-            screenFX.Draw(mainChara.position);
+            screenFX.DrawFlies(mainChara.position);
             headsupDisplay.Draw();
             minimap.Draw();
 

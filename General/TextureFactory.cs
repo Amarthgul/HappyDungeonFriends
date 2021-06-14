@@ -55,6 +55,9 @@ namespace HappyDungeon
         public ImageFile fontLargeBR;
         public ImageFile fontLargeWR;
 
+        public ImageFile transitionUp;
+        public ImageFile transitionDown; 
+
         public ImageFile SFX_fly; 
 
         // ================================================================================
@@ -145,6 +148,9 @@ namespace HappyDungeon
             fontLargeBR = new ImageFile(content, "Images/UI/Fonts/fontBigBR", 1, 1);
             fontLargeWR = new ImageFile(content, "Images/UI/Fonts/fontBigWR", 1, 1);
 
+
+            transitionDown = new ImageFile(content, "Images/UI/transitionDown", 1, 1);
+            transitionUp = new ImageFile(content, "Images/UI/transitionUp", 1, 1);
             SFX_fly = new ImageFile(content, "Images/UI/fly", 4, 4);
 
             // --------------------------------------------------------------------------------

@@ -19,7 +19,9 @@ namespace HappyDungeon
 
         private int respawnPossibility = 5; //5 percent 
         private int maxFlyCount = 3;
-        private List<UI.Effects.ScreenFlyFX> flyList; 
+        private List<UI.Effects.ScreenFlyFX> flyList;
+
+        private UI.Effects.TransitionFX transitionFX;
 
         public ScreenFX(Game1 G)
         {
@@ -27,10 +29,23 @@ namespace HappyDungeon
             spriteBatch = game.spriteBatch;
             flyList = new List<UI.Effects.ScreenFlyFX>();
 
+            transitionFX = new UI.Effects.TransitionFX(game);
+        }
+
+        public void SigTransitionStart()
+        {
+            transitionFX.SigStart();
+            game.transitionProgress[0] = true;
         }
 
         public void Update()
         {
+            if (game.transitionProgress.Any(x => x == true))
+            {
+                transitionFX.Update();
+                return;
+            }
+
             if (flyList.Count < maxFlyCount && Globals.RND.Next(100) < respawnPossibility)
             {
                 flyList.Add(new UI.Effects.ScreenFlyFX(spriteBatch));
@@ -45,9 +60,19 @@ namespace HappyDungeon
             }
         }
 
-        public void Draw(Vector2 FocusPos)
+        public void Draw()
         {
+            if (game.transitionProgress.Any(x => x==true))
+            {
+                transitionFX.Draw();
+                return;
+            }
 
+            
+        }
+
+        public void DrawFlies(Vector2 FocusPos)
+        {
             foreach (UI.Effects.ScreenFlyFX fly in flyList)
             {
                 if (FlyVisible(FocusPos, fly.GetPosition()))

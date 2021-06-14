@@ -96,6 +96,10 @@ namespace HappyDungeon
             new Vector2(135, 1),
             new Vector2(156, 1) };
 
+        public const int TRANSITION_SINGLE = 500;
+        public const int TRANSITION_HOLD = 100;
+        public const int TRANSITION_TOTAL = TRANSITION_SINGLE * 2 + TRANSITION_HOLD;
+
         // ================================================================================
         // ================================ Draw Layers ===================================
         // ================================================================================
@@ -128,7 +132,8 @@ namespace HappyDungeon
 
         public const float CURSOR_RESPONSE = 0.90f;   // Effects triggered by some mouse click 
         public const float CURSOR_LAYER = 0.91f;     // Cursor layer 
-        public const float DEBUG_LAYER = 0.95f;      // Debug layer, put on top-most 
+        public const float TRANSIT_LAYER = 0.95f; 
+        public const float DEBUG_LAYER = 0.99f;      // Debug layer, put on top-most 
 
 
         // ================================================================================

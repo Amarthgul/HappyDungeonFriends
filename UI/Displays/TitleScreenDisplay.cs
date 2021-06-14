@@ -53,6 +53,7 @@ namespace HappyDungeon.UI.Displays
         private bool LMBSessionOn = false;
         private Vector2 onClickPosition = new Vector2();
 
+        private bool transitProtection = false;
 
         private Color defualtTint = Color.White;
 
@@ -151,7 +152,7 @@ namespace HappyDungeon.UI.Displays
 
         public void LeftClickRelease(Vector2 CursorPos)
         {
-            if (!LMBSessionOn) return;
+            if (!LMBSessionOn || transitProtection) return;
 
             if (rectCampaign.Contains(CursorPos) && rectCampaign.Contains(onClickPosition))
             {
@@ -161,7 +162,8 @@ namespace HappyDungeon.UI.Displays
             else if (rectAdventure.Contains(CursorPos) && rectAdventure.Contains(onClickPosition))
             {
                 SoundFX.Instance.PlayTitleClick();
-                game.gameState = Globals.GameStates.Running;
+                game.screenFX.SigTransitionStart();
+                transitProtection = true;
                 LMBSessionOn = false;
             }
             else if (rectSetting.Contains(CursorPos) && rectSetting.Contains(onClickPosition))
@@ -175,6 +177,14 @@ namespace HappyDungeon.UI.Displays
             }
 
 
+        }
+
+        public void Update()
+        {
+            if (game.transitionProgress[1])
+            {
+                game.gameState = Globals.GameStates.Running;
+            }
         }
 
         public void UpdateOnhover(Vector2 CursorPos)
