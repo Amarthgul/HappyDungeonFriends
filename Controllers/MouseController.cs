@@ -48,7 +48,16 @@ namespace HappyDungeon
                     UpdateTransitioning(CurrentState, CurrentLocation);
                     break;
                 case Globals.GameStates.Bag:
-                    UpdateBagView(CurrentState, CurrentLocation);
+                    UpdateDisplays(CurrentState, CurrentLocation);
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    UpdateDisplays(CurrentState, CurrentLocation);
+                    break;
+                case Globals.GameStates.Setting:
+                    UpdateDisplays(CurrentState, CurrentLocation);
+                    break;
+                case Globals.GameStates.GameOver:
+                    UpdateDisplays(CurrentState, CurrentLocation);
                     break;
                 default:
                     break; 
@@ -115,7 +124,7 @@ namespace HappyDungeon
         /// </summary>
         /// <param name="CurrentState">Mouse state</param>
         /// <param name="CurrentLocation">Position, for easier access</param>
-        private void UpdateBagView(MouseState CurrentState, Vector2 CurrentLocation)
+        private void UpdateDisplays(MouseState CurrentState, Vector2 CurrentLocation)
         {
             game.generalDisplay.UpdateCursorPos(CurrentLocation);
 

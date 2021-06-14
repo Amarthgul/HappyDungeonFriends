@@ -12,6 +12,11 @@ namespace HappyDungeon
 {
     public class Globals
     {
+
+        // Version lower than 1.0 means campign is not yet finished 
+        // and the game is mostly still in dev. 
+        public const float VERSION = 0.10f; 
+
         // ================================================================================
         // =========================== Game Size and Display ==============================
         // ================================================================================

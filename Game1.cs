@@ -165,7 +165,7 @@ namespace HappyDungeon
         /// </summary>
         protected override void Initialize()
         {
-            gameState = Globals.GameStates.Running;
+            gameState = Globals.GameStates.TitleScreen;
             // Setup window size 
             graphics.PreferredBackBufferWidth = Globals.OUT_FWIDTH;
             graphics.PreferredBackBufferHeight = Globals.OUT_FHEIGHT;
@@ -263,6 +263,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Bag:
                     DrawBagView();
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    DrawTitleScreen();
                     break;
                 default:
                     break;
@@ -389,7 +392,8 @@ namespace HappyDungeon
             }
             foreach (IProjectile proj in projList)
             {
-                proj.Draw();
+                if (Misc.Instance.ProjectileFogBreaker(proj, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                    proj.Draw();
             }
 
             mainChara.Draw();
@@ -449,6 +453,11 @@ namespace HappyDungeon
         /// Draw method when in bag view 
         /// </summary>
         private void DrawBagView()
+        {
+            generalDisplay.Draw();
+        }
+
+        private void DrawTitleScreen()
         {
             generalDisplay.Draw();
         }

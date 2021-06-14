@@ -16,6 +16,8 @@ namespace HappyDungeon.UI.Texts
             
         };
 
+
+
         public TDB_en_US()
         {
 
@@ -24,6 +26,11 @@ namespace HappyDungeon.UI.Texts
         public string IndexedDescription(int Index)
         {
             return indexedDescription[Index];
+        }
+
+        public string[] TitleOptions()
+        {
+            return new string[] { "Campaign", "Adventure", "Settings" };
         }
 
     }

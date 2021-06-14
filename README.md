@@ -36,3 +36,8 @@ Dev logs
 * Items count CD on its own and still counts when in the bag, it seems possible to quickly 
 switch item in and out of slots and thus drastically increase the ability of the character.
 I don't really want to change that, it feels fun. 
+
+* Since `Stopwatch` will continue running once after started, it might happen that some enemy
+or environments will have a surge of action after the change of game states. It is definitely 
+possible to add a switch condition to all stopwatches, but considering the amount of work needed,
+I probably won't be doing it. 

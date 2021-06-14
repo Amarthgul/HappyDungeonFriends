@@ -55,6 +55,9 @@ namespace HappyDungeon
         private SoundEffect[] bagLMBRelease;
         private SoundEffect[] bagOnhover;
 
+        private SoundEffect[] titleOnHover;
+        private SoundEffect[] titleClick; 
+
         private static SoundFX instance = new SoundFX();
         public static SoundFX Instance {
             get { return instance; }
@@ -170,6 +173,13 @@ namespace HappyDungeon
             };
             bagOnhover = new SoundEffect[] {
                 Content.Load<SoundEffect>("SFX/UI/bagOnhover1"),
+            };
+
+            titleOnHover = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/UI/titleOnHover1"),
+            };
+            titleClick = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/UI/titleClick1"),
             };
         }
 
@@ -309,6 +319,14 @@ namespace HappyDungeon
         public void PlayBagItemOnhover()
         {
             RandPick(bagOnhover).Play();
+        }
+        public void PlayTitleOnHover()
+        {
+            PlayInVolume(RandPick(titleOnHover), .25f);
+        }
+        public void PlayTitleClick()
+        {
+            PlayInVolume(RandPick(titleClick), 1f);
         }
 
         public void PlayEnvOpenMysDoor(Globals.Direction Dir)

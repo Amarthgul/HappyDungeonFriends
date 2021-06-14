@@ -124,6 +124,7 @@
     <Compile Include="UI\Displays\SettingDisplay.cs" />
     <Compile Include="UI\Displays\TitleScreenDisplay.cs" />
     <Compile Include="UI\Effects\ScreenFlyFX.cs" />
+    <Compile Include="UI\Effects\TransitionFX.cs" />
     <Compile Include="UI\HeadsupDisplay.cs" />
     <Compile Include="UI\IUIElement.cs" />
     <Compile Include="UI\Minimap.cs" />

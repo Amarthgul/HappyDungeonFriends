@@ -13,7 +13,7 @@ namespace HappyDungeon
     {
 
         private Game1 game;
-        private SpriteBatch spriteBatch;
+
 
         private UI.Displays.BagDisplay bagDisplay;
         private UI.Displays.TitleScreenDisplay titleDisplay;
@@ -23,7 +23,6 @@ namespace HappyDungeon
         {
             game = G;
 
-            spriteBatch = game.spriteBatch;
 
             InitDisplays();
         }
@@ -31,8 +30,44 @@ namespace HappyDungeon
         private void InitDisplays()
         {
             bagDisplay = new UI.Displays.BagDisplay(game);
-
+            titleDisplay = new UI.Displays.TitleScreenDisplay(game);
         }
+
+
+        public void OptionMoveUp()
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    break;
+                case Globals.GameStates.GameOver:
+                    break;
+                case Globals.GameStates.Setting:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void OptionMoveDown()
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    break;
+                case Globals.GameStates.GameOver:
+                    break;
+                case Globals.GameStates.Setting:
+                    break;
+                default:
+                    break;
+            }
+        }
+
 
         public void ResumeToRunning()
         {
@@ -47,7 +82,12 @@ namespace HappyDungeon
                     bagDisplay.LeftClickRelease(CursorPos);
                     break;
                 case Globals.GameStates.TitleScreen:
+                    titleDisplay.LeftClickRelease(CursorPos);
                     break;
+                case Globals.GameStates.GameOver:
+                    break;
+                case Globals.GameStates.Setting:
+                    break; 
                 default:
                     break;
             }
@@ -61,6 +101,11 @@ namespace HappyDungeon
                     bagDisplay.LeftClickEvent(CursorPos);
                     break;
                 case Globals.GameStates.TitleScreen:
+                    titleDisplay.LeftClickEvent(CursorPos);
+                    break;
+                case Globals.GameStates.GameOver:
+                    break;
+                case Globals.GameStates.Setting:
                     break;
                 default:
                     break;
@@ -79,6 +124,11 @@ namespace HappyDungeon
                     bagDisplay.UpdateOnhover(CursorPos);
                     break;
                 case Globals.GameStates.TitleScreen:
+                    titleDisplay.UpdateOnhover(CursorPos);
+                    break;
+                case Globals.GameStates.GameOver:
+                    break;
+                case Globals.GameStates.Setting:
                     break;
                 default:
                     break;
@@ -93,6 +143,7 @@ namespace HappyDungeon
                     bagDisplay.Update();
                     break;
                 case Globals.GameStates.TitleScreen:
+                    
                     break;
                 default:
                     break;
@@ -107,6 +158,7 @@ namespace HappyDungeon
                     bagDisplay.Draw();
                     break;
                 case Globals.GameStates.TitleScreen:
+                    titleDisplay.Draw();
                     break;
                 default:
                     break; 

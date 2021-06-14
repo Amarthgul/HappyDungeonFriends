@@ -45,7 +45,7 @@ namespace HappyDungeon
         protected int collisionDMG = -8;        // Well collision damage is sort of an attack 
 
         protected bool canAttack = true;        // Overall bool to enable or disable attack  
-        protected bool canRangedAttack = false;  // By default perfrom ranged, if cannot, perform melee
+        protected bool canRangedAttack = true;  // By default perfrom ranged, if cannot, perform melee
         protected bool holdOnAttack = false;     // Wether attack will make it stop moving 
         protected bool meleeShowProjectile = true; // If melee projectile draw the sprite 
         protected int rangedAttackDistance = 4 * Globals.OUT_UNIT;

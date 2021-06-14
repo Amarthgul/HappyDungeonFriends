@@ -14,7 +14,7 @@ namespace HappyDungeon
 
         protected Game1 game;
         protected SpriteBatch spriteBatch;
-        protected Object source; 
+        protected Object source; // Whoever produced this projectile 
 
         protected DamageInstance damageInstance;
 

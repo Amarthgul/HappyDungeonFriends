@@ -625,6 +625,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/selectionNote.png
 
+#begin Images/UI/titleBackground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/titleBackground.png
+
 #begin SFX/Enemies/enemyBBDie1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -1074,4 +1086,16 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/UI/bagOnhover1.wav
+
+#begin SFX/UI/titleClick1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/UI/titleClick1.wav
+
+#begin SFX/UI/titleOnHover1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/UI/titleOnHover1.wav
 

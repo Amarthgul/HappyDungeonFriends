@@ -15,5 +15,7 @@ namespace HappyDungeon.UI.Texts
     {
         string IndexedDescription(int index);
 
+
+        string[] TitleOptions();
     }
 }

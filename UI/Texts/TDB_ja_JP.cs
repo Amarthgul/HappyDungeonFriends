@@ -23,5 +23,10 @@ namespace HappyDungeon.UI.Texts
             return indexedDescription[Index];
         }
 
+        public string[] TitleOptions()
+        {
+            return new string[] { };
+        }
+
     }
 }
