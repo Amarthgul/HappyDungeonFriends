@@ -27,10 +27,10 @@ namespace HappyDungeon
             switch (game.gameState)
             {
                 case Globals.GameStates.Bag:
-                    game.gameState = Globals.GameStates.Running;
+                    game.screenFX.SigTransitionStart(Globals.GameStates.Running);
                     break;
                 default:
-                    game.gameState = Globals.GameStates.Bag;
+                    game.screenFX.SigTransitionStart(Globals.GameStates.Bag);
                     break;
             }
 

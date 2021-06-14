@@ -62,6 +62,7 @@ namespace HappyDungeon.UI.Displays
             game = G;
 
             spriteBatch = game.spriteBatch;
+            campaignAvailable = Globals.VERSION >= 1.0f;
 
             LoadAllSprites();
             SetupPositions();
@@ -154,7 +155,7 @@ namespace HappyDungeon.UI.Displays
         {
             if (!LMBSessionOn || transitProtection) return;
 
-            if (rectCampaign.Contains(CursorPos) && rectCampaign.Contains(onClickPosition))
+            if (rectCampaign.Contains(CursorPos) && rectCampaign.Contains(onClickPosition) && campaignAvailable)
             {
                 SoundFX.Instance.PlayTitleClick();
                 LMBSessionOn = false;
@@ -162,7 +163,7 @@ namespace HappyDungeon.UI.Displays
             else if (rectAdventure.Contains(CursorPos) && rectAdventure.Contains(onClickPosition))
             {
                 SoundFX.Instance.PlayTitleClick();
-                game.screenFX.SigTransitionStart();
+                game.screenFX.SigTransitionStart(Globals.GameStates.Running);
                 transitProtection = true;
                 LMBSessionOn = false;
             }
@@ -181,15 +182,12 @@ namespace HappyDungeon.UI.Displays
 
         public void Update()
         {
-            if (game.transitionProgress[1])
-            {
-                game.gameState = Globals.GameStates.Running;
-            }
+            
         }
 
         public void UpdateOnhover(Vector2 CursorPos)
         {
-            if (rectCampaign.Contains(CursorPos))
+            if (rectCampaign.Contains(CursorPos) && campaignAvailable)
             {
                 if (!onHoverCampaign)
                     SoundFX.Instance.PlayTitleOnHover();
@@ -228,7 +226,7 @@ namespace HappyDungeon.UI.Displays
             if (onHoverCampaign)
                 campaignTextOnHover.Draw(spriteBatch, campaignLoc, defualtTint);
             else
-                campaignText.Draw(spriteBatch, campaignLoc, defualtTint);
+                campaignText.Draw(spriteBatch, campaignLoc, defualtTint * (campaignAvailable? 1f : .5f));
 
 
             if (onHoverAdventure)

@@ -32,9 +32,15 @@ namespace HappyDungeon
             transitionFX = new UI.Effects.TransitionFX(game);
         }
 
-        public void SigTransitionStart()
+        /// <summary>
+        /// Signal a start of new state transitioning. 
+        /// The true transit is in mid stage, when game.transitionProgress[1] becomes true. 
+        /// Note that room transitioning does not use this method of transitioning. 
+        /// </summary>
+        /// <param name="NextState">Which state to change to next</param>
+        public void SigTransitionStart(Globals.GameStates NextState)
         {
-            transitionFX.SigStart();
+            transitionFX.SigStart(NextState);
             game.transitionProgress[0] = true;
         }
 

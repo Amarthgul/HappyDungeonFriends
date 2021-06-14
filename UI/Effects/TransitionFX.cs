@@ -28,6 +28,8 @@ namespace HappyDungeon.UI.Effects
 
         private bool inProgress = false;
 
+        private Globals.GameStates nextState; 
+
         public TransitionFX(Game1 G)
         {
             game = G;
@@ -52,7 +54,7 @@ namespace HappyDungeon.UI.Effects
                 1, 1, Globals.WHOLE_SHEET, 1, Globals.TRANSIT_LAYER);
         }
 
-        public void SigStart()
+        public void SigStart(Globals.GameStates NextState)
         {
             if (!inProgress)
             {
@@ -60,12 +62,21 @@ namespace HappyDungeon.UI.Effects
                 updateSW.Restart();
                 drawPosition = new Vector2(0, -256) * Globals.SCALAR;
                 game.transitionProgress[0] = true;
+                nextState = NextState;
             }
             
         }
 
+        /// <summary>
+        /// Update iterate through 3 stages of transitions. 
+        /// 1st stage enclose the current screen, marked as game.transitionProgress[0];
+        /// 2nd stage lasts shorter and is completely black to allow game state to change without glitch;
+        /// 3nd stage reveils the new state, using game.transitionProgress[2]; 
+        /// </summary>
         public void Update()
         {
+            if (!inProgress) return; // Fail-safe 
+
             if (game.transitionProgress[0] && !game.transitionProgress[1])
             {
                 drawPosition.Y = -totlaTravelDistance + 
@@ -83,6 +94,7 @@ namespace HappyDungeon.UI.Effects
                 {
                     game.transitionProgress[2] = true;
                     updateSW.Restart();
+                    game.gameState = nextState;
                 }
             }
             else if (game.transitionProgress[2])

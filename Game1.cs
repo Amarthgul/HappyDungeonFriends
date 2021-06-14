@@ -24,9 +24,9 @@ namespace HappyDungeon
         // ========================= Game states and parameters ===========================
         // ================================================================================
         private bool _DEVMODE = false;
-        public Globals.Language gameLanguage;
-        public Globals.GameStates gameState;
-        public Globals.GameLevel gameLevel;
+        public Globals.Language gameLanguage { get; set; }
+        public Globals.GameStates gameState { get; set; }
+        public Globals.GameLevel gameLevel { get; set; }
         private int mapSize = 9;
 
         // ================================================================================
@@ -288,6 +288,9 @@ namespace HappyDungeon
         // ================================ Private methods ===============================
         // ================================================================================
 
+        // --------------------------------------------------------------------------------
+        // --------------------------------- Updates --------------------------------------
+
         /// <summary>
         /// Update method for when the game is running 
         /// </summary>
@@ -371,6 +374,9 @@ namespace HappyDungeon
         {
             generalDisplay.Update();
         }
+
+        // --------------------------------------------------------------------------------
+        // ----------------------------------- Draw ---------------------------------------
 
         /// <summary>
         /// Draw method for when the game is runnning 
@@ -472,6 +478,9 @@ namespace HappyDungeon
         {
             generalDisplay.Draw();
         }
+
+        // --------------------------------------------------------------------------------
+        // --------------------------------- Utility --------------------------------------
 
         /// <summary>
         /// Start a new generator and populate the room again 
