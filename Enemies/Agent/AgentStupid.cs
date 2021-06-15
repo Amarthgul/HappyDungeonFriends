@@ -33,9 +33,9 @@ namespace HappyDungeon.Enemies
             RecalNextDelay();
         }
 
-        public Globals.Direction HandleBlockCollision(Globals.Direction FacingDir)
+        public void HandleBlockCollision(Globals.Direction FacingDir)
         {
-            return Misc.Instance.Opposite(FacingDir);
+            self.Turn(Misc.Instance.Opposite(FacingDir));
         }
 
         public void Update(MC MainChara) 

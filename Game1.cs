@@ -24,6 +24,7 @@ namespace HappyDungeon
         // ========================= Game states and parameters ===========================
         // ================================================================================
         private bool _DEVMODE = false;
+        private bool _ENABLE_FOW = false;
         public Globals.Language gameLanguage { get; set; }
         public Globals.GameStates gameState { get; set; }
         public Globals.GameLevel gameLevel { get; set; }
@@ -296,7 +297,8 @@ namespace HappyDungeon
         /// </summary>
         private void UpdateRunning()
         {
-            
+            if (transitionProgress.Any(x => x == true)) return; 
+
             foreach (IItem item in collectibleItemList) {
                 item.Update();
             }
@@ -387,7 +389,8 @@ namespace HappyDungeon
 
             foreach (IItem item in collectibleItemList)
             {
-                if(Misc.Instance.ItemFogBreaker(item, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                if((_DEVMODE && !_ENABLE_FOW) || 
+                    Misc.Instance.ItemFogBreaker(item, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     item.Draw();
             }
             foreach (IItem item in spellSlots.itemSlots)
@@ -398,24 +401,28 @@ namespace HappyDungeon
 
             foreach (IBlock block in dynamicBlockList)
             {
-                if (Misc.Instance.BlockFogBreaker(block, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                if ((_DEVMODE && _ENABLE_FOW) || 
+                    Misc.Instance.BlockFogBreaker(block, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     block.Draw();
             }
 
             foreach (IEnemy enemy in enemyList)
             {
-                if (Misc.Instance.EnemyFogBreaker(enemy, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                if ((_DEVMODE && !_ENABLE_FOW) || 
+                    Misc.Instance.EnemyFogBreaker(enemy, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     enemy.Draw();
             }
             foreach (IProjectile proj in projList)
             {
-                if (Misc.Instance.ProjectileFogBreaker(proj, mainChara.GetRectangle(), fogOfWar.GetRange()))
+                if ((_DEVMODE && !_ENABLE_FOW) || 
+                    Misc.Instance.ProjectileFogBreaker(proj, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     proj.Draw();
             }
 
             mainChara.Draw();
 
-            fogOfWar.Draw();
+            if (_ENABLE_FOW || !_DEVMODE)
+                fogOfWar.Draw();
 
             screenFX.DrawFlies(mainChara.position);
             headsupDisplay.Draw();

@@ -16,6 +16,8 @@ namespace HappyDungeon
 
         void Draw();
 
+        void SpeedChange(int NewSpeed); 
+
         void Turn(Globals.Direction NewDir);
 
         void TakeDamage(DamageInstance Damage);

@@ -24,6 +24,7 @@ namespace HappyDungeon
         public Globals.Direction facingDir;
 
         protected IAgent brainAgent;
+        protected Vector2 spawnPosition; 
         protected Vector2 position;
         protected Vector2 stagedMovement;
 
@@ -35,7 +36,7 @@ namespace HappyDungeon
         // ============================= Movements and attack =============================
         // ================================================================================
         protected int currentMoveIndex;
-        protected int baseMovementSpeed = (int)(0.4 * Globals.SCALAR); 
+        protected int baseMovementSpeed = (int)(0.4 * Globals.SCALAR); // Changed in agent 
         protected bool useSegmentedSpeed = false; 
         protected int[] segmentedSpeed = new int[] {
             (int)(0.2 * Globals.SCALAR),
@@ -79,7 +80,7 @@ namespace HappyDungeon
         protected GeneralSprite attackSprite;
         protected GeneralSprite projectileSprite; 
 
-        protected bool isVisible = false; 
+        protected bool isVisible; // Burrow visibility 
 
         protected Color defaultTint = Color.White;
 
@@ -99,8 +100,8 @@ namespace HappyDungeon
         // ================================================================================ 
         public Globals.GeneralStates selfState; 
 
-        protected bool startWithHibernate = true;  // If the enemy starts in hibernation
-        protected bool wakeupByIlluminati = true; // Only waken by illuminati state
+        protected bool startWithHibernate = false;  // If the enemy starts in hibernation
+        protected bool wakeupByIlluminati = false; // Only waken by illuminati state
         protected bool wakingup = false; 
         protected int wakeUpDistance = (int)(2.0 * Globals.OUT_UNIT); // When player is within this distance 
         protected int wakeupTime = 1600;
@@ -132,6 +133,7 @@ namespace HappyDungeon
         {
             game = G;
             position = P;
+            spawnPosition = P;
 
             spriteBatch = game.spriteBatch;
 
@@ -140,9 +142,6 @@ namespace HappyDungeon
 
             HPBar = new Enemies.EnemyHealthBar(game, selfType);
 
-            brainAgent = new Enemies.AgenTest(this);
-            enemyBlockCollison = new EnemyBlockCollision(game);
-
             selfState = startWithHibernate ? Globals.GeneralStates.Hold : Globals.GeneralStates.Moving;
 
             attackInterval = Globals.RND.Next(attackIntervalMin, attackIntervalMax);
@@ -150,9 +149,15 @@ namespace HappyDungeon
             facingDir = (Globals.Direction)(Globals.RND.Next() % 4);
             movingSprite.rowLimitation = (int)facingDir;
 
+            brainAgent = new Enemies.AgentSTD(this, facingDir);
+            enemyBlockCollison = new EnemyBlockCollision(game);
+
             damageProtectionSW.Restart();
             regenSW.Restart();
             attackSW.Restart();
+
+            if (!startWithHibernate)
+                SetNonHibernate();
         }
 
         public void Turn(Globals.Direction NewDir)
@@ -188,6 +193,11 @@ namespace HappyDungeon
 
             movingSprite.rowLimitation = (int)facingDir;
             movingSprite.Update();
+        }
+
+        public virtual void SpeedChange(int NewSpeed)
+        {
+            baseMovementSpeed = NewSpeed;
         }
 
         /// <summary>
@@ -376,6 +386,12 @@ namespace HappyDungeon
         // ================================ Private methods ===============================
         // ================================================================================
 
+        protected virtual void SetNonHibernate()
+        {
+            isVisible = true;
+            mainSprite = movingSprite;
+        }
+
         /// <summary>
         /// Used to see if a movement will result in collision or not 
         /// </summary>
@@ -536,7 +552,7 @@ namespace HappyDungeon
             }
             else // Turn if hit a block
             {
-                Turn(brainAgent.HandleBlockCollision(facingDir));
+                brainAgent.HandleBlockCollision(facingDir);
             }
 
             UpdateRegen();
@@ -584,10 +600,11 @@ namespace HappyDungeon
                     mainSprite.opacity -= 0.05f;
                 }
 
-                // Gradually fade out 
+                // Gradually fade out and remove itself from level data 
                 if (deathSW.ElapsedMilliseconds > lingeringTime)
                 {
                     position = new Vector2(-Globals.OUT_UNIT, -Globals.OUT_UNIT);
+                    game.roomCycler.RemoveIndex(selfIndex, Misc.Instance.PositionReverse(spawnPosition));
                 }
             }
         }

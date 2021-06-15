@@ -48,10 +48,15 @@ namespace HappyDungeon
                         game.goldCount += item.GetCount();
                         Success = true; // Disable this for fast gold farming lol 
                     }
-                        
 
-                    if(Success) // If that item is "pciked up", remove it 
+
+                    // If that item is "pciked up", remove it 
+                    if (Success)
+                    {
                         ToBeRemoved.Add(item);
+                        Vector2 Position = new Vector2(item.GetRectangle().X, item.GetRectangle().Y);
+                        game.roomCycler.RemoveIndex(item.SelfIndex(), Misc.Instance.PositionReverse(Position)) ;
+                    }
                 }
             }
 

@@ -154,6 +154,9 @@ namespace HappyDungeon
             currentHealth = (int)(MAX_HEALTH * INIT_HP_RATIO);
             pastHealth = -1; 
             currentMaxHP = MAX_HEALTH;
+
+            // Initlize the sprite so that the character will be there when first starts 
+            selfSprite.Update(facingDir, mcState, primaryState, damageInflictionOn);
         }
 
         // ================================================================================

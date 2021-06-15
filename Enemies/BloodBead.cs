@@ -21,6 +21,7 @@ namespace HappyDungeon
         {
             game = G;
             position = P;
+            spawnPosition = P;
             spriteBatch = game.spriteBatch;
 
             // ------------------------------------------------------------------
@@ -100,7 +101,7 @@ namespace HappyDungeon
                 }
                 else
                 {
-                    Turn(brainAgent.HandleBlockCollision(facingDir));
+                    brainAgent.HandleBlockCollision(facingDir);
                 }
 
             }

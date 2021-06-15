@@ -205,7 +205,8 @@ namespace HappyDungeon
         {
             int[] Rev = new int[] { 0, 0 };
 
-
+            Rev[0] = (int)((AbsPos.X - Globals.OUT_BORDER) / Globals.OUT_UNIT);
+            Rev[1] = (int)((AbsPos.Y - Globals.OUT_BORDER - Globals.OUT_HEADSUP) / Globals.OUT_UNIT);
 
             return Rev;
         }
@@ -219,6 +220,12 @@ namespace HappyDungeon
         public int L2Distance(Vector2 P1, Vector2 P2)
         {
             return (int)Math.Sqrt(Math.Pow((P1.X - P2.X), 2) + Math.Pow((P1.Y - P2.Y), 2));
+        }
+
+        public int L1Distance(Vector2 P1, Vector2 P2)
+        {
+            Vector2 Total = P1 - P2; 
+            return (int)(Math.Abs(Total.X) + Math.Abs(Total.Y)) ;
         }
     }
 }

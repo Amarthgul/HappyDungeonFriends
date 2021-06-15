@@ -110,7 +110,7 @@ namespace HappyDungeon
 
         public int SelfIndex()
         {
-            return 0; 
+            return Globals.ITEM_NOTE_SO; 
         }
         public General.Modifiers.IModifier GetPickupModifier()
         {

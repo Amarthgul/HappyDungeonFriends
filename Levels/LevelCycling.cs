@@ -140,6 +140,41 @@ namespace HappyDungeon
             OpenAllDoorsInNextRoom(Direction);
         }
 
+        /// <summary>
+        /// Remove an index from the room, either an enemy or an item.  
+        /// If the given location is not correct, it'll try to find one in the map and
+        /// replace it with the default block index. 
+        /// </summary>
+        /// <param name="Index">Index to remove</param>
+        /// <param name="RefPosition">Best guess of its position</param>
+        public void RemoveIndex(int Index, int[] RefPosition)
+        {
+            if (currentMapSet[currentLocationIndex[0], currentLocationIndex[1]]
+                .Arrangement[RefPosition[1], RefPosition[0]] == Index)
+            {
+                currentMapSet[currentLocationIndex[0], currentLocationIndex[1]]
+                .Arrangement[RefPosition[1], RefPosition[0]] =
+                    currentMapSet[currentLocationIndex[0], currentLocationIndex[1]]
+                    .DefaultBlock;
+            }
+            else
+            {
+                for (int i = 0; i < Globals.RTILE_ROW; i++)
+                {
+                    for (int j = 0; j < Globals.RTILE_COLUMN; j++)
+                    {
+                        if (currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].Arrangement[i, j] == Index)
+                        {
+                            currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].Arrangement[i, j]
+                                = currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].DefaultBlock;
+                            break;
+                        } 
+                    }
+                }
+            }
+                
+        }
+
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================

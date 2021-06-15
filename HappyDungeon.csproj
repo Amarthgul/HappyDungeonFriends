@@ -66,10 +66,7 @@
     <Compile Include="Controllers\IController.cs" />
     <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="Controllers\MouseController.cs" />
-    <Compile Include="Enemies\Agent\AgentMoth.cs" />
-    <Compile Include="Enemies\Agent\AgentDarkArcher.cs" />
-    <Compile Include="Enemies\Agent\AgentTest.cs" />
-    <Compile Include="Enemies\Agent\AgentVampire.cs" />
+    <Compile Include="Enemies\Agent\AgentSTD.cs" />
     <Compile Include="Enemies\Agent\AgentStupid.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
     <Compile Include="Enemies\IEnemySTD.cs" />
