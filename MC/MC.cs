@@ -649,6 +649,7 @@ namespace HappyDungeon
         private Vector2 MaxKnockbackDist(Globals.Direction DirFrom, double Dist)
         {
             Vector2 VecIter = new Vector2(0, 0);
+            Vector2 Result = new Vector2(0, 0); 
             int IterateStep = 1 * Globals.SCALAR;
 
             while(Math.Abs(VecIter.X) < (int)Math.Abs(Dist) * Globals.SCALAR
@@ -677,10 +678,10 @@ namespace HappyDungeon
                 {
                     break;
                 }
-                
+                Result = new Vector2(VecIter.X, VecIter.Y) ;
             }
 
-            return VecIter;
+            return Result;
         }
 
         /// <summary>

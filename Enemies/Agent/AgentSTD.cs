@@ -25,28 +25,39 @@ namespace HappyDungeon.Enemies
         protected int baseSpeed = (int)(0.4 * Globals.SCALAR);
         protected int frenzySpeed = (int)(0.8 * Globals.SCALAR); 
 
-        protected bool seekPlayer = true;
-        protected bool rangedSensing = true;     // Constrain on seekPlayer
-        protected bool rangedFrenzy = true;
-        protected bool smartPathFinding = false;
+        protected bool seekPlayer = true;        // If it has the ability to identify player as its enemy
+        protected bool rangedSensing = true;     // Constrain on seekPlayer only when they're close enough 
+        protected bool rangedFrenzy = true;      // Whether if it enters frenzy after sensing the player 
+        protected bool photophobia = true;       // If it runs away when the player has illuminati on 
+        protected bool smartPathFinding = true;  // If it knows to try to go around the wall 
         protected int senseRange = 3 * Globals.OUT_UNIT;
+        protected int photonRange = 2 * Globals.OUT_UNIT;
+
+        protected int wallSeekingTime = 250;
+        protected int frenzyCD = 500;
+        protected Stopwatch wallSeekingSW = new Stopwatch();
+        protected Stopwatch frenzyCDSW = new Stopwatch();
+        protected bool turnLock = false;
+
+        protected Stopwatch turnSW;
+        protected long nextTurn;
 
         protected Globals.Direction facingDir; 
         protected Globals.Direction playerDirection;
         protected int playerDistance;
 
-        protected Stopwatch turnSW;
-        protected long timer;
-        protected long nextTurn;
+        
 
         public AgentSTD(IEnemy FindMyself, Globals.Direction D)
         {
             self = FindMyself;
-            facingDir = D; 
+            facingDir = D;
 
+            wallSeekingSW = new Stopwatch();
             turnSW = new Stopwatch();
+            wallSeekingSW.Restart();
             turnSW.Restart();
-            timer = 0;
+            frenzyCDSW.Restart();
 
             RecalNextDelay();
         }
@@ -56,10 +67,16 @@ namespace HappyDungeon.Enemies
 
             if (seekPlayer)
             {
-
-                Turn(playerDirection);
+                if (smartPathFinding && wallSeekingSW.ElapsedMilliseconds > wallSeekingTime)
+                {
+                    Turn(SideDirection()[Globals.RND.Next() % 2]);
+                    wallSeekingSW.Restart();
+                    turnLock = true;
+                }
+                else if (!turnLock)
+                    Turn(playerDirection);
             }
-            else
+            else 
             {
                 Turn(Misc.Instance.Opposite(FacingDir));
             }
@@ -68,22 +85,70 @@ namespace HappyDungeon.Enemies
 
         public virtual void Update(MC MainChara)
         {
-            if (seekPlayer)
-            {
-                playerDirection = ToPlayerDirection(MainChara);
-                playerDistance = Misc.Instance.L2Distance(self.GetPosition(), MainChara.position);
+            
+            UpdateSeeker(MainChara);
 
-                if (rangedSensing && rangedFrenzy && playerDistance < senseRange)
+            UpdateTurn(MainChara);
+
+            UpdateAttack(MainChara);
+
+
+        }
+
+        // ================================================================================
+        // ================================ Private methods ===============================
+        // ================================================================================
+        
+        /// <summary>
+        /// Update if seekPlayer is enabled, speed up if frenzy is enabled. 
+        /// </summary>
+        /// <param name="MainChara">Info about player</param>
+        protected virtual void UpdateSeeker(MC MainChara)
+        {
+            playerDirection = ToPlayerDirection(MainChara);
+            playerDistance = Misc.Instance.L2Distance(self.GetPosition(), MainChara.position);
+
+            if (photophobia && playerDistance < photonRange && MainChara.Illuminati())
+            {
+                if (smartPathFinding)
+                {
+                    List<Globals.Direction> Dirs = new List<Globals.Direction>(Globals.FourDirIter);
+                    Dirs.Remove(playerDirection);
+                    Turn(Dirs[Globals.RND.Next() % Dirs.Count]);
+                }
+                else
+                {
+                    Turn(Misc.Instance.Opposite(playerDirection));
+                }
+                    
+                if (rangedFrenzy)
                 {
                     self.SpeedChange(frenzySpeed);
+                    frenzyCDSW.Restart();
+                }
+            }
+
+            if (seekPlayer)
+            {
+                if (rangedSensing && rangedFrenzy && playerDistance < senseRange)
+                {
+                    if (frenzyCDSW.ElapsedMilliseconds > frenzyCD)
+                    {
+                        self.SpeedChange(frenzySpeed);
+                        Turn(playerDirection);
+                        frenzyCDSW.Restart();
+                    }
                 }
                 else
                 {
                     self.SpeedChange(baseSpeed);
                 }
             }
+        }
 
-            if (turnSW.ElapsedMilliseconds > nextTurn)
+        protected virtual void UpdateTurn(MC MainChara)
+        {
+            if (turnSW.ElapsedMilliseconds > nextTurn && !turnLock)
             {
                 if (seekPlayer)
                 {
@@ -94,26 +159,28 @@ namespace HappyDungeon.Enemies
                 }
                 else
                     Turn((Globals.Direction)(Globals.RND.Next() % 4));
-
             }
 
+            if (wallSeekingSW.ElapsedMilliseconds > wallSeekingTime)
+            {
+                turnLock = false;
+            }
+        }
+
+        protected virtual void UpdateAttack(MC MainChara)
+        {
             if (self.CanAttack())
             {
                 self.Attack();
                 self.SetAttackInterval(0);
             }
-
-
         }
-
-        // ================================================================================
-        // ================================ Private methods ===============================
-        // ================================================================================
 
         protected virtual void Turn(Globals.Direction NewDir)
         {
             self.Turn(NewDir);
             RecalNextDelay();
+            facingDir = NewDir;
 
             turnSW.Restart();
         }
@@ -180,6 +247,18 @@ namespace HappyDungeon.Enemies
 
             return PD.ToArray();
             
+        }
+
+        protected virtual Globals.Direction[] SideDirection()
+        {
+            if (facingDir == Globals.Direction.Down || facingDir == Globals.Direction.Up)
+            {
+                return new Globals.Direction[] { Globals.Direction.Left, Globals.Direction.Right };
+            }
+            else
+            {
+                return new Globals.Direction[] { Globals.Direction.Up, Globals.Direction.Down };
+            }
         }
     }
 }

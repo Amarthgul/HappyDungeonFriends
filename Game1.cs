@@ -25,6 +25,7 @@ namespace HappyDungeon
         // ================================================================================
         private bool _DEVMODE = false;
         private bool _ENABLE_FOW = false;
+        private bool _SHOW_BOX = false;
         public Globals.Language gameLanguage { get; set; }
         public Globals.GameStates gameState { get; set; }
         public Globals.GameLevel gameLevel { get; set; }
@@ -435,7 +436,7 @@ namespace HappyDungeon
             displayWholeMinimap = 0; 
 
             // Dev mode debuggings 
-            if (_DEVMODE)
+            if (_DEVMODE && _SHOW_BOX)
             {
                 DrawRectangle PlayerRect = new DrawRectangle(GraphicsDevice, spriteBatch, mainChara.GetRectangle(), Color.Green);
                 PlayerRect.Draw();
