@@ -29,7 +29,6 @@ namespace HappyDungeon
         /// <returns>True if it hits some blocks</returns>
         public bool CollidedWithEnv(Rectangle ProjRectangle)
         {
-            bool result = false;
 
             foreach (IBlock block in game.staticBlockList)
             {
@@ -37,28 +36,30 @@ namespace HappyDungeon
                     return true;
             }
 
-            return result;
+            return false;
         }
 
 
-        public bool CollidedWithPlayer()
+        public bool CollidedWithPlayer(Rectangle ProjRectangle)
         {
-            bool result = false;
 
+            if (game.mainChara.GetRectangle().Intersects(ProjRectangle))
+                return true;
 
-
-
-            return result;
+            return false;
         }
 
-        public bool CollidedWithEnemy()
+        public bool CollidedWithEnemy(Rectangle ProjRectangle)
         {
-            bool result = false;
+
+            foreach (IEnemy enemy in game.staticBlockList)
+            {
+                if (ProjRectangle.Intersects(enemy.GetRectangle()))
+                    return true;
+            }
 
 
-
-
-            return result;
+            return false;
         }
     }
 }

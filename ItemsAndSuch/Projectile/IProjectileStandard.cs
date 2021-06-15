@@ -38,20 +38,23 @@ namespace HappyDungeon
         protected ProjectileCollision collisionDect;
 
         protected Stopwatch selfSW = new Stopwatch();
-        protected int lifeEntension = 50; // Leave a bit more time for melee attack 
+        protected int lifeEntension = 50;   // Leave a bit more time for melee attack 
+        protected bool expireOnHit = true;
         protected bool expired = false;
 
         public bool isMelee { set; get; }
         public bool isTargetProjectile { set; get; }
         public bool isCurved { set; get; }
 
-        public IProjectileStandard(Game1 G, GeneralSprite GS, DamageInstance DI, Vector2 P, Globals.Direction D)
+        public IProjectileStandard(Game1 G, GeneralSprite GS, DamageInstance DI, Vector2 P, 
+            Globals.Direction D, Object S)
         {
             game = G;
             selfSprite = GS;
             damageInstance = DI;
             position = P;
-            facingDir = D; 
+            facingDir = D;
+            source = S;
 
             spriteBatch = game.spriteBatch;
 
@@ -98,12 +101,6 @@ namespace HappyDungeon
             }
             
 
-
-            if (collisionDect.CollidedWithPlayer())
-            {
-                game.mainChara.TakeDamage(damageInstance, Misc.Instance.Opposite(facingDir));
-            }
-
         }
 
         public virtual void Draw()
@@ -123,7 +120,7 @@ namespace HappyDungeon
 
         public virtual Rectangle GetRectangle()
         {
-            return new Rectangle();
+            return collisionRect;
         }
 
         /// <summary>
@@ -151,6 +148,19 @@ namespace HappyDungeon
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================
+
+        protected virtual void CheckHittingTarget()
+        {
+            if (source is IEnemy)
+            {
+                if (collisionDect.CollidedWithPlayer(collisionRect))
+                {
+                    game.mainChara.TakeDamage(damageInstance, facingDir);
+                    if (expireOnHit)
+                        expired = true;
+                }
+            }
+        }
 
         protected virtual void UpdateRectangle()
         {
@@ -189,6 +199,7 @@ namespace HappyDungeon
             currentTravelDistance += moveSpeed;
 
             UpdateRectangle();
+            CheckHittingTarget();
 
             if (currentTravelDistance > totalravelDistance || collisionDect.CollidedWithEnv(collisionRect))
                 expired = true;
@@ -227,6 +238,8 @@ namespace HappyDungeon
                     default:
                         break;
                 }
+
+                CheckHittingTarget();
 
                 if (selfSW.ElapsedMilliseconds > (meleeLastingTime + lifeEntension))
                 {

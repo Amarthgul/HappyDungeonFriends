@@ -312,21 +312,25 @@ namespace HappyDungeon
 
             DamageInstance ReceivedInstance = game.spellSlots.IncomingDamageGernealModifier(DMG);
 
-            MarkDamgeInfliction(ReceivedInstance.DamageCount);
+            if (ReceivedInstance.DamageCount != 0)
+                MarkDamgeInfliction(ReceivedInstance.DamageCount);
 
-            foreach(Globals.DamageEffect FX in DMG.effects)
+            if (DMG.effects != null)
             {
-                switch (FX)
+                foreach (Globals.DamageEffect FX in DMG.effects)
                 {
-                    case Globals.DamageEffect.Break:
-                        break;
-                    case Globals.DamageEffect.Knockback: // instant knockback
-                        position += MaxKnockbackDist(DirFrom, ReceivedInstance.knowckbackDist);
-                        break;
-                    case Globals.DamageEffect.Stun:
-                        break;
-                    default:
-                        break;
+                    switch (FX)
+                    {
+                        case Globals.DamageEffect.Break:
+                            break;
+                        case Globals.DamageEffect.Knockback: // instant knockback
+                            position += MaxKnockbackDist(DirFrom, ReceivedInstance.knowckbackDist);
+                            break;
+                        case Globals.DamageEffect.Stun:
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 

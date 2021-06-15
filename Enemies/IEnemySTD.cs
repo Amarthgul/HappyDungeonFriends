@@ -51,7 +51,7 @@ namespace HappyDungeon
         protected bool meleeShowProjectile = true; // If melee projectile draw the sprite 
         protected int rangedAttackDistance = 4 * Globals.OUT_UNIT;
         protected int meleeAttackRange = 1 * Globals.OUT_UNIT;
-        protected int attackDamage = 10;
+        protected int attackDamage = -10;
         protected int attackLastingTime = 400;  // If hold on attack, then that's the time it stops 
         protected int attackIntervalMin = 2000; // 2 seconds' interval at least 
         protected int attackIntervalMax = 8000; // Some perform attack randomly, that's the longest interval time
@@ -289,7 +289,7 @@ namespace HappyDungeon
         {
             if (!canAttack) return;  // Fail-safe 
 
-            DamageInstance DmgIns = new DamageInstance(10, null);
+            DamageInstance DmgIns = new DamageInstance(attackDamage, null);
             GeneralSprite ProjSpeite = null; 
 
             if(canRangedAttack || meleeShowProjectile)
@@ -299,7 +299,7 @@ namespace HappyDungeon
             }
             
             IProjectileStandard proj = new IProjectileStandard(game, ProjSpeite, DmgIns, 
-                AttackOffset(), facingDir);
+                AttackOffset(), facingDir, this);
             proj.totalravelDistance = canRangedAttack ? rangedAttackDistance : meleeAttackRange;
             if (!canRangedAttack)
             {

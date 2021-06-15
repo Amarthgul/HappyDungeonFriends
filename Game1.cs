@@ -23,9 +23,9 @@ namespace HappyDungeon
         // ================================================================================
         // ========================= Game states and parameters ===========================
         // ================================================================================
-        private bool _DEVMODE = false;
-        private bool _ENABLE_FOW = false;
-        private bool _SHOW_BOX = false;
+        private bool _DEVMODE = false;       // Root flag for dev options 
+        private bool _ENABLE_FOW = false;   // Enable fog of war 
+        private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
         public Globals.Language gameLanguage { get; set; }
         public Globals.GameStates gameState { get; set; }
         public Globals.GameLevel gameLevel { get; set; }
@@ -402,7 +402,7 @@ namespace HappyDungeon
 
             foreach (IBlock block in dynamicBlockList)
             {
-                if ((_DEVMODE && _ENABLE_FOW) || 
+                if ((_DEVMODE && !_ENABLE_FOW) || 
                     Misc.Instance.BlockFogBreaker(block, mainChara.GetRectangle(), fogOfWar.GetRange()))
                     block.Draw();
             }
