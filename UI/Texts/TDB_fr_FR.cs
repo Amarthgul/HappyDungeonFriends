@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HappyDungeon.UI.Texts
 {
     /// <summary>
-    /// French, fancy 
+    /// French, how fancy 
     /// </summary>
     class TDB_fr_FR : ITDB
     {
@@ -27,6 +27,21 @@ namespace HappyDungeon.UI.Texts
         }
 
         public string[] TitleOptions()
+        {
+            return new string[] { };
+        }
+
+        public string[] SettingOptions()
+        {
+            return new string[] { };
+        }
+
+        public string[] PauseOptions()
+        {
+            return new string[] { };
+        }
+
+        public string[] DeathOptions()
         {
             return new string[] { };
         }

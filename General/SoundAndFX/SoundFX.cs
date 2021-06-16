@@ -20,6 +20,8 @@ namespace HappyDungeon
         public float pitchDefault { set; get; }
         public float panDefault { set; get; }
 
+        public static float masterVolume;
+
         // ================================================================================
         // ================================ Main character ================================
         // ================================================================================
@@ -185,7 +187,7 @@ namespace HappyDungeon
 
         private void PlayInVolume(SoundEffect SFX, float Volume)
         {
-            SFX.Play(Volume, pitchDefault, panDefault);
+            SFX.Play(Volume * masterVolume, pitchDefault, panDefault);
         }
 
         private SoundEffect RandPick(SoundEffect[] List)
@@ -200,12 +202,12 @@ namespace HappyDungeon
             if (Math.Abs(Pan) < .5f)
             {
                 float PanSide = .5f - Pan;
-                SFX.Play(Volume, pitchDefault, Pan);
-                SFX.Play(Volume, pitchDefault, PanSide);
+                SFX.Play(Volume * masterVolume, pitchDefault, Pan);
+                SFX.Play(Volume * masterVolume, pitchDefault, PanSide);
             }
             else
             {
-                SFX.Play(Volume, pitchDefault, Pan);
+                SFX.Play(Volume * masterVolume, pitchDefault, Pan);
             }
             
         }
@@ -214,12 +216,17 @@ namespace HappyDungeon
         // ================================ Public methods ================================
         // ================================================================================
 
+        public void SetVolume(float[] Vols)
+        {
+            masterVolume = Vols[0];
+        }
+
         public void PlayMCAttack(MC Player)
         {
             switch (Player.primaryState)
             {
                 case Globals.primaryTypes.Torch:
-                    RandPick(mcAttackWithTorch).Play();
+                    PlayInVolume(RandPick(mcAttackWithTorch), 1f);
                     break;
                 default:
                     break;
@@ -228,7 +235,7 @@ namespace HappyDungeon
 
         public void PlayMCTorchOn()
         {
-            RandPick(mcWalkWithTorch).Play();
+            PlayInVolume(RandPick(mcWalkWithTorch), 1f);
         }
 
         public void PlayMCWalkLevelDelight()
@@ -238,7 +245,7 @@ namespace HappyDungeon
 
         public void PlayGoldPickupSFX()
         {
-            RandPick(itemGoldPickup).Play();
+            PlayInVolume(RandPick(itemGoldPickup), 1f);
         }
 
         public void PlayitemPickup(int Index)
@@ -310,15 +317,15 @@ namespace HappyDungeon
 
         public void PlayBagLMBSelect()
         {
-            RandPick(bagLMBSlect).Play();
+            PlayInVolume(RandPick(bagLMBSlect), 1f);
         }
         public void PlayBagLMBRelease()
         {
-            RandPick(bagLMBRelease).Play();
+            PlayInVolume(RandPick(bagLMBRelease), 1f);
         }
         public void PlayBagItemOnhover()
         {
-            RandPick(bagOnhover).Play();
+            PlayInVolume(RandPick(bagOnhover), 1f);
         }
         public void PlayTitleOnHover()
         {

@@ -23,13 +23,15 @@ namespace HappyDungeon
         // ================================================================================
         // ========================= Game states and parameters ===========================
         // ================================================================================
-        private bool _DEVMODE = false;       // Root flag for dev options 
+        private bool _DEVMODE = false;       // Root flag for all other dev options 
         private bool _ENABLE_FOW = false;   // Enable fog of war 
         private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
         public Globals.Language gameLanguage { get; set; }
         public Globals.GameStates gameState { get; set; }
         public Globals.GameLevel gameLevel { get; set; }
         private int mapSize = 9;
+
+        public float[] volumes { get; set; }
 
         // ================================================================================
         // ====================== Character, items, enemies, etc. =========================
@@ -194,8 +196,11 @@ namespace HappyDungeon
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            volumes = new float[] { 1f };
+
             TextureFactory.Instance.LoadAll(Content);
             SoundFX.Instance.LoadAll(Content);
+            SoundFX.Instance.SetVolume(volumes);
 
             LoadClasses(0);
             // TODO: use this.Content to load your game content here

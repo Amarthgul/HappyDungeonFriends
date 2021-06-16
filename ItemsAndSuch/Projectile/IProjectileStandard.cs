@@ -65,7 +65,7 @@ namespace HappyDungeon
 
             totalravelDistance = (int)(2.0 * Globals.OUT_UNIT);
             currentTravelDistance = 0; 
-            moveSpeed = (int)(3.0 * Globals.SCALAR);
+            moveSpeed = (int)(4.0 * Globals.SCALAR);
             moveInterval = 100;
             defaultTint = Color.White;
             meleeOffset = (int)(1.0 * Globals.OUT_UNIT);

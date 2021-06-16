@@ -218,6 +218,10 @@ namespace HappyDungeon.Enemies
             }
         }
 
+        /// <summary>
+        /// Make the agent frenzy. Either eascape from player or actively chase the player. 
+        /// </summary>
+        /// <param name="InFear">Escape if true</param>
         protected virtual void MarkFrenzy(bool InFear)
         {
             if (frenzyCDSW.ElapsedMilliseconds > frenzyCD)

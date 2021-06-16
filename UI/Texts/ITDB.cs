@@ -16,6 +16,16 @@ namespace HappyDungeon.UI.Texts
         string IndexedDescription(int index);
 
 
+        /// <summary>
+        /// Should be having "Campaign", "Adventure", and "Settings" 3 options. 
+        /// </summary>
+        /// <returns></returns>
         string[] TitleOptions();
+
+        string[] SettingOptions();
+
+        string[] PauseOptions();
+
+        string[] DeathOptions();
     }
 }

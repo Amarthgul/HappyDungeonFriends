@@ -31,5 +31,20 @@ namespace HappyDungeon.UI.Texts
             return new string[] { };
         }
 
+        public string[] SettingOptions()
+        {
+            return new string[] { };
+        }
+
+        public string[] PauseOptions()
+        {
+            return new string[] { };
+        }
+
+        public string[] DeathOptions()
+        {
+            return new string[] { };
+        }
+
     }
 }

@@ -33,5 +33,20 @@ namespace HappyDungeon.UI.Texts
             return new string[] { "Campaign", "Adventure", "Settings" };
         }
 
+        public string[] SettingOptions()
+        {
+            return new string[] { "Volume", "Save", "Load", "Quit" };
+        }
+
+        public string[] PauseOptions()
+        {
+            return new string[] { "Continue", "Back to menu", "Quit" };
+        }
+
+        public string[] DeathOptions()
+        {
+            return new string[] { "Restart", "Load from last save" };
+        }
+
     }
 }

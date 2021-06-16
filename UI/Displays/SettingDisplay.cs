@@ -8,5 +8,7 @@ namespace HappyDungeon.UI.Displays
 {
     class SettingDisplay
     {
+
+
     }
 }

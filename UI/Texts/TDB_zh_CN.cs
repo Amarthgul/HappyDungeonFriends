@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace HappyDungeon.UI.Texts
 {
+    /// <summary>
+    /// I cannot even draw the simplified version (which would be around 3000 for this game?)
+    /// let alone traditional chinese.
+    /// </summary>
     class TDB_zh_CN : ITDB
     {
 
@@ -27,6 +31,19 @@ namespace HappyDungeon.UI.Texts
         {
             return new string[] { };
         }
+        public string[] SettingOptions()
+        {
+            return new string[] { };
+        }
 
+        public string[] PauseOptions()
+        {
+            return new string[] { };
+        }
+
+        public string[] DeathOptions()
+        {
+            return new string[] { };
+        }
     }
 }
