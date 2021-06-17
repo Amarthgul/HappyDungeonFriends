@@ -35,6 +35,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Running:
                     game.Exit();
                     break;
+                case Globals.GameStates.Setting:
+                    game.screenFX.BackToLastState();
+                    break;
                 default:
                     break;
             }

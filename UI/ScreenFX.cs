@@ -23,6 +23,8 @@ namespace HappyDungeon
 
         private UI.Effects.TransitionFX transitionFX;
 
+        private Globals.GameStates lastState;
+
         public ScreenFX(Game1 G)
         {
             game = G;
@@ -42,6 +44,16 @@ namespace HappyDungeon
         {
             transitionFX.SigStart(NextState);
             game.transitionProgress[0] = true;
+        }
+
+        public void SetRecordState(Globals.GameStates State)
+        {
+            lastState = State;
+        }
+
+        public void BackToLastState()
+        {
+            SigTransitionStart(lastState);
         }
 
         public void Update()

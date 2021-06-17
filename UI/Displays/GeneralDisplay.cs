@@ -31,6 +31,7 @@ namespace HappyDungeon
         {
             bagDisplay = new UI.Displays.BagDisplay(game);
             titleDisplay = new UI.Displays.TitleScreenDisplay(game);
+            settingDisplay = new UI.Displays.SettingDisplay(game);
         }
 
 
@@ -129,6 +130,7 @@ namespace HappyDungeon
                 case Globals.GameStates.GameOver:
                     break;
                 case Globals.GameStates.Setting:
+                    settingDisplay.UpdateOnhover(CursorPos);
                     break;
                 default:
                     break;
@@ -159,6 +161,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.TitleScreen:
                     titleDisplay.Draw();
+                    break;
+                case Globals.GameStates.Setting:
+                    settingDisplay.Draw();
                     break;
                 default:
                     break; 

@@ -54,6 +54,7 @@ namespace HappyDungeon.UI.Displays
         private Vector2 onClickPosition = new Vector2();
 
         private bool transitProtection = false;
+        private Stopwatch transitProtSW = new Stopwatch();
 
         private Color defualtTint = Color.White;
 
@@ -164,12 +165,19 @@ namespace HappyDungeon.UI.Displays
             {
                 SoundFX.Instance.PlayTitleClick();
                 game.screenFX.SigTransitionStart(Globals.GameStates.Running);
+
                 transitProtection = true;
+                transitProtSW.Restart();
                 LMBSessionOn = false;
             }
             else if (rectSetting.Contains(CursorPos) && rectSetting.Contains(onClickPosition))
             {
                 SoundFX.Instance.PlayTitleClick();
+                game.screenFX.SetRecordState(Globals.GameStates.TitleScreen);
+                game.screenFX.SigTransitionStart(Globals.GameStates.Setting);
+
+                transitProtection = true;
+                transitProtSW.Restart();
                 LMBSessionOn = false;
             }
             else // If released in a potion that nothing matters 
@@ -182,7 +190,10 @@ namespace HappyDungeon.UI.Displays
 
         public void Update()
         {
-            
+            if (transitProtSW.ElapsedMilliseconds > Globals.TRANSITION_SINGLE)
+            {
+                transitProtection = false;
+            }
         }
 
         public void UpdateOnhover(Vector2 CursorPos)

@@ -21,6 +21,8 @@ namespace HappyDungeon
         public float panDefault { set; get; }
 
         public static float masterVolume;
+        public static float SFXVolume;
+        public static float musicVolume;
 
         // ================================================================================
         // ================================ Main character ================================
@@ -219,6 +221,8 @@ namespace HappyDungeon
         public void SetVolume(float[] Vols)
         {
             masterVolume = Vols[0];
+            SFXVolume = Vols[1];
+            musicVolume = Vols[2];
         }
 
         public void PlayMCAttack(MC Player)

@@ -47,7 +47,9 @@ namespace HappyDungeon
         public ImageFile BagViewBasic;
         public ImageFile BagViewUnderlay;
 
-        public ImageFile titleBackground; 
+        public ImageFile titleBackground;
+
+        public ImageFile settingBackground; 
 
         public ImageFile fontDigitsSmall;
         public ImageFile fontDigitsSmallB;
@@ -141,6 +143,7 @@ namespace HappyDungeon
             BagViewUnderlay = new ImageFile(content, "Images/UI/BagViewUnderlay", 1, 1);
 
             titleBackground = new ImageFile(content, "Images/UI/titleBackground", 1, 1);
+            settingBackground = new ImageFile(content, "Images/UI/SettingBase", 1, 1);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);

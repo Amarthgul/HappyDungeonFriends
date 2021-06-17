@@ -196,7 +196,7 @@ namespace HappyDungeon
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            volumes = new float[] { 1f };
+            volumes = new float[] { 1f, 1f, 1f };
 
             TextureFactory.Instance.LoadAll(Content);
             SoundFX.Instance.LoadAll(Content);
@@ -246,6 +246,9 @@ namespace HappyDungeon
                 case Globals.GameStates.TitleScreen:
                     UpdateTitleScreen();
                     break;
+                case Globals.GameStates.Setting:
+                    UpdateSettings();
+                    break;
                 default:
                     break; 
             }
@@ -280,6 +283,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.TitleScreen:
                     DrawTitleScreen();
+                    break;
+                case Globals.GameStates.Setting:
+                    DrawSettings();
                     break;
                 default:
                     break;
@@ -379,6 +385,11 @@ namespace HappyDungeon
         }
 
         private void UpdateTitleScreen()
+        {
+            generalDisplay.Update();
+        }
+
+        private void UpdateSettings()
         {
             generalDisplay.Update();
         }
@@ -488,6 +499,11 @@ namespace HappyDungeon
         }
 
         private void DrawTitleScreen()
+        {
+            generalDisplay.Draw();
+        }
+
+        private void DrawSettings()
         {
             generalDisplay.Draw();
         }

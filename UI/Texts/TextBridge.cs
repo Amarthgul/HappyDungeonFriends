@@ -83,5 +83,10 @@ namespace HappyDungeon
             return textDataBase.TitleOptions()[Index];
         }
 
+        public string[] GetSettingOptions()
+        {
+            return textDataBase.SettingOptions();
+        }
+
     }
 }

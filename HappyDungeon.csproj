@@ -69,6 +69,7 @@
     <Compile Include="Enemies\Agent\AgentSTD.cs" />
     <Compile Include="Enemies\Agent\AgentStupid.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
+    <Compile Include="Enemies\Database\IdiotDifficulty.cs" />
     <Compile Include="Enemies\IEnemySTD.cs" />
     <Compile Include="Enemies\BloodBead.cs" />
     <Compile Include="Enemies\EnemyHealthBar.cs" />
