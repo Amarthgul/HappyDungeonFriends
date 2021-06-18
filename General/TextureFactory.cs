@@ -49,7 +49,8 @@ namespace HappyDungeon
 
         public ImageFile titleBackground;
 
-        public ImageFile settingBackground; 
+        public ImageFile settingBackground;
+        public ImageFile settingSlider; 
 
         public ImageFile fontDigitsSmall;
         public ImageFile fontDigitsSmallB;
@@ -144,6 +145,7 @@ namespace HappyDungeon
 
             titleBackground = new ImageFile(content, "Images/UI/titleBackground", 1, 1);
             settingBackground = new ImageFile(content, "Images/UI/SettingBase", 1, 1);
+            settingSlider = new ImageFile(content, "Images/UI/slider", 1, 1);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);

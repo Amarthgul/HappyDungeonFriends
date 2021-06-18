@@ -88,6 +88,7 @@ namespace HappyDungeon
                 case Globals.GameStates.GameOver:
                     break;
                 case Globals.GameStates.Setting:
+                    settingDisplay.LeftClickRelease(CursorPos);
                     break; 
                 default:
                     break;
@@ -107,6 +108,7 @@ namespace HappyDungeon
                 case Globals.GameStates.GameOver:
                     break;
                 case Globals.GameStates.Setting:
+                    settingDisplay.LeftClickEvent(CursorPos);
                     break;
                 default:
                     break;
@@ -146,6 +148,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.TitleScreen:
                     titleDisplay.Update();
+                    break;
+                case Globals.GameStates.Setting:
+                    settingDisplay.Update();
                     break;
                 default:
                     break;
