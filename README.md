@@ -21,9 +21,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 10 June 2021: 
+Update 18 June 2021: 
 
-STD enemy can now do different attack methods. 
+The game now start with a title screen, with several options (some not yet implemented). 
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">

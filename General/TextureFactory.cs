@@ -48,6 +48,7 @@ namespace HappyDungeon
         public ImageFile BagViewUnderlay;
 
         public ImageFile titleBackground;
+        public ImageFile skyBackground; 
 
         public ImageFile settingBackground;
         public ImageFile settingSlider; 
@@ -144,6 +145,7 @@ namespace HappyDungeon
             BagViewUnderlay = new ImageFile(content, "Images/UI/BagViewUnderlay", 1, 1);
 
             titleBackground = new ImageFile(content, "Images/UI/titleBackground", 1, 1);
+            skyBackground = new ImageFile(content, "Images/UI/skyBackground", 1, 1);
             settingBackground = new ImageFile(content, "Images/UI/SettingBase", 1, 1);
             settingSlider = new ImageFile(content, "Images/UI/slider", 1, 1);
 

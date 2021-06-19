@@ -11,12 +11,14 @@ namespace HappyDungeon.UI.Displays
 {
     class SettingDisplay
     {
-
+        private const int SLIDER_TEXT_POS = 102;
         private const int SLIDER_POS_X_MAIN = 120;
         private const int SLIDER_POS_X_AUG = 130;
         private const int SLIDER_LEN_0 = 80;
         private const int SLIDER_LEN_1 = 64;
         private const int SLIDER_LEN_2 = 64;
+        private const int NON_ONHOVER_BOUND = 3;
+        private const int OPTION_COUNT = 7; 
 
         private Game1 game;
         private SpriteBatch spriteBatch;
@@ -25,6 +27,7 @@ namespace HappyDungeon.UI.Displays
         // ============================== Drawing of the elements =========================
         // ================================================================================
         private GeneralSprite background;
+        private GeneralSprite backgroundPure; 
         private GeneralSprite[] texts;        // Too many, so unlike title, it's using an array 
         private GeneralSprite[] textsOnHover;
         private GeneralSprite[] sliders; 
@@ -40,9 +43,11 @@ namespace HappyDungeon.UI.Displays
         private Rectangle[] sliderRanges;
         private Vector2[] sliderAllowedRange;
         private bool[] textOnHoverFlag;
-        private bool[] sliderSelected; 
+        private bool[] sliderSelected;
 
-        private Vector2 lastRecordPosition; 
+        private bool LMBSession = false;
+        private Vector2 leftClickSessionStartPos;
+        private Vector2 lastRecordSliderPos; 
 
         private int[] sliderLength; 
 
@@ -72,8 +77,11 @@ namespace HappyDungeon.UI.Displays
         private void LoadAllSprites()
         {
             ImageFile SB = TextureFactory.Instance.settingBackground;
+            ImageFile Sky = TextureFactory.Instance.skyBackground;
 
             background = new GeneralSprite(SB.texture, SB.C, SB.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+            backgroundPure = new GeneralSprite(Sky.texture, Sky.C, Sky.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
 
             texts = new GeneralSprite[TextBridge.Instance.GetSettingOptions().Length];
@@ -101,12 +109,20 @@ namespace HappyDungeon.UI.Displays
 
         private void SetupPositions()
         {
-            textLocations = new Vector2[TextBridge.Instance.GetSettingOptions().Length];
-            textRanges = new Rectangle[TextBridge.Instance.GetSettingOptions().Length];
-
-            for (int i = 0; i < TextBridge.Instance.GetSettingOptions().Length; i++)
+            textRanges = new Rectangle[OPTION_COUNT];
+            textLocations = new Vector2[OPTION_COUNT]
             {
-                textLocations[i] = new Vector2(112 - texts[i].selfTexture.Width, 26 + 18 * i) * Globals.SCALAR;
+                new Vector2(SLIDER_TEXT_POS - texts[0].selfTexture.Width, 26)* Globals.SCALAR,
+                new Vector2(SLIDER_TEXT_POS - texts[1].selfTexture.Width, 44)* Globals.SCALAR,
+                new Vector2(SLIDER_TEXT_POS - texts[2].selfTexture.Width, 62)* Globals.SCALAR,
+                new Vector2(SLIDER_TEXT_POS - texts[3].selfTexture.Width, 104)* Globals.SCALAR,
+                new Vector2(108 - texts[4].selfTexture.Width, 135)* Globals.SCALAR,
+                new Vector2(144, 135)* Globals.SCALAR,
+                new Vector2(138 - texts[6].selfTexture.Width, 165)* Globals.SCALAR
+            };
+
+            for (int i = 0; i < OPTION_COUNT; i++)
+            {
                 textRanges[i] = new Rectangle((int)(textLocations[i].X), (int)(textLocations[i].Y), 
                     (texts[i].selfTexture.Width * Globals.SCALAR), (texts[i].selfTexture.Height * Globals.SCALAR));
             }
@@ -114,19 +130,22 @@ namespace HappyDungeon.UI.Displays
             sliderRanges = new Rectangle[3];
             sliderAllowedRange = new Vector2[3];
             sliderLength = new int[] { SLIDER_LEN_0, SLIDER_LEN_1, SLIDER_LEN_2 };
-            sliderPositions = new Vector2[] {
-                new Vector2(SLIDER_POS_X_MAIN + (game.volumes[0] / 1) * sliderLength[0], 28) * Globals.SCALAR,
-                new Vector2(SLIDER_POS_X_AUG + (game.volumes[0] / 1) * sliderLength[1], 46) * Globals.SCALAR,
-                new Vector2(SLIDER_POS_X_AUG + (game.volumes[0] / 1) * sliderLength[2], 64) * Globals.SCALAR
-            };
             sliderAllowedRange = new Vector2[] { 
                 new Vector2(SLIDER_POS_X_MAIN, SLIDER_POS_X_MAIN + SLIDER_LEN_0) * Globals.SCALAR,
-                new Vector2(SLIDER_POS_X_AUG, SLIDER_POS_X_MAIN + SLIDER_LEN_1) * Globals.SCALAR,
-                new Vector2(SLIDER_POS_X_AUG, SLIDER_POS_X_MAIN + SLIDER_LEN_2) * Globals.SCALAR
+                new Vector2(SLIDER_POS_X_AUG, SLIDER_POS_X_AUG + SLIDER_LEN_1) * Globals.SCALAR,
+                new Vector2(SLIDER_POS_X_AUG, SLIDER_POS_X_AUG + SLIDER_LEN_2) * Globals.SCALAR
+            };
+            sliderPositions = new Vector2[] {
+                new Vector2(SLIDER_POS_X_MAIN + (game.volumes[0] / 1f) * SLIDER_LEN_0, 28) * Globals.SCALAR,
+                new Vector2(SLIDER_POS_X_AUG + (game.volumes[0] / 1f) * SLIDER_LEN_1, 46) * Globals.SCALAR,
+                new Vector2(SLIDER_POS_X_AUG + (game.volumes[0] / 1f) * SLIDER_LEN_2, 64) * Globals.SCALAR
             };
             UpdateSliderRectangles();
         }
 
+        /// <summary>
+        /// Update the rectange of all sliders for next selection
+        /// </summary>
         private void UpdateSliderRectangles()
         {
             for (int i = 0; i < sliders.Length; i++)
@@ -138,6 +157,11 @@ namespace HappyDungeon.UI.Displays
             
         }
 
+        /// <summary>
+        /// Release all on hover flag but one. Or release all if the Excemption is 
+        /// not within the index bound. 
+        /// </summary>
+        /// <param name="Excemption">Index of the excemption</param>
         private void ResettextOnHoverFlag(int Excemption)
         {
             for (int i = 0; i < textOnHoverFlag.Length; i++)
@@ -148,31 +172,53 @@ namespace HappyDungeon.UI.Displays
 
         }
 
+        /// <summary>
+        /// Release all the volume slider's selection flag 
+        /// </summary>
         private void ResetSliderSelection()
         {
             for (int i = 0; i < sliderSelected.Length; i++)
             {
                 sliderSelected[i] = false;
-
             }
+        }
+
+        private void ExecuteCommand(int Index)
+        {
+
         }
 
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
 
+        /// <summary>
+        /// Mark the start of a left click session
+        /// </summary>
+        /// <param name="CursorPos">Cursor position</param>
         public void LeftClickEvent(Vector2 CursorPos)
         {
-            lastRecordPosition = CursorPos;
-            for (int i = 0; i < sliderRanges.Length; i++)
+            if (!LMBSession)
             {
-                if (sliderRanges[i].Contains(CursorPos))
+                leftClickSessionStartPos = CursorPos;
+                LMBSession = true;
+
+                for (int i = 0; i < sliderRanges.Length; i++)
                 {
-                    sliderSelected[i] = true;
+                    if (sliderRanges[i].Contains(CursorPos) && !sliderSelected[i])
+                    {
+                        sliderSelected[i] = true;
+                        lastRecordSliderPos = sliderPositions[i];
+                    }
                 }
             }
+            
         }
 
+        /// <summary>
+        /// Mark the end of a left click session
+        /// </summary>
+        /// <param name="CursorPos">Cursor position</param>
         public void LeftClickRelease(Vector2 CursorPos)
         {
 
@@ -189,8 +235,23 @@ namespace HappyDungeon.UI.Displays
                 ResetSliderSelection();
                 UpdateSliderRectangles();
             }
+
+            for (int i = 0; i < texts.Length; i++)
+            {
+                if (textRanges[i].Contains(CursorPos) && textRanges[i].Contains(leftClickSessionStartPos))
+                {
+                    ExecuteCommand(i);
+                }
+            }
+
+            LMBSession = false;
         }
 
+        /// <summary>
+        /// Actually doe more than just on hover, for clicking on the volume slider it also updates the 
+        /// slider to reflect the current sound volume levvel.
+        /// </summary>
+        /// <param name="CursorPos">Cursor position</param>
         public void UpdateOnhover(Vector2 CursorPos)
         {
             bool hasOnHover = false;
@@ -199,10 +260,12 @@ namespace HappyDungeon.UI.Displays
             {
                 if (textRanges[i].Contains(CursorPos))
                 {
+                    if (i > NON_ONHOVER_BOUND && !textOnHoverFlag[i])
+                        SoundFX.Instance.PlayTitleOnHover();
+
                     textOnHoverFlag[i] = true;
                     hasOnHover = true;
                     ResettextOnHoverFlag(i);
-
                 }
             }
 
@@ -215,11 +278,15 @@ namespace HappyDungeon.UI.Displays
             // ------------------------- Update slider click ------------------------
             for (int i = 0; i < sliderSelected.Length; i++)
             {
-                if (sliderSelected[i] &&
-                    CursorPos.X > sliderAllowedRange[i].X &&
-                    CursorPos.X < sliderAllowedRange[i].Y)
+                if (sliderSelected[i] )
                 {
-                    sliderPositions[i].X = CursorPos.X; 
+                    sliderPositions[i].X = lastRecordSliderPos.X - (leftClickSessionStartPos.X - CursorPos.X);
+
+                    // Avoid out of range 
+                    if (sliderPositions[i].X < sliderAllowedRange[i].X)
+                        sliderPositions[i].X = sliderAllowedRange[i].X;
+                    if (sliderPositions[i].X > sliderAllowedRange[i].Y)
+                        sliderPositions[i].X = sliderAllowedRange[i].Y;
                 }
             }
         }
@@ -231,11 +298,15 @@ namespace HappyDungeon.UI.Displays
 
         public void Draw()
         {
-            background.Draw(spriteBatch, drawPosition, defaultTint);
+            if (game.virgin)
+                backgroundPure.Draw(spriteBatch, drawPosition, defaultTint);
+            else
+                background.Draw(spriteBatch, drawPosition, defaultTint);
 
             for (int i = 0; i < texts.Length; i++)
             {
-                if (textOnHoverFlag[i])
+                // volumes and difficulty can not be clicked, thus having no on hover effects 
+                if (i > NON_ONHOVER_BOUND && textOnHoverFlag[i]) 
                     textsOnHover[i].Draw(spriteBatch, textLocations[i], defaultTint);
                 else
                     texts[i].Draw(spriteBatch, textLocations[i], defaultTint);

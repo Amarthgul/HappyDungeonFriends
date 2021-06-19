@@ -26,12 +26,15 @@ namespace HappyDungeon
         private bool _DEVMODE = false;       // Root flag for all other dev options 
         private bool _ENABLE_FOW = false;   // Enable fog of war 
         private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
-        public Globals.Language gameLanguage { get; set; }
         public Globals.GameStates gameState { get; set; }
-        public Globals.GameLevel gameLevel { get; set; }
         private int mapSize = 9;
+        public bool virgin { get; set; }
 
+        // --------------------------------------------------------------------------------
+        // -------------------------------- Player changeable -----------------------------
         public float[] volumes { get; set; }
+        public Globals.GameLevel gameLevel { get; set; }
+        public Globals.Language gameLanguage { get; set; }
 
         // ================================================================================
         // ====================== Character, items, enemies, etc. =========================
@@ -182,7 +185,7 @@ namespace HappyDungeon
             controllerList.Add(new KeyboardController(this));
             controllerList.Add(new MouseController(this));
 
-            //IsMouseVisible = true;
+            virgin = true;
 
             base.Initialize();
         }
@@ -222,6 +225,11 @@ namespace HappyDungeon
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // Flag the game to its true color if the player has seen what it really is 
+            if (virgin) {
+                if (gameState == Globals.GameStates.Running)
+                    virgin = false;
+            }
 
             // Keyboard and mouse always updates, but id dependent on game state in their Update method
             foreach (IController controller in controllerList)

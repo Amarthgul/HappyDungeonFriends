@@ -187,11 +187,21 @@ namespace HappyDungeon
             };
         }
 
+        /// <summary>
+        /// Play method for SFX and SFX only. 
+        /// </summary>
+        /// <param name="SFX">SFX to play</param>
+        /// <param name="Volume">Given volume, controled by whoever writes it</param>
         private void PlayInVolume(SoundEffect SFX, float Volume)
         {
-            SFX.Play(Volume * masterVolume, pitchDefault, panDefault);
+            SFX.Play(Volume * masterVolume * SFXVolume, pitchDefault, panDefault);
         }
 
+        /// <summary>
+        /// Randomly pick an SFX from a given list. 
+        /// </summary>
+        /// <param name="List">List to pick</param>
+        /// <returns>One of the SFX in the list</returns>
         private SoundEffect RandPick(SoundEffect[] List)
         {
             return List[Globals.RND.Next() % List.Length];
