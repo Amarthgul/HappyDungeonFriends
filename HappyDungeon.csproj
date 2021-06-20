@@ -119,6 +119,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Displays\BagDisplay.cs" />
     <Compile Include="UI\Displays\GeneralDisplay.cs" />
+    <Compile Include="UI\Displays\PauseDisplay.cs" />
     <Compile Include="UI\Displays\SettingDisplay.cs" />
     <Compile Include="UI\Displays\TitleScreenDisplay.cs" />
     <Compile Include="UI\Effects\ScreenFlyFX.cs" />

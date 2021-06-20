@@ -188,6 +188,16 @@ namespace HappyDungeon.UI.Displays
 
         }
 
+        private void DrawPeace()
+        {
+            backgroundPure.Draw(spriteBatch, drawPosition, defaultTint);
+        }
+
+        private void DrawReal()
+        {
+            background.Draw(spriteBatch, drawPosition, defaultTint);
+        }
+
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
@@ -299,9 +309,9 @@ namespace HappyDungeon.UI.Displays
         public void Draw()
         {
             if (game.virgin)
-                backgroundPure.Draw(spriteBatch, drawPosition, defaultTint);
+                DrawPeace();
             else
-                background.Draw(spriteBatch, drawPosition, defaultTint);
+                DrawReal();
 
             for (int i = 0; i < texts.Length; i++)
             {

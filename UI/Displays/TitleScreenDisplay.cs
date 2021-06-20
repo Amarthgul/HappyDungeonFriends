@@ -20,14 +20,16 @@ namespace HappyDungeon.UI.Displays
         // =========================== Sprites and their stats ============================
         // ================================================================================
         private GeneralSprite background;
+        private GeneralSprite backgroundSky; 
 
         private GeneralSprite campaignText;
         private GeneralSprite campaignTextOnHover;
         private GeneralSprite adventureText;
         private GeneralSprite adventureTextOnHover;
         private GeneralSprite settingText;
-        private GeneralSprite settingTextOnHover; 
+        private GeneralSprite settingTextOnHover;
 
+        private Vector2 drawPosition = new Vector2(0, 0);
         private Vector2 campaignLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 112) * Globals.SCALAR;
         private Vector2 adventureLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 128) * Globals.SCALAR;
         private Vector2 settingLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 160) * Globals.SCALAR;
@@ -56,7 +58,7 @@ namespace HappyDungeon.UI.Displays
         private bool transitProtection = false;
         private Stopwatch transitProtSW = new Stopwatch();
 
-        private Color defualtTint = Color.White;
+        private Color defaultTint = Color.White;
 
         public TitleScreenDisplay(Game1 G)
         {
@@ -72,6 +74,7 @@ namespace HappyDungeon.UI.Displays
         private void LoadAllSprites()
         {
             ImageFile TBG = TextureFactory.Instance.titleBackground;
+            ImageFile SKY = TextureFactory.Instance.skyBackground;
 
             Texture2D CT = textGen.GetText(TextBridge.Instance.GetTitleScreenOption(0), game.GraphicsDevice);
             Texture2D CTO = textOnHoverGen.GetText(TextBridge.Instance.GetTitleScreenOption(0), game.GraphicsDevice);
@@ -82,6 +85,9 @@ namespace HappyDungeon.UI.Displays
 
             background = new GeneralSprite(TBG.texture, TBG.C, TBG.R, 
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+            backgroundSky = new GeneralSprite(SKY.texture, SKY.C, SKY.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+
 
             campaignText = new GeneralSprite(CT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
             campaignTextOnHover = new GeneralSprite(CTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
@@ -110,7 +116,6 @@ namespace HappyDungeon.UI.Displays
                 settingText.selfTexture.Width* Globals.SCALAR,
                 settingText.selfTexture.Height* Globals.SCALAR);
         }
-        
 
         private void ResetOnHover(int Excemption)
         {
@@ -138,6 +143,15 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        private void DrawPeace()
+        {
+            backgroundSky.Draw(spriteBatch, drawPosition, defaultTint);
+        }
+
+        private void DrawReal()
+        {
+            background.Draw(spriteBatch, drawPosition, defaultTint);
+        }
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
@@ -230,26 +244,27 @@ namespace HappyDungeon.UI.Displays
 
         public void Draw()
         {
-
-            background.Draw(spriteBatch, new Vector2(0, 0), defualtTint);
-
+            if (game.virgin)
+                DrawPeace();
+            else
+                DrawReal();
 
             if (onHoverCampaign)
-                campaignTextOnHover.Draw(spriteBatch, campaignLoc, defualtTint);
+                campaignTextOnHover.Draw(spriteBatch, campaignLoc, defaultTint);
             else
-                campaignText.Draw(spriteBatch, campaignLoc, defualtTint * (campaignAvailable? 1f : .5f));
+                campaignText.Draw(spriteBatch, campaignLoc, defaultTint * (campaignAvailable? 1f : .5f));
 
 
             if (onHoverAdventure)
-                adventureTextOnHover.Draw(spriteBatch, adventureLoc, defualtTint);
+                adventureTextOnHover.Draw(spriteBatch, adventureLoc, defaultTint);
             else
-                adventureText.Draw(spriteBatch, adventureLoc, defualtTint);
+                adventureText.Draw(spriteBatch, adventureLoc, defaultTint);
 
 
             if (onHoeverSetting)
-                settingTextOnHover.Draw(spriteBatch, settingLoc, defualtTint);
+                settingTextOnHover.Draw(spriteBatch, settingLoc, defaultTint);
             else
-                settingText.Draw(spriteBatch, settingLoc, defualtTint);
+                settingText.Draw(spriteBatch, settingLoc, defaultTint);
 
         }
 

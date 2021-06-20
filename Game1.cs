@@ -257,6 +257,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Setting:
                     UpdateSettings();
                     break;
+                case Globals.GameStates.Pause:
+                    UpdatePaused();
+                    break;
                 default:
                     break; 
             }
@@ -294,6 +297,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Setting:
                     DrawSettings();
+                    break;
+                case Globals.GameStates.Pause:
+                    DrawPaused();
                     break;
                 default:
                     break;
@@ -398,6 +404,11 @@ namespace HappyDungeon
         }
 
         private void UpdateSettings()
+        {
+            generalDisplay.Update();
+        }
+
+        private void UpdatePaused()
         {
             generalDisplay.Update();
         }
@@ -512,6 +523,11 @@ namespace HappyDungeon
         }
 
         private void DrawSettings()
+        {
+            generalDisplay.Draw();
+        }
+
+        private void DrawPaused()
         {
             generalDisplay.Draw();
         }

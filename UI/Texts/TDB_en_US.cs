@@ -40,7 +40,7 @@ namespace HappyDungeon.UI.Texts
 
         public string[] PauseOptions()
         {
-            return new string[] { "Continue", "Setting", "Back to menu", "Quit" };
+            return new string[] { "Continue", "Setting", "Save", "Back to menu", "Quit" };
         }
 
         public string[] DeathOptions()

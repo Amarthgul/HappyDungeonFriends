@@ -33,10 +33,13 @@ namespace HappyDungeon
                     game.Exit();
                     break;
                 case Globals.GameStates.Running:
-                    game.Exit();
+                    game.screenFX.SigTransitionStart(Globals.GameStates.Pause);
                     break;
                 case Globals.GameStates.Setting:
                     game.screenFX.BackToLastState();
+                    break;
+                case Globals.GameStates.Pause:
+                    game.screenFX.SigTransitionStart(Globals.GameStates.Running);
                     break;
                 default:
                     break;
