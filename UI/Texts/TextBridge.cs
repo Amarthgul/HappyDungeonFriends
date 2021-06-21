@@ -88,5 +88,10 @@ namespace HappyDungeon
             return textDataBase.SettingOptions();
         }
 
+        public string[] GetPauseOptions()
+        {
+            return textDataBase.PauseOptions();
+        }
+
     }
 }

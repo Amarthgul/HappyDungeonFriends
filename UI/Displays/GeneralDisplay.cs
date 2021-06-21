@@ -192,7 +192,7 @@ namespace HappyDungeon
                     settingDisplay.Draw();
                     break;
                 case Globals.GameStates.Pause:
-                    pauseDisplay.Update();
+                    pauseDisplay.Draw();
                     break;
                 default:
                     break; 

@@ -71,7 +71,7 @@ namespace HappyDungeon.UI.Displays
             textOnHoverFlag = new bool[texts.Length];
             sliderSelected = new bool[3];
             ResetSliderSelection();
-            ResettextOnHoverFlag(-1);
+            ResetTextOnHoverFlag(-1);
         }
 
         private void LoadAllSprites()
@@ -162,7 +162,7 @@ namespace HappyDungeon.UI.Displays
         /// not within the index bound. 
         /// </summary>
         /// <param name="Excemption">Index of the excemption</param>
-        private void ResettextOnHoverFlag(int Excemption)
+        private void ResetTextOnHoverFlag(int Excemption)
         {
             for (int i = 0; i < textOnHoverFlag.Length; i++)
             {
@@ -275,13 +275,13 @@ namespace HappyDungeon.UI.Displays
 
                     textOnHoverFlag[i] = true;
                     hasOnHover = true;
-                    ResettextOnHoverFlag(i);
+                    ResetTextOnHoverFlag(i);
                 }
             }
 
             if (!hasOnHover)
             {
-                ResettextOnHoverFlag(-1);
+                ResetTextOnHoverFlag(-1);
             }
 
             // ----------------------------------------------------------------------
