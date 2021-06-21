@@ -171,5 +171,7 @@ namespace HappyDungeon
         public static List<Direction> FourDirIter = new List<Direction>() 
             { Direction.Left, Direction.Right, Direction.Up, Direction.Down};
 
+        public static List<GameDifficulty> DifficultyIter = new List<GameDifficulty>() 
+            { GameDifficulty.Normal, GameDifficulty.Idiot };
     }
 }

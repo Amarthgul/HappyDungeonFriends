@@ -51,7 +51,9 @@ namespace HappyDungeon
         public ImageFile skyBackground; 
 
         public ImageFile settingBackground;
-        public ImageFile settingSlider; 
+        public ImageFile settingSlider;
+        public ImageFile settingSlideBar;
+        public ImageFile settingArrow;
 
         public ImageFile fontDigitsSmall;
         public ImageFile fontDigitsSmallB;
@@ -148,6 +150,8 @@ namespace HappyDungeon
             skyBackground = new ImageFile(content, "Images/UI/skyBackground", 1, 1);
             settingBackground = new ImageFile(content, "Images/UI/SettingBase", 1, 1);
             settingSlider = new ImageFile(content, "Images/UI/slider", 1, 1);
+            settingSlideBar = new ImageFile(content, "Images/UI/settingSliders", 1, 1);
+            settingArrow = new ImageFile(content, "Images/UI/arrows", 4, 4);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);

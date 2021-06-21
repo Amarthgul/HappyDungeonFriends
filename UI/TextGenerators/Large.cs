@@ -14,7 +14,7 @@ namespace HappyDungeon.UI
     /// </summary>
     public class Large : IText
     {
-        protected const int HEIGHT = 11; 
+        protected const int HEIGHT = 11; // To accommodate, sprites needs extra spaces  
 
         public Texture2D sourceTexts;
 
@@ -94,22 +94,23 @@ namespace HappyDungeon.UI
         protected Dictionary<char, int> puncWidth = new Dictionary<char, int> 
         {
             {'!', 3 },
-            {'\"', 3 },
+            {'\"', 5 },
             {'\'', 3 },
-            {'(', 3 },
-            {')', 3 },
-            {'*', 3 },
-            {'+', 3 },
-            {',', 3 },
-            {'-', 3 },
+            {'(', 5 },
+            {')', 5 },
+            {'*', 5 },
+            {'+', 7 },
+            {',', 4 },
+            {'-', 5 },
             {'.', 3 },
-            {'/', 3 },
+            {'/', 7 },
             {':', 3 },
-            {';', 3 },
-            {'<', 3 },
-            {'=', 3 },
-            {'>', 3 },
-            {'?', 3 }
+            {';', 4 },
+            {'<', 5 },
+            {'=', 5 },
+            {'>', 5 },
+            {'?', 7 },
+            {'%', 7 }
         };
 
 

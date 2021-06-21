@@ -48,5 +48,21 @@ namespace HappyDungeon.UI.Texts
             return new string[] { "Restart", "Load from last save" };
         }
 
+        public string[] DifficultyOptions()
+        {
+            return new string[] { "Idiot", "Normal" };
+        }
+        public string DifficultyOptions(Globals.GameDifficulty DiffOption)
+        {
+            switch (DiffOption)
+            {
+                case Globals.GameDifficulty.Normal:
+                    return "Normal";
+                case Globals.GameDifficulty.Idiot:
+                    return "Idiot";
+                default:
+                    return "";
+            }
+        }
     }
 }

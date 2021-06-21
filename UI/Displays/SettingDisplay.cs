@@ -18,7 +18,13 @@ namespace HappyDungeon.UI.Displays
         private const int SLIDER_LEN_1 = 64;
         private const int SLIDER_LEN_2 = 64;
         private const int NON_ONHOVER_BOUND = 3;
-        private const int OPTION_COUNT = 8; 
+        private const int OPTION_COUNT = 8;
+        private const int SLIDER_COUNT = 3;
+        private const int SLIDER_MA_POS = 232;
+        private const int SLIDER_SUB_POS = 226;
+        private const int ARROW_COUNT = 2;
+        private const int ARROW_SIZE = 11;          //For rectangle 
+        private const int DIFFICULTY_POS = 160; 
 
         private Game1 game;
         private SpriteBatch spriteBatch;
@@ -27,23 +33,34 @@ namespace HappyDungeon.UI.Displays
         // ============================== Drawing of the elements =========================
         // ================================================================================
         private GeneralSprite background;
-        private GeneralSprite backgroundPure; 
+        private GeneralSprite backgroundPure;
+        private GeneralSprite sliderBar;
+        private GeneralSprite difficulty;
+        private GeneralSprite[] arrows; 
         private GeneralSprite[] texts;        // Too many, so unlike title, it's using an array 
         private GeneralSprite[] textsOnHover;
-        private GeneralSprite[] sliders; 
+        private GeneralSprite[] sliders;
+        private GeneralSprite[] volTexts;     // Percentage of volume 
 
         private Vector2 drawPosition = new Vector2(0, 0);
+        private Vector2 difficultyPos; 
+        private Vector2[] arrowPositions; 
         private Vector2[] sliderPositions;
-        private Vector2[] textLocations;
+        private Vector2[] textPositions;
+        private Vector2[] percentagePos;
+        private Vector2 sliderOffset = new Vector2(-1, 0) * Globals.SCALAR;
 
         // ================================================================================
         // ================================ On-hover and clicks ==========================
         // ================================================================================
         private Rectangle[] textRanges;
         private Rectangle[] sliderRanges;
+        private Rectangle[] arrowRanges;
         private Vector2[] sliderAllowedRange;
         private bool[] textOnHoverFlag;
         private bool[] sliderSelected;
+
+        private int difficultyIndex = 0; 
 
         private bool LMBSession = false;
         private Vector2 leftClickSessionStartPos;
@@ -78,15 +95,20 @@ namespace HappyDungeon.UI.Displays
         {
             ImageFile SB = TextureFactory.Instance.settingBackground;
             ImageFile Sky = TextureFactory.Instance.skyBackground;
+            ImageFile SSB = TextureFactory.Instance.settingSlideBar;
+            ImageFile AW = TextureFactory.Instance.settingArrow;
 
             background = new GeneralSprite(SB.texture, SB.C, SB.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
             backgroundPure = new GeneralSprite(Sky.texture, Sky.C, Sky.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+            sliderBar = new GeneralSprite(SSB.texture, SSB.C, SSB.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
 
             texts = new GeneralSprite[TextBridge.Instance.GetSettingOptions().Length];
             textsOnHover = new GeneralSprite[TextBridge.Instance.GetSettingOptions().Length];
-            sliders = new GeneralSprite[3];
+            sliders = new GeneralSprite[SLIDER_COUNT];
+            volTexts = new GeneralSprite[SLIDER_COUNT];
 
             for (int i = 0; i < OPTION_COUNT; i++)
             {
@@ -104,13 +126,24 @@ namespace HappyDungeon.UI.Displays
                 new GeneralSprite(TextureFactory.Instance.settingSlider.texture, 1, 1,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS)
             };
-            
+
+            arrows = new GeneralSprite[ARROW_COUNT]
+            {
+                new GeneralSprite(AW.texture, AW.C, AW.R, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS),
+                new GeneralSprite(AW.texture, AW.C, AW.R, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS),
+            };
+            arrows[0].colLimitation = 0;
+            arrows[1].colLimitation = 1;
+
+            RefreshDifficulty();
         }
 
         private void SetupPositions()
         {
             textRanges = new Rectangle[OPTION_COUNT];
-            textLocations = new Vector2[OPTION_COUNT]
+            percentagePos = new Vector2[SLIDER_COUNT];
+
+            textPositions = new Vector2[OPTION_COUNT]
             {
                 new Vector2(SLIDER_TEXT_POS - texts[0].selfTexture.Width, 26)* Globals.SCALAR,
                 new Vector2(SLIDER_TEXT_POS - texts[1].selfTexture.Width, 44)* Globals.SCALAR,
@@ -122,9 +155,10 @@ namespace HappyDungeon.UI.Displays
                 new Vector2(144, 165)* Globals.SCALAR
             };
 
+
             for (int i = 0; i < OPTION_COUNT; i++)
             {
-                textRanges[i] = new Rectangle((int)(textLocations[i].X), (int)(textLocations[i].Y), 
+                textRanges[i] = new Rectangle((int)(textPositions[i].X), (int)(textPositions[i].Y), 
                     (texts[i].selfTexture.Width * Globals.SCALAR), (texts[i].selfTexture.Height * Globals.SCALAR));
             }
 
@@ -141,7 +175,38 @@ namespace HappyDungeon.UI.Displays
                 new Vector2(SLIDER_POS_X_AUG + (game.volumes[0] / 1f) * SLIDER_LEN_1, 46) * Globals.SCALAR,
                 new Vector2(SLIDER_POS_X_AUG + (game.volumes[0] / 1f) * SLIDER_LEN_2, 64) * Globals.SCALAR
             };
+
+            arrowPositions = new Vector2[ARROW_COUNT] {
+                new Vector2(119, 104) * Globals.SCALAR,
+                new Vector2(196, 104) * Globals.SCALAR
+            };
+            arrowRanges = new Rectangle[ARROW_COUNT] { 
+                new Rectangle((int)(arrowPositions[0].X), (int)(arrowPositions[0].Y), 
+                ARROW_SIZE * Globals.SCALAR, ARROW_SIZE * Globals.SCALAR),
+                new Rectangle((int)(arrowPositions[1].X), (int)(arrowPositions[1].Y),
+                ARROW_SIZE * Globals.SCALAR, ARROW_SIZE * Globals.SCALAR)
+            };
             UpdateSliderRectangles();
+            RefreshVolumePercentageText();
+            
+        }
+
+        private void RefreshVolumePercentageText()
+        {
+            for (int i = 0; i < SLIDER_COUNT; i++)
+            {
+                int Percent = (int)(game.volumes[i] * 100.0);
+                Texture2D PT = textGen.GetText($"{Percent}%", game.GraphicsDevice);
+                volTexts[i] = new GeneralSprite(PT, 1, 1,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
+            }
+
+            percentagePos = new Vector2[SLIDER_COUNT]
+            {
+                new Vector2(SLIDER_MA_POS - volTexts[0].selfTexture.Width, 26)* Globals.SCALAR,
+                new Vector2(SLIDER_SUB_POS - volTexts[1].selfTexture.Width, 44)* Globals.SCALAR,
+                new Vector2(SLIDER_SUB_POS - volTexts[2].selfTexture.Width, 62)* Globals.SCALAR
+            };
         }
 
         /// <summary>
@@ -173,6 +238,15 @@ namespace HappyDungeon.UI.Displays
 
         }
 
+        private void ResetArrowOnHover(int Excemption)
+        {
+            for (int i = 0; i < ARROW_COUNT; i++)
+            {
+                if (i != Excemption)
+                    arrows[i].rowLimitation = 0;
+            }
+        }
+
         /// <summary>
         /// Release all the volume slider's selection flag 
         /// </summary>
@@ -182,6 +256,18 @@ namespace HappyDungeon.UI.Displays
             {
                 sliderSelected[i] = false;
             }
+        }
+
+        private void RefreshDifficulty()
+        {
+            Globals.GameDifficulty CurrentDiff = Globals.DifficultyIter[Math.Abs(difficultyIndex) % Globals.DifficultyIter.Count]; 
+            Texture2D DiffTexture = textGen.GetText(TextBridge.Instance.GetDifficultyOptions(CurrentDiff),
+                game.GraphicsDevice);
+
+            difficulty = new GeneralSprite(DiffTexture, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
+            difficultyPos = new Vector2(DIFFICULTY_POS - DiffTexture.Width/2, 104) * Globals.SCALAR;
+
+            game.difficulty = CurrentDiff; 
         }
 
         private void ExecuteCommand(int Index)
@@ -211,6 +297,7 @@ namespace HappyDungeon.UI.Displays
         private void DrawReal()
         {
             background.Draw(spriteBatch, drawPosition, defaultTint);
+            
         }
 
         // ================================================================================
@@ -249,16 +336,19 @@ namespace HappyDungeon.UI.Displays
 
             if (sliderSelected.Any(x => x == true))
             {
-                for (int i = 0; i < sliderSelected.Length; i++)
-                {
-                    if (sliderSelected[i])
-                    {
-                        game.volumes[i] = (sliderPositions[i].X - sliderAllowedRange[i].X) / (sliderLength[i] * Globals.SCALAR);
-                    }
-                }
-                SoundFX.Instance.SetVolume(game.volumes);
                 ResetSliderSelection();
                 UpdateSliderRectangles();
+            }
+
+            // Adjusting difficulty 
+            for (int i = 0; i < ARROW_COUNT; i++)
+            {
+                if (LMBSession && arrowRanges[i].Contains(CursorPos) && arrowRanges[i].Contains(leftClickSessionStartPos))
+                {
+                    if (i == 0) difficultyIndex--;
+                    else difficultyIndex++;
+                    RefreshDifficulty();
+                }
             }
 
             for (int i = 0; i < texts.Length; i++)
@@ -293,14 +383,26 @@ namespace HappyDungeon.UI.Displays
                     ResetTextOnHoverFlag(i);
                 }
             }
+            for (int i = 0; i < ARROW_COUNT; i++)
+            {
+                if (arrowRanges[i].Contains(CursorPos))
+                {
+                    if (arrows[i].rowLimitation != 1)
+                        SoundFX.Instance.PlayTitleOnHover();
+                    arrows[i].rowLimitation = 1;
+                    hasOnHover = true;
+                    ResetArrowOnHover(i);
+                }
+            }
 
             if (!hasOnHover)
             {
                 ResetTextOnHoverFlag(-1);
+                ResetArrowOnHover(-1);
             }
 
             // ----------------------------------------------------------------------
-            // ------------------------- Update slider click ------------------------
+            // ------------------------- Update volume slider -----------------------
             for (int i = 0; i < sliderSelected.Length; i++)
             {
                 if (sliderSelected[i] )
@@ -312,13 +414,16 @@ namespace HappyDungeon.UI.Displays
                         sliderPositions[i].X = sliderAllowedRange[i].X;
                     if (sliderPositions[i].X > sliderAllowedRange[i].Y)
                         sliderPositions[i].X = sliderAllowedRange[i].Y;
+
+                    game.volumes[i] = (sliderPositions[i].X - sliderAllowedRange[i].X) / (sliderLength[i] * Globals.SCALAR);
+                    SoundFX.Instance.SetVolume(game.volumes);
                 }
             }
         }
 
         public void Update()
         {
-
+            RefreshVolumePercentageText();
         }
 
         public void Draw()
@@ -332,15 +437,23 @@ namespace HappyDungeon.UI.Displays
             {
                 // volumes and difficulty can not be clicked, thus having no on hover effects 
                 if (i > NON_ONHOVER_BOUND && textOnHoverFlag[i]) 
-                    textsOnHover[i].Draw(spriteBatch, textLocations[i], defaultTint);
+                    textsOnHover[i].Draw(spriteBatch, textPositions[i], defaultTint);
                 else
-                    texts[i].Draw(spriteBatch, textLocations[i], defaultTint);
+                    texts[i].Draw(spriteBatch, textPositions[i], defaultTint);
             }
 
-            for (int i = 0; i < sliders.Length; i++)
+            sliderBar.Draw(spriteBatch, drawPosition, defaultTint);
+            for (int i = 0; i < SLIDER_COUNT; i++)
             {
-                sliders[i].Draw(spriteBatch, sliderPositions[i], defaultTint);
+                sliders[i].Draw(spriteBatch, sliderPositions[i] + sliderOffset, defaultTint);
+                volTexts[i].Draw(spriteBatch, percentagePos[i], defaultTint);
             }
+
+            for (int i = 0; i < ARROW_COUNT; i++)
+            {
+                arrows[i].Draw(spriteBatch, arrowPositions[i], defaultTint);
+            }
+            difficulty.Draw(spriteBatch, difficultyPos, defaultTint);
 
         }
 

@@ -35,6 +35,7 @@ namespace HappyDungeon
         public float[] volumes { get; set; }
         public Globals.GameLevel gameLevel { get; set; }
         public Globals.Language gameLanguage { get; set; }
+        public Globals.GameDifficulty difficulty { get; set; }
 
         // ================================================================================
         // ====================== Character, items, enemies, etc. =========================
@@ -186,6 +187,7 @@ namespace HappyDungeon
             controllerList.Add(new MouseController(this));
 
             virgin = true;
+            difficulty = Globals.GameDifficulty.Normal;
 
             base.Initialize();
         }

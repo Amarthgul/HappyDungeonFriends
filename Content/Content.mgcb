@@ -421,6 +421,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/MC/MC_walk_Torch.png
 
+#begin Images/UI/arrows.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/arrows.png
+
 #begin Images/UI/bagOnBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -636,6 +648,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/UI/SettingBase.png
+
+#begin Images/UI/settingSliders.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/settingSliders.png
 
 #begin Images/UI/skyBackground.png
 /importer:TextureImporter
