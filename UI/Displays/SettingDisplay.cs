@@ -18,7 +18,7 @@ namespace HappyDungeon.UI.Displays
         private const int SLIDER_LEN_1 = 64;
         private const int SLIDER_LEN_2 = 64;
         private const int NON_ONHOVER_BOUND = 3;
-        private const int OPTION_COUNT = 7; 
+        private const int OPTION_COUNT = 8; 
 
         private Game1 game;
         private SpriteBatch spriteBatch;
@@ -88,7 +88,7 @@ namespace HappyDungeon.UI.Displays
             textsOnHover = new GeneralSprite[TextBridge.Instance.GetSettingOptions().Length];
             sliders = new GeneralSprite[3];
 
-            for (int i = 0; i < TextBridge.Instance.GetSettingOptions().Length; i++)
+            for (int i = 0; i < OPTION_COUNT; i++)
             {
                 Texture2D TO = textGen.GetText(TextBridge.Instance.GetSettingOptions()[i], game.GraphicsDevice);
                 Texture2D TOO = textOnHoverGen.GetText(TextBridge.Instance.GetSettingOptions()[i], game.GraphicsDevice);
@@ -118,7 +118,8 @@ namespace HappyDungeon.UI.Displays
                 new Vector2(SLIDER_TEXT_POS - texts[3].selfTexture.Width, 104)* Globals.SCALAR,
                 new Vector2(108 - texts[4].selfTexture.Width, 135)* Globals.SCALAR,
                 new Vector2(144, 135)* Globals.SCALAR,
-                new Vector2(138 - texts[6].selfTexture.Width, 165)* Globals.SCALAR
+                new Vector2(108 - texts[6].selfTexture.Width, 165)* Globals.SCALAR,
+                new Vector2(144, 165)* Globals.SCALAR
             };
 
             for (int i = 0; i < OPTION_COUNT; i++)
@@ -185,7 +186,21 @@ namespace HappyDungeon.UI.Displays
 
         private void ExecuteCommand(int Index)
         {
-
+            switch (Index)
+            {
+                case 4:  // Save
+                    break;
+                case 5:  // Load
+                    break;
+                case 6:  // Back
+                    game.screenFX.BackToLastState();
+                    break;
+                case 7:  // Quit
+                    game.Exit();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void DrawPeace()
@@ -313,7 +328,7 @@ namespace HappyDungeon.UI.Displays
             else
                 DrawReal();
 
-            for (int i = 0; i < texts.Length; i++)
+            for (int i = 0; i < OPTION_COUNT; i++)
             {
                 // volumes and difficulty can not be clicked, thus having no on hover effects 
                 if (i > NON_ONHOVER_BOUND && textOnHoverFlag[i]) 

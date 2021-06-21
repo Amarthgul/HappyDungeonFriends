@@ -34,6 +34,9 @@ namespace HappyDungeon.UI.Displays
         // ================================================================================
         // ========================= Click and on hover logics  ===========================
         // ================================================================================
+        private bool LMBSession = false;
+        private Vector2 leftClickSessionStartPos;
+
         private Rectangle[] textRectangles;
         private bool[] textOnHoverFlag;
 
@@ -109,6 +112,29 @@ namespace HappyDungeon.UI.Displays
 
         }
 
+        private void ExecuteCommand(int Index)
+        {
+            switch (Index)
+            {
+                case 0:
+                    game.screenFX.SigTransitionStart(Globals.GameStates.Running);
+                    break;
+                case 1:
+                    game.screenFX.SigTransitionStart(Globals.GameStates.Setting);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    game.screenFX.SigTransitionStart(Globals.GameStates.TitleScreen);
+                    break;
+                case 4:
+                    game.Exit();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void DrawPeace()
         {
             backgroundSky.Draw(spriteBatch, drawPosition, defaultTint);
@@ -125,12 +151,27 @@ namespace HappyDungeon.UI.Displays
 
         public void LeftClickEvent(Vector2 CursorPos)
         {
+            if (!LMBSession)
+            {
+                LMBSession = true;
+                leftClickSessionStartPos = CursorPos;
 
+            }
         }
 
         public void LeftClickRelease(Vector2 CursorPos)
         {
 
+            for (int i = 0; i < TEXT_COUNT; i++)
+            {
+                if (LMBSession && textRectangles[i].Contains(CursorPos) && textRectangles[i].Contains(leftClickSessionStartPos))
+                {
+                    SoundFX.Instance.PlayTitleClick();
+                    ExecuteCommand(i);
+                }
+            }
+
+            LMBSession = false;
         }
 
         public void UpdateOnhover(Vector2 CursorPos)
@@ -159,7 +200,7 @@ namespace HappyDungeon.UI.Displays
 
         public void Update()
         {
-
+            game.screenFX.SetRecordState(Globals.GameStates.Pause);
         }
 
         public void Draw()

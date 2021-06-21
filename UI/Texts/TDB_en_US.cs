@@ -35,12 +35,12 @@ namespace HappyDungeon.UI.Texts
 
         public string[] SettingOptions()
         {
-            return new string[] { "Master Volume", "SFX Volume", "Music volume", "Difficulty", "Save", "Load", "Quit" };
+            return new string[] { "Master Volume", "SFX Volume", "Music volume", "Difficulty", "Save", "Load", "Back", "Quit" };
         }
 
         public string[] PauseOptions()
         {
-            return new string[] { "Continue", "Setting", "Save", "Back to menu", "Quit" };
+            return new string[] { "Continue", "Settings", "Save", "Back to menu", "Quit" };
         }
 
         public string[] DeathOptions()
