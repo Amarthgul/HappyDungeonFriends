@@ -12,15 +12,28 @@ namespace HappyDungeon.UI.Displays
     class TitleScreenDisplay
     {
 
+        private const float BG_BASE_LAYER = Globals.UI_UNDER;
+        private const float SKY_LAYER = BG_BASE_LAYER + 0.001f; 
+        private const float CLOUD_BG = BG_BASE_LAYER + 0.002f;
+        private const float CLOUD_MG = BG_BASE_LAYER + 0.003f;
+        private const float CLOUD_FG = BG_BASE_LAYER + 0.004f;
+        private const float MOUNT_BG = BG_BASE_LAYER + 0.005f;
+        private const float MOUNT_FG = BG_BASE_LAYER + 0.006f;
+
         private Game1 game;
         private SpriteBatch spriteBatch;
-
 
         // ================================================================================
         // =========================== Sprites and their stats ============================
         // ================================================================================
+        private GeneralSprite title; 
         private GeneralSprite background;
-        private GeneralSprite backgroundSky; 
+        private GeneralSprite backgroundSky;
+        private GeneralSprite titleCloudFG;
+        private GeneralSprite titleCloudMG;
+        private GeneralSprite titleCloudBG;
+        private GeneralSprite titleMountainFG;
+        private GeneralSprite titleMountainBG;
 
         private GeneralSprite campaignText;
         private GeneralSprite campaignTextOnHover;
@@ -33,6 +46,20 @@ namespace HappyDungeon.UI.Displays
         private Vector2 campaignLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 112) * Globals.SCALAR;
         private Vector2 adventureLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 128) * Globals.SCALAR;
         private Vector2 settingLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 160) * Globals.SCALAR;
+
+        private Vector2 cloudPosFG = new Vector2(0, 0);
+        private Vector2 cloudPosMG = new Vector2(0, 0);
+        private Vector2 cloudPosBG = new Vector2(0, 0);
+        private Vector2 mountPosFG = new Vector2(0, 0);
+        private Vector2 mountPosBG = new Vector2(0, 0);
+        private Vector2 duplicate = new Vector2(-Globals.OUT_FWIDTH, 0);
+        private float cloudSpeedFG = 0.4f * Globals.SCALAR;
+        private float cloudSpeedMG = 0.2f * Globals.SCALAR;
+        private float cloudSpeedBG = 0.1f * Globals.SCALAR;
+        private float mountainSpeedFG = 0.2f * Globals.SCALAR;
+        private float mountainSpeedBG = 0.05f * Globals.SCALAR;
+        private int animteInterval = 50;
+        private Stopwatch animateSW = new Stopwatch();
 
         private bool campaignAvailable = true; // Decides if it gets gray out 
 
@@ -69,12 +96,21 @@ namespace HappyDungeon.UI.Displays
 
             LoadAllSprites();
             SetupPositions();
+
+            animateSW.Restart();
         }
 
         private void LoadAllSprites()
         {
             ImageFile TBG = TextureFactory.Instance.titleBackground;
             ImageFile SKY = TextureFactory.Instance.skyBackground;
+            ImageFile TT = TextureFactory.Instance.titleText;
+
+            ImageFile CF = TextureFactory.Instance.titleCloudFG;
+            ImageFile CM = TextureFactory.Instance.titleCloudMG;
+            ImageFile CB = TextureFactory.Instance.titleCloudBG;
+            ImageFile MB = TextureFactory.Instance.titleMountainBG;
+            ImageFile MF = TextureFactory.Instance.titleMountainFG; 
 
             Texture2D CT = textGen.GetText(TextBridge.Instance.GetTitleScreenOption(0), game.GraphicsDevice);
             Texture2D CTO = textOnHoverGen.GetText(TextBridge.Instance.GetTitleScreenOption(0), game.GraphicsDevice);
@@ -86,8 +122,20 @@ namespace HappyDungeon.UI.Displays
             background = new GeneralSprite(TBG.texture, TBG.C, TBG.R, 
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
             backgroundSky = new GeneralSprite(SKY.texture, SKY.C, SKY.R,
-                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, SKY_LAYER);
+            title = new GeneralSprite(TT.texture, TT.C, TT.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_LAYER);
 
+            titleCloudFG = new GeneralSprite(CF.texture, CF.C, CF.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, CLOUD_FG);
+            titleCloudMG = new GeneralSprite(CM.texture, CM.C, CM.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, CLOUD_MG);
+            titleCloudBG = new GeneralSprite(CB.texture, CB.C, CB.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, CLOUD_BG);
+            titleMountainFG = new GeneralSprite(MF.texture, MF.C, MF.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, MOUNT_FG);
+            titleMountainBG = new GeneralSprite(MB.texture, MB.C, MB.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, MOUNT_BG);
 
             campaignText = new GeneralSprite(CT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
             campaignTextOnHover = new GeneralSprite(CTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
@@ -146,6 +194,18 @@ namespace HappyDungeon.UI.Displays
         private void DrawPeace()
         {
             backgroundSky.Draw(spriteBatch, drawPosition, defaultTint);
+
+            titleCloudBG.Draw(spriteBatch, cloudPosBG, defaultTint);
+            titleCloudMG.Draw(spriteBatch, cloudPosMG, defaultTint);
+            titleCloudFG.Draw(spriteBatch, cloudPosFG, defaultTint);
+            titleMountainBG.Draw(spriteBatch, mountPosBG, defaultTint);
+            titleMountainFG.Draw(spriteBatch, mountPosFG, defaultTint);
+
+            titleCloudBG.Draw(spriteBatch, cloudPosBG + duplicate, defaultTint);
+            titleCloudMG.Draw(spriteBatch, cloudPosMG + duplicate, defaultTint);
+            titleCloudFG.Draw(spriteBatch, cloudPosFG + duplicate, defaultTint);
+            titleMountainBG.Draw(spriteBatch, mountPosBG + duplicate, defaultTint);
+            titleMountainFG.Draw(spriteBatch, mountPosFG + duplicate, defaultTint);
         }
 
         private void DrawReal()
@@ -202,14 +262,6 @@ namespace HappyDungeon.UI.Displays
 
         }
 
-        public void Update()
-        {
-            if (transitProtSW.ElapsedMilliseconds > Globals.TRANSITION_SINGLE)
-            {
-                transitProtection = false;
-            }
-        }
-
         public void UpdateOnhover(Vector2 CursorPos)
         {
             if (rectCampaign.Contains(CursorPos) && campaignAvailable)
@@ -242,6 +294,33 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        public void Update()
+        {
+            if (transitProtSW.ElapsedMilliseconds > Globals.TRANSITION_SINGLE)
+            {
+                transitProtection = false;
+            }
+
+            if (animateSW.ElapsedMilliseconds > animteInterval)
+            {
+                cloudPosFG.X += cloudSpeedFG;
+                cloudPosMG.X += cloudSpeedMG;
+                cloudPosBG.X += cloudSpeedBG;
+                mountPosFG.X += mountainSpeedFG;
+                mountPosBG.X += mountainSpeedBG;
+
+                if (cloudPosFG.X > Globals.OUT_FWIDTH) cloudPosFG.X = 0;
+                if (cloudPosMG.X > Globals.OUT_FWIDTH) cloudPosMG.X = 0;
+                if (cloudPosBG.X > Globals.OUT_FWIDTH) cloudPosBG.X = 0;
+                if (mountPosFG.X > Globals.OUT_FWIDTH) mountPosFG.X = 0;
+                if (mountPosBG.X > Globals.OUT_FWIDTH) mountPosBG.X = 0;
+
+                animateSW.Restart();
+            }
+
+        }
+
+
         public void Draw()
         {
             if (game.virgin)
@@ -249,17 +328,17 @@ namespace HappyDungeon.UI.Displays
             else
                 DrawReal();
 
+            title.Draw(spriteBatch, drawPosition, defaultTint);
+
             if (onHoverCampaign)
                 campaignTextOnHover.Draw(spriteBatch, campaignLoc, defaultTint);
             else
                 campaignText.Draw(spriteBatch, campaignLoc, defaultTint * (campaignAvailable? 1f : .5f));
 
-
             if (onHoverAdventure)
                 adventureTextOnHover.Draw(spriteBatch, adventureLoc, defaultTint);
             else
                 adventureText.Draw(spriteBatch, adventureLoc, defaultTint);
-
 
             if (onHoeverSetting)
                 settingTextOnHover.Draw(spriteBatch, settingLoc, defaultTint);

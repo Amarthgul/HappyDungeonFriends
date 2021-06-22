@@ -5,7 +5,8 @@
 </p>
 
 This is an open source 2D top down game of a young girl happily explores a whimsical dungeon 
-filled with rainbow, flowers, and unicorn.
+filled with rainbow, flowers, and unicorn. But do be cautious, it may contain contents that should
+not be shown to kids. 
 
 By the end it should have all codes, images (include PSDs), and musics available.
 
@@ -21,9 +22,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 18 June 2021: 
+Update 21 June 2021: 
 
-The game now start with a title screen, with several options (some not yet implemented). 
+Title screen finally has a proper illustration and is animated.  
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">
@@ -31,7 +32,10 @@ The game now start with a title screen, with several options (some not yet imple
 
 --------------------------------------------------------
 
-Dev logs
+Dev logs and random comments 
+
+* This game drew inspiration from some of my favorites, like DotA 2, Diablo, Warcraft, Isaac, 
+and some level of Gris and Disgaea. 
 
 * Items count CD on its own and still counts when in the bag, it seems possible to quickly 
 switch item in and out of slots and thus drastically increase the ability of the character.

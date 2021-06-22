@@ -47,12 +47,20 @@ namespace HappyDungeon
         public ImageFile BagViewBasic;
         public ImageFile BagViewUnderlay;
 
+        public ImageFile titleText; 
         public ImageFile titleBackground;
-        public ImageFile skyBackground; 
+        public ImageFile skyBackground;
+        public ImageFile titleCloudFG;
+        public ImageFile titleCloudMG;
+        public ImageFile titleCloudBG;
+        public ImageFile titleMountainBG;
+        public ImageFile titleMountainFG; 
 
         public ImageFile settingBackground;
         public ImageFile settingSlider;
         public ImageFile settingSlideBar;
+        public ImageFile settingSliderRed;
+        public ImageFile settingSlideBarRed;
         public ImageFile settingArrow;
 
         public ImageFile fontDigitsSmall;
@@ -146,11 +154,20 @@ namespace HappyDungeon
             BagViewBasic = new ImageFile(content, "Images/UI/BagViewBasic", 1, 1);
             BagViewUnderlay = new ImageFile(content, "Images/UI/BagViewUnderlay", 1, 1);
 
+            titleText = new ImageFile(content, "Images/UI/title", 1, 1);
             titleBackground = new ImageFile(content, "Images/UI/titleBackground", 1, 1);
             skyBackground = new ImageFile(content, "Images/UI/skyBackground", 1, 1);
+            titleCloudFG = new ImageFile(content, "Images/UI/titleCloudFG", 1, 1);
+            titleCloudMG = new ImageFile(content, "Images/UI/titleCloudMG", 1, 1);
+            titleCloudBG = new ImageFile(content, "Images/UI/titleCloudBG", 1, 1);
+            titleMountainBG = new ImageFile(content, "Images/UI/titleMountainBG", 1, 1);
+            titleMountainFG = new ImageFile(content, "Images/UI/titleMountainFG", 1, 1);
+
             settingBackground = new ImageFile(content, "Images/UI/SettingBase", 1, 1);
             settingSlider = new ImageFile(content, "Images/UI/slider", 1, 1);
             settingSlideBar = new ImageFile(content, "Images/UI/settingSliders", 1, 1);
+            settingSliderRed = new ImageFile(content, "Images/UI/sliderRed", 1, 1);
+            settingSlideBarRed = new ImageFile(content, "Images/UI/settingSlidersRed", 1, 1);
             settingArrow = new ImageFile(content, "Images/UI/arrows", 4, 4);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);

@@ -33,13 +33,17 @@ namespace HappyDungeon.UI.Displays
         // ============================== Drawing of the elements =========================
         // ================================================================================
         private GeneralSprite background;
+        private GeneralSprite titleMountainFG;
+        private GeneralSprite titleMountainBG;
         private GeneralSprite backgroundPure;
         private GeneralSprite sliderBar;
+        private GeneralSprite sliderBarRed; 
         private GeneralSprite difficulty;
         private GeneralSprite[] arrows; 
         private GeneralSprite[] texts;        // Too many, so unlike title, it's using an array 
         private GeneralSprite[] textsOnHover;
         private GeneralSprite[] sliders;
+        private GeneralSprite[] slidersRed; 
         private GeneralSprite[] volTexts;     // Percentage of volume 
 
         private Vector2 drawPosition = new Vector2(0, 0);
@@ -91,18 +95,31 @@ namespace HappyDungeon.UI.Displays
             ResetTextOnHoverFlag(-1);
         }
 
+        /// <summary>
+        /// Load all sprites and their on-hover version, if have any 
+        /// </summary>
         private void LoadAllSprites()
         {
-            ImageFile SB = TextureFactory.Instance.settingBackground;
+            ImageFile SB = TextureFactory.Instance.titleBackground;
             ImageFile Sky = TextureFactory.Instance.skyBackground;
             ImageFile SSB = TextureFactory.Instance.settingSlideBar;
+            ImageFile SSBR = TextureFactory.Instance.settingSlideBarRed;
             ImageFile AW = TextureFactory.Instance.settingArrow;
+            ImageFile MB = TextureFactory.Instance.titleMountainBG;
+            ImageFile MF = TextureFactory.Instance.titleMountainFG;
 
             background = new GeneralSprite(SB.texture, SB.C, SB.R,
-                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID - 0.01f);
             backgroundPure = new GeneralSprite(Sky.texture, Sky.C, Sky.R,
-                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID - 0.01f);
             sliderBar = new GeneralSprite(SSB.texture, SSB.C, SSB.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+            sliderBarRed = new GeneralSprite(SSBR.texture, SSBR.C, SSBR.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
+
+            titleMountainFG = new GeneralSprite(MF.texture, MF.C, MF.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID + 0.01f);
+            titleMountainBG = new GeneralSprite(MB.texture, MB.C, MB.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
 
             texts = new GeneralSprite[TextBridge.Instance.GetSettingOptions().Length];
@@ -126,6 +143,14 @@ namespace HappyDungeon.UI.Displays
                 new GeneralSprite(TextureFactory.Instance.settingSlider.texture, 1, 1,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS)
             };
+            slidersRed = new GeneralSprite[] {
+                new GeneralSprite(TextureFactory.Instance.settingSliderRed.texture, 1, 1,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS),
+                new GeneralSprite(TextureFactory.Instance.settingSliderRed.texture, 1, 1,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS),
+                new GeneralSprite(TextureFactory.Instance.settingSliderRed.texture, 1, 1,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS)
+            };
 
             arrows = new GeneralSprite[ARROW_COUNT]
             {
@@ -138,6 +163,9 @@ namespace HappyDungeon.UI.Displays
             RefreshDifficulty();
         }
 
+        /// <summary>
+        /// Setup all the draw position and on-hover rectangle ranges 
+        /// </summary>
         private void SetupPositions()
         {
             textRanges = new Rectangle[OPTION_COUNT];
@@ -151,8 +179,8 @@ namespace HappyDungeon.UI.Displays
                 new Vector2(SLIDER_TEXT_POS - texts[3].selfTexture.Width, 104)* Globals.SCALAR,
                 new Vector2(108 - texts[4].selfTexture.Width, 135)* Globals.SCALAR,
                 new Vector2(144, 135)* Globals.SCALAR,
-                new Vector2(108 - texts[6].selfTexture.Width, 165)* Globals.SCALAR,
-                new Vector2(144, 165)* Globals.SCALAR
+                new Vector2(108 - texts[6].selfTexture.Width, 160)* Globals.SCALAR,
+                new Vector2(144, 160)* Globals.SCALAR
             };
 
 
@@ -191,6 +219,10 @@ namespace HappyDungeon.UI.Displays
             
         }
 
+        /// <summary>
+        /// Change the displayed volume text depending on slider position,
+        /// also re-adjusting their position 
+        /// </summary>
         private void RefreshVolumePercentageText()
         {
             for (int i = 0; i < SLIDER_COUNT; i++)
@@ -238,6 +270,10 @@ namespace HappyDungeon.UI.Displays
 
         }
 
+        /// <summary>
+        /// Set the arrow icons to normal for thoes not being hovered upon. 
+        /// </summary>
+        /// <param name="Excemption">Which to skip</param>
         private void ResetArrowOnHover(int Excemption)
         {
             for (int i = 0; i < ARROW_COUNT; i++)
@@ -258,6 +294,9 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        /// <summary>
+        /// Refresh the displayed difficulty and also set the game difficulty to that. 
+        /// </summary>
         private void RefreshDifficulty()
         {
             Globals.GameDifficulty CurrentDiff = Globals.DifficultyIter[Math.Abs(difficultyIndex) % Globals.DifficultyIter.Count]; 
@@ -292,6 +331,8 @@ namespace HappyDungeon.UI.Displays
         private void DrawPeace()
         {
             backgroundPure.Draw(spriteBatch, drawPosition, defaultTint);
+            titleMountainBG.Draw(spriteBatch, drawPosition, defaultTint);
+            titleMountainFG.Draw(spriteBatch, drawPosition, defaultTint);
         }
 
         private void DrawReal()
@@ -417,13 +458,14 @@ namespace HappyDungeon.UI.Displays
 
                     game.volumes[i] = (sliderPositions[i].X - sliderAllowedRange[i].X) / (sliderLength[i] * Globals.SCALAR);
                     SoundFX.Instance.SetVolume(game.volumes);
+                    RefreshVolumePercentageText();
                 }
             }
         }
 
         public void Update()
         {
-            RefreshVolumePercentageText();
+            
         }
 
         public void Draw()
@@ -442,10 +484,17 @@ namespace HappyDungeon.UI.Displays
                     texts[i].Draw(spriteBatch, textPositions[i], defaultTint);
             }
 
-            sliderBar.Draw(spriteBatch, drawPosition, defaultTint);
+            if (game.virgin)
+                sliderBar.Draw(spriteBatch, drawPosition, defaultTint);
+            else
+                sliderBarRed.Draw(spriteBatch, drawPosition, defaultTint);
+
             for (int i = 0; i < SLIDER_COUNT; i++)
             {
-                sliders[i].Draw(spriteBatch, sliderPositions[i] + sliderOffset, defaultTint);
+                if (game.virgin)
+                    sliders[i].Draw(spriteBatch, sliderPositions[i] + sliderOffset, defaultTint);
+                else
+                    slidersRed[i].Draw(spriteBatch, sliderPositions[i] + sliderOffset, defaultTint);
                 volTexts[i].Draw(spriteBatch, percentagePos[i], defaultTint);
             }
 
