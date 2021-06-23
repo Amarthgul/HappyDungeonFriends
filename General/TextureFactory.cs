@@ -168,7 +168,7 @@ namespace HappyDungeon
             settingSlideBar = new ImageFile(content, "Images/UI/settingSliders", 1, 1);
             settingSliderRed = new ImageFile(content, "Images/UI/sliderRed", 1, 1);
             settingSlideBarRed = new ImageFile(content, "Images/UI/settingSlidersRed", 1, 1);
-            settingArrow = new ImageFile(content, "Images/UI/arrows", 4, 4);
+            settingArrow = new ImageFile(content, "Images/UI/settingArrows", 4, 4);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);

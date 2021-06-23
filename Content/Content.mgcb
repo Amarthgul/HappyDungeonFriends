@@ -421,18 +421,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/MC/MC_walk_Torch.png
 
-#begin Images/UI/arrows.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/UI/arrows.png
-
 #begin Images/UI/bagOnBar.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -637,6 +625,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/selectionNote.png
 
+#begin Images/UI/settingArrows.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/settingArrows.png
+
 #begin Images/UI/SettingBase.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -673,18 +673,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/settingSlidersRed.png
 
-#begin Images/UI/settingSlidersRed.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/UI/settingSlidersRed.png
-
 #begin Images/UI/skyBackground.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -708,18 +696,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/UI/slider.png
-
-#begin Images/UI/sliderRed.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/UI/sliderRed.png
 
 #begin Images/UI/sliderRed.png
 /importer:TextureImporter
@@ -1290,6 +1266,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SFX/UI/bagOnhover1.wav
+
+#begin SFX/UI/settingSliderClicking.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/UI/settingSliderClicking.wav
 
 #begin SFX/UI/titleClick1.wav
 /importer:WavImporter

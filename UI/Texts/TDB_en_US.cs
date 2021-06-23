@@ -30,7 +30,7 @@ namespace HappyDungeon.UI.Texts
 
         public string[] TitleOptions()
         {
-            return new string[] { "Campaign", "Adventure", "Settings" };
+            return new string[] { "Campaign", "Adventure", "Load", "Settings" };
         }
 
         public string[] SettingOptions()

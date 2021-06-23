@@ -54,6 +54,8 @@ namespace HappyDungeon.UI.Displays
         private Vector2[] percentagePos;
         private Vector2 sliderOffset = new Vector2(-1, 0) * Globals.SCALAR;
 
+        private int[] sliderLength;
+
         // ================================================================================
         // ================================ On-hover and clicks ==========================
         // ================================================================================
@@ -68,9 +70,10 @@ namespace HappyDungeon.UI.Displays
 
         private bool LMBSession = false;
         private Vector2 leftClickSessionStartPos;
-        private Vector2 lastRecordSliderPos; 
+        private Vector2 lastRecordSliderPos;
 
-        private int[] sliderLength; 
+        private int sliderPosRecord;
+        private int triggerDistance = (int)(1.0 * Globals.SCALAR);
 
         // Text generator 
         private LargeBR textGen = new LargeBR();
@@ -93,6 +96,7 @@ namespace HappyDungeon.UI.Displays
             sliderSelected = new bool[3];
             ResetSliderSelection();
             ResetTextOnHoverFlag(-1);
+
         }
 
         /// <summary>
@@ -279,7 +283,13 @@ namespace HappyDungeon.UI.Displays
             for (int i = 0; i < ARROW_COUNT; i++)
             {
                 if (i != Excemption)
-                    arrows[i].rowLimitation = 0;
+                {
+                    if (game.virgin)
+                        arrows[i].rowLimitation = 0;
+                    else
+                        arrows[i].rowLimitation = 2;
+                }
+                    
             }
         }
 
@@ -362,6 +372,8 @@ namespace HappyDungeon.UI.Displays
                     {
                         sliderSelected[i] = true;
                         lastRecordSliderPos = sliderPositions[i];
+
+                        sliderPosRecord = (int)sliderPositions[i].X;
                     }
                 }
             }
@@ -374,6 +386,7 @@ namespace HappyDungeon.UI.Displays
         /// <param name="CursorPos">Cursor position</param>
         public void LeftClickRelease(Vector2 CursorPos)
         {
+            if (!LMBSession) return; 
 
             if (sliderSelected.Any(x => x == true))
             {
@@ -386,6 +399,8 @@ namespace HappyDungeon.UI.Displays
             {
                 if (LMBSession && arrowRanges[i].Contains(CursorPos) && arrowRanges[i].Contains(leftClickSessionStartPos))
                 {
+                    SoundFX.Instance.PlayTitleClick();
+
                     if (i == 0) difficultyIndex--;
                     else difficultyIndex++;
                     RefreshDifficulty();
@@ -396,6 +411,7 @@ namespace HappyDungeon.UI.Displays
             {
                 if (textRanges[i].Contains(CursorPos) && textRanges[i].Contains(leftClickSessionStartPos))
                 {
+                    SoundFX.Instance.PlayTitleClick();
                     ExecuteCommand(i);
                 }
             }
@@ -428,9 +444,14 @@ namespace HappyDungeon.UI.Displays
             {
                 if (arrowRanges[i].Contains(CursorPos))
                 {
-                    if (arrows[i].rowLimitation != 1)
+                    if ((arrows[i].rowLimitation != 1 && game.virgin) ||
+                        (arrows[i].rowLimitation != 3 && !game.virgin))
                         SoundFX.Instance.PlayTitleOnHover();
-                    arrows[i].rowLimitation = 1;
+
+                    if (game.virgin)
+                        arrows[i].rowLimitation = 1;
+                    else
+                        arrows[i].rowLimitation = 3;
                     hasOnHover = true;
                     ResetArrowOnHover(i);
                 }
@@ -449,6 +470,12 @@ namespace HappyDungeon.UI.Displays
                 if (sliderSelected[i] )
                 {
                     sliderPositions[i].X = lastRecordSliderPos.X - (leftClickSessionStartPos.X - CursorPos.X);
+
+                    if (Math.Abs(sliderPositions[i].X - sliderPosRecord) > triggerDistance)
+                    {
+                        SoundFX.Instance.PlaySettingSliderClick();
+                        sliderPosRecord = (int)sliderPositions[i].X;
+                    }
 
                     // Avoid out of range 
                     if (sliderPositions[i].X < sliderAllowedRange[i].X)

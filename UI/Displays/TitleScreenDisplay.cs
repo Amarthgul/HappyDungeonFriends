@@ -39,12 +39,15 @@ namespace HappyDungeon.UI.Displays
         private GeneralSprite campaignTextOnHover;
         private GeneralSprite adventureText;
         private GeneralSprite adventureTextOnHover;
+        private GeneralSprite loadSavedText;
+        private GeneralSprite loadSavedTextOnHover;
         private GeneralSprite settingText;
         private GeneralSprite settingTextOnHover;
 
         private Vector2 drawPosition = new Vector2(0, 0);
         private Vector2 campaignLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 112) * Globals.SCALAR;
         private Vector2 adventureLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 128) * Globals.SCALAR;
+        private Vector2 loadSavedLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 144) * Globals.SCALAR;
         private Vector2 settingLoc = new Vector2(Globals.ORIG_FWIDTH / 2, 160) * Globals.SCALAR;
 
         private Vector2 cloudPosFG = new Vector2(0, 0);
@@ -73,10 +76,12 @@ namespace HappyDungeon.UI.Displays
         // Could have put them all in an array, but it'll be harder to read and maintain 
         private bool onHoverCampaign = false;
         private bool onHoverAdventure = false;
+        private bool onHoverLoadSaved = false;
         private bool onHoeverSetting = false; 
 
         private Rectangle rectCampaign;
         private Rectangle rectAdventure;
+        private Rectangle rectLoadSaved; 
         private Rectangle rectSetting;
 
         private bool LMBSessionOn = false;
@@ -100,6 +105,9 @@ namespace HappyDungeon.UI.Displays
             animateSW.Restart();
         }
 
+        /// <summary>
+        /// Load all background sprites and creates all text sprites
+        /// </summary>
         private void LoadAllSprites()
         {
             ImageFile TBG = TextureFactory.Instance.titleBackground;
@@ -116,8 +124,10 @@ namespace HappyDungeon.UI.Displays
             Texture2D CTO = textOnHoverGen.GetText(TextBridge.Instance.GetTitleScreenOption(0), game.GraphicsDevice);
             Texture2D AT = textGen.GetText(TextBridge.Instance.GetTitleScreenOption(1), game.GraphicsDevice);
             Texture2D ATO = textOnHoverGen.GetText(TextBridge.Instance.GetTitleScreenOption(1), game.GraphicsDevice);
-            Texture2D ST = textGen.GetText(TextBridge.Instance.GetTitleScreenOption(2), game.GraphicsDevice);
-            Texture2D STO = textOnHoverGen.GetText(TextBridge.Instance.GetTitleScreenOption(2), game.GraphicsDevice);
+            Texture2D LT = textGen.GetText(TextBridge.Instance.GetTitleScreenOption(2), game.GraphicsDevice);
+            Texture2D LTO = textOnHoverGen.GetText(TextBridge.Instance.GetTitleScreenOption(2), game.GraphicsDevice);
+            Texture2D ST = textGen.GetText(TextBridge.Instance.GetTitleScreenOption(3), game.GraphicsDevice);
+            Texture2D STO = textOnHoverGen.GetText(TextBridge.Instance.GetTitleScreenOption(3), game.GraphicsDevice);
 
             background = new GeneralSprite(TBG.texture, TBG.C, TBG.R, 
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_MID);
@@ -141,17 +151,23 @@ namespace HappyDungeon.UI.Displays
             campaignTextOnHover = new GeneralSprite(CTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
             adventureText = new GeneralSprite(AT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
             adventureTextOnHover = new GeneralSprite(ATO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
+            loadSavedText = new GeneralSprite(LT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
+            loadSavedTextOnHover = new GeneralSprite(LTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
             settingText = new GeneralSprite(ST, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
             settingTextOnHover = new GeneralSprite(STO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
 
 
         }
 
+        /// <summary>
+        /// Setup the position and rectangles for draw and on hover check.
+        /// </summary>
         private void SetupPositions()
         {
             // Align them to the middle, used this way in case other languages are used 
             campaignLoc.X -= (campaignText.selfTexture.Width * Globals.SCALAR) / 2;
             adventureLoc.X -= (adventureText.selfTexture.Width * Globals.SCALAR) / 2;
+            loadSavedLoc.X -= (loadSavedText.selfTexture.Width * Globals.SCALAR) / 2;
             settingLoc.X -= (settingText.selfTexture.Width * Globals.SCALAR) / 2;
 
             rectCampaign = new Rectangle((int)campaignLoc.X, (int)campaignLoc.Y,
@@ -160,11 +176,19 @@ namespace HappyDungeon.UI.Displays
             rectAdventure = new Rectangle((int)adventureLoc.X, (int)adventureLoc.Y,
                 adventureText.selfTexture.Width * Globals.SCALAR, 
                 adventureText.selfTexture.Height * Globals.SCALAR);
+            rectLoadSaved = new Rectangle((int)loadSavedLoc.X, (int)loadSavedLoc.Y,
+                adventureText.selfTexture.Width * Globals.SCALAR,
+                adventureText.selfTexture.Height * Globals.SCALAR);
             rectSetting = new Rectangle((int)settingLoc.X, (int)settingLoc.Y,
                 settingText.selfTexture.Width* Globals.SCALAR,
                 settingText.selfTexture.Height* Globals.SCALAR);
         }
 
+        /// <summary>
+        /// Reset on hover flags for the texts. 
+        /// With either 1 excemption or no excemption. 
+        /// </summary>
+        /// <param name="Excemption">Which to skip</param>
         private void ResetOnHover(int Excemption)
         {
             switch (Excemption)
@@ -172,20 +196,29 @@ namespace HappyDungeon.UI.Displays
                 case 0:
                     onHoverCampaign = false;
                     onHoverAdventure = false;
+                    onHoverLoadSaved = false;
                     onHoeverSetting = false;
                     break;
                 case 1:
                     onHoverAdventure = false;
                     onHoeverSetting = false;
+                    onHoverLoadSaved = false;
                     break;
                 case 2:
                     onHoverCampaign = false;
                     onHoeverSetting = false;
+                    onHoverLoadSaved = false;
                     break;
                 case 3:
                     onHoverCampaign = false;
                     onHoverAdventure = false;
-                    break; 
+                    onHoeverSetting = false;
+                    break;
+                case 4:
+                    onHoverLoadSaved = false;
+                    onHoverCampaign = false;
+                    onHoverAdventure = false;
+                    break;
                 default:
                     break;
             }
@@ -244,6 +277,10 @@ namespace HappyDungeon.UI.Displays
                 transitProtSW.Restart();
                 LMBSessionOn = false;
             }
+            else if (rectLoadSaved.Contains(CursorPos) && rectLoadSaved.Contains(onClickPosition))
+            {
+
+            }
             else if (rectSetting.Contains(CursorPos) && rectSetting.Contains(onClickPosition))
             {
                 SoundFX.Instance.PlayTitleClick();
@@ -280,13 +317,21 @@ namespace HappyDungeon.UI.Displays
                 onHoverAdventure = true;
                 ResetOnHover(2);
             }
+            else if (rectLoadSaved.Contains(CursorPos))
+            {
+                if (!onHoverLoadSaved)
+                    SoundFX.Instance.PlayTitleOnHover();
+
+                onHoverLoadSaved = true;
+                ResetOnHover(3);
+            }
             else if (rectSetting.Contains(CursorPos))
             {
                 if (!onHoeverSetting)
                     SoundFX.Instance.PlayTitleOnHover();
 
                 onHoeverSetting = true;
-                ResetOnHover(3);
+                ResetOnHover(4);
             }
             else
             {
@@ -339,6 +384,12 @@ namespace HappyDungeon.UI.Displays
                 adventureTextOnHover.Draw(spriteBatch, adventureLoc, defaultTint);
             else
                 adventureText.Draw(spriteBatch, adventureLoc, defaultTint);
+
+            if (onHoverLoadSaved)
+                loadSavedTextOnHover.Draw(spriteBatch, loadSavedLoc, defaultTint);
+            else
+                loadSavedText.Draw(spriteBatch, loadSavedLoc, defaultTint);
+
 
             if (onHoeverSetting)
                 settingTextOnHover.Draw(spriteBatch, settingLoc, defaultTint);

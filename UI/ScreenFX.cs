@@ -86,7 +86,6 @@ namespace HappyDungeon
                 return;
             }
 
-            
         }
 
         public void DrawFlies(Vector2 FocusPos)

@@ -155,12 +155,12 @@ namespace HappyDungeon.UI.Displays
             {
                 LMBSession = true;
                 leftClickSessionStartPos = CursorPos;
-
             }
         }
 
         public void LeftClickRelease(Vector2 CursorPos)
         {
+            if (!LMBSession) return;
 
             for (int i = 0; i < TEXT_COUNT; i++)
             {

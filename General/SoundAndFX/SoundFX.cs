@@ -59,6 +59,8 @@ namespace HappyDungeon
         private SoundEffect[] bagLMBRelease;
         private SoundEffect[] bagOnhover;
 
+        private SoundEffect[] settingSliderClick; 
+
         private SoundEffect[] titleOnHover;
         private SoundEffect[] titleClick; 
 
@@ -170,21 +172,19 @@ namespace HappyDungeon
             // --------------------------------------------------------------------------------
             // ----------------------------------- UI  ----------------------------------------
             bagLMBSlect = new SoundEffect[] {    
-                Content.Load<SoundEffect>("SFX/UI/bagLMBClick1"),
-            };
+                Content.Load<SoundEffect>("SFX/UI/bagLMBClick1") };
             bagLMBRelease = new SoundEffect[] {    
-                Content.Load<SoundEffect>("SFX/UI/bagLMBRelease1"),
-            };
+                Content.Load<SoundEffect>("SFX/UI/bagLMBRelease1") };
             bagOnhover = new SoundEffect[] {
-                Content.Load<SoundEffect>("SFX/UI/bagOnhover1"),
-            };
+                Content.Load<SoundEffect>("SFX/UI/bagOnhover1") };
+
+            settingSliderClick = new SoundEffect[] {
+                Content.Load<SoundEffect>("SFX/UI/settingSliderClicking")};
 
             titleOnHover = new SoundEffect[] {
-                Content.Load<SoundEffect>("SFX/UI/titleOnHover1"),
-            };
+                Content.Load<SoundEffect>("SFX/UI/titleOnHover1")  };
             titleClick = new SoundEffect[] {
-                Content.Load<SoundEffect>("SFX/UI/titleClick1"),
-            };
+                Content.Load<SoundEffect>("SFX/UI/titleClick1") };
         }
 
         /// <summary>
@@ -341,6 +341,12 @@ namespace HappyDungeon
         {
             PlayInVolume(RandPick(bagOnhover), 1f);
         }
+
+        public void PlaySettingSliderClick()
+        {
+            PlayInVolume(RandPick(settingSliderClick), .5f);
+        }
+
         public void PlayTitleOnHover()
         {
             PlayInVolume(RandPick(titleOnHover), .25f);
