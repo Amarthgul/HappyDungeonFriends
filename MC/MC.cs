@@ -374,7 +374,7 @@ namespace HappyDungeon
 
             UpdateCollisionsAndMovements();
 
-            currentHealth += ContinuedHealthReduction(); // TODO: make it into a method
+            currentHealth += ContinuedHealthReduction(); 
 
             // Update sprites 
             selfSprite.Update(facingDir, mcState, primaryState, damageInflictionOn);
@@ -384,6 +384,7 @@ namespace HappyDungeon
             UpdateDamgeRecoverProtection();
 
             CheckBoundary();
+            CheckHealth();
 
             if (mcState == Globals.GeneralStates.Moving)
             {
@@ -641,6 +642,15 @@ namespace HappyDungeon
                 game.reset((int)Globals.Direction.Down);
             }
 
+        }
+
+        private void CheckHealth()
+        {
+            if (currentHealth <= 0)
+            {
+                // Might have other options 
+                mcState = Globals.GeneralStates.Dead; 
+            }
         }
 
         /// <summary>

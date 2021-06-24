@@ -30,7 +30,8 @@ namespace HappyDungeon.UI.Displays
 
         private GeneralSprite primarySlot;
         private GeneralSprite[] itemSlots;
-        private GeneralSprite[] bagSlots;
+        private GeneralSprite[] bagSlots; 
+        // TODO: add description sprites
 
         private Vector2 primaryLoc = new Vector2(112, 69) * Globals.SCALAR;
         private Vector2[] itemsLoc = new Vector2[] {

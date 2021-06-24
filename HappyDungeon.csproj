@@ -85,6 +85,7 @@
     <Compile Include="General\Modifiers\ModifierCollection.cs" />
     <Compile Include="General\Modifiers\ModifierTorch.cs" />
     <Compile Include="General\SoundAndFX\SoundFX.cs" />
+    <Compile Include="ItemsAndSuch\DescriptionTextureGen\GenerateDescription.cs" />
     <Compile Include="ItemsAndSuch\Items\DroppedGold.cs" />
     <Compile Include="ItemsAndSuch\Items\IItem.cs" />
     <Compile Include="ItemsAndSuch\ItemCoolDown.cs" />
