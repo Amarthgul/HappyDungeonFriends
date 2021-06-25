@@ -69,7 +69,9 @@ namespace HappyDungeon
         public ImageFile fontLarge;
         public ImageFile fontLargeBR;
         public ImageFile fontLargeWR;
-        public ImageFile fontSmall; 
+        public ImageFile fontSmall;
+        public ImageFile fontSmallWR;
+        public ImageFile fontSmallBR; 
 
         public ImageFile transitionUp;
         public ImageFile transitionDown; 
@@ -178,6 +180,8 @@ namespace HappyDungeon
             fontLargeBR = new ImageFile(content, "Images/UI/Fonts/en_US_fontBigBR", 1, 1);
             fontLargeWR = new ImageFile(content, "Images/UI/Fonts/en_US_fontBigWR", 1, 1);
             fontSmall = new ImageFile(content, "Images/UI/Fonts/en_US_fontSmall", 1, 1);
+            fontSmallWR = new ImageFile(content, "Images/UI/Fonts/en_US_fontSmallWR", 1, 1);
+            fontSmallBR = new ImageFile(content, "Images/UI/Fonts/en_US_fontSmallBR", 1, 1);
 
             transitionDown = new ImageFile(content, "Images/UI/transitionDown", 1, 1);
             transitionUp = new ImageFile(content, "Images/UI/transitionUp", 1, 1);

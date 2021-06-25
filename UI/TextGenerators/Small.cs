@@ -120,27 +120,37 @@ namespace HappyDungeon.UI
 
         public int interval { set; get; }
         public int spaceSize { set; get; }
-
+        public int widthOffset { set; get; }
+        public int heightOffset{ set; get; }
         public Small()
         {
             sourceTexts = TextureFactory.Instance.fontSmall.texture;
 
             interval = 1;
             spaceSize = 3;
+            widthOffset = 0;
+            heightOffset = 0;
+
         }
 
         protected int GetCharWidth(char TarChar)
         {
+            int result = 0;
+
             if (alpLowerWidth.ContainsKey(TarChar))
-                return alpLowerWidth[TarChar];
+                result = alpLowerWidth[TarChar];
             else if (alpCapWidth.ContainsKey(TarChar))
-                return alpCapWidth[TarChar];
+                result = alpCapWidth[TarChar];
             else if (digitWidth.ContainsKey(TarChar))
-                return digitWidth[TarChar];
+                result = digitWidth[TarChar];
             else if (puncWidth.ContainsKey(TarChar))
-                return puncWidth[TarChar];
+                result = puncWidth[TarChar];
             else
                 return 0;
+
+            result += 2 * widthOffset; 
+
+            return result;
         }
 
 
@@ -155,7 +165,7 @@ namespace HappyDungeon.UI
             else ExmDict = puncWidth;
 
             for (int i = 0; ExmDict.ElementAt(i).Key != TarChar; i++)
-                Result += ExmDict.ElementAt(i).Value + 1; // Small basic has 1 offset between each character
+                Result += ExmDict.ElementAt(i).Value + interval + 2 * widthOffset; // Small basic has 1 offset between each character
 
             return Result;
 
@@ -169,22 +179,22 @@ namespace HappyDungeon.UI
             Color[] Data;
 
             if (alpLowerWidth.ContainsKey(TarChar))
-                RowLoc = ROW_LOC_LOW;
+                RowLoc = ROW_LOC_LOW - heightOffset;
             else if (alpCapWidth.ContainsKey(TarChar))
-                RowLoc = ROW_LOC_CAP;
+                RowLoc = ROW_LOC_CAP - heightOffset;
             else if (digitWidth.ContainsKey(TarChar))
-                RowLoc = ROW_LOC_DIG;
+                RowLoc = ROW_LOC_DIG - heightOffset;
             else if (puncWidth.ContainsKey(TarChar))
-                RowLoc = ROW_LOC_PUN;
+                RowLoc = ROW_LOC_PUN - heightOffset;
             else
                 return null;
 
             CharWidth = GetCharWidth(TarChar);
-            SingleChar = TextureFactory.Instance.GenerateTexture(G, CharWidth, HEIGHT, pixel => Color.Transparent);
+            SingleChar = TextureFactory.Instance.GenerateTexture(G, CharWidth, HEIGHT + 2 * heightOffset, pixel => Color.Transparent);
             Data = new Color[SingleChar.Width * SingleChar.Height];
 
             CharSrcPosition = GetSrcLocation(TarChar);
-            SourceRect = new Rectangle(CharSrcPosition, RowLoc, CharWidth, HEIGHT);
+            SourceRect = new Rectangle(CharSrcPosition, RowLoc, CharWidth, HEIGHT + 2 * heightOffset);
 
             sourceTexts.GetData(0, SourceRect, Data, 0, Data.Length);
             SingleChar.SetData(Data);
@@ -196,7 +206,7 @@ namespace HappyDungeon.UI
         {
             int FullWidth = 0;
             int Recorder = 0;
-            Rectangle DestRectangle = new Rectangle(0, 0, 0, HEIGHT);
+            Rectangle DestRectangle = new Rectangle(0, 0, 0, HEIGHT + 2 * heightOffset);
 
 
             // Calculate full width of the output texture 
@@ -210,7 +220,7 @@ namespace HappyDungeon.UI
             }
 
             // generate the blank texture 
-            textTure = TextureFactory.Instance.GenerateTexture(G, FullWidth, HEIGHT, pixel => Color.Transparent);
+            textTure = TextureFactory.Instance.GenerateTexture(G, FullWidth, HEIGHT + 2 * heightOffset, pixel => Color.Transparent);
 
             foreach (char c in Text)
             {
@@ -224,7 +234,7 @@ namespace HappyDungeon.UI
                 Color[] Data = new Color[CharTextureNow.Width * CharTextureNow.Height];
                 CharTextureNow.GetData(Data);
 
-                DestRectangle = new Rectangle(Recorder, 0, CharTextureNow.Width, HEIGHT);
+                DestRectangle = new Rectangle(Recorder, 0, CharTextureNow.Width, HEIGHT + 2 * heightOffset);
                 textTure.SetData(0, DestRectangle, Data, 0, Data.Length);
 
                 Recorder += GetCharWidth(c) + interval;

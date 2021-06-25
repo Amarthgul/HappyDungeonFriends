@@ -136,6 +136,9 @@
     <Compile Include="UI\TextGenerators\Large.cs" />
     <Compile Include="UI\TextGenerators\LargeWR.cs" />
     <Compile Include="UI\TextGenerators\LargeBR.cs" />
+    <Compile Include="UI\TextGenerators\SmallBR.cs" />
+    <Compile Include="UI\TextGenerators\SmallWR.cs" />
+    <Compile Include="UI\TextGenerators\Small.cs" />
     <Compile Include="UI\Texts\ITDB.cs" />
     <Compile Include="UI\Texts\TDB_es.cs" />
     <Compile Include="UI\Texts\TDB_fr_FR.cs" />
