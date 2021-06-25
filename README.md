@@ -22,9 +22,13 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 21 June 2021: 
+Update 25 June 2021: 
 
-Title screen finally has a proper illustration and is animated.  
+Despite still cannot die or win, most of the game feature frameworks has now been finsihed.   
+
+<p align="center">
+	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/W4hXXG4.png" width="512">
+</p>
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">
@@ -34,8 +38,8 @@ Title screen finally has a proper illustration and is animated.
 
 Dev logs and random comments 
 
-* This game drew inspiration from some of my favorites, like DotA 2, Diablo, Warcraft, Isaac, 
-and some level of Gris and Disgaea. 
+* This game drew inspiration from some of my favorites, such as DotA 2, Diablo, Warcraft, Isaac, 
+and some part of Gris and Disgaea. 
 
 * Items count CD on its own and still counts when in the bag, it seems possible to quickly 
 switch item in and out of slots and thus drastically increase the ability of the character.
@@ -43,5 +47,6 @@ I don't really want to change that, it feels fun.
 
 * Since `Stopwatch` will continue running once after started, it might happen that some enemy
 or environments will have a surge of action after the change of game states. It is definitely 
-possible to add a switch condition to all stopwatches, but considering the amount of work needed,
+possible to add a switch condition to all stopwatches (or write a new stopwatch class),
+but considering the amount of work needed,
 I probably won't be doing it. 

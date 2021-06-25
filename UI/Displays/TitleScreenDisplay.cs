@@ -177,8 +177,8 @@ namespace HappyDungeon.UI.Displays
                 adventureText.selfTexture.Width * Globals.SCALAR, 
                 adventureText.selfTexture.Height * Globals.SCALAR);
             rectLoadSaved = new Rectangle((int)loadSavedLoc.X, (int)loadSavedLoc.Y,
-                adventureText.selfTexture.Width * Globals.SCALAR,
-                adventureText.selfTexture.Height * Globals.SCALAR);
+                loadSavedText.selfTexture.Width * Globals.SCALAR,
+                loadSavedText.selfTexture.Height * Globals.SCALAR);
             rectSetting = new Rectangle((int)settingLoc.X, (int)settingLoc.Y,
                 settingText.selfTexture.Width* Globals.SCALAR,
                 settingText.selfTexture.Height* Globals.SCALAR);
