@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-
 namespace HappyDungeon.UI
 {
     /// <summary>
-    /// Larger font with black rims
+    /// Small font is mostly for descriptions and other text-heavy parts. 
     /// </summary>
-    public class Large : IText
+    public class Small : IText
     {
-        protected const int HEIGHT = 11; // To accommodate, sprites needs extra spaces  
-        protected const int ROW_LOC_LOW = 0;
-        protected const int ROW_LOC_CAP = 18;
-        protected const int ROW_LOC_DIG = 33;
-        protected const int ROW_LOC_PUN = 54;
+
+        protected const int HEIGHT = 7;        // To accommodate, sprites needs extra spaces  
+        protected const int ROW_LOC_LOW = 4;
+        protected const int ROW_LOC_CAP = 13;
+        protected const int ROW_LOC_DIG = 22;
+        protected const int ROW_LOC_PUN = 31;
 
         public Texture2D sourceTexts;
 
@@ -26,107 +26,107 @@ namespace HappyDungeon.UI
 
         protected Dictionary<char, int> digitWidth = new Dictionary<char, int>
         {
-            {'0', 7 },
-            {'1', 5 },
-            {'2', 7 },
-            {'3', 7 },
-            {'4', 7 },
-            {'5', 7 },
-            {'6', 7 },
-            {'7', 7 },
-            {'8', 7 },
-            {'9', 7 },
+            {'0', 3 },
+            {'1', 1 },
+            {'2', 3 },
+            {'3', 3 },
+            {'4', 3 },
+            {'5', 3 },
+            {'6', 3 },
+            {'7', 3 },
+            {'8', 3 },
+            {'9', 3 },
         };
         protected Dictionary<char, int> alpLowerWidth = new Dictionary<char, int>
         {
-            {'a', 6 },
-            {'b', 6 },
-            {'c', 6 },
-            {'d', 6 },
-            {'e', 6 },
-            {'f', 5 },
-            {'g', 6 },
-            {'h', 6 },
-            {'i', 3 },
-            {'j', 4 },
-            {'k', 6 },
-            {'l', 4 },
-            {'m', 7 },
-            {'n', 6 },
-            {'o', 6 },
-            {'p', 6 },
-            {'q', 6 },
-            {'r', 5 },
-            {'s', 6 },
-            {'t', 5 },
-            {'u', 6 },
-            {'v', 7 },
-            {'w', 7 },
-            {'x', 7 },
-            {'y', 6 },
-            {'z', 6 },
+            {'a', 3 },
+            {'b', 3 },
+            {'c', 3 },
+            {'d', 3 },
+            {'e', 3 },
+            {'f', 3 },
+            {'g', 3 },
+            {'h', 3 },
+            {'i', 1 },
+            {'j', 2 },
+            {'k', 3 },
+            {'l', 2 },
+            {'m', 5 },
+            {'n', 3 },
+            {'o', 3 },
+            {'p', 3 },
+            {'q', 3 },
+            {'r', 2 },
+            {'s', 3 },
+            {'t', 3 },
+            {'u', 3 },
+            {'v', 3 },
+            {'w', 5 },
+            {'x', 3 },
+            {'y', 3 },
+            {'z', 3 },
         };
         protected Dictionary<char, int> alpCapWidth = new Dictionary<char, int>
         {
-            {'A', 7 },
-            {'B', 7 },
-            {'C', 7 },
-            {'D', 7 },
-            {'E', 6 },
-            {'F', 6 },
-            {'G', 7 },
-            {'H', 7 },
-            {'I', 5 },
-            {'J', 5 },
-            {'K', 7 },
-            {'L', 6 },
-            {'M', 9 },
-            {'N', 7 },
-            {'O', 7 },
-            {'P', 7 },
-            {'Q', 8 },
-            {'R', 7 },
-            {'S', 7 },
-            {'T', 7 },
-            {'U', 7 },
-            {'V', 9 },
-            {'W', 9 },
-            {'X', 9 },
-            {'Y', 7 },
-            {'Z', 7 },
+            {'A', 3 },
+            {'B', 3 },
+            {'C', 3 },
+            {'D', 3 },
+            {'E', 3 },
+            {'F', 3 },
+            {'G', 3 },
+            {'H', 3 },
+            {'I', 3 },
+            {'J', 2 },
+            {'K', 3 },
+            {'L', 3 },
+            {'M', 5 },
+            {'N', 4 },
+            {'O', 4 },
+            {'P', 3 },
+            {'Q', 4 },
+            {'R', 3 },
+            {'S', 3 },
+            {'T', 3 },
+            {'U', 3 },
+            {'V', 3 },
+            {'W', 5 },
+            {'X', 3 },
+            {'Y', 3 },
+            {'Z', 4 },
         };
-        protected Dictionary<char, int> puncWidth = new Dictionary<char, int> 
+        protected Dictionary<char, int> puncWidth = new Dictionary<char, int>
         {
-            {'!', 3 },
-            {'\"', 5 },
-            {'\'', 3 },
-            {'(', 5 },
-            {')', 5 },
-            {'*', 5 },
-            {'+', 7 },
-            {',', 4 },
-            {'-', 5 },
-            {'.', 3 },
-            {'/', 7 },
-            {':', 3 },
-            {';', 4 },
-            {'<', 5 },
-            {'=', 5 },
-            {'>', 5 },
-            {'?', 7 },
-            {'%', 7 }
+            {'!', 1 },
+            {'\"', 1 },
+            {'\'', 1 },
+            {'(', 2 },
+            {')', 2 },
+            {'*', 2 },
+            {'+', 3 },
+            {',', 2 },
+            {'-', 2 },
+            {'.', 1 },
+            {'/', 3 },
+            {':', 1 },
+            {';', 2 },
+            {'<', 3 },
+            {'=', 2 },
+            {'>', 3 },
+            {'?', 3 },
+            {'%', 3 }
         };
 
 
         public int interval { set; get; }
         public int spaceSize { set; get; }
 
-        public Large()
+        public Small()
         {
-            sourceTexts = TextureFactory.Instance.fontLarge.texture;
+            sourceTexts = TextureFactory.Instance.fontSmall.texture;
 
-            interval = 0;
-            spaceSize = 2;
+            interval = 1;
+            spaceSize = 3;
         }
 
         protected int GetCharWidth(char TarChar)
@@ -140,13 +140,14 @@ namespace HappyDungeon.UI
             else if (puncWidth.ContainsKey(TarChar))
                 return puncWidth[TarChar];
             else
-                return 0; 
+                return 0;
         }
+
 
         protected int GetSrcLocation(char TarChar)
         {
             Dictionary<char, int> ExmDict;
-            int Result = 0; 
+            int Result = 0;
 
             if (Char.IsDigit(TarChar)) ExmDict = digitWidth;
             else if (Char.IsLower(TarChar)) ExmDict = alpLowerWidth;
@@ -154,7 +155,7 @@ namespace HappyDungeon.UI
             else ExmDict = puncWidth;
 
             for (int i = 0; ExmDict.ElementAt(i).Key != TarChar; i++)
-                Result += ExmDict.ElementAt(i).Value;
+                Result += ExmDict.ElementAt(i).Value + 1; // Small basic has 1 offset between each character
 
             return Result;
 
@@ -163,7 +164,7 @@ namespace HappyDungeon.UI
         protected Texture2D GetCharTexture(char TarChar, GraphicsDevice G)
         {
             int RowLoc, CharWidth, CharSrcPosition;
-            Texture2D SingleChar; 
+            Texture2D SingleChar;
             Rectangle SourceRect;
             Color[] Data;
 
@@ -191,12 +192,12 @@ namespace HappyDungeon.UI
             return SingleChar;
         }
 
-        public Texture2D GetText(string Text, GraphicsDevice G) 
+        public Texture2D GetText(string Text, GraphicsDevice G)
         {
             int FullWidth = 0;
             int Recorder = 0;
             Rectangle DestRectangle = new Rectangle(0, 0, 0, HEIGHT);
-            
+
 
             // Calculate full width of the output texture 
             foreach (char c in Text)
@@ -208,11 +209,12 @@ namespace HappyDungeon.UI
                     FullWidth += spaceSize;
             }
 
+            // generate the blank texture 
             textTure = TextureFactory.Instance.GenerateTexture(G, FullWidth, HEIGHT, pixel => Color.Transparent);
 
             foreach (char c in Text)
             {
-                if(c == ' ')
+                if (c == ' ')
                 {
                     Recorder += spaceSize;
                     continue;
@@ -225,10 +227,12 @@ namespace HappyDungeon.UI
                 DestRectangle = new Rectangle(Recorder, 0, CharTextureNow.Width, HEIGHT);
                 textTure.SetData(0, DestRectangle, Data, 0, Data.Length);
 
-                Recorder += GetCharWidth(c);
+                Recorder += GetCharWidth(c) + interval;
             }
 
-            return textTure; 
+            return textTure;
         }
     }
+
 }
+

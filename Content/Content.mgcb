@@ -517,7 +517,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/Fonts/DigitsSmallBlack.png
 
-#begin Images/UI/Fonts/fontBig.png
+#begin Images/UI/Fonts/en_US_fontBig.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -527,9 +527,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/UI/Fonts/fontBig.png
+/build:Images/UI/Fonts/en_US_fontBig.png
 
-#begin Images/UI/Fonts/fontBigBR.png
+#begin Images/UI/Fonts/en_US_fontBigBR.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -539,9 +539,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/UI/Fonts/fontBigBR.png
+/build:Images/UI/Fonts/en_US_fontBigBR.png
 
-#begin Images/UI/Fonts/fontBigWR.png
+#begin Images/UI/Fonts/en_US_fontBigWR.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -551,7 +551,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/UI/Fonts/fontBigWR.png
+/build:Images/UI/Fonts/en_US_fontBigWR.png
+
+#begin Images/UI/Fonts/en_US_fontSmall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/Fonts/en_US_fontSmall.png
 
 #begin Images/UI/goldOnBar.png
 /importer:TextureImporter

@@ -15,6 +15,7 @@ namespace HappyDungeon.UI
     /// </summary>
     public interface IText
     {
+
         Texture2D GetText(string Text, GraphicsDevice G);
 
     }
