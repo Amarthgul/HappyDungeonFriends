@@ -98,5 +98,10 @@ namespace HappyDungeon
             return textDataBase.DifficultyOptions(DiffOption);
         }
 
+        public string GetNoteSetOneRandDescription()
+        {
+            return textDataBase.NoteSetOneRand();
+        }
+
     }
 }

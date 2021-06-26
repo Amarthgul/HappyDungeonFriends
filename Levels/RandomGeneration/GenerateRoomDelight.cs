@@ -252,9 +252,9 @@ namespace HappyDungeon
                 { 0, 0, Globals.ITEM_GOLD, 0, 0, 0, 0, 0, 0, Globals.STARE_BLOCK_2, 0, 0},
                 { 0, 0, 0, 0, 0, 0, 0, Globals.ITEM_TORCH, 0, 0, 0, 0},
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                { 0, Globals.STARE_BLOCK_1, 0, 0, 0, 0, 0, Globals.ENEMY_BEAD, 0, 0, 0, 0},
-                { 0, Globals.STARE_BLOCK_1, 0, 0, 0, 0, 0, 0, Globals.ENEMY_STD, 0, 0, 0},
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Globals.ITEM_NOTE_SO, 0}};
+                { 0, Globals.STARE_BLOCK_1, 0, 0, 0, 0, 0, Globals.ENEMY_BEAD, 0, 0, 0, Globals.ITEM_NOTE_SO},
+                { 0, Globals.STARE_BLOCK_1, 0, 0, 0, 0, 0, 0, Globals.ENEMY_STD, 0, 0, Globals.ITEM_NOTE_SO},
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, Globals.ITEM_NOTE_SO, Globals.ITEM_NOTE_SO, Globals.ITEM_NOTE_SO}};
             }
 
             return room;

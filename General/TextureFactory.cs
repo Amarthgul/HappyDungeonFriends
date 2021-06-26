@@ -46,6 +46,9 @@ namespace HappyDungeon
         public ImageFile SelectionNote;
         public ImageFile BagViewBasic;
         public ImageFile BagViewUnderlay;
+        public ImageFile bagOnHoverBoxTop;
+        public ImageFile bagOnHoverBoxMid;
+        public ImageFile bagOnHoverBoxBot; 
 
         public ImageFile titleText; 
         public ImageFile titleBackground;
@@ -157,6 +160,9 @@ namespace HappyDungeon
             SelectionNote = new ImageFile(content, "Images/UI/selectionNote", 1, 1);
             BagViewBasic = new ImageFile(content, "Images/UI/BagViewBasic", 1, 1);
             BagViewUnderlay = new ImageFile(content, "Images/UI/BagViewUnderlay", 1, 1);
+            bagOnHoverBoxTop = new ImageFile(content, "Images/UI/BagOnHoverBoxTop", 1, 1);
+            bagOnHoverBoxMid = new ImageFile(content, "Images/UI/BagOnHoverBoxMid", 1, 1);
+            bagOnHoverBoxBot = new ImageFile(content, "Images/UI/BagOnHoverBoxBott", 1, 1);
 
             titleText = new ImageFile(content, "Images/UI/title", 1, 1);
             titleBackground = new ImageFile(content, "Images/UI/titleBackground", 1, 1);
@@ -248,7 +254,7 @@ namespace HappyDungeon
         public int C { get; set; }
 
         public ImageFile(ContentManager content, string PN, int C, int R) {
-            this.texture = content.Load<Texture2D>(PN);
+            texture = content.Load<Texture2D>(PN);
             this.C = C;
             this.R = R;
         }

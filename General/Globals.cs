@@ -131,9 +131,9 @@ namespace HappyDungeon
         public const float UI_ALT_TEXT = 0.891f;     // Alt display of the texts 
 
         public const float CURSOR_RESPONSE = 0.90f;   // Effects triggered by some mouse click 
-        public const float CURSOR_LAYER = 0.91f;     // Cursor layer 
+        public const float CURSOR_LAYER = 0.91f;      // Cursor layer 
         public const float TRANSIT_LAYER = 0.95f; 
-        public const float DEBUG_LAYER = 0.99f;      // Debug layer, put on top-most 
+        public const float DEBUG_LAYER = 0.999f;       // Debug layer, put on top-most 
 
 
         // ================================================================================

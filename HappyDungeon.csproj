@@ -85,7 +85,7 @@
     <Compile Include="General\Modifiers\ModifierCollection.cs" />
     <Compile Include="General\Modifiers\ModifierTorch.cs" />
     <Compile Include="General\SoundAndFX\SoundFX.cs" />
-    <Compile Include="ItemsAndSuch\DescriptionTextureGen\GenerateDescription.cs" />
+    <Compile Include="UI\DescriptionTextureGen\GenerateDescription.cs" />
     <Compile Include="ItemsAndSuch\Items\DroppedGold.cs" />
     <Compile Include="ItemsAndSuch\Items\IItem.cs" />
     <Compile Include="ItemsAndSuch\ItemCoolDown.cs" />
@@ -140,6 +140,7 @@
     <Compile Include="UI\TextGenerators\SmallWR.cs" />
     <Compile Include="UI\TextGenerators\Small.cs" />
     <Compile Include="UI\Texts\ITDB.cs" />
+    <Compile Include="UI\Texts\TDB_BASE.cs" />
     <Compile Include="UI\Texts\TDB_es.cs" />
     <Compile Include="UI\Texts\TDB_fr_FR.cs" />
     <Compile Include="UI\Texts\TDB_ja_JP.cs" />

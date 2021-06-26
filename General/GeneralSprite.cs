@@ -67,6 +67,12 @@ namespace HappyDungeon
             stopwatch.Restart();
         }
 
+        public void Refresh()
+        {
+            textureWidth = selfTexture.Width / columnsCount;
+            textureHeight = selfTexture.Height / rowCount;
+        }
+
         public void Update()
         {
             isStatic = (totalFrames == 1 ? true : false);

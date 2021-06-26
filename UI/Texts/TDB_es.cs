@@ -9,46 +9,14 @@ namespace HappyDungeon.UI.Texts
     /// <summary>
     /// Spanish, god I know not a single word of this 
     /// </summary>
-    class TDB_es : ITDB
+    class TDB_es : TDB_BASE
     {
 
-        private Dictionary<int, string> indexedDescription = new Dictionary<int, string> {
 
-        };
 
         public TDB_es()
         {
 
-        }
-
-        public string IndexedDescription(int Index)
-        {
-            return indexedDescription[Index];
-        }
-
-        public string[] TitleOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] SettingOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] PauseOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] DeathOptions()
-        {
-            return new string[] { };
-        }
-
-        public string DifficultyOptions(Globals.GameDifficulty DiffOption)
-        {
-            return " ";
         }
 
     }

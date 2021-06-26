@@ -19,6 +19,7 @@ namespace HappyDungeon
         private Vector2 position; 
         private Rectangle collisionRect;
 
+        private string selfDescription; 
 
         private Game1 game;
         private SpriteBatch spriteBatch;
@@ -37,6 +38,7 @@ namespace HappyDungeon
             position = P;
 
             collisionRect = new Rectangle((int)P.X, (int)P.Y, Globals.OUT_UNIT, Globals.OUT_UNIT);
+            selfDescription = TextBridge.Instance.GetNoteSetOneRandDescription();
 
             ImageFile NSO = TextureFactory.Instance.itemNoteSetOne;
             itemSprite = new GeneralSprite(NSO.texture, NSO.C, NSO.R, 
@@ -128,7 +130,7 @@ namespace HappyDungeon
         }
         public string GetItemDescription()
         {
-            return TextBridge.Instance.GetIndexedDescrption(SelfIndex()); ;
+            return selfDescription;
         }
     }
 }

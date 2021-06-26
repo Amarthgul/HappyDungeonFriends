@@ -6,53 +6,58 @@ using System.Threading.Tasks;
 
 namespace HappyDungeon.UI.Texts
 {
-    class TDB_en_US : ITDB
+    class TDB_en_US : TDB_BASE
     {
 
-        private Dictionary<int, string> indexedDescription = new Dictionary<int, string> {
-            {Globals.ITEM_TORCH, "A simple wooden stick with fabrics tied on top" },
-            {Globals.ITEM_LINKEN, "It wispers" },
-            {Globals.ITEM_NOTE_SO, "torch" },
-            
+        private string[] noteSetOne = new string[] {
+            "This behavior makes it easier for formats like comma-separated values (CSV) files ",
+
+            "multiple separator characters. The following example uses spaces, commas, " +
+            "periods, colons, and tabs",
+
+            "Natalie Portman on the set of \"Leon The Professional",
+
+            "nience method that lets you concatenate each element"
         };
-
-
+        private bool[] noteSetOneMark = new bool[] { false, false, false, false };
 
         public TDB_en_US()
         {
-
+            indexedDescription = new Dictionary<int, string> {
+                {Globals.ITEM_TORCH, "A simple wooden stick with fabrics tied on top" },
+                {Globals.ITEM_LINKEN, "It wispers" },
+                {Globals.ITEM_NOTE_SO, "torch" },
+            };
         }
 
-        public string IndexedDescription(int Index)
+
+
+        public override string IndexedDescription(int Index)
         {
             return indexedDescription[Index];
         }
 
-        public string[] TitleOptions()
+        public override string[] TitleOptions()
         {
             return new string[] { "Campaign", "Adventure", "Load", "Settings" };
         }
 
-        public string[] SettingOptions()
+        public override string[] SettingOptions()
         {
             return new string[] { "Master Volume", "SFX Volume", "Music volume", "Difficulty", "Save", "Load", "Back", "Quit" };
         }
 
-        public string[] PauseOptions()
+        public override string[] PauseOptions()
         {
             return new string[] { "Continue", "Settings", "Save", "Back to menu", "Quit" };
         }
 
-        public string[] DeathOptions()
+        public override string[] DeathOptions()
         {
             return new string[] { "Restart", "Load from last save" };
         }
 
-        public string[] DifficultyOptions()
-        {
-            return new string[] { "Idiot", "Normal" };
-        }
-        public string DifficultyOptions(Globals.GameDifficulty DiffOption)
+        public override string DifficultyOptions(Globals.GameDifficulty DiffOption)
         {
             switch (DiffOption)
             {
@@ -63,6 +68,22 @@ namespace HappyDungeon.UI.Texts
                 default:
                     return "";
             }
+        }
+
+        public override string NoteSetOneRand()
+        {
+            if (noteSetOneMark.All(x => x == true))
+                return "Everything on it looks blurry";
+
+            int Index = Globals.RND.Next() % 4;
+            while (noteSetOneMark[Index])
+            {
+                Index = Globals.RND.Next() % 4;
+
+            }
+            noteSetOneMark[Index] = true;
+
+            return noteSetOne[Index];
         }
     }
 }

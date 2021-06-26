@@ -9,48 +9,15 @@ namespace HappyDungeon.UI.Texts
     /// <summary>
     /// I really want to add JP support but drawing 100+ characters are damn hard 
     /// </summary>
-    class TDB_ja_JP : ITDB
+    class TDB_ja_JP : TDB_BASE
     {
 
-        private Dictionary<int, string> indexedDescription = new Dictionary<int, string> {
-
-        };
 
         public TDB_ja_JP()
         {
 
         }
 
-        public string IndexedDescription(int Index)
-        {
-            return indexedDescription[Index];
-        }
-
-        public string[] TitleOptions()
-        {
-            return new string[] { };
-        }
-
-
-        public string[] SettingOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] PauseOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] DeathOptions()
-        {
-            return new string[] { };
-        }
-
-        public string DifficultyOptions(Globals.GameDifficulty DiffOption)
-        {
-            return " ";
-        }
 
     }
 

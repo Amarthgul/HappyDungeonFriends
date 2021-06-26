@@ -15,9 +15,12 @@ namespace HappyDungeon.UI.Displays
     /// </summary>
     class BagDisplay
     {
+        private const int HOVERING_HORIZONTAL_SWITCH = 144 * Globals.SCALAR;
+        private const int HOVERING_VERTICAL_TOLERANCE = 16 * Globals.SCALAR;
+        private const int HOVERING_WIDTH = 84 * Globals.SCALAR;
+
         private Game1 game;
         private SpriteBatch spriteBatch;
-
 
         // ================================================================================
         // =========================== Sprites and their stats ============================
@@ -57,6 +60,20 @@ namespace HappyDungeon.UI.Displays
 
         private Vector2 bagOnHoverIndexedLoc = new Vector2(0, 0); // Determining which slot will the hover not be in
 
+        // Hovering descriptions 
+        private Vector2 deltaTrigger = new Vector2(.5f, .5f) * Globals.SCALAR;
+        private Vector2 lastHoveringPos = new Vector2();
+        private Vector2 hoveringDrawPos;
+        private GeneralSprite hoveringDescriptionText;
+        private GeneralSprite hoveringDescriptionBox;
+        private Stopwatch hoveringSW = new Stopwatch();
+        private Stopwatch hoveringPreCastSW = new Stopwatch();
+        private int hoveringUpdateInterval = 100;
+        private int hoveringPreCastPeriod = 500;
+        private bool isStationary = false;
+        private bool hoveringPreCasting = false;
+        private bool hoveringDisplay = false;
+
         // ================================================================================
         // ============================ Click modifications ===============================
         // ================================================================================
@@ -82,6 +99,8 @@ namespace HappyDungeon.UI.Displays
             LoadSprites();
             SetupRectangles();
             UnselectAll(); // Use as initliziation 
+
+            hoveringSW.Restart();
         }
 
         /// <summary>
@@ -105,6 +124,11 @@ namespace HappyDungeon.UI.Displays
             bagSlots = new GeneralSprite[Globals.BAG_SIZE];
 
             for (int i = 0; i < Globals.BAG_SIZE; i++) bagSlots[i] = null;
+
+            hoveringDescriptionText = new GeneralSprite(TextureFactory.Instance.bagOnHoverBoxTop.texture,
+                1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_LAYER);
+            hoveringDescriptionBox = new GeneralSprite(TextureFactory.Instance.bagOnHoverBoxTop.texture,
+                1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_SHADOW);
         }
 
         /// <summary>
@@ -198,6 +222,72 @@ namespace HappyDungeon.UI.Displays
                 if (i != Excemption)
                     bagOnHoverSFX[i] = false;
             }
+        }
+
+        /// <summary>
+        /// Check if the mouse is staying relatively stationary fora while.
+        /// The triggering time is defined as `hoveringPreCastPeriod`. 
+        /// </summary>
+        /// <param name="CursorPos">Current position of the cursor</param>
+        /// <returns>True if it barely moves in the past half second or so</returns>
+        private bool CheckStationary(Vector2 CursorPos)
+        {
+            if (hoveringSW.ElapsedMilliseconds < hoveringUpdateInterval)
+                return isStationary;
+            else
+            {
+                bool Result = false;
+
+                Vector2 CurrentDelta = CursorPos - lastHoveringPos;
+                if (Math.Abs(CurrentDelta.X) < deltaTrigger.X && Math.Abs(CurrentDelta.Y) < deltaTrigger.Y)
+                {
+                    if (hoveringPreCasting)
+                    {
+                        if (hoveringPreCastSW.ElapsedMilliseconds > hoveringPreCastPeriod)
+                        {
+                            Result = true;
+                        }
+                    }
+                    else
+                    {
+                        hoveringPreCasting = true;
+                        hoveringPreCastSW.Restart();
+                    }
+                }
+                else
+                {
+                    hoveringPreCasting = false;
+                }
+
+                lastHoveringPos = CursorPos; 
+
+                return Result;
+            }
+        }
+
+        /// <summary>
+        /// Initilize the hovering decription display. get the textures and set their positions. 
+        /// </summary>
+        /// <param name="TargetItem">What item to display</param>
+        /// <param name="DrawPos">Possibly where to draw it</param>
+        private void InitHoveringDisplay(IItem TargetItem, Vector2 DrawPos)
+        {
+            GenerateDescription Gen = new GenerateDescription(game.GraphicsDevice, TargetItem);
+
+            hoveringDrawPos = new Vector2(DrawPos.X + 6 * Globals.SCALAR, DrawPos.Y);
+
+            hoveringDescriptionText.selfTexture = Gen.GetTexture();
+            hoveringDescriptionText.positionOffset = Gen.TextPositionOffset() * Globals.SCALAR;
+            hoveringDescriptionText.Refresh();
+
+            hoveringDescriptionBox.selfTexture = Gen.GetBox();
+            hoveringDescriptionBox.Refresh();
+
+            if (DrawPos.X > HOVERING_HORIZONTAL_SWITCH)
+                hoveringDrawPos.X = DrawPos.X - HOVERING_WIDTH; 
+            if (DrawPos.Y + hoveringDescriptionBox.selfTexture.Height > 
+                Globals.OUT_FHEIGHT - HOVERING_VERTICAL_TOLERANCE)
+                hoveringDrawPos.Y = DrawPos.Y - hoveringDescriptionBox.selfTexture.Height * Globals.SCALAR;
         }
 
         private void SpecialCasesPrimary(IItem Item)
@@ -412,22 +502,34 @@ namespace HappyDungeon.UI.Displays
         }
 
         /// <summary>
-        /// Marks onhover effect for the draw method 
+        /// Marks onhover effect for the draw method, also checks hovering descriptions. 
         /// </summary>
         /// <param name="CursorPos">Position of the cursor</param>
         public void UpdateOnhover(Vector2 CursorPos)
         {
             bool OnHoverSFX = false;
-            bool OnHoverDetected = false; 
+            bool OnHoverDetected = false;
+
+            isStationary = CheckStationary(CursorPos);
 
             if (primaryRange.Contains(CursorPos))
             {
                 if (!primaryOnHover) OnHoverSFX = true;
 
+                // Check for whether or not to display the item description 
+                if (isStationary && !hoveringDisplay)  {
+                    hoveringDisplay = true;
+                    InitHoveringDisplay(game.spellSlots.GetItem(-1), CursorPos);
+                }
+                else if (! isStationary) {
+                    hoveringDisplay = false;
+                }
+
                 primaryOnHover = true;
                 OnHoverDetected = true;
                 ResetOnHover(1);
             }
+            // Bag
             else if (bagRange.Contains(CursorPos))
             {
                 int TBP = (int)((CursorPos.X - bagLoc.X) / Globals.OUT_UNIT)
@@ -438,20 +540,40 @@ namespace HappyDungeon.UI.Displays
                     );
                 bagOnHover = true;
 
+                // Play on hover sound 
                 if (!bagOnHoverSFX[TBP]) {
                     OnHoverSFX = true;
                     bagOnHoverSFX[TBP] = true;
                     ResetBagOnHoverSFX(TBP);
                 }
 
+                // Check for whether or not to display the item description 
+                if (isStationary && !hoveringDisplay && game.spellSlots.GetBagItem(TBP) != null) {
+                    hoveringDisplay = true;
+                    InitHoveringDisplay(game.spellSlots.GetBagItem(TBP), CursorPos);
+                }
+                else if (!isStationary) {
+                    hoveringDisplay = false;
+                }
+
                 OnHoverDetected = true;
                 ResetOnHover(3);
             }
+            // The 3 slots on top
             else
             {
                 for (int i = 0; i < Globals.SLOT_SIZE; i++){
                     if (itemsRange[i].Contains(CursorPos)) {
                         if (!itemsOnHover[i]) OnHoverSFX = true;
+
+                        // Check for whether or not to display the item description 
+                        if (isStationary && !hoveringDisplay && game.spellSlots.GetItem(i) != null){
+                            hoveringDisplay = true;
+                            InitHoveringDisplay(game.spellSlots.GetItem(i), CursorPos);
+                        }
+                        else if (!isStationary) {
+                            hoveringDisplay = false;
+                        }
 
                         itemsOnHover[i] = true;
                         OnHoverDetected = true;
@@ -464,7 +586,7 @@ namespace HappyDungeon.UI.Displays
                 ResetOnHover(0);
             }
 
-            if (OnHoverSFX) {
+            if (OnHoverSFX) { // There can only be one on hover at a time 
                 SoundFX.Instance.PlayBagItemOnhover();
             } 
         }
@@ -555,6 +677,13 @@ namespace HappyDungeon.UI.Displays
             }
             if (bagOnHover)
                 onHoverNote.Draw(spriteBatch, bagOnHoverIndexedLoc, defaultTint);
+
+            if (hoveringDisplay)
+            {
+                hoveringDescriptionText.Draw(spriteBatch, hoveringDrawPos, defaultTint);
+                hoveringDescriptionBox.Draw(spriteBatch, hoveringDrawPos, defaultTint);
+            }
+                
 
         }
 

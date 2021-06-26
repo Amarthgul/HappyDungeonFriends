@@ -11,6 +11,9 @@ namespace HappyDungeon
     class PlayerItemCollision
     {
         private Game1 game;
+        private List<int> nonDuplicateExemptions = new List<int>() { 
+            Globals.ITEM_NOTE_SO
+        };
 
         public PlayerItemCollision(Game1 G)
         {
@@ -31,7 +34,7 @@ namespace HappyDungeon
                 {
                     IItem Duplicate = game.bagItemList.Find(c => c.SelfIndex() == item.SelfIndex());
 
-                    if (Duplicate != null) // If this item is already in the bag 
+                    if (Duplicate != null && !nonDuplicateExemptions.Contains(Duplicate.SelfIndex())) // If this item is already in the bag 
                     {
                         Duplicate.CountFlux(item.GetCount());
                         Success = true;

@@ -29,5 +29,7 @@ namespace HappyDungeon.UI.Texts
         string[] DeathOptions();
 
         string DifficultyOptions(Globals.GameDifficulty DiffOption);
+
+        string NoteSetOneRand();
     }
 }

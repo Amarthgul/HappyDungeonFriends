@@ -9,47 +9,16 @@ namespace HappyDungeon.UI.Texts
     /// <summary>
     /// French, how fancy 
     /// </summary>
-    class TDB_fr_FR : ITDB
+    class TDB_fr_FR : TDB_BASE
     {
 
-        private Dictionary<int, string> indexedDescription = new Dictionary<int, string> {
 
-        };
 
         public TDB_fr_FR()
         {
 
         }
 
-        public string IndexedDescription(int Index)
-        {
-            return indexedDescription[Index];
-        }
-
-        public string[] TitleOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] SettingOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] PauseOptions()
-        {
-            return new string[] { };
-        }
-
-        public string[] DeathOptions()
-        {
-            return new string[] { };
-        }
-
-        public string DifficultyOptions(Globals.GameDifficulty DiffOption)
-        {
-            return " ";
-        }
 
     }
 }
