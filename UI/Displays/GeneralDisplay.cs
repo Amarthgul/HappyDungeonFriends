@@ -25,7 +25,8 @@ namespace HappyDungeon
         private UI.Displays.BagDisplay bagDisplay;
         private UI.Displays.TitleScreenDisplay titleDisplay;
         private UI.Displays.SettingDisplay settingDisplay;
-        private UI.Displays.PauseDisplay pauseDisplay; 
+        private UI.Displays.PauseDisplay pauseDisplay;
+        private UI.Displays.GameOverDisplay gameOverDisplay; 
 
         public GeneralDisplay(Game1 G)
         {
@@ -41,6 +42,7 @@ namespace HappyDungeon
             titleDisplay = new UI.Displays.TitleScreenDisplay(game);
             settingDisplay = new UI.Displays.SettingDisplay(game);
             pauseDisplay = new UI.Displays.PauseDisplay(game);
+            gameOverDisplay = new UI.Displays.GameOverDisplay(game);
         }
 
 
@@ -95,6 +97,7 @@ namespace HappyDungeon
                     titleDisplay.LeftClickRelease(CursorPos);
                     break;
                 case Globals.GameStates.GameOver:
+                    gameOverDisplay.LeftClickRelease(CursorPos);
                     break;
                 case Globals.GameStates.Setting:
                     settingDisplay.LeftClickRelease(CursorPos);
@@ -118,6 +121,7 @@ namespace HappyDungeon
                     titleDisplay.LeftClickEvent(CursorPos);
                     break;
                 case Globals.GameStates.GameOver:
+                    gameOverDisplay.LeftClickEvent(CursorPos);
                     break;
                 case Globals.GameStates.Setting:
                     settingDisplay.LeftClickEvent(CursorPos);
@@ -145,6 +149,7 @@ namespace HappyDungeon
                     titleDisplay.UpdateOnhover(CursorPos);
                     break;
                 case Globals.GameStates.GameOver:
+                    gameOverDisplay.UpdateOnhover(CursorPos);
                     break;
                 case Globals.GameStates.Setting:
                     settingDisplay.UpdateOnhover(CursorPos);
@@ -173,6 +178,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Pause:
                     pauseDisplay.Update();
                     break;
+                case Globals.GameStates.GameOver:
+                    gameOverDisplay.Update();
+                    break;
                 default:
                     break;
             }
@@ -193,6 +201,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Pause:
                     pauseDisplay.Draw();
+                    break;
+                case Globals.GameStates.GameOver:
+                    gameOverDisplay.Draw();
                     break;
                 default:
                     break; 

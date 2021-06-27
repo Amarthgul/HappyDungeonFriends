@@ -20,7 +20,7 @@ namespace HappyDungeon
         // ======================== Consts and landmark positions =========================
         // ================================================================================
         private const int MAX_HEALTH = 100;
-        private const double INIT_HP_RATIO = 0.75;
+        private const double INIT_HP_RATIO = 0.1;
         private const float RECT_WIDTH_OFFSET = 0.1f;
         private const float RECT_HEIGHT_OFFSET = 0.3f;
         private const int NEW_ROOM_OFFSET = 2 * Globals.SCALAR;
@@ -644,12 +644,16 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// Check the health of the player, mark as dead if no other options are left 
+        /// </summary>
         private void CheckHealth()
         {
             if (currentHealth <= 0)
             {
                 // Might have other options 
-                mcState = Globals.GeneralStates.Dead; 
+                mcState = Globals.GeneralStates.Dead;
+                game.screenFX.SigTransitionStart(Globals.GameStates.GameOver);
             }
         }
 

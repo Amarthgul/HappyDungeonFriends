@@ -66,6 +66,13 @@ namespace HappyDungeon
         public ImageFile settingSlideBarRed;
         public ImageFile settingArrow;
 
+        public ImageFile gameOverDeadBG; 
+
+        public ImageFile transitionUp;
+        public ImageFile transitionDown;
+
+        public ImageFile SFX_fly;
+
         public ImageFile fontDigitsSmall;
         public ImageFile fontDigitsSmallB;
         // ------------------------------------ en_US ---------------------------------------
@@ -76,10 +83,7 @@ namespace HappyDungeon
         public ImageFile fontSmallWR;
         public ImageFile fontSmallBR; 
 
-        public ImageFile transitionUp;
-        public ImageFile transitionDown; 
-
-        public ImageFile SFX_fly; 
+        
 
         // ================================================================================
         // =================================== Items ======================================
@@ -179,6 +183,8 @@ namespace HappyDungeon
             settingSliderRed = new ImageFile(content, "Images/UI/sliderRed", 1, 1);
             settingSlideBarRed = new ImageFile(content, "Images/UI/settingSlidersRed", 1, 1);
             settingArrow = new ImageFile(content, "Images/UI/settingArrows", 4, 4);
+
+            gameOverDeadBG = new ImageFile(content, "Images/UI/gameOverDeadBG", 1, 1);
 
             fontDigitsSmall = new ImageFile(content, "Images/UI/Fonts/DigitsSmall", 1, 1);
             fontDigitsSmallB = new ImageFile(content, "Images/UI/Fonts/DigitsSmallBlack", 1, 1);

@@ -262,6 +262,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Pause:
                     UpdatePaused();
                     break;
+                case Globals.GameStates.GameOver:
+                    UpdateGameOver();
+                    break;
                 default:
                     break; 
             }
@@ -302,6 +305,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Pause:
                     DrawPaused();
+                    break;
+                case Globals.GameStates.GameOver:
+                    DrawGameOver();
                     break;
                 default:
                     break;
@@ -395,6 +401,9 @@ namespace HappyDungeon
 
         }
 
+        // The rests are mostly just update generalDisplay, I only made them into separated method
+        // in case of future changes, which, looks rather ncecessary. 
+
         private void UpdateBagView()
         {
             generalDisplay.Update();
@@ -411,6 +420,11 @@ namespace HappyDungeon
         }
 
         private void UpdatePaused()
+        {
+            generalDisplay.Update();
+        }
+
+        private void UpdateGameOver()
         {
             generalDisplay.Update();
         }
@@ -530,6 +544,11 @@ namespace HappyDungeon
         }
 
         private void DrawPaused()
+        {
+            generalDisplay.Draw();
+        }
+
+        private void DrawGameOver()
         {
             generalDisplay.Draw();
         }

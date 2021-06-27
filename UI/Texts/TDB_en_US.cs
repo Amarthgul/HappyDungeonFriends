@@ -19,6 +19,7 @@ namespace HappyDungeon.UI.Texts
 
             "nience method that lets you concatenate each element"
         };
+
         private bool[] noteSetOneMark = new bool[] { false, false, false, false };
 
         public TDB_en_US()
