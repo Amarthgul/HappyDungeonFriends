@@ -22,7 +22,8 @@ namespace HappyDungeon.UI.Displays
         private GeneralSprite[] optionOnHover;
 
         private Vector2 drawPosition = new Vector2(0, 0);
-        private Vector2 optionPos; 
+        private Vector2[] optionPos;
+        private Rectangle[] optionRanges; 
 
         // Text generator 
         private LargeBR textGen = new LargeBR();
@@ -38,7 +39,7 @@ namespace HappyDungeon.UI.Displays
             spriteBatch = game.spriteBatch;
 
             LoadSprites();
-
+            SetupPositions();
         }
 
         private void LoadSprites()
@@ -47,6 +48,35 @@ namespace HappyDungeon.UI.Displays
 
             deadBG = new GeneralSprite(DBG.texture, DBG.C, DBG.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
+
+            options = new GeneralSprite[OPTION_COUNT];
+            optionOnHover = new GeneralSprite[OPTION_COUNT];
+
+            for (int i = 0; i < OPTION_COUNT; i++)
+            {
+                Texture2D TO = textGen.GetText(TextBridge.Instance.GetgameOverOptions()[i], game.GraphicsDevice);
+                Texture2D TOO = textOnHoverGen.GetText(TextBridge.Instance.GetgameOverOptions()[i], game.GraphicsDevice);
+
+                options[i] = new GeneralSprite(TO, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
+                optionOnHover[i] = new GeneralSprite(TOO, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
+            }
+        }
+
+        private void SetupPositions()
+        {
+            optionPos = new Vector2[OPTION_COUNT] {
+                new Vector2( 128 - options[0].selfTexture.Width / 2, 92  ),
+                new Vector2( 128 - options[1].selfTexture.Width / 2, 110 )
+            };
+
+            optionRanges = new Rectangle[] {
+                new Rectangle( (int)(optionPos[0].X), (int)(optionPos[0].Y),
+                options[0].selfTexture.Width * Globals.SCALAR,
+                options[0].selfTexture.Height * Globals.SCALAR ),
+                new Rectangle( (int)(optionPos[1].X), (int)(optionPos[1].Y),
+                options[1].selfTexture.Width * Globals.SCALAR,
+                options[1].selfTexture.Height * Globals.SCALAR )
+            };
         }
 
         public void LeftClickEvent(Vector2 CursorPos)

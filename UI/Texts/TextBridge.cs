@@ -103,5 +103,10 @@ namespace HappyDungeon
             return textDataBase.NoteSetOneRand();
         }
 
+        public string[] GetgameOverOptions()
+        {
+            return textDataBase.DeathOptions();
+        }
+
     }
 }
