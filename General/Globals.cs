@@ -65,16 +65,17 @@ namespace HappyDungeon
         // ====================== Item, enemy, and block indexes ==========================
         // ================================================================================
         // -1 ~ -255 are items 
-        public const int ITEM_TORCH = -1;
-        public const int ITEM_LINKEN = -10;
-        public const int ITEM_NOTE_SO = -20;
-        public const int ITEM_GOLD = -255;
+        public const int ITEM_TORCH =     -1;
+        public const int ITEM_LINKEN =   -10;
+        public const int ITEM_NOTE_SO =  -20;
+        public const int ITEM_STD =     -254;
+        public const int ITEM_GOLD =    -255;
 
         public const int ITEM_BOUND = -256;
 
         // -256 and smaller are enemies or NPCs 
-        public const int ENEMY_STD = -256;
-        public const int ENEMY_BEAD = -257;
+        public const int ENEMY_STD =   -256;
+        public const int ENEMY_BEAD =  -257;
 
         // Blocks are these bigger or equal to 0
 

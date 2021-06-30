@@ -8,7 +8,7 @@ namespace HappyDungeon.UI.Texts
 {
     class TDB_en_US : TDB_BASE
     {
-
+        // Should have 4 parts
         private string[] noteSetOne = new string[] {
             "This behavior makes it easier for formats like comma-separated values (CSV) files ",
 

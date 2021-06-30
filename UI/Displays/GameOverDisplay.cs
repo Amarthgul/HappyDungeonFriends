@@ -23,7 +23,15 @@ namespace HappyDungeon.UI.Displays
 
         private Vector2 drawPosition = new Vector2(0, 0);
         private Vector2[] optionPos;
-        private Rectangle[] optionRanges; 
+
+        // ================================================================================
+        // ================================ On-hover and clicks ==========================
+        // ================================================================================
+        private Rectangle[] optionRanges;
+        private bool[] optionIsOnHover;
+
+        private Vector2 leftClickSessionStartPos; 
+        private bool LMBSession = false;
 
         // Text generator 
         private LargeBR textGen = new LargeBR();
@@ -40,6 +48,9 @@ namespace HappyDungeon.UI.Displays
 
             LoadSprites();
             SetupPositions();
+
+            optionIsOnHover = new bool[OPTION_COUNT];
+            ResetOptionOnHover(-1);
         }
 
         private void LoadSprites()
@@ -65,8 +76,8 @@ namespace HappyDungeon.UI.Displays
         private void SetupPositions()
         {
             optionPos = new Vector2[OPTION_COUNT] {
-                new Vector2( 128 - options[0].selfTexture.Width / 2, 92  ),
-                new Vector2( 128 - options[1].selfTexture.Width / 2, 110 )
+                new Vector2( 128 - options[0].selfTexture.Width / 2, 110  ) * Globals.SCALAR,
+                new Vector2( 128 - options[1].selfTexture.Width / 2, 128 ) * Globals.SCALAR
             };
 
             optionRanges = new Rectangle[] {
@@ -79,18 +90,61 @@ namespace HappyDungeon.UI.Displays
             };
         }
 
+        private void ResetOptionOnHover(int Excemption)
+        {
+            for (int i = 0; i < OPTION_COUNT; i++)
+            {
+                if (i != Excemption)
+                    optionIsOnHover[i] = false;
+            }
+        }
+
+        // ================================================================================
+        // ============================== Public methods ==================================
+        // ================================================================================
+
         public void LeftClickEvent(Vector2 CursorPos)
         {
-
+            if (!LMBSession)
+            {
+                LMBSession = true;
+                leftClickSessionStartPos = CursorPos; 
+            }
         }
 
         public void LeftClickRelease(Vector2 CursorPos)
         {
+            if (LMBSession && optionRanges[0].Contains(CursorPos) && optionRanges[0].Contains(CursorPos))
+            {
+                game.reset(5);
+                game.screenFX.SigTransitionStart(Globals.GameStates.TitleScreen);
+            }
+            else if (LMBSession && optionRanges[0].Contains(CursorPos) && optionRanges[0].Contains(CursorPos))
+            {
 
+            }
         }
 
         public void UpdateOnhover(Vector2 CursorPos)
         {
+            bool HasOnHover = false;
+
+            for (int i = 0; i < OPTION_COUNT; i++)
+            {
+                if (optionRanges[i].Contains(CursorPos))
+                {
+                    if (!optionIsOnHover[i])
+                        SoundFX.Instance.PlayTitleOnHover();
+
+                    optionIsOnHover[i] = true;
+                    ResetOptionOnHover(i);
+
+                    HasOnHover = true;
+                }
+            }
+
+            if (!HasOnHover)
+                ResetOptionOnHover(-1);
 
         }
 
@@ -103,7 +157,13 @@ namespace HappyDungeon.UI.Displays
         {
             deadBG.Draw(spriteBatch, drawPosition, defaultTint);
 
-
+            for (int i = 0; i < OPTION_COUNT; i++)
+            {
+                if (optionIsOnHover[i])
+                    optionOnHover[i].Draw(spriteBatch, optionPos[i], defaultTint);
+                else
+                    options[i].Draw(spriteBatch, optionPos[i], defaultTint);
+            }
         }
 
     }

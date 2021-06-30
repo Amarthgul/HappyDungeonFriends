@@ -92,7 +92,7 @@ namespace HappyDungeon
 
         public virtual int SelfIndex()
         {
-            return 0; 
+            return Globals.ITEM_STD; 
         }
         public virtual General.Modifiers.IModifier GetPickupModifier()
         {
