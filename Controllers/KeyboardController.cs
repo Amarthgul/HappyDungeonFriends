@@ -13,10 +13,8 @@ namespace HappyDungeon
         {
             this.game = game;
 
-            //Add all default controls
             controllerMappings = new Dictionary<Keys, ICommand>()
             {
-                //PlayerMovement
                 {Keys.Q, new UsePrimaryCommand(game)},
                 {Keys.W, new Use1stSlotCommand(game)},
                 {Keys.E, new Use2ndSlotCommand(game)},
@@ -25,6 +23,7 @@ namespace HappyDungeon
                 {Keys.Left, new MoveLeftCommand(game)},
                 {Keys.Down, new MoveDownCommand(game)},
                 {Keys.Right, new MoveRightCommand(game)},
+                {Keys.Enter, new EnterConfirmCommand(game)},
 
                 {Keys.A, new AttackCommand(game)},
                 {Keys.B, new DisplayBagCommand(game)},

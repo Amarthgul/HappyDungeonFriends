@@ -82,6 +82,25 @@ namespace HappyDungeon
             }
         }
 
+        public void OptionConfirm()
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    break;
+                case Globals.GameStates.TitleScreen:
+                    titleDisplay.OptionConfirm();
+                    break;
+                case Globals.GameStates.GameOver:
+                    break;
+                case Globals.GameStates.Setting:
+                    break;
+                case Globals.GameStates.Pause:
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public void ResumeToRunning()
         {

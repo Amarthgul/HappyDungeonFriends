@@ -55,6 +55,7 @@
     <Compile Include="Commands\DisplayMapCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\MoveCommand.cs" />
+    <Compile Include="Commands\EnterConfirmCommand.cs" />
     <Compile Include="Commands\MoveDownCommand.cs" />
     <Compile Include="Commands\MoveLeftCommand.cs" />
     <Compile Include="Commands\MoveRightCommand.cs" />

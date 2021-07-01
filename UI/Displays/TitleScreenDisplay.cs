@@ -253,11 +253,15 @@ namespace HappyDungeon.UI.Displays
             background.Draw(spriteBatch, drawPosition, defaultTint);
         }
 
+        /// <summary>
+        /// Flag certain option as being selected. 
+        /// </summary>
+        /// <returns>True if a valid selection is made</returns>
         private bool RefreshKBS()
         {
             bool Result = true;
 
-            switch (Math.Abs(KBI % OPTION_COUNT))
+            switch (Math.Abs(KBI) % OPTION_COUNT)
             {
                 case 0:
                     onHoverCampaign = true;
@@ -284,6 +288,10 @@ namespace HappyDungeon.UI.Displays
             return Result; 
         }
 
+        /// <summary>
+        /// Change KBI accroding to mouse hovering. 
+        /// </summary>
+        /// <param name="Target">Which option to mark</param>
         private void ReverseKBS(int Target)
         {
             switch (Target)
@@ -306,6 +314,16 @@ namespace HappyDungeon.UI.Displays
                     break;
             }
         }
+
+        /// <summary>
+        /// Check if KBI has negative risk, if so, make it positive. 
+        /// </summary>
+        private void RestoreKBI()
+        {
+            if (KBI < 4) KBI += 4;
+        }
+
+
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
@@ -316,14 +334,17 @@ namespace HappyDungeon.UI.Displays
             {
                 KBS = true;
                 while (!RefreshKBS()) KBI--;
+                SoundFX.Instance.PlayTitleOnHover();
                 KBSW.Restart();
             }
             else if (KBSW.ElapsedMilliseconds > KBInterval)
             {
                 KBI--;
                 while (!RefreshKBS()) KBI--;
+                SoundFX.Instance.PlayTitleOnHover();
                 KBSW.Restart();
             }
+            RestoreKBI();
         }
 
         public void OptionMoveDown()
@@ -332,14 +353,50 @@ namespace HappyDungeon.UI.Displays
             {
                 KBS = true;
                 while (!RefreshKBS()) KBI++;
+                SoundFX.Instance.PlayTitleOnHover();
                 KBSW.Restart();
             }
             else if (KBSW.ElapsedMilliseconds > KBInterval)
             {
                 KBI++;
                 while (!RefreshKBS()) KBI++;
+                SoundFX.Instance.PlayTitleOnHover();
                 KBSW.Restart();
             }
+        }
+
+        public void OptionConfirm()
+        {
+            if (!KBS) return; // Do nothing if it's currently selected with keyboard 
+
+            Vector2 FakeClick = new Vector2(); 
+
+            switch (Math.Abs(KBI) % OPTION_COUNT)
+            {
+                case 0:
+                    FakeClick = new Vector2(campaignLoc.X + 1, campaignLoc.Y + 1);
+                    onClickPosition = FakeClick;
+                    LeftClickRelease(FakeClick);
+                    break;
+                case 1:
+                    FakeClick = new Vector2(adventureLoc.X + 1, adventureLoc.Y + 1);
+                    onClickPosition = FakeClick;
+                    LeftClickRelease(FakeClick);
+                    break;
+                case 2:
+                    FakeClick = new Vector2(loadSavedLoc.X + 1, loadSavedLoc.Y + 1);
+                    onClickPosition = FakeClick;
+                    LeftClickRelease(FakeClick);
+                    break;
+                case 3:
+                    FakeClick = new Vector2(settingLoc.X + 1, settingLoc.Y + 1);
+                    onClickPosition = FakeClick;
+                    LeftClickRelease(FakeClick);
+                    break;
+                default:
+                    break;
+            }
+
         }
 
         public void LeftClickEvent(Vector2 CursorPos)
@@ -360,7 +417,7 @@ namespace HappyDungeon.UI.Displays
 
         public void LeftClickRelease(Vector2 CursorPos)
         {
-            if (!LMBSessionOn || transitProtection) return;
+            if ((!LMBSessionOn && !KBS) || transitProtection) return; // Don't do anything during transition animation 
 
             if (rectCampaign.Contains(CursorPos) && rectCampaign.Contains(onClickPosition) && campaignAvailable)
             {
