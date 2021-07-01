@@ -18,23 +18,15 @@ namespace HappyDungeon
         }
         public void execute()
         {
-            switch (game.gameState)
+
+            if (game.gameState == Globals.GameStates.Running)
             {
-                case Globals.GameStates.Running:
-                    new Commands.MoveCommand().Move(game, Globals.Direction.Up);
-                    break;
-                case Globals.GameStates.Setting:
-                    break;
-                case Globals.GameStates.TitleScreen:
-                    break;
-                case Globals.GameStates.Bag:
-                    break;
-                case Globals.GameStates.GameOver:
-                    break;
-                case Globals.GameStates.Conversation:
-                    break;
-                default:
-                    break; 
+                new Commands.MoveCommand().Move(game, Globals.Direction.Up);
+
+            }
+            else if (Globals.Displays.Contains(game.gameState))
+            {
+                game.generalDisplay.OptionMoveUp();
             }
 
         }

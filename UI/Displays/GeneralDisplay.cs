@@ -53,6 +53,7 @@ namespace HappyDungeon
                 case Globals.GameStates.Bag:
                     break;
                 case Globals.GameStates.TitleScreen:
+                    titleDisplay.OptionMoveUp();
                     break;
                 case Globals.GameStates.GameOver:
                     break;
@@ -70,6 +71,7 @@ namespace HappyDungeon
                 case Globals.GameStates.Bag:
                     break;
                 case Globals.GameStates.TitleScreen:
+                    titleDisplay.OptionMoveDown();
                     break;
                 case Globals.GameStates.GameOver:
                     break;

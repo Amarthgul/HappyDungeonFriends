@@ -11,7 +11,7 @@ namespace HappyDungeon.UI.Displays
 {
     class TitleScreenDisplay
     {
-
+        private const int OPTION_COUNT = 4; 
         private const float BG_BASE_LAYER = Globals.UI_UNDER;
         private const float SKY_LAYER = BG_BASE_LAYER + 0.001f; 
         private const float CLOUD_BG = BG_BASE_LAYER + 0.002f;
@@ -86,6 +86,13 @@ namespace HappyDungeon.UI.Displays
 
         private bool LMBSessionOn = false;
         private Vector2 onClickPosition = new Vector2();
+
+        // --------------------------------------------------------------------------------
+        // ------------------------ Switch for keyboard control ---------------------------
+        private bool KBS = false; // Keyboard session flag 
+        private int KBI = 0;      // Option index 
+        private Stopwatch KBSW = new Stopwatch();
+        private int KBInterval = 100; 
 
         private bool transitProtection = false;
         private Stopwatch transitProtSW = new Stopwatch();
@@ -245,12 +252,104 @@ namespace HappyDungeon.UI.Displays
         {
             background.Draw(spriteBatch, drawPosition, defaultTint);
         }
+
+        private bool RefreshKBS()
+        {
+            bool Result = true;
+
+            switch (Math.Abs(KBI % OPTION_COUNT))
+            {
+                case 0:
+                    onHoverCampaign = true;
+                    ResetOnHover(1);
+                    if (!campaignAvailable)
+                        Result = false;
+                    break;
+                case 1:
+                    onHoverAdventure = true;
+                    ResetOnHover(2);
+                    break;
+                case 2:
+                    onHoverLoadSaved = true;
+                    ResetOnHover(3);
+                    break;
+                case 3:
+                    onHoeverSetting = true;
+                    ResetOnHover(4);
+                    break;
+                default:
+                    break;
+            }
+
+            return Result; 
+        }
+
+        private void ReverseKBS(int Target)
+        {
+            switch (Target)
+            {
+
+                case 1:
+                    if(campaignAvailable)
+                        KBI = 0;
+                    break;
+                case 2:
+                    KBI = 1;
+                    break;
+                case 3:
+                    KBI = 2;
+                    break;
+                case 4:
+                    KBI = 3;
+                    break;
+                default:
+                    break;
+            }
+        }
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
 
+        public void OptionMoveUp()
+        {
+            if (!KBS)
+            {
+                KBS = true;
+                while (!RefreshKBS()) KBI--;
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBI--;
+                while (!RefreshKBS()) KBI--;
+                KBSW.Restart();
+            }
+        }
+
+        public void OptionMoveDown()
+        {
+            if (!KBS)
+            {
+                KBS = true;
+                while (!RefreshKBS()) KBI++;
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBI++;
+                while (!RefreshKBS()) KBI++;
+                KBSW.Restart();
+            }
+        }
+
         public void LeftClickEvent(Vector2 CursorPos)
         {
+            if (KBS)
+            {
+                // left click will cancel keyboard seesion 
+                KBS = false;
+            }
+
             if (!LMBSessionOn) // So that it only records this at the start of a session 
             {
                 onClickPosition = CursorPos;
@@ -301,41 +400,56 @@ namespace HappyDungeon.UI.Displays
 
         public void UpdateOnhover(Vector2 CursorPos)
         {
+            bool HasOnHover = false; 
+
             if (rectCampaign.Contains(CursorPos) && campaignAvailable)
             {
                 if (!onHoverCampaign)
                     SoundFX.Instance.PlayTitleOnHover();
 
+                HasOnHover = true;
                 onHoverCampaign = true;
                 ResetOnHover(1);
+                ReverseKBS(1);
             }
             else if (rectAdventure.Contains(CursorPos))
             {
                 if (!onHoverAdventure)
                     SoundFX.Instance.PlayTitleOnHover();
 
+                HasOnHover = true;
                 onHoverAdventure = true;
                 ResetOnHover(2);
+                ReverseKBS(2);
             }
             else if (rectLoadSaved.Contains(CursorPos))
             {
                 if (!onHoverLoadSaved)
                     SoundFX.Instance.PlayTitleOnHover();
 
+                HasOnHover = true;
                 onHoverLoadSaved = true;
                 ResetOnHover(3);
+                ReverseKBS(3);
             }
             else if (rectSetting.Contains(CursorPos))
             {
                 if (!onHoeverSetting)
                     SoundFX.Instance.PlayTitleOnHover();
 
+                HasOnHover = true;
                 onHoeverSetting = true;
                 ResetOnHover(4);
+                ReverseKBS(4);
             }
-            else
+
+            if (!HasOnHover && !KBS)
             {
                 ResetOnHover(0);
+            }
+            else if(HasOnHover)
+            {
+                KBS = false;
             }
         }
 

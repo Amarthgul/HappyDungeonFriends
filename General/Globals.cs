@@ -168,11 +168,18 @@ namespace HappyDungeon
         // So English is the only one currently supports 
         public enum Language { English, Spanish, Chinese, Japanese, French };
 
-        // Four direction iterator 
+        // --------------------------------------------------------------------------------
+        // -------------------------------- Iterators -------------------------------------
         public static List<Direction> FourDirIter = new List<Direction>() 
             { Direction.Left, Direction.Right, Direction.Up, Direction.Down};
 
         public static List<GameDifficulty> DifficultyIter = new List<GameDifficulty>() 
             { GameDifficulty.Normal, GameDifficulty.Idiot };
+
+        public static List<GameStates> Displays = new List<GameStates> { 
+            GameStates.Bag, GameStates.GameOver, 
+            GameStates.Pause, GameStates.Setting,
+            GameStates.TitleScreen
+        };
     }
 }
