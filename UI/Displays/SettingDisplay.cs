@@ -75,13 +75,19 @@ namespace HappyDungeon.UI.Displays
         private int sliderPosRecord;
         private int triggerDistance = (int)(1.0 * Globals.SCALAR);
 
+        // --------------------------------------------------------------------------------
+        // ------------------------ Switch for keyboard control ---------------------------
+        private bool KBS = false; // Keyboard session flag 
+        private int KBI = 0;      // Option index 
+        private Stopwatch KBSW = new Stopwatch();
+        private int KBInterval = 100;
+
+
         // Text generator 
         private LargeBR textGen = new LargeBR();
         private LargeWR textOnHoverGen = new LargeWR();
 
         private Color defaultTint = Color.White;
-
-        
 
         public SettingDisplay(Game1 G)
         {
@@ -350,6 +356,67 @@ namespace HappyDungeon.UI.Displays
             background.Draw(spriteBatch, drawPosition, defaultTint);
             
         }
+
+        private bool RefreshKBS()
+        {
+            bool Result = true;
+
+            switch (Math.Abs(KBI) % OPTION_COUNT)
+            {
+                case 0:
+                    
+                    break;
+                case 1:
+                    
+                    break;
+                case 2:
+                    
+                    break;
+                case 3:
+                    
+                    break;
+                default:
+                    break;
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Change KBI accroding to mouse hovering. 
+        /// </summary>
+        /// <param name="Target">Which option to mark</param>
+        private void ReverseKBS(int Target)
+        {
+            switch (Target)
+            {
+
+                case 1:
+
+                    break;
+                case 2:
+                    KBI = 1;
+                    break;
+                case 3:
+                    KBI = 2;
+                    break;
+                case 4:
+                    KBI = 3;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Check if KBI has negative risk, if so, make it positive. 
+        /// </summary>
+        private void RestoreKBI()
+        {
+            if (KBI < 4) KBI += 4;
+        }
+
+
 
         // ================================================================================
         // ============================== Public methods ==================================

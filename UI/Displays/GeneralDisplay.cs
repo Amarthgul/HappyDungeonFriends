@@ -59,6 +59,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Setting:
                     break;
+                case Globals.GameStates.Pause:
+                    pauseDisplay.OptionMoveUp();
+                    break;
                 default:
                     break;
             }
@@ -76,6 +79,9 @@ namespace HappyDungeon
                 case Globals.GameStates.GameOver:
                     break;
                 case Globals.GameStates.Setting:
+                    break;
+                case Globals.GameStates.Pause:
+                    pauseDisplay.OptionMoveDown();
                     break;
                 default:
                     break;
@@ -96,6 +102,7 @@ namespace HappyDungeon
                 case Globals.GameStates.Setting:
                     break;
                 case Globals.GameStates.Pause:
+                    pauseDisplay.OptionConfirm();
                     break;
                 default:
                     break;

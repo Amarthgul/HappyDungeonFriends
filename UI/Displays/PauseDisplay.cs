@@ -40,6 +40,13 @@ namespace HappyDungeon.UI.Displays
         private Rectangle[] textRectangles;
         private bool[] textOnHoverFlag;
 
+        // --------------------------------------------------------------------------------
+        // ------------------------ Switch for keyboard control ---------------------------
+        private bool KBS = false; // Keyboard session flag 
+        private int KBI = 0;      // Option index 
+        private Stopwatch KBSW = new Stopwatch();
+        private int KBInterval = 100;
+
         private Color defaultTint = Color.White;
 
         public PauseDisplay(Game1 G)
@@ -145,9 +152,86 @@ namespace HappyDungeon.UI.Displays
             background.Draw(spriteBatch, drawPosition, defaultTint);
         }
 
+        private void RefreshKBS()
+        {
+
+            textOnHoverFlag[KBI % TEXT_COUNT] = true;
+
+        }
+
+        /// <summary>
+        /// Change KBI accroding to mouse hovering. 
+        /// </summary>
+        /// <param name="Target">Which option to mark</param>
+        private void ReverseKBS(int Target)
+        {
+            KBI = Target; 
+        }
+
+        /// <summary>
+        /// Check if KBI has negative risk, if so, make it positive. 
+        /// </summary>
+        private void RestoreKBI()
+        {
+            if (KBI < TEXT_COUNT) KBI += TEXT_COUNT;
+        }
+
+
+
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
+
+        public void OptionMoveUp()
+        {
+            if (!KBS)
+            {
+                KBS = true;
+                RefreshKBS();
+                ResetTextOnHoverFlag(KBI % TEXT_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBI--;
+                RefreshKBS();
+                ResetTextOnHoverFlag(KBI % TEXT_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            RestoreKBI();
+        }
+
+        public void OptionMoveDown()
+        {
+            if (!KBS)
+            {
+                KBS = true;
+                RefreshKBS();
+                ResetTextOnHoverFlag(KBI % TEXT_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBI++;
+                RefreshKBS();
+                ResetTextOnHoverFlag(KBI % TEXT_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+        }
+
+        public void OptionConfirm()
+        {
+            if (!KBS) return; // Do nothing if it's currently selected with keyboard 
+
+            int Index = KBI % TEXT_COUNT;
+            Vector2 FakeClick = new Vector2(textLocations[Index].X + 1, textLocations[Index].Y + 1);
+            leftClickSessionStartPos = FakeClick;
+            LeftClickRelease(FakeClick);
+        }
 
         public void LeftClickEvent(Vector2 CursorPos)
         {
@@ -188,12 +272,17 @@ namespace HappyDungeon.UI.Displays
                     textOnHoverFlag[i] = true;
                     hasOnHover = true;
                     ResetTextOnHoverFlag(i);
+                    ReverseKBS(i);
                 }
             }
 
-            if (!hasOnHover)
+            if (!hasOnHover && !KBS)
             {
                 ResetTextOnHoverFlag(-1);
+            }
+            else if (hasOnHover)
+            {
+                KBS = false;
             }
         }
 
