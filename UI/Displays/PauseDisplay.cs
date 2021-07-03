@@ -176,8 +176,6 @@ namespace HappyDungeon.UI.Displays
             if (KBI < TEXT_COUNT) KBI += TEXT_COUNT;
         }
 
-
-
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
@@ -244,11 +242,12 @@ namespace HappyDungeon.UI.Displays
 
         public void LeftClickRelease(Vector2 CursorPos)
         {
-            if (!LMBSession) return;
+            if (!LMBSession && !KBS) return;
 
             for (int i = 0; i < TEXT_COUNT; i++)
             {
-                if (LMBSession && textRectangles[i].Contains(CursorPos) && textRectangles[i].Contains(leftClickSessionStartPos))
+                if ((LMBSession || KBS) && textRectangles[i].Contains(CursorPos) && 
+                    textRectangles[i].Contains(leftClickSessionStartPos))
                 {
                     SoundFX.Instance.PlayTitleClick();
                     ExecuteCommand(i);

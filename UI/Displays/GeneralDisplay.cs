@@ -56,6 +56,7 @@ namespace HappyDungeon
                     titleDisplay.OptionMoveUp();
                     break;
                 case Globals.GameStates.GameOver:
+                    gameOverDisplay.OptionMoveUp();
                     break;
                 case Globals.GameStates.Setting:
                     break;
@@ -77,6 +78,7 @@ namespace HappyDungeon
                     titleDisplay.OptionMoveDown();
                     break;
                 case Globals.GameStates.GameOver:
+                    gameOverDisplay.OptionMoveDown();
                     break;
                 case Globals.GameStates.Setting:
                     break;
@@ -98,6 +100,7 @@ namespace HappyDungeon
                     titleDisplay.OptionConfirm();
                     break;
                 case Globals.GameStates.GameOver:
+                    gameOverDisplay.OptionConfirm();
                     break;
                 case Globals.GameStates.Setting:
                     break;

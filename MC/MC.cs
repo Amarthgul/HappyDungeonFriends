@@ -353,7 +353,7 @@ namespace HappyDungeon
 
             newRoomProtectSW.Restart();
 
-            mcState = Globals.GeneralStates.Hold;
+            // Possible check for state
         }
 
         public void Update()

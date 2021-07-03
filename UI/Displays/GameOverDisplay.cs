@@ -33,6 +33,14 @@ namespace HappyDungeon.UI.Displays
         private Vector2 leftClickSessionStartPos; 
         private bool LMBSession = false;
 
+        // --------------------------------------------------------------------------------
+        // ------------------------ Switch for keyboard control ---------------------------
+        private bool KBS = false; // Keyboard session flag 
+        private int KBI = 0;      // Option index 
+        private Stopwatch KBSW = new Stopwatch();
+        private int KBInterval = 100;
+
+
         // Text generator 
         private LargeBR textGen = new LargeBR();
         private LargeWR textOnHoverGen = new LargeWR();
@@ -99,9 +107,101 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        private void ExecuteCommand(int Index)
+        {
+            switch (Index)
+            {
+                case 0:
+                    game.reset(5);
+                    game.screenFX.SigTransitionStart(Globals.GameStates.TitleScreen);
+                    break;
+                case 1:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void RefreshKBS()
+        {
+
+            optionIsOnHover[KBI % OPTION_COUNT] = true;
+
+        }
+
+        /// <summary>
+        /// Change KBI accroding to mouse hovering. 
+        /// </summary>
+        /// <param name="Target">Which option to mark</param>
+        private void ReverseKBS(int Target)
+        {
+            KBI = Target;
+        }
+
+        /// <summary>
+        /// Check if KBI has negative risk, if so, make it positive. 
+        /// </summary>
+        private void RestoreKBI()
+        {
+            if (KBI < OPTION_COUNT) KBI += OPTION_COUNT;
+        }
+
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
+
+
+        public void OptionMoveUp()
+        {
+            RestoreKBI();
+            if (!KBS)
+            {
+                KBS = true;
+                RefreshKBS();
+                ResetOptionOnHover(KBI % OPTION_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBI--;
+                RefreshKBS();
+                ResetOptionOnHover(KBI % OPTION_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+        }
+
+        public void OptionMoveDown()
+        {
+            if (!KBS)
+            {
+                KBS = true;
+                RefreshKBS();
+                ResetOptionOnHover(KBI % OPTION_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBI++;
+                RefreshKBS();
+                ResetOptionOnHover(KBI % OPTION_COUNT);
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+        }
+
+        public void OptionConfirm()
+        {
+            if (!KBS) return; // Do nothing if it's currently selected with keyboard 
+
+            int Index = KBI % OPTION_COUNT;
+            Vector2 FakeClick = new Vector2(optionPos[Index].X + 1, optionPos[Index].Y + 1);
+            leftClickSessionStartPos = FakeClick;
+            LeftClickRelease(FakeClick);
+        }
+
 
         public void LeftClickEvent(Vector2 CursorPos)
         {
@@ -114,14 +214,14 @@ namespace HappyDungeon.UI.Displays
 
         public void LeftClickRelease(Vector2 CursorPos)
         {
-            if (LMBSession && optionRanges[0].Contains(CursorPos) && optionRanges[0].Contains(CursorPos))
-            {
-                game.reset(5);
-                game.screenFX.SigTransitionStart(Globals.GameStates.TitleScreen);
-            }
-            else if (LMBSession && optionRanges[0].Contains(CursorPos) && optionRanges[0].Contains(CursorPos))
-            {
+            if (!LMBSession && !KBS) return;
 
+            for (int i = 0; i < OPTION_COUNT; i++)
+            {
+                if ((LMBSession || KBS) && optionRanges[i].Contains(CursorPos) && optionRanges[i].Contains(CursorPos))
+                {
+                    ExecuteCommand(i);
+                }
             }
         }
 
@@ -138,13 +238,17 @@ namespace HappyDungeon.UI.Displays
 
                     optionIsOnHover[i] = true;
                     ResetOptionOnHover(i);
+                    ReverseKBS(i);
 
                     HasOnHover = true;
                 }
             }
 
-            if (!HasOnHover)
+            if (!HasOnHover && !KBS)
+            {
                 ResetOptionOnHover(-1);
+            }
+                
 
         }
 
