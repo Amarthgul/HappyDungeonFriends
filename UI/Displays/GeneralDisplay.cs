@@ -45,6 +45,32 @@ namespace HappyDungeon
             gameOverDisplay = new UI.Displays.GameOverDisplay(game);
         }
 
+        public void OptionMoveLeft()
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    break;
+                case Globals.GameStates.Setting:
+                    settingDisplay.OptionMoveLeft();
+                    break;
+                default:
+                    break;
+            }
+        }
+        public void OptionMoveRight()
+        {
+            switch (game.gameState)
+            {
+                case Globals.GameStates.Bag:
+                    break;
+                case Globals.GameStates.Setting:
+                    settingDisplay.OptionMoveRight();
+                    break;
+                default:
+                    break;
+            }
+        }
 
         public void OptionMoveUp()
         {

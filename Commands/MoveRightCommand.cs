@@ -19,7 +19,10 @@ namespace HappyDungeon
         }
         public void execute()
         {
-            new Commands.MoveCommand().Move(game, Globals.Direction.Right);
+            if (game.gameState == Globals.GameStates.Running)
+                new Commands.MoveCommand().Move(game, Globals.Direction.Right);
+            else if (Globals.Displays.Contains(game.gameState))
+                game.generalDisplay.OptionMoveRight();
 
         }
     }

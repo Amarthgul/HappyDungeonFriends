@@ -78,7 +78,8 @@ namespace HappyDungeon.UI.Displays
         // --------------------------------------------------------------------------------
         // ------------------------ Switch for keyboard control ---------------------------
         private bool KBS = false; // Keyboard session flag 
-        private int KBI = 0;      // Option index 
+        private int KBIH = 0;
+        private int KBIV = 0;      // Option index 
         private Stopwatch KBSW = new Stopwatch();
         private int KBInterval = 100;
 
@@ -361,7 +362,7 @@ namespace HappyDungeon.UI.Displays
         {
             bool Result = true;
 
-            switch (Math.Abs(KBI) % OPTION_COUNT)
+            switch (Math.Abs(KBIV) % OPTION_COUNT)
             {
                 case 0:
                     
@@ -383,7 +384,7 @@ namespace HappyDungeon.UI.Displays
         }
 
         /// <summary>
-        /// Change KBI accroding to mouse hovering. 
+        /// Change KBIV accroding to mouse hovering. 
         /// </summary>
         /// <param name="Target">Which option to mark</param>
         private void ReverseKBS(int Target)
@@ -395,13 +396,13 @@ namespace HappyDungeon.UI.Displays
 
                     break;
                 case 2:
-                    KBI = 1;
+                    KBIV = 1;
                     break;
                 case 3:
-                    KBI = 2;
+                    KBIV = 2;
                     break;
                 case 4:
-                    KBI = 3;
+                    KBIV = 3;
                     break;
                 default:
                     break;
@@ -409,11 +410,11 @@ namespace HappyDungeon.UI.Displays
         }
 
         /// <summary>
-        /// Check if KBI has negative risk, if so, make it positive. 
+        /// Check if KBIV has negative risk, if so, make it positive. 
         /// </summary>
         private void RestoreKBI()
         {
-            if (KBI < 4) KBI += 4;
+            if (KBIV < 4) KBIV += 4;
         }
 
 
@@ -421,6 +422,55 @@ namespace HappyDungeon.UI.Displays
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
+
+
+        public void OptionMoveUp()
+        {
+            if (!KBS)
+            {
+                KBS = true;
+                while (!RefreshKBS()) KBIV--;
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIV--;
+                while (!RefreshKBS()) KBIV--;
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            RestoreKBI();
+        }
+
+        public void OptionMoveDown()
+        {
+            if (!KBS)
+            {
+                KBS = true;
+                while (!RefreshKBS()) KBIV++;
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIV++;
+                while (!RefreshKBS()) KBIV++;
+                SoundFX.Instance.PlayTitleOnHover();
+                KBSW.Restart();
+            }
+        }
+
+        public void OptionMoveLeft()
+        {
+
+        }
+
+        public void OptionMoveRight()
+        {
+
+        }
+
 
         /// <summary>
         /// Mark the start of a left click session
