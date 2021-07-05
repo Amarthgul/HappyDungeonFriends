@@ -62,6 +62,7 @@ namespace HappyDungeon
         public ImageFile settingBackground;
         public ImageFile settingSlider;
         public ImageFile settingSlideBar;
+        public ImageFile[] settingSliderBarOH;
         public ImageFile settingSliderRed;
         public ImageFile settingSlideBarRed;
         public ImageFile settingArrow;
@@ -180,6 +181,11 @@ namespace HappyDungeon
             settingBackground = new ImageFile(content, "Images/UI/SettingBase", 1, 1);
             settingSlider = new ImageFile(content, "Images/UI/slider", 1, 1);
             settingSlideBar = new ImageFile(content, "Images/UI/settingSliders", 1, 1);
+            settingSliderBarOH = new ImageFile[] {
+                new ImageFile(content, "Images/UI/settingSlidersOHT", 1, 1),
+                new ImageFile(content, "Images/UI/settingSlidersOHM", 1, 1),
+                new ImageFile(content, "Images/UI/settingSlidersOHB", 1, 1)
+            };
             settingSliderRed = new ImageFile(content, "Images/UI/sliderRed", 1, 1);
             settingSlideBarRed = new ImageFile(content, "Images/UI/settingSlidersRed", 1, 1);
             settingArrow = new ImageFile(content, "Images/UI/settingArrows", 4, 4);

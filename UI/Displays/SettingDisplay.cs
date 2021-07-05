@@ -37,7 +37,8 @@ namespace HappyDungeon.UI.Displays
         private GeneralSprite titleMountainBG;
         private GeneralSprite backgroundPure;
         private GeneralSprite sliderBar;
-        private GeneralSprite sliderBarRed; 
+        private GeneralSprite[] sliderBarOnHover;
+        private GeneralSprite sliderBarRed;
         private GeneralSprite difficulty;
         private GeneralSprite[] arrows; 
         private GeneralSprite[] texts;        // Too many, so unlike title, it's using an array 
@@ -65,6 +66,7 @@ namespace HappyDungeon.UI.Displays
         private Vector2[] sliderAllowedRange;
         private bool[] textOnHoverFlag;
         private bool[] sliderSelected;
+        private bool[] sliderOnHover;    // The on hover efect for sliders are actually slider bar highlight 
 
         private int difficultyIndex = 0; 
 
@@ -77,12 +79,14 @@ namespace HappyDungeon.UI.Displays
 
         // --------------------------------------------------------------------------------
         // ------------------------ Switch for keyboard control ---------------------------
-        private bool KBS = false; // Keyboard session flag 
-        private int KBIH = 0;
-        private int KBIV = 0;      // Option index 
-        private Stopwatch KBSW = new Stopwatch();
-        private int KBInterval = 100;
-
+        private bool KBS = false;  // Keyboard session flag 
+        private int KBIH = 0;      // Keyboard Index Horizontal 
+        private int KBIV = 0;      // Keyboard Index Vertical 
+        private Stopwatch KBVSW = new Stopwatch();  // Keyboard Vertical Stopwatch
+        private Stopwatch KBHSW = new Stopwatch();  // Keyboard Horizontal Stopwatch
+        private int KBInterval = 100;               // The one to use 
+        private int KBIntervalShort = 50;           // Shorter one for volume control 
+        private int KBIntervalLong = 100;           // Longer one for standard press event 
 
         // Text generator 
         private LargeBR textGen = new LargeBR();
@@ -100,7 +104,8 @@ namespace HappyDungeon.UI.Displays
             SetupPositions();
 
             textOnHoverFlag = new bool[texts.Length];
-            sliderSelected = new bool[3];
+            sliderSelected = new bool[SLIDER_COUNT];
+            sliderOnHover = new bool[SLIDER_COUNT];
             ResetSliderSelection();
             ResetTextOnHoverFlag(-1);
 
@@ -162,6 +167,15 @@ namespace HappyDungeon.UI.Displays
                 new GeneralSprite(TextureFactory.Instance.settingSliderRed.texture, 1, 1,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS)
             };
+            sliderBarOnHover = new GeneralSprite[] {
+                new GeneralSprite(TextureFactory.Instance.settingSliderBarOH[0].texture, 1, 1, 
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_SLOTS),
+                new GeneralSprite(TextureFactory.Instance.settingSliderBarOH[1].texture, 1, 1,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_SLOTS),
+                new GeneralSprite(TextureFactory.Instance.settingSliderBarOH[2].texture, 1, 1,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_SLOTS),
+            };
+
 
             arrows = new GeneralSprite[ARROW_COUNT]
             {
@@ -311,6 +325,15 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        private void ResetSliderOnHover(int Excemption)
+        {
+            for (int i = 0; i < SLIDER_COUNT; i++)
+            {
+                if (i != Excemption)
+                    sliderOnHover[i] = false;
+            }
+        }
+
         /// <summary>
         /// Refresh the displayed difficulty and also set the game difficulty to that. 
         /// </summary>
@@ -358,29 +381,9 @@ namespace HappyDungeon.UI.Displays
             
         }
 
-        private bool RefreshKBS()
+        private void RefreshKBS()
         {
-            bool Result = true;
-
-            switch (Math.Abs(KBIV) % OPTION_COUNT)
-            {
-                case 0:
-                    
-                    break;
-                case 1:
-                    
-                    break;
-                case 2:
-                    
-                    break;
-                case 3:
-                    
-                    break;
-                default:
-                    break;
-            }
-
-            return Result;
+            
         }
 
         /// <summary>
@@ -392,18 +395,6 @@ namespace HappyDungeon.UI.Displays
             switch (Target)
             {
 
-                case 1:
-
-                    break;
-                case 2:
-                    KBIV = 1;
-                    break;
-                case 3:
-                    KBIV = 2;
-                    break;
-                case 4:
-                    KBIV = 3;
-                    break;
                 default:
                     break;
             }
@@ -417,7 +408,13 @@ namespace HappyDungeon.UI.Displays
             if (KBIV < 4) KBIV += 4;
         }
 
-
+        private void StartKBS()
+        {
+            KBS = true;
+            RefreshKBS();
+            SoundFX.Instance.PlayTitleOnHover();
+            KBVSW.Restart();
+        }
 
         // ================================================================================
         // ============================== Public methods ==================================
@@ -428,17 +425,14 @@ namespace HappyDungeon.UI.Displays
         {
             if (!KBS)
             {
-                KBS = true;
-                while (!RefreshKBS()) KBIV--;
-                SoundFX.Instance.PlayTitleOnHover();
-                KBSW.Restart();
+                KBIV--;
+                StartKBS();
             }
-            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            else if (KBVSW.ElapsedMilliseconds > KBInterval)
             {
                 KBIV--;
-                while (!RefreshKBS()) KBIV--;
                 SoundFX.Instance.PlayTitleOnHover();
-                KBSW.Restart();
+                KBVSW.Restart();
             }
             RestoreKBI();
         }
@@ -447,28 +441,45 @@ namespace HappyDungeon.UI.Displays
         {
             if (!KBS)
             {
-                KBS = true;
-                while (!RefreshKBS()) KBIV++;
-                SoundFX.Instance.PlayTitleOnHover();
-                KBSW.Restart();
+                KBIV++;
+                StartKBS();
             }
-            else if (KBSW.ElapsedMilliseconds > KBInterval)
+            else if (KBVSW.ElapsedMilliseconds > KBInterval)
             {
                 KBIV++;
-                while (!RefreshKBS()) KBIV++;
                 SoundFX.Instance.PlayTitleOnHover();
-                KBSW.Restart();
+                KBVSW.Restart();
             }
         }
 
         public void OptionMoveLeft()
         {
-
+            if (!KBS)
+            {
+                KBIH--;
+                StartKBS();
+            }
+            else if (KBVSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIH--;
+                SoundFX.Instance.PlayTitleOnHover();
+                KBVSW.Restart();
+            }
         }
 
         public void OptionMoveRight()
         {
-
+            if (!KBS)
+            {
+                KBIH++;
+                StartKBS();
+            }
+            else if (KBVSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIH++;
+                SoundFX.Instance.PlayTitleOnHover();
+                KBVSW.Restart();
+            }
         }
 
 
@@ -544,6 +555,7 @@ namespace HappyDungeon.UI.Displays
         public void UpdateOnhover(Vector2 CursorPos)
         {
             bool hasOnHover = false;
+            bool hasSliderOnHover = false;
 
             for (int i = 0; i < texts.Length; i++)
             {
@@ -574,22 +586,29 @@ namespace HappyDungeon.UI.Displays
                 }
             }
 
-            if (!hasOnHover)
-            {
-                ResetTextOnHoverFlag(-1);
-                ResetArrowOnHover(-1);
-            }
-
             // ----------------------------------------------------------------------
             // ------------------------- Update volume slider -----------------------
-            for (int i = 0; i < sliderSelected.Length; i++)
+            for (int i = 0; i < SLIDER_COUNT; i++)
             {
+                // -------------------- Hover logistics ----------------------------
+                if (sliderRanges[i].Contains(CursorPos))
+                {
+                    hasSliderOnHover = true;
+                    if (!sliderOnHover[i])
+                    {
+                        sliderOnHover[i] = true;
+                        SoundFX.Instance.PlayTitleOnHover();
+                        ResetSliderOnHover(i);
+                    }
+                }
+
+                // -------------------- Click logistics ----------------------------
                 if (sliderSelected[i] )
                 {
                     sliderPositions[i].X = lastRecordSliderPos.X - (leftClickSessionStartPos.X - CursorPos.X);
 
-                    if (Math.Abs(sliderPositions[i].X - sliderPosRecord) > triggerDistance)
-                    {
+                    // Let the slider follow the mouse movement 
+                    if (Math.Abs(sliderPositions[i].X - sliderPosRecord) > triggerDistance) {
                         SoundFX.Instance.PlaySettingSliderClick();
                         sliderPosRecord = (int)sliderPositions[i].X;
                     }
@@ -603,7 +622,20 @@ namespace HappyDungeon.UI.Displays
                     game.volumes[i] = (sliderPositions[i].X - sliderAllowedRange[i].X) / (sliderLength[i] * Globals.SCALAR);
                     SoundFX.Instance.SetVolume(game.volumes);
                     RefreshVolumePercentageText();
+                    UpdateSliderRectangles();
                 }
+            }
+
+
+            // ------------------- Reset if no hover is detected -------------------
+            if (!hasOnHover)
+            {
+                ResetTextOnHoverFlag(-1);
+                ResetArrowOnHover(-1);
+            }
+            if (!hasSliderOnHover)
+            {
+                ResetSliderOnHover(-1);
             }
         }
 
@@ -619,8 +651,7 @@ namespace HappyDungeon.UI.Displays
             else
                 DrawReal();
 
-            for (int i = 0; i < OPTION_COUNT; i++)
-            {
+            for (int i = 0; i < OPTION_COUNT; i++) {
                 // volumes and difficulty can not be clicked, thus having no on hover effects 
                 if (i > NON_ONHOVER_BOUND && textOnHoverFlag[i]) 
                     textsOnHover[i].Draw(spriteBatch, textPositions[i], defaultTint);
@@ -628,13 +659,28 @@ namespace HappyDungeon.UI.Displays
                     texts[i].Draw(spriteBatch, textPositions[i], defaultTint);
             }
 
-            if (game.virgin)
-                sliderBar.Draw(spriteBatch, drawPosition, defaultTint);
-            else
-                sliderBarRed.Draw(spriteBatch, drawPosition, defaultTint);
 
-            for (int i = 0; i < SLIDER_COUNT; i++)
-            {
+            // ----------------------------- Slider Bars --------------------------------
+            if (game.virgin) {
+                sliderBar.Draw(spriteBatch, drawPosition, defaultTint);
+            }
+            else {
+                sliderBarRed.Draw(spriteBatch, drawPosition, defaultTint);
+            }
+
+            for (int i = 0; i < SLIDER_COUNT; i++) {
+                if (sliderOnHover[i]) {
+                    sliderBarOnHover[i].Draw(spriteBatch, drawPosition, defaultTint);
+                }
+            }
+            
+            
+                
+            
+            
+            
+
+            for (int i = 0; i < SLIDER_COUNT; i++)  {
                 if (game.virgin)
                     sliders[i].Draw(spriteBatch, sliderPositions[i] + sliderOffset, defaultTint);
                 else
@@ -642,10 +688,10 @@ namespace HappyDungeon.UI.Displays
                 volTexts[i].Draw(spriteBatch, percentagePos[i], defaultTint);
             }
 
-            for (int i = 0; i < ARROW_COUNT; i++)
-            {
+            for (int i = 0; i < ARROW_COUNT; i++) {
                 arrows[i].Draw(spriteBatch, arrowPositions[i], defaultTint);
             }
+
             difficulty.Draw(spriteBatch, difficultyPos, defaultTint);
 
         }
