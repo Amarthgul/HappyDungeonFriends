@@ -11,6 +11,8 @@ namespace HappyDungeon.UI.Displays
 {
     class SettingDisplay
     {
+        private const int OPTION_COUNT_H = 2;
+        private const int OPTION_COUNT_V = 6;
         private const int SLIDER_TEXT_POS = 102;
         private const int SLIDER_POS_X_MAIN = 120;
         private const int SLIDER_POS_X_AUG = 130;
@@ -482,6 +484,10 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        public void OptionConfirm()
+        {
+
+        }
 
         /// <summary>
         /// Mark the start of a left click session
