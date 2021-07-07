@@ -216,6 +216,7 @@
     <None Include="ItemsAndSuch\README.md" />
     <None Include="MC\README.md" />
     <None Include="README.md" />
+    <None Include="UI\Displays\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Images\Enemies\bead.png" />
@@ -234,6 +235,7 @@
     <Content Include="Content\Images\UI\HeadsupUIFront.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\BGM\" />
     <Folder Include="Content\SFX\Enemies\" />
     <Folder Include="Content\SFX\Env\" />
     <Folder Include="Content\SFX\Items\" />

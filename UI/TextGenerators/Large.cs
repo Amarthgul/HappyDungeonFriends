@@ -14,10 +14,10 @@ namespace HappyDungeon.UI
     /// </summary>
     public class Large : IText
     {
-        protected const int HEIGHT = 11; // To accommodate, sprites needs extra spaces  
-        protected const int ROW_LOC_LOW = 0;
+        protected const int HEIGHT = 11;       // To accommodate this height, sprite images needs extra spaces  
+        protected const int ROW_LOC_LOW = 0;   
         protected const int ROW_LOC_CAP = 18;
-        protected const int ROW_LOC_DIG = 33;
+        protected const int ROW_LOC_DIG = 35;  // Offset a bit to align
         protected const int ROW_LOC_PUN = 54;
 
         public Texture2D sourceTexts;

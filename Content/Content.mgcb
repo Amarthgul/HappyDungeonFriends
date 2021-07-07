@@ -13,6 +13,54 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin BGM/lv1BGM1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM1.wav
+
+#begin BGM/lv1BGM2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM2.wav
+
+#begin BGM/lv1BGM3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM3.wav
+
+#begin BGM/lv1BGM4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM4.wav
+
+#begin BGM/lv1BGM5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM5.wav
+
+#begin BGM/lv1BGM6.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM6.wav
+
+#begin BGM/lv1BGM7.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM7.wav
+
+#begin BGM/lv1BGM8.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:BGM/lv1BGM8.wav
+
 #begin Images/Enemies/bead.png
 /importer:TextureImporter
 /processor:TextureProcessor

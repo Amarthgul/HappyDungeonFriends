@@ -241,6 +241,7 @@ namespace HappyDungeon
             // The cursor location is actually always on update
             cursor.Update();
             screenFX.Update();
+            SoundFX.Instance.UpdateBGM();
 
             switch (gameState)
             {

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
+using System.Diagnostics;
 
 namespace HappyDungeon
 {
@@ -15,6 +16,9 @@ namespace HappyDungeon
     /// </summary>
     class SoundFX
     {
+        private Stopwatch BGMSW = new Stopwatch();
+        private int BGMInterval = 9500;
+        private bool fisrtStartUp = true;
 
         public float volume { set; get; }
         public float pitchDefault { set; get; }
@@ -62,7 +66,12 @@ namespace HappyDungeon
         private SoundEffect[] settingSliderClick; 
 
         private SoundEffect[] titleOnHover;
-        private SoundEffect[] titleClick; 
+        private SoundEffect[] titleClick;
+
+        // ================================================================================
+        // ====================================== BGM =====================================
+        // ================================================================================
+        private SoundEffect[] LV1BGM;
 
         private static SoundFX instance = new SoundFX();
         public static SoundFX Instance {
@@ -74,6 +83,8 @@ namespace HappyDungeon
             volume = 1.0f;
             pitchDefault = 0f;
             panDefault = 0f;
+
+            BGMSW.Restart();
         }
 
         public void LoadAll(ContentManager Content)
@@ -170,7 +181,7 @@ namespace HappyDungeon
             };
 
             // --------------------------------------------------------------------------------
-            // ----------------------------------- UI  ----------------------------------------
+            // ----------------------------------- UI -----------------------------------------
             bagLMBSlect = new SoundEffect[] {    
                 Content.Load<SoundEffect>("SFX/UI/bagLMBClick1") };
             bagLMBRelease = new SoundEffect[] {    
@@ -185,6 +196,19 @@ namespace HappyDungeon
                 Content.Load<SoundEffect>("SFX/UI/titleOnHover1")  };
             titleClick = new SoundEffect[] {
                 Content.Load<SoundEffect>("SFX/UI/titleClick1") };
+
+            // --------------------------------------------------------------------------------
+            // ----------------------------------- BGM ----------------------------------------
+            LV1BGM = new SoundEffect[] {
+                Content.Load<SoundEffect>("BGM/lv1BGM1"),
+                Content.Load<SoundEffect>("BGM/lv1BGM2"),
+                Content.Load<SoundEffect>("BGM/lv1BGM3"),
+                Content.Load<SoundEffect>("BGM/lv1BGM4"),
+                Content.Load<SoundEffect>("BGM/lv1BGM5"),
+                Content.Load<SoundEffect>("BGM/lv1BGM6"),
+                Content.Load<SoundEffect>("BGM/lv1BGM7"),
+                Content.Load<SoundEffect>("BGM/lv1BGM8"),
+            };
         }
 
         /// <summary>
@@ -227,6 +251,21 @@ namespace HappyDungeon
         // ================================================================================
         // ================================ Public methods ================================
         // ================================================================================
+
+        public void UpdateBGM()
+        {
+            if (fisrtStartUp)
+            {
+                fisrtStartUp = false; 
+                PlayInVolume(RandPick(LV1BGM), .25f);
+                BGMSW.Restart();
+            }
+            else if(BGMSW.ElapsedMilliseconds > BGMInterval)
+            {
+                PlayInVolume(RandPick(LV1BGM), .25f);
+                BGMSW.Restart();
+            }
+        }
 
         public void SetVolume(float[] Vols)
         {

@@ -86,9 +86,11 @@ namespace HappyDungeon.UI.Displays
         private int KBIV = 0;      // Keyboard Index Vertical 
         private Stopwatch KBVSW = new Stopwatch();  // Keyboard Vertical Stopwatch
         private Stopwatch KBHSW = new Stopwatch();  // Keyboard Horizontal Stopwatch
-        private int KBInterval = 100;               // The one to use 
+        private Stopwatch optionProtectionSW = new Stopwatch(); // Avoid repetitive triggering of Enter key
+        private int KBInterval = 200;               // The one to use 
         private int KBIntervalShort = 50;           // Shorter one for volume control 
-        private int KBIntervalLong = 100;           // Longer one for standard press event 
+        private int KBIntervalLong = 200;           // Longer one for standard press event 
+        private int optionConfirmProtection = 500;  // Cooldown for next valid Enter key confirm
 
         // Text generator 
         private LargeBR textGen = new LargeBR();
@@ -111,6 +113,9 @@ namespace HappyDungeon.UI.Displays
             ResetSliderSelection();
             ResetTextOnHoverFlag(-1);
 
+            KBHSW.Restart();
+            KBVSW.Restart();
+            optionProtectionSW.Restart();
         }
 
         /// <summary>
@@ -370,6 +375,24 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        /// <summary>
+        /// Mark a difficulty selection arrow as on-hovered.
+        /// </summary>
+        /// <param name="Index">Which one to mark</param>
+        private void MarkArrowOnHover(int Index)
+        {
+            if ((arrows[Index].rowLimitation != 1 && game.virgin) ||
+                        (arrows[Index].rowLimitation != 3 && !game.virgin))
+                SoundFX.Instance.PlayTitleOnHover();
+
+            if (game.virgin)
+                arrows[Index].rowLimitation = 1;
+            else
+                arrows[Index].rowLimitation = 3;
+            
+            ResetArrowOnHover(Index);
+        }
+
         private void DrawPeace()
         {
             backgroundPure.Draw(spriteBatch, drawPosition, defaultTint);
@@ -383,72 +406,171 @@ namespace HappyDungeon.UI.Displays
             
         }
 
+        /// <summary>
+        /// Mark highlight depending on which option is being selected by keyboard. 
+        /// </summary>
         private void RefreshKBS()
         {
-            
-        }
+            int KBIVD = KBIV % OPTION_COUNT_V;
+            int KBIHD = KBIH % OPTION_COUNT_H;
 
-        /// <summary>
-        /// Change KBIV accroding to mouse hovering. 
-        /// </summary>
-        /// <param name="Target">Which option to mark</param>
-        private void ReverseKBS(int Target)
-        {
-            switch (Target)
+            if (KBIVD <= 2) // Volume sliders 
             {
+                KBInterval = KBIntervalShort; 
 
-                default:
-                    break;
+                sliderOnHover[KBIVD] = true;
+                ResetSliderOnHover(KBIVD);
+                ResetTextOnHoverFlag(-1);
+                ResetArrowOnHover(-1);
+            }
+            else
+            {
+                KBInterval = KBIntervalLong;
+
+                ResetSliderOnHover(-1);
+                switch (KBIVD)
+                {
+                    case 3:
+                        MarkArrowOnHover(KBIHD);
+                        break;
+                    case 4:
+                        textOnHoverFlag[KBIVD + KBIHD] = true;
+                        ResetTextOnHoverFlag(KBIVD + KBIHD);
+                        ResetArrowOnHover(-1);
+                        break;
+                    default:
+                        textOnHoverFlag[6 + KBIHD] = true;
+                        ResetTextOnHoverFlag(6 + KBIHD);
+                        ResetArrowOnHover(-1);
+                        break;
+                }
             }
         }
 
         /// <summary>
-        /// Check if KBIV has negative risk, if so, make it positive. 
+        /// Change KBIV and KBIH accroding to mouse hovering. 
+        /// The indeices are explained in readme with settingKeyboardIndex.png. 
+        /// </summary>
+        /// <param name="Target">Which option to mark</param>
+        private void ReverseKBS(int Target)
+        {
+            if (Target <= 2)
+                KBIV = Target;
+            else
+            {
+                switch (Target)
+                {
+                    case 3:
+                        KBIV = 3;
+                        KBIH = 0;
+                        break;
+                    case 4:
+                        KBIV = 3;
+                        KBIH = 1;
+                        break;
+                    case 5:
+                        KBIV = 4;
+                        KBIH = 0;
+                        break;
+                    case 6:
+                        KBIV = 4;
+                        KBIH = 1;
+                        break;
+                    case 7:
+                        KBIV = 5;
+                        KBIH = 0;
+                        break;
+                    case 8:
+                        KBIV = 5;
+                        KBIH = 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+        }
+
+        /// <summary>
+        /// Check if KBI has negative risk, if so, make it positive. 
         /// </summary>
         private void RestoreKBI()
         {
-            if (KBIV < 4) KBIV += 4;
+            if (KBIV < OPTION_COUNT_V) KBIV += OPTION_COUNT_V;
+            if (KBIH < OPTION_COUNT_H) KBIH += OPTION_COUNT_H;
         }
 
-        private void StartKBS()
+        /// <summary>
+        /// Start a KBS session
+        /// </summary>
+        /// <param name="Vertical">if it's up and down key being pressed</param>
+        private void StartKBS(bool Vertical)
         {
             KBS = true;
             RefreshKBS();
             SoundFX.Instance.PlayTitleOnHover();
-            KBVSW.Restart();
+            if (Vertical)
+                KBVSW.Restart();
+            else
+                KBHSW.Restart();
+        }
+
+        /// <summary>
+        /// Check if currently is using 
+        /// </summary>
+        private void VolumeControlKBS(bool Add)
+        {
+            if (KBIV % OPTION_COUNT_V > 2) return;
+
+            for (int i = 0; i < SLIDER_COUNT; i++)
+            {
+                if (i == KBIV % OPTION_COUNT_V)
+                {
+                    if (Add) game.volumes[i] += 0.01f;
+                    else game.volumes[i] -= 0.01f;
+
+                    sliderPositions[i].X = sliderAllowedRange[i].X + 
+                        game.volumes[i] * (i == 0 ? SLIDER_LEN_0 : SLIDER_LEN_1) * Globals.SCALAR;
+
+                    SoundFX.Instance.PlaySettingSliderClick();
+                    SoundFX.Instance.SetVolume(game.volumes);
+
+                    RefreshVolumePercentageText();
+                    UpdateSliderRectangles();
+                }
+            }
         }
 
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
 
-
         public void OptionMoveUp()
         {
+            RestoreKBI();
             if (!KBS)
             {
-                KBIV--;
-                StartKBS();
+                StartKBS(true);
             }
             else if (KBVSW.ElapsedMilliseconds > KBInterval)
             {
                 KBIV--;
+                RefreshKBS();
                 SoundFX.Instance.PlayTitleOnHover();
                 KBVSW.Restart();
             }
-            RestoreKBI();
         }
 
         public void OptionMoveDown()
         {
             if (!KBS)
             {
-                KBIV++;
-                StartKBS();
+                StartKBS(true);
             }
             else if (KBVSW.ElapsedMilliseconds > KBInterval)
             {
                 KBIV++;
+                RefreshKBS();
                 SoundFX.Instance.PlayTitleOnHover();
                 KBVSW.Restart();
             }
@@ -456,16 +578,18 @@ namespace HappyDungeon.UI.Displays
 
         public void OptionMoveLeft()
         {
+            RestoreKBI();
             if (!KBS)
             {
-                KBIH--;
-                StartKBS();
+                StartKBS(false);
             }
-            else if (KBVSW.ElapsedMilliseconds > KBInterval)
+            else if (KBHSW.ElapsedMilliseconds > KBInterval)
             {
                 KBIH--;
+                RefreshKBS();
+                VolumeControlKBS(false);
                 SoundFX.Instance.PlayTitleOnHover();
-                KBVSW.Restart();
+                KBHSW.Restart();
             }
         }
 
@@ -473,20 +597,52 @@ namespace HappyDungeon.UI.Displays
         {
             if (!KBS)
             {
-                KBIH++;
-                StartKBS();
+                StartKBS(false);
             }
-            else if (KBVSW.ElapsedMilliseconds > KBInterval)
+            else if (KBHSW.ElapsedMilliseconds > KBInterval)
             {
                 KBIH++;
+                RefreshKBS();
+                VolumeControlKBS(true);
                 SoundFX.Instance.PlayTitleOnHover();
-                KBVSW.Restart();
+                KBHSW.Restart();
             }
         }
 
         public void OptionConfirm()
         {
+            if (optionProtectionSW.ElapsedMilliseconds < optionConfirmProtection) return; 
 
+            int KBIVD = KBIV % OPTION_COUNT_V;
+            int KBIHD = KBIH % OPTION_COUNT_H;
+            Vector2 FakeClick = new Vector2();
+
+            if (KBIVD <= 2) // Volume sliders 
+            {
+                // Do nothing, enter does no shit for sliders 
+            }
+            else
+            {
+                switch (KBIVD)
+                {
+                    case 3: // Difficulty 
+                        FakeClick.X = arrowPositions[KBIHD].X + 1;
+                        FakeClick.Y = arrowPositions[KBIHD].Y + 1;
+                        break;
+                    case 4: // Save and Load 
+                        FakeClick.X = textPositions[KBIHD + KBIHD].X + 1;
+                        FakeClick.Y = textPositions[KBIHD + KBIHD].Y + 1;
+                        break;
+                    default: // Back and quit 
+                        FakeClick.X = textPositions[6 + KBIHD].X + 1;
+                        FakeClick.Y = textPositions[6 + KBIHD].Y + 1;
+                        break;
+                }
+                leftClickSessionStartPos = FakeClick;
+                LeftClickRelease(FakeClick);
+            }
+
+            optionProtectionSW.Restart();
         }
 
         /// <summary>
@@ -520,7 +676,7 @@ namespace HappyDungeon.UI.Displays
         /// <param name="CursorPos">Cursor position</param>
         public void LeftClickRelease(Vector2 CursorPos)
         {
-            if (!LMBSession) return; 
+            if (!LMBSession && !KBS) return; 
 
             if (sliderSelected.Any(x => x == true))
             {
@@ -531,7 +687,7 @@ namespace HappyDungeon.UI.Displays
             // Adjusting difficulty 
             for (int i = 0; i < ARROW_COUNT; i++)
             {
-                if (LMBSession && arrowRanges[i].Contains(CursorPos) && arrowRanges[i].Contains(leftClickSessionStartPos))
+                if ((LMBSession || KBS) && arrowRanges[i].Contains(CursorPos) && arrowRanges[i].Contains(leftClickSessionStartPos))
                 {
                     SoundFX.Instance.PlayTitleClick();
 
@@ -554,7 +710,7 @@ namespace HappyDungeon.UI.Displays
         }
 
         /// <summary>
-        /// Actually doe more than just on hover, for clicking on the volume slider it also updates the 
+        /// Actually do more than just on hover, for clicking on the volume slider it also updates the 
         /// slider to reflect the current sound volume levvel.
         /// </summary>
         /// <param name="CursorPos">Cursor position</param>
@@ -563,10 +719,14 @@ namespace HappyDungeon.UI.Displays
             bool hasOnHover = false;
             bool hasSliderOnHover = false;
 
-            for (int i = 0; i < texts.Length; i++)
+            // -------------------------- Text options --------------------------------
+            for (int i = NON_ONHOVER_BOUND - 1; i < texts.Length; i++)
             {
                 if (textRanges[i].Contains(CursorPos))
                 {
+                    KBS = false;
+                    ReverseKBS(i);
+
                     if (i > NON_ONHOVER_BOUND && !textOnHoverFlag[i])
                         SoundFX.Instance.PlayTitleOnHover();
 
@@ -575,20 +735,15 @@ namespace HappyDungeon.UI.Displays
                     ResetTextOnHoverFlag(i);
                 }
             }
+            // ------------------------------- Arrow ---------------------------------
             for (int i = 0; i < ARROW_COUNT; i++)
             {
                 if (arrowRanges[i].Contains(CursorPos))
                 {
-                    if ((arrows[i].rowLimitation != 1 && game.virgin) ||
-                        (arrows[i].rowLimitation != 3 && !game.virgin))
-                        SoundFX.Instance.PlayTitleOnHover();
-
-                    if (game.virgin)
-                        arrows[i].rowLimitation = 1;
-                    else
-                        arrows[i].rowLimitation = 3;
+                    KBS = false;
                     hasOnHover = true;
-                    ResetArrowOnHover(i);
+                    MarkArrowOnHover(i);
+                    ReverseKBS(3 + i);
                 }
             }
 
@@ -599,6 +754,9 @@ namespace HappyDungeon.UI.Displays
                 // -------------------- Hover logistics ----------------------------
                 if (sliderRanges[i].Contains(CursorPos))
                 {
+                    KBS = false;
+                    ReverseKBS(i);
+
                     hasSliderOnHover = true;
                     if (!sliderOnHover[i])
                     {
@@ -611,6 +769,9 @@ namespace HappyDungeon.UI.Displays
                 // -------------------- Click logistics ----------------------------
                 if (sliderSelected[i] )
                 {
+                    sliderOnHover[i] = true; // Fake highlight 
+                    hasSliderOnHover = true;
+
                     sliderPositions[i].X = lastRecordSliderPos.X - (leftClickSessionStartPos.X - CursorPos.X);
 
                     // Let the slider follow the mouse movement 
@@ -634,12 +795,12 @@ namespace HappyDungeon.UI.Displays
 
 
             // ------------------- Reset if no hover is detected -------------------
-            if (!hasOnHover)
+            if (!hasOnHover && !KBS)
             {
                 ResetTextOnHoverFlag(-1);
                 ResetArrowOnHover(-1);
             }
-            if (!hasSliderOnHover)
+            if (!hasSliderOnHover && !KBS)
             {
                 ResetSliderOnHover(-1);
             }
