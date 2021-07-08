@@ -63,9 +63,10 @@ the character when being bumped onto.
 
 # Agents 
 
-## Test agent 
+## STD agent 
 
-Not really used. Mostly for dev purpose. 
+Base case for agent. 
+
 
 ## The stupid 
 

@@ -30,14 +30,18 @@ namespace HappyDungeon.Enemies
         protected bool photophobia = true;       // If it runs away when the player has illuminati on 
         protected bool photonFrenzy = true;      // If it enters frenzy as it eascapes from light 
         protected bool smartPathFinding = false;  // If it knows to try to go around the wall 
+        protected bool smartRedirection = true;  // If it keeps a memeory of recent directions 
         protected bool smartAttack = true;       // Only attacks when alighned 
         protected bool canLockOnPlayer = true;   // If it can loack on player once encountered 
         protected bool lockPhotonTrigger = true; // If automatically trigger lock on when illuminati is on 
+        
         protected bool lockOnPlayer = false;     // If the player is being locked 
         protected int senseRange = (int)(2.25 * Globals.OUT_UNIT);
         protected int photonRange = (int)(2.5 * Globals.OUT_UNIT);
         protected int attackAlignTolerance = (int)(0.5 * Globals.OUT_UNIT);
-        protected int lockOnPlayerTurnRateBase = (int)(1.5 * Globals.OUT_UNIT); 
+        protected int lockOnPlayerTurnRateBase = (int)(1.5 * Globals.OUT_UNIT);
+        protected int directionMemoryCount = 10; // For smartRedirection, try to find the direction appear least in the list
+        protected Queue<Globals.Direction> directionHistory = new Queue<Globals.Direction>();
 
         protected int wallSeekingTime = 250;
         protected int frenzyCD = 500;
@@ -152,6 +156,10 @@ namespace HappyDungeon.Enemies
             }
         }
 
+        /// <summary>
+        /// Update the direction, could be affected by player position, player distance, and self-awareness. 
+        /// </summary>
+        /// <param name="MainChara">The player character for reference</param>
         protected virtual void UpdateTurn(MC MainChara)
         {
             if (lockOnPlayer && turnSW.ElapsedMilliseconds > nextTurnLockModified)
@@ -164,12 +172,12 @@ namespace HappyDungeon.Enemies
                 if (seekPlayer)
                 {
                     if ((rangedSensing && playerDistance < senseRange))
-                        Turn(playerDirection);
+                        Turn(playerDirection); // If it can sense the player, turn to the player direction 
                     else
-                        Turn(PossibleDirections()[Globals.RND.Next() % 3]);
+                        Turn(TurnPseudoRand(PossibleDirections())); // Rand turn 
                 }
                 else
-                    Turn((Globals.Direction)(Globals.RND.Next() % 4));
+                    Turn(TurnPseudoRand());
             }
 
             // Deal with the case where player is holding a torch and is coming too close 
@@ -252,6 +260,66 @@ namespace HappyDungeon.Enemies
             turnSW.Restart();
         }
 
+        protected virtual Globals.Direction TurnPseudoRand()
+        {
+            if (!smartRedirection)
+                return (Globals.Direction)(Globals.RND.Next() % 4);
+
+
+            Globals.Direction Result;
+            int[] DirRecords = new int[] { 0, 0, 0, 0};
+            int SmallestIndex = 10; 
+
+            foreach (Globals.Direction Dir in directionHistory)
+            {
+                DirRecords[(int)Dir] += 1; 
+            }
+            for(int i = 0; i < DirRecords.Length; i++)
+            {
+                if (DirRecords[i] < SmallestIndex)
+                    SmallestIndex = i; 
+            }
+
+            Result = Globals.FourDirIter[SmallestIndex];
+            directionHistory.Enqueue(Result);
+
+            if (directionHistory.Count > directionMemoryCount)
+                directionHistory.Dequeue();
+
+            return Result;
+        }
+
+        protected virtual Globals.Direction TurnPseudoRand(Globals.Direction[] Options)
+        {
+            if (!smartRedirection)
+                return Options[Globals.RND.Next() % Options.Length];
+
+            Globals.Direction Result = Globals.FourDirIter[Globals.RND.Next() % 4];
+            int[] DirRecords = new int[] { 0, 0, 0, 0 };
+            int SmallestIndex = 10;
+
+            foreach (Globals.Direction Dir in directionHistory)
+            {
+                DirRecords[(int)Dir] += 1;
+            }
+            for (int i = 0; i < DirRecords.Length; i++)
+            {
+                if (DirRecords[i] < SmallestIndex && Options.Contains(Globals.FourDirIter[i]))
+                {
+                    SmallestIndex = DirRecords[i];
+                    Result = Globals.FourDirIter[i];
+                }
+            }
+
+            directionHistory.Enqueue(Result);
+
+            if (directionHistory.Count > directionMemoryCount)
+                directionHistory.Dequeue();
+
+            return Result;
+
+        }
+
         protected virtual void Attack()
         {
             self.Attack();
@@ -313,6 +381,10 @@ namespace HappyDungeon.Enemies
             return Misc.Instance.L1Distance(self.GetPosition(), MainChara.position);
         }
 
+        /// <summary>
+        /// Get all directions despite the current facing direction. 
+        /// </summary>
+        /// <returns>List of 3 directions</returns>
         protected virtual Globals.Direction[] PossibleDirections()
         {
             List<Globals.Direction> PD = new List<Globals.Direction>() { 

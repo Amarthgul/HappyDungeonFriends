@@ -25,7 +25,7 @@ namespace HappyDungeon
         // ================================================================================
         private bool _DEVMODE = false;       // Root flag for all other dev options 
         private bool _ENABLE_FOW = false;   // Enable fog of war 
-        private bool _SHOW_BOX = true;     // Draw boundary boxes for objects 
+        private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
         public Globals.GameStates gameState { get; set; }
         private int mapSize = 9;
         public bool virgin { get; set; }
