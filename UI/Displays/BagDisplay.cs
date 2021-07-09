@@ -89,6 +89,17 @@ namespace HappyDungeon.UI.Displays
         private int bagItemSelectionIndex;
         private IItem itemSelected;
 
+        // --------------------------------------------------------------------------------
+        // ------------------------ Switch for keyboard control ---------------------------
+        private bool KBS = false;  // Keyboard session flag 
+        private int KBIH = 0;      // Keyboard Index Horizontal 
+        private int KBIV = 0;      // Keyboard Index Vertical 
+        private Stopwatch KBVSW = new Stopwatch();  // Keyboard Vertical Stopwatch
+        private Stopwatch KBHSW = new Stopwatch();  // Keyboard Horizontal Stopwatch
+        private Stopwatch optionProtectionSW = new Stopwatch(); // Avoid repetitive triggering of Enter key
+        private int KBInterval = 200;               // The one to use 
+        private int optionConfirmProtection = 500;  // Cooldown for next valid Enter key confirm
+
         // Init 
         public BagDisplay(Game1 G)
         {
@@ -101,6 +112,7 @@ namespace HappyDungeon.UI.Displays
             UnselectAll(); // Use as initliziation 
 
             hoveringSW.Restart();
+            optionProtectionSW.Restart();
         }
 
         /// <summary>
@@ -301,9 +313,119 @@ namespace HappyDungeon.UI.Displays
             }
             
         }
+
+        /// <summary>
+        /// Mark highlight depending on which option is being selected by keyboard. 
+        /// </summary>
+        private void RefreshKBS()
+        {
+            
+        }
+
+        /// <summary>
+        /// Change KBIV and KBIH accroding to mouse hovering. 
+        /// 
+        /// </summary>
+        /// <param name="Target">Which option to mark</param>
+        private void ReverseKBS(int Target)
+        {
+            
+
+        }
+
+        /// <summary>
+        /// Check if KBIs have negative risk, if so, make it positive. 
+        /// </summary>
+        private void RestoreKBI()
+        {
+            
+        }
+
+        /// <summary>
+        /// Start a KBS session
+        /// </summary>
+        /// <param name="Vertical">if it's up and down key being pressed</param>
+        private void StartKBS(bool Vertical)
+        {
+            KBS = true;
+            RefreshKBS();
+            SoundFX.Instance.PlayTitleOnHover();
+            if (Vertical)
+                KBVSW.Restart();
+            else
+                KBHSW.Restart();
+        }
+
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
+
+        public void OptionMoveUp()
+        {
+            RestoreKBI();
+            if (!KBS)
+            {
+                StartKBS(true);
+            }
+            else if (KBVSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIV--;
+                RefreshKBS();
+                SoundFX.Instance.PlayTitleOnHover();
+                KBVSW.Restart();
+            }
+        }
+
+        public void OptionMoveDown()
+        {
+            if (!KBS)
+            {
+                StartKBS(true);
+            }
+            else if (KBVSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIV++;
+                RefreshKBS();
+                SoundFX.Instance.PlayTitleOnHover();
+                KBVSW.Restart();
+            }
+        }
+
+        public void OptionMoveLeft()
+        {
+            RestoreKBI();
+            if (!KBS)
+            {
+                StartKBS(false);
+            }
+            else if (KBHSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIH--;
+                RefreshKBS();
+                SoundFX.Instance.PlayTitleOnHover();
+                KBHSW.Restart();
+            }
+        }
+
+        public void OptionMoveRight()
+        {
+            if (!KBS)
+            {
+                StartKBS(false);
+            }
+            else if (KBHSW.ElapsedMilliseconds > KBInterval)
+            {
+                KBIH++;
+                RefreshKBS();
+                SoundFX.Instance.PlayTitleOnHover();
+                KBHSW.Restart();
+            }
+        }
+
+        public void OptionConfirm()
+        {
+            
+        }
 
         /// <summary>
         /// Dealing with left click. Either marks the start of a left click session,

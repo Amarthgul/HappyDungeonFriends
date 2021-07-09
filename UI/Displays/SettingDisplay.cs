@@ -492,7 +492,7 @@ namespace HappyDungeon.UI.Displays
         }
 
         /// <summary>
-        /// Check if KBI has negative risk, if so, make it positive. 
+        /// Check if KBIs have negative risk, if so, make it positive. 
         /// </summary>
         private void RestoreKBI()
         {
