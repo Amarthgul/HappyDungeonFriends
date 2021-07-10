@@ -31,6 +31,8 @@ namespace HappyDungeon.UI.Displays
 
         private GeneralSprite onHoverNote;
 
+        private GeneralSprite[] characterAvatars; 
+
         private GeneralSprite primarySlot;
         private GeneralSprite[] itemSlots;
         private GeneralSprite[] bagSlots; 
@@ -123,6 +125,7 @@ namespace HappyDungeon.UI.Displays
             ImageFile BDO = TextureFactory.Instance.BagViewBasic;
             ImageFile BDU = TextureFactory.Instance.BagViewUnderlay;
             ImageFile OHN = TextureFactory.Instance.SelectionNote;
+            
 
             bagViewBasic = new GeneralSprite(BDO.texture, BDO.C, BDO.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
@@ -130,6 +133,16 @@ namespace HappyDungeon.UI.Displays
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
             onHoverNote = new GeneralSprite(OHN.texture, OHN.C, OHN.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS);
+
+            characterAvatars = new GeneralSprite[TextureFactory.Instance.bagAvatar.Length];
+            for (int i = 0; i < TextureFactory.Instance.bagAvatar.Length; i++)
+            {
+                ImageFile CA = TextureFactory.Instance.bagAvatar[i];
+                characterAvatars[i] = new GeneralSprite(CA.texture, CA.C, CA.R,
+                Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS); 
+            }
+                
+                
 
             primarySlot = null;
             itemSlots = new GeneralSprite[] { null, null, null };
@@ -788,6 +801,16 @@ namespace HappyDungeon.UI.Displays
 
             bagViewBasic.Draw(spriteBatch, drawPosition, defaultTint);
 
+
+            // Draw avatar 
+            switch (game.gameLevel)
+            {
+                case Globals.GameLevel.Delight:
+                    characterAvatars[0].Draw(spriteBatch, drawPosition, defaultTint);
+                    break;
+                default:
+                    break; 
+            }
 
             // On hover selection notes
             if (primaryOnHover)
