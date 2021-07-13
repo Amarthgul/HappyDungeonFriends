@@ -21,7 +21,7 @@ namespace HappyDungeon
         private const int SINGLE_ROW_CHAR = 20;
         private const int MAX_LINE = 10; 
 
-        char[] delimiterChars = { ' ', ',', '.', ':', '\t' };
+        char[] delimiterChars = { ' ' };
 
         private GraphicsDevice graphics;
         private string description;

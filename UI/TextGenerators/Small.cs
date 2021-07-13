@@ -20,6 +20,8 @@ namespace HappyDungeon.UI
         protected const int ROW_LOC_DIG = 22;
         protected const int ROW_LOC_PUN = 31;
 
+        protected bool upperCaseOnly = true;
+
         public Texture2D sourceTexts;
 
         public Texture2D textTure;
@@ -128,8 +130,8 @@ namespace HappyDungeon.UI
 
             interval = 1;
             spaceSize = 3;
-            widthOffset = 0;
-            heightOffset = 0;
+            widthOffset = 0;  // When it has a rim
+            heightOffset = 0; // When it has a rim 
 
         }
 
@@ -208,6 +210,8 @@ namespace HappyDungeon.UI
             int Recorder = 0;
             Rectangle DestRectangle = new Rectangle(0, 0, 0, HEIGHT + 2 * heightOffset);
 
+            if (upperCaseOnly)
+                Text = Text.ToUpper();
 
             // Calculate full width of the output texture 
             foreach (char c in Text)
@@ -224,6 +228,7 @@ namespace HappyDungeon.UI
 
             foreach (char c in Text)
             {
+
                 if (c == ' ')
                 {
                     Recorder += spaceSize;

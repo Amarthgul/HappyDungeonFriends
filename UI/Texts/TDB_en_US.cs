@@ -15,7 +15,7 @@ namespace HappyDungeon.UI.Texts
             "multiple separator characters. The following example uses spaces, commas, " +
             "periods, colons, and tabs",
 
-            "Natalie Portman on the set of \"Leon The Professional",
+            "Natalie Portman 100 on the set of \"Leon The Professional",
 
             "nience method that lets you concatenate each element"
         };
