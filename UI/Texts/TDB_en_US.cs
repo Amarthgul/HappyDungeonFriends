@@ -25,9 +25,10 @@ namespace HappyDungeon.UI.Texts
         public TDB_en_US()
         {
             indexedDescription = new Dictionary<int, string> {
-                {Globals.ITEM_TORCH, "A simple wooden stick with fabrics tied on top" },
-                {Globals.ITEM_LINKEN, "It wispers" },
-                {Globals.ITEM_NOTE_SO, "torch" },
+                { Globals.ITEM_TORCH, "A simple wooden stick with fabrics tied on top" },
+                { Globals.ITEM_LINKEN, "It wispers" },
+                { Globals.ITEM_NOTE_SO, "torch" },
+                { Globals.ITEM_GOLD, "What can money do"}
             };
         }
 

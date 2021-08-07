@@ -22,7 +22,7 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-Update 25 June 2021: 
+## Update 25 June 2021: 
 
 Despite still cannot die or win, most of the game feature frameworks has now been finsihed.   
 
@@ -36,7 +36,20 @@ Despite still cannot die or win, most of the game feature frameworks has now bee
 
 --------------------------------------------------------
 
-Dev logs and random comments 
+## How to control: 
+
+(currently accepts keybord and mouse input, gamepad support is not added)
+
+* Arrow keys for movement and option selection (some may not be fully implmented)
+* `Q` `W` `E` `R` to use item 
+* `Alt` to display hotkeys
+* `B` to open bag, you can also click on the bag icon
+* `Tab` to display minimap, use LMB to pan it around 
+* `Esc` to pause/quit 
+
+--------------------------------------------------------
+
+## Dev logs and random comments 
 
 * This game drew inspiration from some of my favorites, such as DotA 2, Diablo, Warcraft, Isaac, 
 and some part of Gris and Disgaea. 
