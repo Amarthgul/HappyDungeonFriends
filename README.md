@@ -42,10 +42,13 @@ Despite still cannot die or win, most of the game feature frameworks has now bee
 
 * Arrow keys for movement and option selection (some may not be fully implmented)
 * `Q` `W` `E` `R` to use item 
+* `Enter` to confirm
 * `Alt` to display hotkeys
 * `B` to open bag, you can also click on the bag icon
 * `Tab` to display minimap, use LMB to pan it around 
 * `Esc` to pause/quit 
+
+(It is not sure if Mac keyboard can work, tbh Mac cannot run it at all)  
 
 --------------------------------------------------------
 
