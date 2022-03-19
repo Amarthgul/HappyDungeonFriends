@@ -14,6 +14,15 @@ namespace HappyDungeon
     /// </summary>
     public class Game1 : Game
     {
+        /// <summary>
+        /// Dev options. 
+        /// Please ntoe that _DEVMODE is the master trigger. All other triggers are regarded 
+        /// as not enabled unless _DEVMODE is on. 
+        /// </summary>
+        private bool _DEVMODE = true;       // Root flag for all other dev options 
+        private bool _ENABLE_FOW = false;   // Enable fog of war 
+        private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
+
         // ================================================================================
         // ============================= Abstract resources ===============================
         // ================================================================================
@@ -23,9 +32,7 @@ namespace HappyDungeon
         // ================================================================================
         // ========================= Game states and parameters ===========================
         // ================================================================================
-        private bool _DEVMODE = false;       // Root flag for all other dev options 
-        private bool _ENABLE_FOW = false;   // Enable fog of war 
-        private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
+
         public Globals.GameStates gameState { get; set; }
         private int mapSize = 9;
         public bool virgin { get; set; }
@@ -328,13 +335,14 @@ namespace HappyDungeon
         // --------------------------------- Updates --------------------------------------
 
         /// <summary>
-        /// Update method for when the game is running 
+        /// For a selection of classes (item, enemy, projectiles), their updates are needed
+        /// to deal with some of the change of game state (e.g. stop colldown update while 
+        /// the game is not running)
         /// </summary>
-        private void UpdateRunning()
+        private void UpdateRoutine()
         {
-            if (transitionProgress.Any(x => x == true)) return; 
-
-            foreach (IItem item in collectibleItemList) {
+            foreach (IItem item in collectibleItemList)
+            {
                 item.Update();
             }
             foreach (IItem item in spellSlots.itemSlots)
@@ -343,6 +351,22 @@ namespace HappyDungeon
                     item.Update();
             }
 
+            foreach (IEnemy enemy in enemyList)
+            {
+                enemy.Update(mainChara);
+            }
+            foreach (IProjectile proj in projList)
+            {
+                proj.Update();
+            }
+        }
+
+        /// <summary>
+        /// Update method for when the game is running 
+        /// </summary>
+        private void UpdateRunning()
+        {
+            if (transitionProgress.Any(x => x == true)) return; 
 
             foreach (IBlock block in dynamicBlockList)
             {
@@ -350,12 +374,7 @@ namespace HappyDungeon
                     block.Update();
             }
 
-            foreach (IEnemy enemy in enemyList) {
-                enemy.Update(mainChara);
-            }
-            foreach (IProjectile proj in projList) {
-                proj.Update();
-            }
+            UpdateRoutine();
 
             spellSlots.Update();
 
@@ -402,27 +421,37 @@ namespace HappyDungeon
 
         }
 
-        // The rests are mostly just update generalDisplay, I only made them into separated method
-        // in case of future changes, which, looks rather ncecessary. 
+        /// <summary>
+        /// The rest of the update methods are more generic, consisting of mostly only the 
+        /// general display update and routine update. 
+        /// </summary>
 
         private void UpdateBagView()
         {
             generalDisplay.Update();
+
+            UpdateRoutine();
         }
 
         private void UpdateTitleScreen()
         {
             generalDisplay.Update();
+
+            UpdateRoutine();
         }
 
         private void UpdateSettings()
         {
             generalDisplay.Update();
+
+            UpdateRoutine();
         }
 
         private void UpdatePaused()
         {
             generalDisplay.Update();
+
+            UpdateRoutine();
         }
 
         private void UpdateGameOver()

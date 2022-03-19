@@ -65,6 +65,9 @@ namespace HappyDungeon
         /// <param name="MainChara">Not used</param>
         public override void Update(MC MainChara)
         {
+            if (game.gameState != Globals.GameStates.Running && !Globals.REAL_TIME_ACTION)
+                return;
+
             // Change draw layers if player is lower in screen 
             float DrawLayer; 
             if(MainChara.position.Y > position.Y)

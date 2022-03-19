@@ -227,6 +227,9 @@ namespace HappyDungeon
         /// <param name="MainChara">Player's character</param>
         public virtual void Update(MC MainChara)
         {
+            if (game.gameState != Globals.GameStates.Running && !Globals.REAL_TIME_ACTION)
+                return;
+
             // Change draw layers if player is lower in screen 
             float DrawLayer;
             if (MainChara.position.Y > position.Y) {

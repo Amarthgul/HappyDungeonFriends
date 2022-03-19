@@ -16,9 +16,6 @@ namespace HappyDungeon
         private long milliseconds;
         private long memoryMS;
 
-        private Globals.GameStates previousState;
-        private Globals.GameStates currentState; 
-
         private System.Diagnostics.Stopwatch innerSW; 
 
         public long ElapsedMilliseconds
@@ -34,7 +31,6 @@ namespace HappyDungeon
                     memoryMS = milliseconds;
                     innerSW.Restart(); 
                 }
-                
 
                 return milliseconds; 
             }

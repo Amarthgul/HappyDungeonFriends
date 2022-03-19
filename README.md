@@ -22,9 +22,9 @@ Currently still work in progress.
 
 --------------------------------------------------------
 
-## Update 25 June 2021: 
+## Update 19th March 2022: 
 
-Despite still cannot die or win, most of the game feature frameworks has now been finsihed.   
+Added new stopwatch. Detail at Dev log 0.11.    
 
 <p align="center">
 	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/W4hXXG4.png" width="512">
@@ -52,7 +52,29 @@ Despite still cannot die or win, most of the game feature frameworks has now bee
 
 --------------------------------------------------------
 
-## Dev logs and random comments 
+## Dev logs
+
+### 0.11  
+
+19 March 2022
+
+Partially substituted the `stopwatch` class. there are now 2 types of stopwatches:
+
+* `Stopwatch`, defined in this project under `Misc` folder. This stopwatch can be set to halt 
+when the player opens the bag or pause the game. Most enemy and item use this stopwatch since
+they are not supposed to update while player opens bag or paused the game. (the catch is that 
+by toggling the `REAL_TIME_ACTION` in `Globals`, they *can*)
+
+* `System.Diagnostics.Stopwatch` the C# stopwatch, which continues to count regardless of circumstances.  
+
+### 0.10 
+
+25 June 2021
+
+Basic framework, the character can move, attack, pickup and use item, kill and be killed. 
+Plus the user interface and game control.  
+
+## Random comments 
 
 * This game drew inspiration from some of my favorites, such as DotA 2, Diablo, Warcraft, Isaac, 
 and some part of Gris and Disgaea. 

@@ -108,6 +108,11 @@ namespace HappyDungeon
         /// </summary>
         public void Update()
         {
+            if (Globals.DEBUGGING && game.gameState != Globals.GameStates.Running)
+            {
+                long current = stopwatch.ElapsedMilliseconds;
+            }
+
             if (stopwatch.ElapsedMilliseconds > Globals.ITEM_HOLD && pickupProtection == false)
             {
                 pickupProtection = true;
@@ -163,7 +168,8 @@ namespace HappyDungeon
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_LAYER); 
         }
         public double CooldownRate()
-        {
+        { 
+
             if (cooldownFinished)
                 return 1.0;
             else 
