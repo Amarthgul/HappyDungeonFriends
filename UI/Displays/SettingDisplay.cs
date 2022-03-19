@@ -84,9 +84,9 @@ namespace HappyDungeon.UI.Displays
         private bool KBS = false;  // Keyboard session flag 
         private int KBIH = 0;      // Keyboard Index Horizontal 
         private int KBIV = 0;      // Keyboard Index Vertical 
-        private Stopwatch KBVSW = new Stopwatch();  // Keyboard Vertical Stopwatch
-        private Stopwatch KBHSW = new Stopwatch();  // Keyboard Horizontal Stopwatch
-        private Stopwatch optionProtectionSW = new Stopwatch(); // Avoid repetitive triggering of Enter key
+        private System.Diagnostics.Stopwatch KBVSW = new System.Diagnostics.Stopwatch();  // Keyboard Vertical Stopwatch
+        private System.Diagnostics.Stopwatch KBHSW = new System.Diagnostics.Stopwatch();  // Keyboard Horizontal Stopwatch
+        private System.Diagnostics.Stopwatch optionProtectionSW = new System.Diagnostics.Stopwatch(); // Avoid repetitive triggering of Enter key
         private int KBInterval = 200;               // The one to use 
         private int KBIntervalShort = 50;           // Shorter one for volume control 
         private int KBIntervalLong = 200;           // Longer one for standard press event 

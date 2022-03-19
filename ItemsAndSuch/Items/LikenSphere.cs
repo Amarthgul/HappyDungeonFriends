@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using System.Diagnostics;
+//using System.Diagnostics;
 
 namespace HappyDungeon
 {
@@ -30,14 +30,14 @@ namespace HappyDungeon
         // Item cooldown and pickup protection  
         private int itemEffectiveTime = 8000;  // 8 seconds 
         private int itemCoolDown = 12000;      // 12 Seconds
-        private Stopwatch stopwatch = new Stopwatch();
+        private Stopwatch stopwatch;
         private bool shieldOn = false;
         private bool pickupProtection = false;
         private bool cooldownFinished = true; 
 
         private Color defaultTint = Color.White;
 
-        private Stopwatch radiatingSFXSW = new Stopwatch();
+        private Stopwatch radiatingSFXSW;
         private int radSoundInterval = 400; 
 
         public LinkenSphere(Game1 G, Vector2 P)
@@ -45,6 +45,9 @@ namespace HappyDungeon
             game = G;
             position = P;
 
+            radiatingSFXSW = new Stopwatch(game);
+            stopwatch = new Stopwatch(game);
+            
             spriteBatch = game.spriteBatch;
 
             collisionRect = new Rectangle((int)P.X, (int)P.Y, Globals.OUT_UNIT, Globals.OUT_UNIT);
@@ -105,6 +108,11 @@ namespace HappyDungeon
         /// </summary>
         public void Update()
         {
+            if (Globals.DEBUGGING && game.gameState != Globals.GameStates.Running)
+            {
+                long current = stopwatch.ElapsedMilliseconds;
+            }
+
             if (stopwatch.ElapsedMilliseconds > Globals.ITEM_HOLD && pickupProtection == false)
             {
                 pickupProtection = true;
@@ -160,7 +168,8 @@ namespace HappyDungeon
                 Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ITEM_LAYER); 
         }
         public double CooldownRate()
-        {
+        { 
+
             if (cooldownFinished)
                 return 1.0;
             else 

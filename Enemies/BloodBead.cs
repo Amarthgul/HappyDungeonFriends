@@ -48,7 +48,7 @@ namespace HappyDungeon
 
             HPBar = new Enemies.EnemyHealthBar(game, selfType);
 
-            brainAgent = new Enemies.AgentStupid(this);
+            brainAgent = new Enemies.AgentStupid(this, game);
             enemyBlockCollison = new EnemyBlockCollision(game);
 
             currentMoveIndex = 0;
@@ -65,6 +65,9 @@ namespace HappyDungeon
         /// <param name="MainChara">Not used</param>
         public override void Update(MC MainChara)
         {
+            if (game.gameState != Globals.GameStates.Running && !Globals.REAL_TIME_ACTION)
+                return;
+
             // Change draw layers if player is lower in screen 
             float DrawLayer; 
             if(MainChara.position.Y > position.Y)

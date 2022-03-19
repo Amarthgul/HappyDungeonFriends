@@ -13,6 +13,9 @@ namespace HappyDungeon.Enemies
     /// </summary>
     class AgentStupid : IAgent
     {
+
+        private Game1 game; 
+
         private const int DELAY_MAX = 8000;
         private const int DELAY_MIN = 4000;
 
@@ -22,11 +25,12 @@ namespace HappyDungeon.Enemies
         private long timer;
         private long nextTurn; 
 
-        public AgentStupid(IEnemy FindMyself)
+        public AgentStupid(IEnemy FindMyself, Game1 G)
         {
             self = FindMyself;
+            game = G; 
 
-            stopwatch = new Stopwatch();
+            stopwatch = new Stopwatch(G);
             stopwatch.Restart();
             timer = 0;
 
@@ -40,6 +44,9 @@ namespace HappyDungeon.Enemies
 
         public void Update(MC MainChara) 
         {
+            if (game.gameState != Globals.GameStates.Running && !Globals.REAL_TIME_ACTION)
+                return;
+
             timer = stopwatch.ElapsedMilliseconds;
             if (timer > nextTurn)
             {

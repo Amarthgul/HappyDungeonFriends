@@ -47,7 +47,7 @@ namespace HappyDungeon
 
         public bool moveRestricted;                   // This field is for limiting movement to only 1 direction 
         public bool[] canTurn = new bool[] { true, true, true, true };
-        private Stopwatch[] dirStopwatches = new Stopwatch[] { new Stopwatch() , new Stopwatch() , new Stopwatch() , new Stopwatch() };
+        private Stopwatch[] dirStopwatches;
         private long[] dirTimers = new long[] { 0, 0, 0, 0 }; 
 
         private Rectangle collisionRect;
@@ -58,7 +58,7 @@ namespace HappyDungeon
 
         // New room protection is used to give time for the MC stats to warm-up 
         private bool newRoomProtectionOn;  
-        private Stopwatch newRoomProtectSW = new Stopwatch();
+        private Stopwatch newRoomProtectSW;
         private int newRoomProtectTime = 100; 
 
         // ================================================================================
@@ -120,6 +120,9 @@ namespace HappyDungeon
             game = G;
             spriteBatch = game.spriteBatch;
 
+            dirStopwatches = new Stopwatch[] { new Stopwatch(game), new Stopwatch(game), new Stopwatch(game), new Stopwatch(game) };
+            newRoomProtectSW = new Stopwatch(game);
+
             position = startUpPosition;
             facingDir = Globals.Direction.Up;
 
@@ -140,12 +143,12 @@ namespace HappyDungeon
             mcState = Globals.GeneralStates.Hold; // Start as on hold 
             moveRestricted = false;
 
-            damageProtectionSW = new Stopwatch();
+            damageProtectionSW = new Stopwatch(game);
             damageProtectionSW.Restart();
             damageRecoverTimer = 0;
 
-            attackExternalSW = new Stopwatch();
-            attackInternalSW = new Stopwatch();
+            attackExternalSW = new Stopwatch(game);
+            attackInternalSW = new Stopwatch(game);
             attackExternalSW.Restart();
 
             newRoomProtectionOn = true;

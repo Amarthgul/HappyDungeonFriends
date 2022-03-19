@@ -22,7 +22,7 @@ namespace HappyDungeon
         private SpriteBatch spriteBatch;
 
         // Item hold 
-        private Stopwatch stopwatch = new Stopwatch();
+        private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private long timer;
         private bool cooldownFinished;
 

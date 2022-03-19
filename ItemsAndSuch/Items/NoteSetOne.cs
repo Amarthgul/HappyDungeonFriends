@@ -24,8 +24,8 @@ namespace HappyDungeon
         private Game1 game;
         private SpriteBatch spriteBatch;
 
-        // Item hold 
-        private Stopwatch stopwatch = new Stopwatch();
+        // Item hold, inrevlant to game state so used normal stopwatch 
+        private System.Diagnostics.Stopwatch stopwatch;
         private long timer;
         private bool cooldownFinished;
 
@@ -44,7 +44,8 @@ namespace HappyDungeon
             itemSprite = new GeneralSprite(NSO.texture, NSO.C, NSO.R, 
                 0, Globals.FRAME_CYCLE, Globals.ITEM_LAYER);
             itemSprite.colLimitation = Globals.RND.Next() % Globals.FRAME_CYCLE;
-
+            
+            stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Restart();
             cooldownFinished = false;
         }
@@ -80,8 +81,6 @@ namespace HappyDungeon
             {
                 cooldownFinished = true;
             }
-
-
         }
 
         public void Draw()

@@ -13,9 +13,22 @@ namespace HappyDungeon
     public class Globals
     {
 
+        public const bool DEBUGGING = true;
+
         // Version lower than 1.0 means campign is not yet finished 
         // and the game is mostly still in dev. 
-        public const float VERSION = 0.10f; 
+        public const float VERSION = 0.11f;
+
+        // ================================================================================
+        // ============================== Gameplay Options ================================
+        // ================================================================================
+
+        /// <summary>
+        /// When this is enabled, enemy can move even while the player is not active
+        /// (i.e. in bag view etc.)
+        /// </summary>
+        public const bool REAL_TIME_ACTION = false;
+
 
         // ================================================================================
         // =========================== Game Size and Display ==============================

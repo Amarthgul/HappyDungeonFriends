@@ -20,7 +20,7 @@ namespace HappyDungeon.UI.Effects
         private GeneralSprite allBlack;
 
         private Vector2 drawPosition = new Vector2();
-        private Stopwatch updateSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch updateSW = new System.Diagnostics.Stopwatch();
         private int totlaTravelDistance = 256 * Globals.SCALAR; 
 
         private Color defaultTint = Color.White;

@@ -16,7 +16,7 @@ namespace HappyDungeon
         {
             game = G;
 
-            stopwatch = new Stopwatch();
+            stopwatch = new Stopwatch(game);
             stopwatch.Restart();
         }
         public void execute()

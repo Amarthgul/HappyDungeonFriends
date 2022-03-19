@@ -16,7 +16,7 @@ namespace HappyDungeon
     /// </summary>
     class SoundFX
     {
-        private Stopwatch BGMSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch BGMSW = new System.Diagnostics.Stopwatch();
         private int BGMInterval = 9500;
         private bool fisrtStartUp = true;
 

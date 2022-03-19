@@ -29,7 +29,7 @@ namespace HappyDungeon
         private int toleranceDistance = 1 * Globals.SCALAR;
         private int rowChoice;
         private bool expressionOn = false;
-        private Stopwatch stopwatch = new Stopwatch();
+        private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private int interval = 5000;
         private int experssionLastingTime = 1000; 
         private long timer;

@@ -48,7 +48,7 @@ namespace HappyDungeon
 
         // Transition 
         private bool transtionFinished;
-        private Stopwatch stopwatch = new Stopwatch();
+        private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private long timer;
         private Globals.Direction TransDir;
         public Vector2[] nextLvPos = {

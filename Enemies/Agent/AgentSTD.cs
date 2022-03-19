@@ -16,6 +16,9 @@ namespace HappyDungeon.Enemies
     /// </summary>
     class AgentSTD : IAgent
     {
+
+        private Game1 game; 
+
         protected int minDelay = 2000;
         protected double delayMultiplier = 1.5; 
 
@@ -45,8 +48,8 @@ namespace HappyDungeon.Enemies
 
         protected int wallSeekingTime = 250;
         protected int frenzyCD = 500;
-        protected Stopwatch wallSeekingSW = new Stopwatch();
-        protected Stopwatch frenzyCDSW = new Stopwatch();
+        protected Stopwatch wallSeekingSW;
+        protected Stopwatch frenzyCDSW;
         protected bool turnLock = false;
 
         protected Stopwatch turnSW;
@@ -60,13 +63,16 @@ namespace HappyDungeon.Enemies
 
         
 
-        public AgentSTD(IEnemy FindMyself, Globals.Direction D)
+        public AgentSTD(IEnemy FindMyself, Game1 G, Globals.Direction D)
         {
             self = FindMyself;
+            game = G; 
             facingDir = D;
 
-            wallSeekingSW = new Stopwatch();
-            turnSW = new Stopwatch();
+            wallSeekingSW = new Stopwatch(G);
+            turnSW = new Stopwatch(G);
+            frenzyCDSW = new Stopwatch(G);
+
             wallSeekingSW.Restart();
             turnSW.Restart();
             frenzyCDSW.Restart();
@@ -97,13 +103,14 @@ namespace HappyDungeon.Enemies
 
         public virtual void Update(MC MainChara)
         {
-            
+            if (game.gameState != Globals.GameStates.Running && !Globals.REAL_TIME_ACTION)
+                return; 
+
             UpdateSeeker(MainChara);
 
             UpdateTurn(MainChara);
 
             UpdateAttack(MainChara);
-
 
         }
 

@@ -62,7 +62,7 @@ namespace HappyDungeon.UI.Displays
         private float mountainSpeedFG = 0.2f * Globals.SCALAR;
         private float mountainSpeedBG = 0.05f * Globals.SCALAR;
         private int animteInterval = 50;
-        private Stopwatch animateSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch animateSW = new System.Diagnostics.Stopwatch();
 
         private bool campaignAvailable = true; // Decides if it gets gray out 
 
@@ -91,11 +91,11 @@ namespace HappyDungeon.UI.Displays
         // ------------------------ Switch for keyboard control ---------------------------
         private bool KBS = false; // Keyboard session flag 
         private int KBI = 0;      // Option index 
-        private Stopwatch KBSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch KBSW = new System.Diagnostics.Stopwatch();
         private int KBInterval = 100; 
 
         private bool transitProtection = false;
-        private Stopwatch transitProtSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch transitProtSW = new System.Diagnostics.Stopwatch();
 
         private Color defaultTint = Color.White;
 

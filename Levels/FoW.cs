@@ -48,7 +48,8 @@ namespace HappyDungeon
 
         private float layer = Globals.FOW_LAYER;
 
-        private Stopwatch stopwatch = new Stopwatch();
+        // Irrelvant to game state so used normal stopwatch  
+        private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         private long timer;
 
         public FoW(Game1 G)

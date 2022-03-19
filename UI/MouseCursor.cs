@@ -22,7 +22,7 @@ namespace HappyDungeon
         private GeneralSprite cursor;
 
 
-        private Stopwatch creationTimer;
+        private System.Diagnostics.Stopwatch creationTimer;
         private bool canCreateNow = true;
         private List<RightClikInMapNote> effectList;
         private Vector2 positionOffset = new Vector2(-7, -10);
@@ -36,7 +36,7 @@ namespace HappyDungeon
             game = G;
             spriteBatch = game.spriteBatch;
 
-            creationTimer = new Stopwatch();
+            creationTimer = new System.Diagnostics.Stopwatch();
             effectList = new List<RightClikInMapNote>();
 
             position = new Vector2(0, 0);
@@ -80,8 +80,8 @@ namespace HappyDungeon
 
             if (canCreateNow)
             {
-                Vector2 adjustedPosition = CreationLocation + positionOffset * Globals.SCALAR; 
-                Stopwatch NewTimer = new Stopwatch();
+                Vector2 adjustedPosition = CreationLocation + positionOffset * Globals.SCALAR;
+                System.Diagnostics.Stopwatch NewTimer = new System.Diagnostics.Stopwatch();
                 NewTimer.Restart();
                 effectList.Add(new RightClikInMapNote(NewTimer, AddNewRMBMapClick(), adjustedPosition));
 
@@ -126,11 +126,11 @@ namespace HappyDungeon
 
     class RightClikInMapNote
     {
-        public Stopwatch timer;
+        public System.Diagnostics.Stopwatch timer;
         public GeneralSprite noteSprite;
         public Vector2 position; 
 
-        public RightClikInMapNote(Stopwatch T, GeneralSprite S, Vector2 P)
+        public RightClikInMapNote(System.Diagnostics.Stopwatch T, GeneralSprite S, Vector2 P)
         {
             timer = T;
             noteSprite = S;

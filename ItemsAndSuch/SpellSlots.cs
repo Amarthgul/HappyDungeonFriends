@@ -28,13 +28,16 @@ namespace HappyDungeon
 
         private ModifierCollection modifiers;
 
-        private Stopwatch stopwatch = new Stopwatch();
-        private Stopwatch[] itemsSW = new Stopwatch[] { new Stopwatch(), new Stopwatch(), new Stopwatch()};
+        private Stopwatch stopwatch;
+        private Stopwatch[] itemsSW;
         private long timer;
 
         public SpellSlots(Game1 G)
         {
             game = G;
+
+            stopwatch = new Stopwatch(game);
+            itemsSW = new Stopwatch[] { new Stopwatch(game), new Stopwatch(game), new Stopwatch(game) };
 
             modifiers = new ModifierCollection();
 
