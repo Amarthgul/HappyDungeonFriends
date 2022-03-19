@@ -10,6 +10,8 @@ namespace HappyDungeon.General.Modifiers
 
     class ModifierBurn : IModifier
     {
+        private Game1 game; 
+
         private int burnDamageTotal;
         private int[] damageSequence;
         private int damageIndex = 0;
@@ -19,13 +21,15 @@ namespace HappyDungeon.General.Modifiers
         public long tikTime { set; get; }
 
         private long intervalTimer = 0;
-        private Stopwatch intervalSW;
+        private Stopwatch intervalSW;  
 
         private long totalTimer = 0;
-        private Stopwatch totalSW; 
+        private Stopwatch totalSW;
 
-        public ModifierBurn(int TotalDMG)
+        public ModifierBurn(Game1 G, int TotalDMG)
         {
+            game = G;
+
             burnDamageTotal = TotalDMG;
 
             totalTiks = 4;
@@ -41,8 +45,8 @@ namespace HappyDungeon.General.Modifiers
             }
             damageSequence[damageSequence.Length - 1] = burnDamageTotal - SingleTikDamage * totalTiks;
 
-            intervalSW = new Stopwatch();
-            totalSW = new Stopwatch();
+            intervalSW = new Stopwatch(game);
+            totalSW = new Stopwatch(game);
 
             intervalSW.Restart();
             totalSW.Restart();

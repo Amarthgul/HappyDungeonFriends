@@ -10,13 +10,13 @@ namespace HappyDungeon
     public class EscCommand : ICommand
     {
         private Game1 game;
-        private Stopwatch stopwatch;
+        private System.Diagnostics.Stopwatch stopwatch;
 
         public EscCommand(Game1 G)
         {
             game = G;
 
-            stopwatch = new Stopwatch();
+            stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Restart();
         }
         public void execute()

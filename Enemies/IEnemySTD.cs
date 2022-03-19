@@ -56,7 +56,7 @@ namespace HappyDungeon
         protected int attackIntervalMin = 2000; // 2 seconds' interval at least 
         protected int attackIntervalMax = 8000; // Some perform attack randomly, that's the longest interval time
         protected int attackInterval; 
-        protected Stopwatch attackSW = new Stopwatch();
+        protected System.Diagnostics.Stopwatch attackSW = new System.Diagnostics.Stopwatch();
 
         // ================================================================================
         // ================================= Collisions ===================================
@@ -91,7 +91,7 @@ namespace HappyDungeon
         protected int moveSoundIntervalBaseline = 1000;
         protected int moveSoundIntervalFlau = 200;
         protected int moveSoundInterval = 1000;
-        protected Stopwatch soundSW = new Stopwatch();
+        protected Stopwatch soundSW;
         private float maxVolume = .2f;
         private int audibleRange = 3 * Globals.OUT_UNIT;
 
@@ -105,22 +105,22 @@ namespace HappyDungeon
         protected bool wakingup = false; 
         protected int wakeUpDistance = (int)(2.0 * Globals.OUT_UNIT); // When player is within this distance 
         protected int wakeupTime = 1600;
-        protected Stopwatch wakeupSW = new Stopwatch(); 
+        protected Stopwatch wakeupSW; 
 
         protected Enemies.EnemyHealthBar HPBar;
         protected int totalHealth = 20;
         protected int currentHealth = 20;
         protected int regenAmount = 1;
         protected int regenInterval = 200;  // Pretty much the min number that can be killed  
-        protected Stopwatch regenSW = new Stopwatch();
-        protected Stopwatch damageProtectionSW = new Stopwatch();  // Avoid being 1 shot
+        protected Stopwatch regenSW;
+        protected Stopwatch damageProtectionSW;  // Avoid being 1 shot
         protected int recoverTime = 1000;
 
         // ================================================================================
         // ==================================== Death =====================================
         // ================================================================================ 
         protected bool startOfEnd = false;
-        protected Stopwatch deathSW = new Stopwatch();
+        protected Stopwatch deathSW;
         protected int fadeStartTime = 1000; // Opacity starts to decrease after this time 
         protected int lingeringTime = 1500; // Completely disappears after this time 
 
@@ -134,6 +134,12 @@ namespace HappyDungeon
             game = G;
             position = P;
             spawnPosition = P;
+
+            soundSW = new Stopwatch(game);
+            wakeupSW = new Stopwatch(game);
+            regenSW = new Stopwatch(game);
+            damageProtectionSW = new Stopwatch(game);
+            deathSW = new Stopwatch(game);
 
             spriteBatch = game.spriteBatch;
 
@@ -149,7 +155,7 @@ namespace HappyDungeon
             facingDir = (Globals.Direction)(Globals.RND.Next() % 4);
             movingSprite.rowLimitation = (int)facingDir;
 
-            brainAgent = new Enemies.AgentSTD(this, facingDir);
+            brainAgent = new Enemies.AgentSTD(this, game, facingDir);
             enemyBlockCollison = new EnemyBlockCollision(game);
 
             damageProtectionSW.Restart();

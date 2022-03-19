@@ -22,11 +22,11 @@ namespace HappyDungeon.Enemies
         private long timer;
         private long nextTurn; 
 
-        public AgentStupid(IEnemy FindMyself)
+        public AgentStupid(IEnemy FindMyself, Game1 G)
         {
             self = FindMyself;
 
-            stopwatch = new Stopwatch();
+            stopwatch = new Stopwatch(G);
             stopwatch.Restart();
             timer = 0;
 

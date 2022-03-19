@@ -18,13 +18,13 @@ namespace HappyDungeon
         protected GeneralSprite itemSprite;
 
         // Item hold 
-        protected Stopwatch stopwatch = new Stopwatch();
+        protected Stopwatch stopwatch;
         protected long timer;
         protected bool cooldownFinished;
 
         public IItemSTD(Game1 G, Vector2 P)
         {
-
+            stopwatch = new Stopwatch(G);
 
             stopwatch.Restart();
         }

@@ -30,7 +30,7 @@ namespace HappyDungeon
 
         // Updating 
         public bool isStatic { get; set; } 
-        public Stopwatch stopwatch = new Stopwatch();
+        public System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         
         private long timer;
 

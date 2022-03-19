@@ -37,10 +37,10 @@ namespace HappyDungeon
 
         public bool healthInflicting { set; get; }
 
-        private Stopwatch torchSFXSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch torchSFXSW = new System.Diagnostics.Stopwatch();
         private int torchSoundInterval = 900;
 
-        private Stopwatch walkSFXSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch walkSFXSW = new System.Diagnostics.Stopwatch();
         private int walkSoundInterval = Globals.FRAME_DELAY; 
 
         public CharacterSprite(Game1 G)

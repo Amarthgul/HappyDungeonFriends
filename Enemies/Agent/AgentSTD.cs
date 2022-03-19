@@ -45,8 +45,8 @@ namespace HappyDungeon.Enemies
 
         protected int wallSeekingTime = 250;
         protected int frenzyCD = 500;
-        protected Stopwatch wallSeekingSW = new Stopwatch();
-        protected Stopwatch frenzyCDSW = new Stopwatch();
+        protected Stopwatch wallSeekingSW;
+        protected Stopwatch frenzyCDSW;
         protected bool turnLock = false;
 
         protected Stopwatch turnSW;
@@ -60,13 +60,13 @@ namespace HappyDungeon.Enemies
 
         
 
-        public AgentSTD(IEnemy FindMyself, Globals.Direction D)
+        public AgentSTD(IEnemy FindMyself, Game1 G, Globals.Direction D)
         {
             self = FindMyself;
             facingDir = D;
 
-            wallSeekingSW = new Stopwatch();
-            turnSW = new Stopwatch();
+            wallSeekingSW = new Stopwatch(G);
+            turnSW = new Stopwatch(G);
             wallSeekingSW.Restart();
             turnSW.Restart();
             frenzyCDSW.Restart();

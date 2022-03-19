@@ -23,7 +23,7 @@ namespace HappyDungeon
 
         protected Vector2 position;
         protected Globals.Direction facingDir;
-        protected Stopwatch moveSW = new Stopwatch();
+        protected Stopwatch moveSW;
         protected Vector2 initialPosition; 
         public int moveSpeed { get; set; }
         public int moveInterval { get; set; }
@@ -37,7 +37,7 @@ namespace HappyDungeon
         protected Rectangle collisionRect;
         protected ProjectileCollision collisionDect;
 
-        protected Stopwatch selfSW = new Stopwatch();
+        protected Stopwatch selfSW;
         protected int lifeEntension = 50;   // Leave a bit more time for melee attack 
         protected bool expireOnHit = true;
         protected bool expired = false;
@@ -55,6 +55,9 @@ namespace HappyDungeon
             position = P;
             facingDir = D;
             source = S;
+
+            moveSW = new Stopwatch(game);
+            selfSW = new Stopwatch(game);
 
             spriteBatch = game.spriteBatch;
 

@@ -20,7 +20,7 @@ namespace HappyDungeon
         private SpriteBatch spriteBatch;
 
         // Item hold 
-        private Stopwatch stopwatch = new Stopwatch();
+        private Stopwatch stopwatch;
         private long timer;
         private bool cooldownFinished;
 
@@ -37,6 +37,8 @@ namespace HappyDungeon
             game = G;
             spriteBatch = game.spriteBatch;
             position = P;
+
+            stopwatch = new Stopwatch(game);
 
             collisionRect = new Rectangle((int)P.X, (int)P.Y, Globals.OUT_UNIT, Globals.OUT_UNIT);
 
@@ -151,7 +153,7 @@ namespace HappyDungeon
             if (game.mainChara.primaryState != Globals.primaryTypes.Torch)
                 return null; 
 
-            return new General.Modifiers.ModifierBurn(5);
+            return new General.Modifiers.ModifierBurn(game, 5);
         }
 
         public Globals.ItemType SelfType()

@@ -48,7 +48,7 @@ namespace HappyDungeon
 
             HPBar = new Enemies.EnemyHealthBar(game, selfType);
 
-            brainAgent = new Enemies.AgentStupid(this);
+            brainAgent = new Enemies.AgentStupid(this, game);
             enemyBlockCollison = new EnemyBlockCollision(game);
 
             currentMoveIndex = 0;

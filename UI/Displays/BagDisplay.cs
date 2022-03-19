@@ -68,8 +68,8 @@ namespace HappyDungeon.UI.Displays
         private Vector2 hoveringDrawPos;
         private GeneralSprite hoveringDescriptionText;
         private GeneralSprite hoveringDescriptionBox;
-        private Stopwatch hoveringSW = new Stopwatch();
-        private Stopwatch hoveringPreCastSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch hoveringSW = new System.Diagnostics.Stopwatch();
+        private System.Diagnostics.Stopwatch hoveringPreCastSW = new System.Diagnostics.Stopwatch();
         private int hoveringUpdateInterval = 100;
         private int hoveringPreCastPeriod = 500;
         private bool isStationary = false;
@@ -96,9 +96,9 @@ namespace HappyDungeon.UI.Displays
         private bool KBS = false;  // Keyboard session flag 
         private int KBIH = 0;      // Keyboard Index Horizontal 
         private int KBIV = 0;      // Keyboard Index Vertical 
-        private Stopwatch KBVSW = new Stopwatch();  // Keyboard Vertical Stopwatch
-        private Stopwatch KBHSW = new Stopwatch();  // Keyboard Horizontal Stopwatch
-        private Stopwatch optionProtectionSW = new Stopwatch(); // Avoid repetitive triggering of Enter key
+        private System.Diagnostics.Stopwatch KBVSW = new System.Diagnostics.Stopwatch();  // Keyboard Vertical Stopwatch
+        private System.Diagnostics.Stopwatch KBHSW = new System.Diagnostics.Stopwatch();  // Keyboard Horizontal Stopwatch
+        private System.Diagnostics.Stopwatch optionProtectionSW = new System.Diagnostics.Stopwatch(); // Avoid repetitive triggering of Enter key
         private int KBInterval = 200;               // The one to use 
         private int optionConfirmProtection = 500;  // Cooldown for next valid Enter key confirm
 

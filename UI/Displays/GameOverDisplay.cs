@@ -37,7 +37,7 @@ namespace HappyDungeon.UI.Displays
         // ------------------------ Switch for keyboard control ---------------------------
         private bool KBS = false; // Keyboard session flag 
         private int KBI = 0;      // Option index 
-        private Stopwatch KBSW = new Stopwatch();
+        private System.Diagnostics.Stopwatch KBSW = new System.Diagnostics.Stopwatch();
         private int KBInterval = 100;
 
 
