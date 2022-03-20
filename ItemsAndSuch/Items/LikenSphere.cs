@@ -33,7 +33,9 @@ namespace HappyDungeon
         private Stopwatch stopwatch;
         private bool shieldOn = false;
         private bool pickupProtection = false;
-        private bool cooldownFinished = true; 
+        private bool cooldownFinished = true;
+
+        private int selfIndex = Globals.ITEM_LINKEN; 
 
         private Color defaultTint = Color.White;
 
@@ -178,7 +180,7 @@ namespace HappyDungeon
 
         public int SelfIndex()
         {
-            return Globals.ITEM_LINKEN; 
+            return selfIndex; 
         }
         public General.Modifiers.IModifier GetPickupModifier()
         {
@@ -206,6 +208,13 @@ namespace HappyDungeon
         public string GetItemDescription()
         {
             return TextBridge.Instance.GetIndexedDescrption(SelfIndex());
+        }
+
+        public int GetPickUpScore()
+        {
+            return General.ScoreTable.Instance.getScore(
+                selfIndex, game.difficulty
+                );
         }
     }
 }

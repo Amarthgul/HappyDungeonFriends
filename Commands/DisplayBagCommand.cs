@@ -10,15 +10,16 @@ namespace HappyDungeon
     public class DisplayBagCommand : ICommand
     {
         private Game1 game;
-        private Stopwatch stopwatch;
+        private System.Diagnostics.Stopwatch stopwatch;
 
         public DisplayBagCommand(Game1 G)
         {
             game = G;
 
-            stopwatch = new Stopwatch(game);
+            stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Restart();
         }
+
         public void execute()
         {
             if (stopwatch.ElapsedMilliseconds < Globals.KB_STATE_HOLD)
@@ -35,7 +36,6 @@ namespace HappyDungeon
             }
 
             stopwatch.Restart();
-            
         }
 
     }

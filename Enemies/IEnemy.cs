@@ -9,6 +9,11 @@ using Microsoft.Xna.Framework;
 namespace HappyDungeon
 {
 
+    /// <summary>
+    /// IEnemy represents the "outside" of an enemy class, 
+    /// i.e. how they exchange infomation with other characters. 
+    /// The inside is handled by "IAgent" class and its derivatives.
+    /// </summary>
     public interface IEnemy
     {
 
@@ -36,6 +41,8 @@ namespace HappyDungeon
 
         bool IsDead();
 
-        DamageInstance DealCollisionDamage(); 
+        DamageInstance DealCollisionDamage();
+
+        int GetKillScore();
     }
 }

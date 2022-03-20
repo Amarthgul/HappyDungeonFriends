@@ -16,11 +16,13 @@ namespace HappyDungeon
     {
         /// <summary>
         /// Dev options. 
-        /// Please ntoe that _DEVMODE is the master trigger. All other triggers are regarded 
-        /// as not enabled unless _DEVMODE is on. 
+        /// Please note that _DEVMODE is the master trigger. All other triggers are 
+        /// regarded as not enabled unless _DEVMODE is on. 
+        /// Also note that Dev mode is not the same as BEGUGGING in the Globals. 
+        /// Dev mode aims in tweaking features, while DEBUGGING is for coding. 
         /// </summary>
-        private bool _DEVMODE = true;       // Root flag for all other dev options 
-        private bool _ENABLE_FOW = false;   // Enable fog of war 
+        private bool _DEVMODE = false;       // Root flag for all other dev options 
+        private bool _ENABLE_FOW = false;   // Enable fog of war
         private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
 
         // ================================================================================
@@ -35,13 +37,14 @@ namespace HappyDungeon
 
         public Globals.GameStates gameState { get; set; }
         private int mapSize = 9;
-        public bool virgin { get; set; }
+        public bool virgin { get; set; } // Some UI display differently depend on this
 
         // --------------------------------------------------------------------------------
         // -------------------------------- Player changeable -----------------------------
-        public float[] volumes { get; set; }
-        public Globals.GameLevel gameLevel { get; set; }
-        public Globals.Language gameLanguage { get; set; }
+        public float[] volumes { get; set; }                // Sound volume
+        public Globals.GameLevel gameLevel { get; set; }    // 3 levels: Delight, Joy, Bliss
+        public Globals.Language gameLanguage { get; set; }  
+        // Only English, add others if you have the patience of drawing sprites for texts 
         public Globals.GameDifficulty difficulty { get; set; }
 
         // ================================================================================
@@ -240,7 +243,7 @@ namespace HappyDungeon
                     virgin = false;
             }
 
-            // Keyboard and mouse always updates, but id dependent on game state in their Update method
+            // Keyboard and mouse always updates, but is dependent on game state in their Update method
             foreach (IController controller in controllerList)
             {
                 controller.Update();

@@ -27,7 +27,6 @@ namespace HappyDungeon
 
         public RoomInfo GetStart()
         {
-
             // Note that changing the initial room in GenerateRoom.cs can do the same 
             // But more comprehensive and less buggy 
             if (_DEVMODE)

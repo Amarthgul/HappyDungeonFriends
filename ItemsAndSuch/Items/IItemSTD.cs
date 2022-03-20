@@ -15,7 +15,10 @@ namespace HappyDungeon
     /// </summary>
     class IItemSTD : IItem
     {
+        protected Game1 game;
         protected GeneralSprite itemSprite;
+
+        protected int selfIndex = Globals.ITEM_STD; 
 
         // Item hold 
         protected Stopwatch stopwatch;
@@ -24,6 +27,7 @@ namespace HappyDungeon
 
         public IItemSTD(Game1 G, Vector2 P)
         {
+            game = G; 
             stopwatch = new Stopwatch(G);
 
             stopwatch.Restart();
@@ -111,6 +115,13 @@ namespace HappyDungeon
 
         public virtual string GetItemDescription() {
             return TextBridge.Instance.GetIndexedDescrption(SelfIndex()); ;
+        }
+
+        public int GetPickUpScore()
+        {
+            return General.ScoreTable.Instance.getScore(
+                selfIndex, game.difficulty
+                );
         }
     }
 }

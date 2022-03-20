@@ -24,6 +24,8 @@ namespace HappyDungeon
         private Game1 game;
         private SpriteBatch spriteBatch;
 
+        private int selfIndex = Globals.ITEM_NOTE_SO; 
+
         // Item hold, inrevlant to game state so used normal stopwatch 
         private System.Diagnostics.Stopwatch stopwatch;
         private long timer;
@@ -111,7 +113,7 @@ namespace HappyDungeon
 
         public int SelfIndex()
         {
-            return Globals.ITEM_NOTE_SO; 
+            return selfIndex;
         }
         public General.Modifiers.IModifier GetPickupModifier()
         {
@@ -130,6 +132,13 @@ namespace HappyDungeon
         public string GetItemDescription()
         {
             return selfDescription;
+        }
+
+        public int GetPickUpScore()
+        {
+            return General.ScoreTable.Instance.getScore(
+                selfIndex, game.difficulty
+                );
         }
     }
 }
