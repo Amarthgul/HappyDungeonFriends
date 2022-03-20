@@ -62,7 +62,7 @@ namespace HappyDungeon.UI.Displays
 
         private Vector2 bagOnHoverIndexedLoc = new Vector2(0, 0); // Determining which slot will the hover not be in
 
-        // Hovering descriptions 
+        // On hovering descriptions 
         private Vector2 deltaTrigger = new Vector2(.5f, .5f) * Globals.SCALAR;
         private Vector2 lastHoveringPos = new Vector2();
         private Vector2 hoveringDrawPos;
@@ -71,7 +71,7 @@ namespace HappyDungeon.UI.Displays
         private System.Diagnostics.Stopwatch hoveringSW = new System.Diagnostics.Stopwatch();
         private System.Diagnostics.Stopwatch hoveringPreCastSW = new System.Diagnostics.Stopwatch();
         private int hoveringUpdateInterval = 100;
-        private int hoveringPreCastPeriod = 500;
+        private int hoveringPreCastPeriod = 500;   // After this amount of time, the descrption would show up
         private bool isStationary = false;
         private bool hoveringPreCasting = false;
         private bool hoveringDisplay = false;

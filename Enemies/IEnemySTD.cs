@@ -391,6 +391,13 @@ namespace HappyDungeon
             return selfIndex; 
         }
 
+        public virtual int GetKillScore()
+        {
+            return General.ScoreTable.Instance.getScore(
+                selfIndex, game.difficulty
+                ); 
+        }
+
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================

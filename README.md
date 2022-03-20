@@ -10,12 +10,6 @@ not be shown to kids.
 
 By the end it should have all codes, images (include PSDs), and musics available.
 
-Note that this project has a strong personal flavour, I do try to keep the naming, comments, and implementation 
-consistent, but it is not strictly bound to any design pattern or strategy. Like some words are used interchangeably; 
-and the inner structure of a file, like what fileds goes first or how to sort the methods, are not the same; 
-how brackets are indented may also vary slightly depending on whether or not I want a certain part to be more 
-compact. 
-
 Currently still work in progress. 
 
 まだまだ...
@@ -58,6 +52,8 @@ Added new stopwatch. Detail at Dev log 0.11.
 
 19 March 2022
 
+**Finally back to work after almost a year's hiatus!**
+
 Partially substituted the `stopwatch` class. there are now 2 types of stopwatches:
 
 * `Stopwatch`, defined in this project under `Misc` folder. This stopwatch can be set to halt 
@@ -76,15 +72,10 @@ Plus the user interface and game control.
 
 ## Random comments 
 
-* This game drew inspiration from some of my favorites, such as DotA 2, Diablo, Warcraft, Isaac, 
-and some part of Gris and Disgaea. 
+* This game is apprently based on Legend of Zelda (gameplay-wise), originally a group project
+for one of my CSE classes. But I feel that project was largly flawed, so I decided to completely 
+remake it and add things I wish I have added for the project. 
 
-* Items count CD on its own and still counts when in the bag, it seems possible to quickly 
-switch item in and out of slots and thus drastically increase the ability of the character.
-I don't really want to change that, it feels fun. 
-
-* Since `Stopwatch` will continue running once after started, it might happen that some enemy
-or environments will have a surge of action after the change of game states. It is definitely 
-possible to add a switch condition to all stopwatches (or write a new stopwatch class),
-but considering the amount of work needed,
-I probably won't be doing it. 
+* Drew inspiration from some of my favorite games, Diablo, DotA 2, Warcraft, Isaac, Gris, Disgaea, 
+to name a few. Also imbued heavily is the idea of Mahou Shoujo, Madoka Magica especially, that is, failure 
+and sacrifice even with the earnest wish and best effort. 

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace HappyDungeon
 {
     /// <summary>
-    /// Agent is the decision making part for the enemies. 
-    /// The "brain", you can say. 
+    /// Agent is the decision making part for the enemies, 
+    /// the "brain", one can say. 
     /// </summary>
     public interface IAgent
     {

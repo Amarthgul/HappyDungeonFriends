@@ -166,5 +166,12 @@ namespace HappyDungeon
         {
             return TextBridge.Instance.GetIndexedDescrption(SelfIndex()); ;
         }
+
+        public int GetPickUpScore()
+        {
+            return General.ScoreTable.Instance.getScore(
+                selfIndex, game.difficulty
+                );
+        }
     }
 }

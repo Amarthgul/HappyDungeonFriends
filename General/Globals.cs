@@ -61,8 +61,8 @@ namespace HappyDungeon
         public const int WHOLE_SHEET = -1; // Use the entire sheet when updating frames 
         public const int ONE_FRAME = 1;
         public const int FRAME_CYCLE = 4;  // By default each animation cycle has 4 frames 
-        public static Vector2 SPRITE_OFFSET_2 = new Vector2(-2 * Globals.SCALAR, -2 * Globals.SCALAR);
-        public static Vector2 SPRITE_OFFSET_UNIT = new Vector2(-ORIG_UNIT * Globals.SCALAR, -ORIG_UNIT * Globals.SCALAR);
+        public static Vector2 SPRITE_OFFSET_2 = new Vector2(-2 * SCALAR, -2 * SCALAR);
+        public static Vector2 SPRITE_OFFSET_UNIT = new Vector2(-ORIG_UNIT * SCALAR, -ORIG_UNIT * SCALAR);
 
         // ================================================================================
         // ============================== Levels and Rooms ================================
@@ -77,7 +77,15 @@ namespace HappyDungeon
         // ================================================================================
         // ====================== Item, enemy, and block indexes ==========================
         // ================================================================================
-        // -1 ~ -255 are items 
+
+        /// <summary>
+        /// Solid blocks are block with index higher than 127 
+        /// Animated blocks are btween 127 to 0 (inclusive)
+        /// -1 ~ -255 are items 
+        /// -256 and smaller are enemies or NPCs 
+        /// </summary>
+
+        // Items 
         public const int ITEM_TORCH =     -1;
         public const int ITEM_LINKEN =   -10;
         public const int ITEM_NOTE_SO =  -20;
@@ -86,13 +94,18 @@ namespace HappyDungeon
 
         public const int ITEM_BOUND = -256;
 
-        // -256 and smaller are enemies or NPCs 
+
+        //Enemy or MPC 
         public const int ENEMY_STD =   -256;
         public const int ENEMY_BEAD =  -257;
+        /// <summary>
+        /// Please note adding or updating the enemy index would very possibily also require 
+        /// updates in ScoreTable (Enemies.Database.ScoreTable).
+        /// Score are kept in a seperate file becasue it's not an essential feature, and also
+        /// to reduce the size and amount of items in this Globals. 
+        /// </summary>
 
-        // Blocks are these bigger or equal to 0
-
-        // Solid blocks are block with index higher than 127 
+        // Blocks 
         public const int STARE_BLOCK_1 = 128;
         public const int STARE_BLOCK_2 = 144; 
         public const int SOLID_BLOCK_BOUND = 128;
@@ -177,12 +190,14 @@ namespace HappyDungeon
         public enum DamageEffect { Stun, Knockback, Break, None };
         public enum DamageType { None, Burn };
 
-        // Chinese and Japanese sprites are too difficult to make and I don't speak Spanish
-        // So English is the only one currently supports 
-        public enum Language { English, Spanish, Chinese, Japanese, French };
+        /// Chinese and Japanese sprites are too difficult to make and I don't
+        /// speak Spanish, deutsch, or French, so English is the only one language 
+        /// currently the game supports (till v0.11)
+        public enum Language { English, Spanish, Chinese, Japanese, French, Deutsch };
 
         // --------------------------------------------------------------------------------
         // -------------------------------- Iterators -------------------------------------
+        // Created for quick access or iteration 
         public static List<Direction> FourDirIter = new List<Direction>() 
             { Direction.Left, Direction.Right, Direction.Up, Direction.Down};
 

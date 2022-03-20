@@ -116,7 +116,7 @@ namespace HappyDungeon
         {
             if (game.mainChara.Illuminati())
             {
-                // Add gold glowing FX 
+                // Add gold shimmering FX 
                 goldFX.Draw(spriteBatch, position, defaultTint);
 
                 // Update the sprite animation only if being lit by torch
@@ -172,6 +172,13 @@ namespace HappyDungeon
         public string GetItemDescription()
         {
             return TextBridge.Instance.GetIndexedDescrption(SelfIndex()); ;
+        }
+
+        public int GetPickUpScore()
+        {
+            return General.ScoreTable.Instance.getScore(
+                selfIndex, game.difficulty
+                );
         }
 
     }

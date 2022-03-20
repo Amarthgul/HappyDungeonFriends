@@ -123,6 +123,12 @@ namespace HappyDungeon
         /// </summary>
         /// <returns>Some short sentences</returns>
         string GetItemDescription();
+
+        /// <summary>
+        /// Get the score per item per pickup 
+        /// </summary>
+        /// <returns>Score of picking up 1 of this item</returns>
+        int GetPickUpScore();
     }
 }
 
