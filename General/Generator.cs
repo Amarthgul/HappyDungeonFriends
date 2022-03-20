@@ -134,14 +134,16 @@ namespace HappyDungeon
             Vector2 Position; 
 
             int[,] RoomMat = game.roomCycler.GetCurrentRoomInfo().Arrangement;
+            int ItemIndex; 
 
             for (int i = 0; i < RoomMat.GetLength(0); i++)
             {
                 for (int j = 0; j < RoomMat.GetLength(1); j++)
                 {
                     Position = Misc.Instance.PositionTranslate(i, j);
+                    ItemIndex = General.IndexCoder.GetAuxIndex(RoomMat[i, j]);
 
-                    switch (RoomMat[i, j])
+                    switch (ItemIndex)
                     {
                         case Globals.ITEM_TORCH:
                             ItemList.Add(new Torch(Game, Position)); ;
@@ -172,20 +174,22 @@ namespace HappyDungeon
             Vector2 Position;
 
             int[,] RoomMat = game.roomCycler.GetCurrentRoomInfo().Arrangement;
+            int BlockIndex; 
 
             for (int i = 0; i < RoomMat.GetLength(0); i++)
             {
                 for (int j = 0; j < RoomMat.GetLength(1); j++)
                 {
                     Position = Misc.Instance.PositionTranslate(i, j);
+                    BlockIndex = General.IndexCoder.GetBlockIndex(RoomMat[i, j]);
 
-                    switch (RoomMat[i, j])
+                    switch (BlockIndex)
                     {
                         case Globals.STARE_BLOCK_1:
-                            BlockList.Add(new StareBlock(Game, Position, RoomMat[i, j] / BlockColCount)); ;
+                            BlockList.Add(new StareBlock(Game, Position, BlockIndex / BlockColCount)); ;
                             break;
                         case Globals.STARE_BLOCK_2:
-                            BlockList.Add(new StareBlock(Game, Position, RoomMat[i, j] / BlockColCount));
+                            BlockList.Add(new StareBlock(Game, Position, BlockIndex / BlockColCount));
                             break;
                         default:
                             break;
@@ -203,14 +207,16 @@ namespace HappyDungeon
             Vector2 Position;
 
             int[,] RoomMat = game.roomCycler.GetCurrentRoomInfo().Arrangement;
+            int EnemyIndex; 
 
             for (int i = 0; i < RoomMat.GetLength(0); i++)
             {
                 for (int j = 0; j < RoomMat.GetLength(1); j++)
                 {
                     Position = Misc.Instance.PositionTranslate(i, j);
+                    EnemyIndex = General.IndexCoder.GetAuxIndex(RoomMat[i, j]);
 
-                    switch (RoomMat[i, j])
+                    switch (EnemyIndex)
                     {
                         case Globals.ENEMY_BEAD:
                             EnemyList.Add(new BloodBead(Game, Position));

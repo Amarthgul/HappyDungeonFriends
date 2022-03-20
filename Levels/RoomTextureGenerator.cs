@@ -19,12 +19,14 @@ namespace HappyDungeon.Levels
         private const int DOOR_HOLE_INDEX = 4;
         private const int EDGE_PRESERVE = 17;
 
+        // Mapping the direction Enum to the image of the doors
+        // Since the sprite drawn the doors in different order 
         private Dictionary<int, int> doorDirMapping = new Dictionary<int, int>(){
             {0, 1},
             {1, 2},
             {2, 0},
             {3, 3}
-            };  // Mapping the direction Enum to the image of the doors 
+            };   
 
         private SpriteBatch spriteBatch;
         private Game1 game;
@@ -87,8 +89,10 @@ namespace HappyDungeon.Levels
         /// </summary>
         /// <param name="index">Block index</param>
         /// <returns>Texture of the block</returns>
-        private Texture2D getBlockByIndex(int index)
+        private Texture2D getBlockByIndex(int Index)
         {
+            int index = General.IndexCoder.GetBlockIndex(Index);
+
             Texture2D block = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
                 Globals.ORIG_UNIT, Globals.ORIG_UNIT, pixel => defaultColor);
             int row = index / ALL_MIGHT_DIV;
@@ -130,8 +134,10 @@ namespace HappyDungeon.Levels
                     Vector2 StartPoint = new Vector2(Globals.ORIG_BORDER + c * Globals.ORIG_UNIT,
                         Globals.ORIG_BORDER + r * Globals.ORIG_UNIT);
 
-                    int TileTypeNow = (mapMatrix[r, c] >= 0 && mapMatrix[r, c] < ALL_MIGH_COUNT) ?
-                        mapMatrix[r, c] : defaultBlockIndex;
+                    int BlockIndex = General.IndexCoder.GetBlockIndex(mapMatrix[r, c]);
+                    int TileTypeNow = (BlockIndex >= 0 && BlockIndex < ALL_MIGH_COUNT) ?
+                        BlockIndex : defaultBlockIndex;
+
                     Texture2D TextureNow = getBlockByIndex(TileTypeNow);
 
                     int CountNow = TextureNow.Width * TextureNow.Height;

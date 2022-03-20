@@ -144,6 +144,13 @@ namespace HappyDungeon
             return result;
         }
 
+        /// <summary>
+        /// Check if a projectile can be seen. 
+        /// </summary>
+        /// <param name="Proj">The projectile to be checked</param>
+        /// <param name="PlayerRect">Rectangle of the player</param>
+        /// <param name="VisibleRange">Visible range of the fog</param>
+        /// <returns></returns>
         public bool ProjectileFogBreaker(IProjectile Proj, Rectangle PlayerRect, float VisibleRange)
         {
             bool result = false;
@@ -222,6 +229,12 @@ namespace HappyDungeon
             return (int)Math.Sqrt(Math.Pow((P1.X - P2.X), 2) + Math.Pow((P1.Y - P2.Y), 2));
         }
 
+        /// <summary>
+        /// Manhattan distance between 2 points.
+        /// </summary>
+        /// <param name="P1">Point 1</param>
+        /// <param name="P2">Point 2</param>
+        /// <returns>L1 or to say Manhattan distance between point 1 and 2</returns>
         public int L1Distance(Vector2 P1, Vector2 P2)
         {
             Vector2 Total = P1 - P2; 

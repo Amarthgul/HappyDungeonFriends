@@ -79,8 +79,8 @@ namespace HappyDungeon
         // ================================================================================
 
         /// <summary>
-        /// Solid blocks are block with index higher than 127 
-        /// Animated blocks are btween 127 to 0 (inclusive)
+        /// Solid blocks are block with collision box and an index higher than 127 
+        /// Blocks without collision box are btween 127 to 0 (inclusive)
         /// -1 ~ -255 are items 
         /// -256 and smaller are enemies or NPCs 
         /// </summary>

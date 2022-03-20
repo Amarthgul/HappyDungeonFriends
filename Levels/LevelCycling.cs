@@ -140,9 +140,8 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Remove an index from the room, either an enemy or an item.  
-        /// If the given location is not correct, it'll try to find one in the map and
-        /// replace it with the default block index. 
+        /// Remove an index from the room, either an enemy or an item.
+        /// If the given location is not correct, it'll try to find one in the map. 
         /// </summary>
         /// <param name="Index">Index to remove</param>
         /// <param name="RefPosition">Best guess of its position</param>
@@ -162,10 +161,14 @@ namespace HappyDungeon
                 {
                     for (int j = 0; j < Globals.RTILE_COLUMN; j++)
                     {
-                        if (currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].Arrangement[i, j] == Index)
+                        int TargetIndex = currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].Arrangement[i, j];
+                        int AuxIndex = General.IndexCoder.GetAuxIndex(TargetIndex);
+                        //int BlockIndex = General.IndexCoder.GetBlockIndex(TargetIndex);
+                        
+                        if (AuxIndex == Index)
                         {
                             currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].Arrangement[i, j]
-                                = currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].DefaultBlock;
+                                = General.IndexCoder.OverrideAuxIndex(TargetIndex, 0);
                             break;
                         } 
                     }

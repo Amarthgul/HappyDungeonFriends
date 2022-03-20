@@ -71,6 +71,7 @@
     <Compile Include="Enemies\Agent\AgentStupid.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
     <Compile Include="Enemies\Database\IdiotDifficulty.cs" />
+    <Compile Include="General\IndexCoder.cs" />
     <Compile Include="General\ScoreTable.cs" />
     <Compile Include="Enemies\IEnemySTD.cs" />
     <Compile Include="Enemies\BloodBead.cs" />

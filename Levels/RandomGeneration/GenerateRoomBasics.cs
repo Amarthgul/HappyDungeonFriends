@@ -64,7 +64,8 @@ namespace HappyDungeon.Levels
         /// </summary>
         /// <param name="Pattern">Pattern to follow</param>
         /// <param name="Index">Index to put</param>
-        public void PopulatePattern(bool[,] Pattern, int Index)
+        /// <param name="IsBlock">Whether or not it's used to populate blocks (false for item and enemy)</param>
+        public void PopulatePattern(bool[,] Pattern, int Index, bool IsBlock)
         {
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
             {
@@ -72,7 +73,10 @@ namespace HappyDungeon.Levels
                 {
                     if (Pattern[i, j])
                     {
-                        room.Arrangement[i, j] = Index;
+                        if (IsBlock)
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideBlockIndex(room.Arrangement[i, j], Index);
+                        else
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideAuxIndex(room.Arrangement[i, j], Index);
                     }
                 }
             }
@@ -84,7 +88,8 @@ namespace HappyDungeon.Levels
         /// <param name="Pattern">Pattern to fill</param>
         /// <param name="ListOfIndex">Possible indexes to fill with</param>
         /// <param name="FillPercent">Precent of the pattern to be filled</param>
-        public void PopulatePatternPartial(bool[,] Pattern, int[] ListOfIndex, double FillPercent)
+        /// <param name="IsBlock">Whether or not it's used to populate blocks (false for item and enemy)</param>
+        public void PopulatePatternPartial(bool[,] Pattern, int[] ListOfIndex, double FillPercent, bool IsBlock)
         {
             int Possibility = (int)(FillPercent * 100);
 
@@ -94,7 +99,13 @@ namespace HappyDungeon.Levels
                 {
                     if (Globals.RND.Next(100) < Possibility && Pattern[i, j])
                     {
-                        room.Arrangement[i, j] = ListOfIndex[Globals.RND.Next(ListOfIndex.Length)];
+                        if (IsBlock)
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideBlockIndex(room.Arrangement[i, j], 
+                                ListOfIndex[Globals.RND.Next(ListOfIndex.Length)]);
+                        else
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideAuxIndex(room.Arrangement[i, j], 
+                                ListOfIndex[Globals.RND.Next(ListOfIndex.Length)]);
+                        
                     }
                 }
             }
@@ -109,7 +120,8 @@ namespace HappyDungeon.Levels
         /// <param name="Pattern">Pattern to follow</param>
         /// <param name="ListOfIndex">All possible indexes that could be added</param>
         /// <param name="MaxType">Max amount of different indexes that can appear</param>
-        public void PopulatePatternRand(bool[,] Pattern, int[] ListOfIndex, int MaxType)
+        /// <param name="IsBlock">Whether or not it's used to populate blocks (false for item and enemy)</param>
+        public void PopulatePatternRand(bool[,] Pattern, int[] ListOfIndex, int MaxType, bool IsBlock)
         {
             List<int> ActualList = new List<int>(); ;
 
@@ -127,7 +139,13 @@ namespace HappyDungeon.Levels
                 {
                     if (Pattern[i, j])
                     {
-                        room.Arrangement[i, j] = ActualList[Globals.RND.Next(ActualList.Count)];
+                        if (IsBlock)
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideBlockIndex(room.Arrangement[i, j],
+                                ActualList[Globals.RND.Next(ActualList.Count)]);
+                        else
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideAuxIndex(room.Arrangement[i, j],
+                                ActualList[Globals.RND.Next(ActualList.Count)]);
+                        //room.Arrangement[i, j] = ActualList[Globals.RND.Next(ActualList.Count)];
                     }
                 }
             }
@@ -140,7 +158,8 @@ namespace HappyDungeon.Levels
         /// <param name="Pattern">Pattern to fill</param>
         /// <param name="ListOfIndex">Possible indexes to fill with</param>
         /// <param name="Condition">The condition for current index to meet</param>
-        public void PopulatPatternCondition(bool[,] Pattern, int[] ListOfIndex, Func<int, bool> Condition)
+        /// <param name="IsBlock">Whether or not it's used to populate blocks (false for item and enemy)</param>
+        public void PopulatPatternCondition(bool[,] Pattern, int[] ListOfIndex, Func<int, bool> Condition, bool IsBlock)
         {
 
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
@@ -149,7 +168,13 @@ namespace HappyDungeon.Levels
                 {
                     if (Pattern[i, j] && Condition(room.Arrangement[i, j]))
                     {
-                        room.Arrangement[i, j] = ListOfIndex[Globals.RND.Next(ListOfIndex.Length)];
+                        //room.Arrangement[i, j] = ListOfIndex[Globals.RND.Next(ListOfIndex.Length)];
+                        if (IsBlock)
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideBlockIndex(room.Arrangement[i, j],
+                                ListOfIndex[Globals.RND.Next(ListOfIndex.Length)]);
+                        else
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideAuxIndex(room.Arrangement[i, j],
+                                ListOfIndex[Globals.RND.Next(ListOfIndex.Length)]);
                     }
                 }
             }
@@ -163,7 +188,9 @@ namespace HappyDungeon.Levels
         /// <param name="ListOfIndex">Possible indexes to fill with</param>
         /// <param name="OffsetX">Row function</param>
         /// <param name="OffsetY">Column function</param>
-        public void PopulatePatternWeighted(bool[,] Pattern, int[] ListOfIndex, Func<int, int> OffsetX, Func<int, int> OffsetY)
+        /// <param name="IsBlock">Whether or not it's used to populate blocks (false for item and enemy)</param>
+        public void PopulatePatternWeighted(bool[,] Pattern, int[] ListOfIndex, 
+            Func<int, int> OffsetX, Func<int, int> OffsetY, bool IsBlock)
         {
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
             {
@@ -176,25 +203,13 @@ namespace HappyDungeon.Levels
                         if (NewlyPopulate < ListOfIndex.Min()) NewlyPopulate = ListOfIndex.Min();
 
                         room.Arrangement[i, j] = NewlyPopulate;
+
+                        if (IsBlock)
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideBlockIndex(room.Arrangement[i, j], NewlyPopulate);
+                        else
+                            room.Arrangement[i, j] = General.IndexCoder.OverrideAuxIndex(room.Arrangement[i, j], NewlyPopulate);
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Soft index is added to places where it's not a solid block. 
-        /// </summary>
-        /// <param name="Position">Position to try to place the index</param>
-        /// <param name="Index">Index to be placed</param>
-        /// <returns></returns>
-        public bool AddSoftIndex(int[] Position, int Index)
-        {
-            if (IsBlock(Position[0], Position[1]))
-                return false;
-            else
-            {
-                room.Arrangement[Position[0], Position[1]] = Index;
-                return true;
             }
         }
 
@@ -203,37 +218,38 @@ namespace HappyDungeon.Levels
         // ================================================================================
 
         /// <summary>
-        /// Check if that position is going to spawn as a block.
+        /// Check if that position is going to spawn as a block/walkable tile.
         /// </summary>
         /// <param name="row">Meh</param>
         /// <param name="col">Meh</param>
         /// <returns>True if it's a block</returns>
         protected bool IsBlock(int row, int col)
         {
-            return (room.Arrangement[row, col] > 0);
+            return (General.IndexCoder.GetBlockIndex(room.Arrangement[row, col]) > 0);
         }
 
         /// <summary>
-        /// Check if that position is going to spawn as a solid block.
+        /// Check if that position is going to spawn with a solid block.
         /// Solid block hiders movement. 
         /// </summary>
         /// <param name="row">Meh</param>
         /// <param name="col">Meh</param>
         /// <returns>True if that position is going to have a solid block</returns>
-        protected bool IsSolidBlock(int row, int col)
+        protected bool HasSolidBlock(int row, int col)
         {
-            return (room.Arrangement[row, col] > Globals.SOLID_BLOCK_BOUND);
+            return (General.IndexCoder.GetBlockIndex(room.Arrangement[row, col]) > Globals.SOLID_BLOCK_BOUND);
         }
 
         /// <summary>
-        /// Check if the given location shall spawn an item. 
+        /// Check if the given location shall spawn with an item. 
         /// </summary>
         /// <param name="row">Meh</param>
         /// <param name="col">Meh</param>
         /// <returns>True if that index is an item</returns>
-        protected bool IsItem(int row, int col)
+        protected bool HasItem(int row, int col)
         {
-            return (room.Arrangement[row, col] < 0 && room.Arrangement[row, col] > Globals.ITEM_BOUND);
+            return (General.IndexCoder.GetAuxIndex(room.Arrangement[row, col]) < 0 &&
+                General.IndexCoder.GetAuxIndex(room.Arrangement[row, col]) > Globals.ITEM_BOUND);
         }
 
         /// <summary>
@@ -307,17 +323,21 @@ namespace HappyDungeon.Levels
         /// Flood the arrangement matrix with one single index. 
         /// </summary>
         /// <param name="Index">Flooding index.</param>
-        protected void FloodMap(int Index)
+        /// <param name="IsBlock">Whether or not it's used to populate blocks (false for item and enemy)</param>
+        protected void FloodMap(int Index, bool IsBlock)
         {
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
             {
                 for (int j = 0; j < room.Arrangement.GetLength(1); j++)
                 {
-                    room.Arrangement[i, j] = Index;
+                    //room.Arrangement[i, j] = General.IndexCoder.FloodIndex(Index) ;
+                    if (IsBlock)
+                        room.Arrangement[i, j] = General.IndexCoder.OverrideBlockIndex(room.Arrangement[i, j], Index);
+                    else
+                        room.Arrangement[i, j] = General.IndexCoder.OverrideAuxIndex(room.Arrangement[i, j], Index);
                 }
             }
         }
-
 
 
     }

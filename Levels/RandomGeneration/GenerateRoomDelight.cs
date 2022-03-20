@@ -100,7 +100,9 @@ namespace HappyDungeon
                         && Count < enemyCount 
                         && roomDB.canPlaceDirect[i, j])
                     {
-                        room.Arrangement[i, j] = enemyList[Globals.RND.Next(enemyList.Length)];
+                        //room.Arrangement[i, j] = enemyList[Globals.RND.Next(enemyList.Length)];
+                        room.Arrangement[i, j] = General.IndexCoder.OverrideAuxIndex(room.Arrangement[i, j], 
+                            enemyList[Globals.RND.Next(enemyList.Length)]);
                         Count++;
                     }
                 }
@@ -163,23 +165,23 @@ namespace HappyDungeon
 
             // Set default blocks and populate the basic grounds 
             room.DefaultBlock = DefaultBlock;
-            FloodMap(DefaultBlock);
+            FloodMap(DefaultBlock, true);
             PopulatePatternWeighted(NotPath, NonPathTiles, 
-                x => (Math.Max(x, x - 12) / 3), y => (Math.Max(y, y - 7)) / 3);
-            PopulatePatternRand(CornerWights, CornerTiles, CornerTiles.Length);
+                x => (Math.Max(x, x - 12) / 3), y => (Math.Max(y, y - 7)) / 3, true);
+            PopulatePatternRand(CornerWights, CornerTiles, CornerTiles.Length, true);
 
             // Put some stare blocks around the start up room 
             if (Globals.RND.Next(100) < StareBlockPossibility && distFromStartup < StareBlockThreshold)
             {
                 if (Globals.RND.Next(100) < 50)
-                    PopulatePattern(roomDB.shihonzuki, StareBlocks[Globals.RND.Next() % StareBlocks.Length]);
+                    PopulatePattern(roomDB.shihonzuki, StareBlocks[Globals.RND.Next() % StareBlocks.Length], true);
                 else
-                    PopulatePattern(roomDB.corners, StareBlocks[Globals.RND.Next() % StareBlocks.Length]);
+                    PopulatePattern(roomDB.corners, StareBlocks[Globals.RND.Next() % StareBlocks.Length], true);
             }
 
             // Add paths in the room 
-            PopulatePatternPartial(MaskedPath, SelectedTiles, PathFillPercent);
-            PopulatPatternCondition(MaskedPath, CompensateTiles, c => (c > HighBound));
+            PopulatePatternPartial(MaskedPath, SelectedTiles, PathFillPercent, true);
+            PopulatPatternCondition(MaskedPath, CompensateTiles, c => (c > HighBound), true);
 
         }
 
@@ -224,7 +226,7 @@ namespace HappyDungeon
             int RowMid = 2;
             int ColMid = 6;
 
-            FloodMap(blackRoomInedx);
+            FloodMap(blackRoomInedx, true);
 
             for (int i = 0; i < room.Arrangement.GetLength(0); i++)
             {
@@ -247,7 +249,7 @@ namespace HappyDungeon
 
             if (_DEVMODE)
             {
-                room.Arrangement = new int[,] {
+                int[,] DevMatrix = new int[,] {
                 { 0, 0, Globals.ITEM_LINKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 { 0, 0, Globals.ITEM_GOLD, 0, 0, 0, 0, 0, 0, Globals.STARE_BLOCK_2, 0, 0},
                 { 0, 0, 0, 0, 0, 0, 0, Globals.ITEM_TORCH, 0, 0, 0, 0},
@@ -255,6 +257,8 @@ namespace HappyDungeon
                 { 0, Globals.STARE_BLOCK_1, 0, 0, 0, 0, 0, Globals.ENEMY_BEAD, 0, 0, 0, Globals.ITEM_NOTE_SO},
                 { 0, Globals.STARE_BLOCK_1, 0, 0, 0, 0, 0, 0, Globals.ENEMY_STD, 0, 0, Globals.ITEM_NOTE_SO},
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, Globals.ITEM_NOTE_SO, Globals.ITEM_NOTE_SO, Globals.ITEM_NOTE_SO}};
+
+                room.Arrangement = General.IndexCoder.OverrideMatrixAutoFill(0, DevMatrix, false);
             }
 
             return room;
@@ -267,7 +271,7 @@ namespace HappyDungeon
             int ColMid = 7;
 
             room.Type = Globals.RoomTypes.Boss;
-            FloodMap(defaultBlock);
+            FloodMap(defaultBlock, true);
 
             //room.Arrangement[RowMid, ColMid] = Globals.BOSS_ENEMY;
         }

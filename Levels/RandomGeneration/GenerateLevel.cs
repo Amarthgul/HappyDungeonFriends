@@ -250,23 +250,6 @@ namespace HappyDungeon
             levelSet[CurrentPos[0] + (int)Offset.Y, CurrentPos[1] + (int)Offset.X].MysteryDoors[nextRoomDoorDir] = true;
         }
 
-        private void AddItemInRoom(int[] CurrentPos, int ItemIndex, int Number)
-        {
-            GenerateRoomDelight RoomGen = new GenerateRoomDelight();
-            RoomGen.room = levelSet[CurrentPos[0], CurrentPos[1]];
-            int Count = 0;
-
-            while (Count > Number)
-            {
-                int pos1 = Globals.RND.Next(Globals.RTILE_ROW);
-                int pos2 = Globals.RND.Next(Globals.RTILE_COLUMN);
-
-                if (RoomGen.AddSoftIndex(CurrentPos, ItemIndex))
-                {
-                    Count++;
-                }
-            }
-        }
 
         /// <summary>
         /// Randomly select a position, if there's a room, then make it as the start up room.
