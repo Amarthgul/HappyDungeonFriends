@@ -17,7 +17,7 @@ namespace HappyDungeon.UI.Texts
 
 
         /// <summary>
-        /// Should be having "Campaign", "Adventure", and "Settings" 3 options. 
+        /// Should be having "Campaign", "Adventure", "Load", and "Settings" 4 options. 
         /// </summary>
         /// <returns></returns>
         string[] TitleOptions();
@@ -27,6 +27,8 @@ namespace HappyDungeon.UI.Texts
         string[] PauseOptions();
 
         string[] DeathOptions();
+
+        string[] SaveAndLoadOptions();
 
         string DifficultyOptions(Globals.GameDifficulty DiffOption);
 

@@ -27,11 +27,11 @@ namespace HappyDungeon
             // ------------------------------------------------------------------
             // -------------------- Difference from STD--------------------------
             selfIndex = Globals.ENEMY_BEAD;
-            segmentedSpeed = new int[] {
-                (int)(0.1 * Globals.SCALAR),
-                (int)(0.3 * Globals.SCALAR),
-                (int)(0.6 * Globals.SCALAR),
-                (int)(0.3 * Globals.SCALAR) };
+            segmentedSpeed = new float[] {
+                0.1f * Globals.SCALAR,
+                0.3f * Globals.SCALAR,
+                0.6f * Globals.SCALAR,
+                0.3f * Globals.SCALAR };
             collisionDMG = -12;
             horizontalTop = 4 * Globals.SCALAR;
             horizontalBot = 3 * Globals.SCALAR;

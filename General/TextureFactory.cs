@@ -53,6 +53,7 @@ namespace HappyDungeon
 
         public ImageFile titleText; 
         public ImageFile titleBackground;
+        public ImageFile titleBackgroundWhole; 
         public ImageFile skyBackground;
         public ImageFile titleCloudFG;
         public ImageFile titleCloudMG;
@@ -67,6 +68,10 @@ namespace HappyDungeon
         public ImageFile settingSliderRed;
         public ImageFile settingSlideBarRed;
         public ImageFile settingArrow;
+
+        public ImageFile loadSaveInsSelect;
+        public ImageFile loadSaveInsOverlay; 
+        public ImageFile[] loadSaveIns; 
 
         public ImageFile gameOverDeadBG; 
 
@@ -86,7 +91,6 @@ namespace HappyDungeon
         public ImageFile fontSmallBR; 
 
         
-
         // ================================================================================
         // =================================== Items ======================================
         // ================================================================================ 
@@ -175,6 +179,7 @@ namespace HappyDungeon
 
             titleText = new ImageFile(content, "Images/UI/title", 1, 1);
             titleBackground = new ImageFile(content, "Images/UI/titleBackground", 1, 1);
+            titleBackgroundWhole = new ImageFile(content, "Images/UI/titleBackgroundWhole", 1, 1);
             skyBackground = new ImageFile(content, "Images/UI/skyBackground", 1, 1);
             titleCloudFG = new ImageFile(content, "Images/UI/titleCloudFG", 1, 1);
             titleCloudMG = new ImageFile(content, "Images/UI/titleCloudMG", 1, 1);
@@ -193,6 +198,14 @@ namespace HappyDungeon
             settingSliderRed = new ImageFile(content, "Images/UI/sliderRed", 1, 1);
             settingSlideBarRed = new ImageFile(content, "Images/UI/settingSlidersRed", 1, 1);
             settingArrow = new ImageFile(content, "Images/UI/settingArrows", 4, 4);
+
+            loadSaveInsOverlay = new ImageFile(content, "Images/UI/ProgressionInstanceOverlay", 1, 1);
+            loadSaveInsSelect = new ImageFile(content, "Images/UI/ProgressionInstanceEmpty", 1, 1);
+            loadSaveIns = new ImageFile[] { 
+                new ImageFile(content, "Images/UI/ProgressionInstance01", 1, 1),
+                new ImageFile(content, "Images/UI/ProgressionInstance02", 1, 1),
+                new ImageFile(content, "Images/UI/ProgressionInstance03", 1, 1)
+            };
 
             gameOverDeadBG = new ImageFile(content, "Images/UI/gameOverDeadBG", 1, 1);
 

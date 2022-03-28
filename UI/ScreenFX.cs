@@ -13,6 +13,7 @@ namespace HappyDungeon
 {
     public class ScreenFX
     {
+        private const bool _DEBUGGING = false; 
 
         private Game1 game;
         private SpriteBatch spriteBatch;
@@ -24,6 +25,8 @@ namespace HappyDungeon
         private UI.Effects.TransitionFX transitionFX;
 
         private Globals.GameStates lastState;
+
+        public Texture2D screenCapbackup { set; get; }
 
         public ScreenFX(Game1 G)
         {
@@ -42,6 +45,23 @@ namespace HappyDungeon
         /// <param name="NextState">Which state to change to next</param>
         public void SigTransitionStart(Globals.GameStates NextState)
         {
+            // Whenever switch from running state, there is a chance that the player is gonna save.
+            // Thus, take a screenshot that can be used as thumbnail. 
+            if(game.gameState == Globals.GameStates.Running)
+            {
+                Texture2D screencap = Screenshot();
+
+                screenCapbackup = screencap;
+
+                if (_DEBUGGING)
+                {
+                    GeneralSprite cap = new GeneralSprite(screencap, 1, 1, 0, 1, 1f);
+                    game.spriteBatch.Begin();
+                    cap.Draw(game.spriteBatch, new Vector2(0, 0), Color.White);
+                    game.spriteBatch.End();
+                }
+            }
+
             transitionFX.SigStart(NextState);
             game.transitionProgress[0] = true;
         }
@@ -97,6 +117,10 @@ namespace HappyDungeon
             }
         }
 
+        // ================================================================================
+        // ================================ Private methods ===============================
+        // ================================================================================
+
         private bool FlyVisible(Vector2 PlayerPos, Vector2 FlyPos)
         {
             float Range = (game.fogOfWar.GetRange() + 0.5f) * Globals.OUT_UNIT;
@@ -104,9 +128,25 @@ namespace HappyDungeon
             return (Math.Abs(PlayerPos.X - FlyPos.X) + Math.Abs(PlayerPos.Y - FlyPos.Y)) < Range;
         }
 
+        private Texture2D Screenshot()
+        {
+            byte[] screenData;
 
+            screenData = new byte[game.GraphicsDevice.PresentationParameters.BackBufferWidth *
+                game.GraphicsDevice.PresentationParameters.BackBufferHeight * 4];
+
+            game.GraphicsDevice.GetBackBufferData<byte>(screenData);
+
+            Texture2D Screenshot = new Texture2D(game.GraphicsDevice, 
+                game.GraphicsDevice.PresentationParameters.BackBufferWidth,
+                game.GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false, 
+                game.GraphicsDevice.PresentationParameters.BackBufferFormat);
+
+            Screenshot.SetData<byte>(screenData);
+
+            return Screenshot; 
+        }
     }
-
-    
 
 }

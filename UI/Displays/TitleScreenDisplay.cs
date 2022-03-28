@@ -435,7 +435,12 @@ namespace HappyDungeon.UI.Displays
             }
             else if (rectLoadSaved.Contains(CursorPos) && rectLoadSaved.Contains(onClickPosition))
             {
+                SoundFX.Instance.PlayTitleClick();
+                game.screenFX.SigTransitionStart(Globals.GameStates.LoadAndSave);
 
+                transitProtection = true;
+                transitProtSW.Restart();
+                LMBSessionOn = false;
             }
             else if (rectSetting.Contains(CursorPos) && rectSetting.Contains(onClickPosition))
             {

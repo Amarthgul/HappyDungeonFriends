@@ -59,6 +59,9 @@ namespace HappyDungeon
                 case Globals.GameStates.GameOver:
                     UpdateDisplays(CurrentState, CurrentLocation);
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    UpdateDisplays(CurrentState, CurrentLocation);
+                    break;
                 case Globals.GameStates.Pause:
                     UpdateDisplays(CurrentState, CurrentLocation);
                     break;

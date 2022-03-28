@@ -356,13 +356,17 @@ namespace HappyDungeon.UI.Displays
             game.difficulty = CurrentDiff; 
         }
 
+        /// <summary>
+        /// Actually do something depend on what the player clicks. 
+        /// </summary>
+        /// <param name="Index">Indication of what to do</param>
         private void ExecuteCommand(int Index)
         {
             switch (Index)
             {
-                case 4:  // Save
+                case 4:  // Credits
                     break;
-                case 5:  // Load
+                case 5:  // Reset settings 
                     break;
                 case 6:  // Back
                     game.screenFX.BackToLastState();

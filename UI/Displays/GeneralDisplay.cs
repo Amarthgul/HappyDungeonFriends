@@ -30,7 +30,8 @@ namespace HappyDungeon
         private UI.Displays.TitleScreenDisplay titleDisplay;
         private UI.Displays.SettingDisplay settingDisplay;
         private UI.Displays.PauseDisplay pauseDisplay;
-        private UI.Displays.GameOverDisplay gameOverDisplay; 
+        private UI.Displays.GameOverDisplay gameOverDisplay;
+        private UI.Displays.LoadAndSaveDisplay loadAndSaveDisplay;
 
         public GeneralDisplay(Game1 G)
         {
@@ -47,6 +48,7 @@ namespace HappyDungeon
             settingDisplay = new UI.Displays.SettingDisplay(game);
             pauseDisplay = new UI.Displays.PauseDisplay(game);
             gameOverDisplay = new UI.Displays.GameOverDisplay(game);
+            loadAndSaveDisplay = new UI.Displays.LoadAndSaveDisplay(game);
         }
 
         public void OptionMoveLeft()
@@ -162,6 +164,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Setting:
                     settingDisplay.LeftClickRelease(CursorPos);
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.LeftClickRelease(CursorPos);
+                    break; 
                 case Globals.GameStates.Pause:
                     pauseDisplay.LeftClickRelease(CursorPos);
                     break;
@@ -185,6 +190,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Setting:
                     settingDisplay.LeftClickEvent(CursorPos);
+                    break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.LeftClickEvent(CursorPos);
                     break;
                 case Globals.GameStates.Pause:
                     pauseDisplay.LeftClickEvent(CursorPos);
@@ -214,6 +222,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Setting:
                     settingDisplay.UpdateOnhover(CursorPos);
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.UpdateOnhover(CursorPos);
+                    break;
                 case Globals.GameStates.Pause:
                     pauseDisplay.UpdateOnhover(CursorPos);
                     break;
@@ -237,6 +248,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Pause:
                     pauseDisplay.Update();
+                    break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.Update();
                     break;
                 case Globals.GameStates.GameOver:
                     gameOverDisplay.Update();
@@ -262,6 +276,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Pause:
                     pauseDisplay.Draw();
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.Draw();
+                    break; 
                 case Globals.GameStates.GameOver:
                     gameOverDisplay.Draw();
                     break;

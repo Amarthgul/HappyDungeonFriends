@@ -28,15 +28,17 @@ namespace HappyDungeon
         // ================================================================================
         // ============================= Abstract resources ===============================
         // ================================================================================
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
 
         // ================================================================================
         // ========================= Game states and parameters ===========================
         // ================================================================================
 
+        public LoadAndSave loadAndSave { get; set; } 
+
         public Globals.GameStates gameState { get; set; }
-        private int mapSize = 9;
+        public int mapSize = 9;
         public bool virgin { get; set; } // Some UI display differently depend on this
 
         // --------------------------------------------------------------------------------
@@ -57,6 +59,7 @@ namespace HappyDungeon
         public List<IItem> bagItemList { get; set; }          // Stays same in each game session 
         public List<IProjectile> projList { get; set; }       // Cleans after entering new room
         public int goldCount { get; set; }
+        public int gameScore { get; set; }
 
         // ================================================================================
         // =================== Maps, rooms, and environmental effects =====================
@@ -107,6 +110,8 @@ namespace HappyDungeon
             gameLevel = Globals.GameLevel.Delight;
             gameLanguage = Globals.Language.English;
             TextBridge.Instance.Init(this);
+
+            loadAndSave = new LoadAndSave(this);   // Proceeds the initialization of displays
 
             roomCycler = new LevelCycling(mapSize, gameLevel);
 
@@ -273,6 +278,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Pause:
                     UpdatePaused();
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    UpdateLoadAndSave();
+                    break;
                 case Globals.GameStates.GameOver:
                     UpdateGameOver();
                     break;
@@ -317,6 +325,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Pause:
                     DrawPaused();
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    DrawLoadAndSave();
+                    break; 
                 case Globals.GameStates.GameOver:
                     DrawGameOver();
                     break;
@@ -457,10 +468,18 @@ namespace HappyDungeon
             UpdateRoutine();
         }
 
+        private void UpdateLoadAndSave()
+        {
+            generalDisplay.Update();
+
+            UpdateRoutine();
+        }
+
         private void UpdateGameOver()
         {
             generalDisplay.Update();
         }
+
 
         // --------------------------------------------------------------------------------
         // ----------------------------------- Draw ---------------------------------------
@@ -577,6 +596,11 @@ namespace HappyDungeon
         }
 
         private void DrawPaused()
+        {
+            generalDisplay.Draw();
+        }
+
+        private void DrawLoadAndSave()
         {
             generalDisplay.Draw();
         }

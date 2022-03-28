@@ -71,6 +71,10 @@
     <Compile Include="Enemies\Agent\AgentStupid.cs" />
     <Compile Include="Enemies\Agent\IAgent.cs" />
     <Compile Include="Enemies\Database\IdiotDifficulty.cs" />
+    <Compile Include="General\GameProgression\GameLoader.cs" />
+    <Compile Include="General\GameProgression\GameSaver.cs" />
+    <Compile Include="General\GameProgression\LoadAndSave.cs" />
+    <Compile Include="General\GameProgression\ProgressionInstance.cs" />
     <Compile Include="General\IndexCoder.cs" />
     <Compile Include="General\ScoreTable.cs" />
     <Compile Include="Enemies\IEnemySTD.cs" />
@@ -125,6 +129,7 @@
     <Compile Include="UI\Displays\BagDisplay.cs" />
     <Compile Include="UI\Displays\GameOverDisplay.cs" />
     <Compile Include="UI\Displays\GeneralDisplay.cs" />
+    <Compile Include="UI\Displays\LoadAndSaveDisplay.cs" />
     <Compile Include="UI\Displays\PauseDisplay.cs" />
     <Compile Include="UI\Displays\SettingDisplay.cs" />
     <Compile Include="UI\Displays\TitleScreenDisplay.cs" />
@@ -236,6 +241,7 @@
     <Content Include="Content\Images\MC\MC_walk.png" />
     <Content Include="Content\Images\UI\HeadsupUIBack.png" />
     <Content Include="Content\Images\UI\HeadsupUIFront.png" />
+    <Content Include="Content\Saved\temp.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\BGM\" />

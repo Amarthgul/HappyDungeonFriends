@@ -182,7 +182,8 @@ namespace HappyDungeon
         public enum EnemyTypes { Minion, Elite, Boss };
         public enum ItemType { Primary, Usable, Junk };
         public enum Direction { Left, Right, Up, Down, None };
-        public enum GameStates { TitleScreen, Running, RoomTransitioning, Setting, Bag, GameOver, Conversation, Pause }
+        public enum GameStates { TitleScreen, Running, RoomTransitioning, 
+            Setting, Bag, GameOver, Conversation, Pause, LoadAndSave }
         public enum GameLevel { Delight, Joy, Bliss };
         public enum GameDifficulty { Idiot, Normal };
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Stunned, Dead }

@@ -48,6 +48,11 @@ namespace HappyDungeon.UI.Texts
             return new string[] { };
         }
 
+        public virtual string[] SaveAndLoadOptions()
+        {
+            return new string[] { };
+        }
+
         public virtual string DifficultyOptions(Globals.GameDifficulty DiffOption)
         {
             return " ";

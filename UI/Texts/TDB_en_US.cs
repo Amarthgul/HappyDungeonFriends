@@ -46,7 +46,7 @@ namespace HappyDungeon.UI.Texts
 
         public override string[] SettingOptions()
         {
-            return new string[] { "Master Volume", "SFX Volume", "Music volume", "Difficulty", "Save", "Load", "Back", "Quit" };
+            return new string[] { "Master Volume", "SFX Volume", "Music volume", "Difficulty", "Credits", "Reset", "Back", "Quit" };
         }
 
         public override string[] PauseOptions()
@@ -57,6 +57,11 @@ namespace HappyDungeon.UI.Texts
         public override string[] DeathOptions()
         {
             return new string[] { "Restart", "Load from last save" };
+        }
+
+        public override string[] SaveAndLoadOptions()
+        {
+            return new string[] { "Load", "Override", "Back" };
         }
 
         public override string DifficultyOptions(Globals.GameDifficulty DiffOption)

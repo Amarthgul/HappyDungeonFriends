@@ -36,13 +36,13 @@ namespace HappyDungeon
         // ============================= Movements and attack =============================
         // ================================================================================
         protected int currentMoveIndex;
-        protected int baseMovementSpeed = (int)(0.4 * Globals.SCALAR); // Changed in agent 
+        protected float baseMovementSpeed; // Changed in agent 
         protected bool useSegmentedSpeed = false; 
-        protected int[] segmentedSpeed = new int[] {
-            (int)(0.2 * Globals.SCALAR),
-            (int)(0.2 * Globals.SCALAR),
-            (int)(0.2 * Globals.SCALAR),
-            (int)(0.2 * Globals.SCALAR) };
+        protected float[] segmentedSpeed = new float[] {
+            0.2f * Globals.SCALAR,
+            0.2f * Globals.SCALAR,
+            0.2f * Globals.SCALAR,
+            0.2f * Globals.SCALAR };
         protected int collisionDMG = -8;        // Well collision damage is sort of an attack 
 
         protected bool canAttack = true;        // Overall bool to enable or disable attack  
@@ -134,6 +134,8 @@ namespace HappyDungeon
             game = G;
             position = P;
             spawnPosition = P;
+
+            baseMovementSpeed = 0.4f * Globals.SCALAR;
 
             soundSW = new Stopwatch(game);
             wakeupSW = new Stopwatch(game);
@@ -415,8 +417,8 @@ namespace HappyDungeon
         protected virtual Rectangle GetStagedRectangle()
         {
             return new Rectangle(
-                CollisionRect.X + (int)stagedMovement.X,
-                CollisionRect.Y + (int)stagedMovement.Y,
+                (int)(CollisionRect.X + stagedMovement.X),
+                (int)(CollisionRect.Y + stagedMovement.Y),
                 CollisionRect.Width,
                 CollisionRect.Height
                 );
