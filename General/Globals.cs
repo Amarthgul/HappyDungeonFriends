@@ -78,6 +78,8 @@ namespace HappyDungeon
         // ====================== Item, enemy, and block indexes ==========================
         // ================================================================================
 
+        public const int NULL_INDEX = 0; 
+
         /// <summary>
         /// Solid blocks are block with collision box and an index higher than 127 
         /// Blocks without collision box are btween 127 to 0 (inclusive)

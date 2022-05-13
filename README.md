@@ -8,7 +8,8 @@ This is an open source 2D top down game of a young girl happily explores a whims
 filled with rainbow, flowers, and unicorn. But do be cautious, it may contain contents that should
 not be shown to kids. 
 
-By the end it should have all codes, images (include PSDs), and musics available.
+Written in C# XNA, sprites designed and drawn by me, musics from online resouces(mostly bought on ZapSplat), 
+by the end it should have all codes, images (include PSDs), and musics/SFX files available.
 
 Currently still work in progress. 
 

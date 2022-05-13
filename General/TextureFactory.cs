@@ -49,7 +49,8 @@ namespace HappyDungeon
         public ImageFile bagOnHoverBoxTop;
         public ImageFile bagOnHoverBoxMid;
         public ImageFile bagOnHoverBoxBot;
-        public ImageFile[] bagAvatar; 
+        public ImageFile[] bagAvatar;
+        public ImageFile bagGoldIcon; 
 
         public ImageFile titleText; 
         public ImageFile titleBackground;
@@ -176,6 +177,7 @@ namespace HappyDungeon
             bagAvatar = new ImageFile[] {
                 new ImageFile(content, "Images/UI/AvatarLV1", 1, 1)
                 };
+            bagGoldIcon = new ImageFile(content, "Images/UI/goldInBag", 1, 1);
 
             titleText = new ImageFile(content, "Images/UI/title", 1, 1);
             titleBackground = new ImageFile(content, "Images/UI/titleBackground", 1, 1);

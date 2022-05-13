@@ -75,6 +75,8 @@
     <Compile Include="General\GameProgression\GameSaver.cs" />
     <Compile Include="General\GameProgression\LoadAndSave.cs" />
     <Compile Include="General\GameProgression\ProgressionInstance.cs" />
+    <Compile Include="General\GameProgression\Settings.cs" />
+    <Compile Include="General\GameProgression\temp.cs" />
     <Compile Include="General\IndexCoder.cs" />
     <Compile Include="General\ScoreTable.cs" />
     <Compile Include="Enemies\IEnemySTD.cs" />
@@ -162,6 +164,9 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -221,8 +226,10 @@
     <None Include="Content\Images\Items\itemExtra.psd" />
     <None Include="Content\Images\Items\items.psd" />
     <None Include="Enemies\README.md" />
+    <None Include="General\GameProgression\README.md" />
     <None Include="ItemsAndSuch\README.md" />
     <None Include="MC\README.md" />
+    <None Include="packages.config" />
     <None Include="README.md" />
     <None Include="UI\Displays\README.md" />
   </ItemGroup>

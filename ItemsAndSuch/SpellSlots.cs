@@ -41,7 +41,7 @@ namespace HappyDungeon
 
             modifiers = new ModifierCollection();
 
-            bag = new IItem[24];
+            bag = new IItem[Globals.BAG_SIZE];
             for (int i = 0; i < Globals.SLOT_SIZE; i++) bag[i] = null; 
         }
 

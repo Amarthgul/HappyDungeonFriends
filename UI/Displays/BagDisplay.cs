@@ -31,7 +31,9 @@ namespace HappyDungeon.UI.Displays
 
         private GeneralSprite onHoverNote;
 
-        private GeneralSprite[] characterAvatars; 
+        private GeneralSprite[] characterAvatars;
+
+        private GeneralSprite goldIcon; 
 
         private GeneralSprite primarySlot;
         private GeneralSprite[] itemSlots;
@@ -125,7 +127,7 @@ namespace HappyDungeon.UI.Displays
             ImageFile BDO = TextureFactory.Instance.BagViewBasic;
             ImageFile BDU = TextureFactory.Instance.BagViewUnderlay;
             ImageFile OHN = TextureFactory.Instance.SelectionNote;
-            
+            ImageFile GI = TextureFactory.Instance.bagGoldIcon; 
 
             bagViewBasic = new GeneralSprite(BDO.texture, BDO.C, BDO.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_LAYER);
@@ -133,6 +135,7 @@ namespace HappyDungeon.UI.Displays
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_UNDER);
             onHoverNote = new GeneralSprite(OHN.texture, OHN.C, OHN.R,
                 Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS);
+            goldIcon = new GeneralSprite(GI.texture, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_ICONS); 
 
             characterAvatars = new GeneralSprite[TextureFactory.Instance.bagAvatar.Length];
             for (int i = 0; i < TextureFactory.Instance.bagAvatar.Length; i++)
@@ -810,6 +813,12 @@ namespace HappyDungeon.UI.Displays
                     break;
                 default:
                     break; 
+            }
+
+            // Draw gold if has any 
+            if(game.goldCount > 0)
+            {
+                goldIcon.Draw(spriteBatch, new Vector2(), defaultTint);
             }
 
             // On hover selection notes

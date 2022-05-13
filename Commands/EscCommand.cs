@@ -38,6 +38,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Setting:
                     game.screenFX.BackToLastState();
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    game.screenFX.BackToLastState();
+                    break;
                 case Globals.GameStates.Pause:
                     game.screenFX.SigTransitionStart(Globals.GameStates.Running);
                     break;

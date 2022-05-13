@@ -697,6 +697,18 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/gameOverDeadBG.png
 
+#begin Images/UI/goldInBag.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/goldInBag.png
+
 #begin Images/UI/goldOnBar.png
 /importer:TextureImporter
 /processor:TextureProcessor

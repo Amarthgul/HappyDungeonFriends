@@ -12,7 +12,7 @@ namespace HappyDungeon.UI.Displays
     class LoadAndSaveDisplay
     {
 
-        private const bool _DEBUGGING = true; 
+        private const bool _DEBUGGING = false; 
 
         private const int INSTANCE_WIDTH = 64 * Globals.SCALAR;     // How wide a progression instance displays
         private const int INSTANCE_HEIGHT = 128 * Globals.SCALAR;   // How high a progression instance displays 
@@ -21,8 +21,10 @@ namespace HappyDungeon.UI.Displays
         private const int INSTANCE_TO_LEFT = 16 * Globals.SCALAR;   // White space boundary at left and right 
         private const int INSTANCE_TO_TOP = 17 * Globals.SCALAR;
 
-        private const int TX_LOAD_TO_TOP = 78 * Globals.SCALAR;     // Distance of the "load" text to the top of inst 
+        private const int TX_LOAD_TO_TOP = 78 * Globals.SCALAR;     // Distance of the "load" text to the top of instance 
         private const int TX_OVERLD_TO_TOP = 94 * Globals.SCALAR;
+
+        private const int TX_BACK_TO_TOP = 159 * Globals.SCALAR;    // Distance of the "save" text to the top of the window
 
         private const int DRAG_BUFFER_MAX = 32 * Globals.SCALAR;    // When dragging left or right, the furthest distance
 
@@ -34,7 +36,7 @@ namespace HappyDungeon.UI.Displays
         // ================================================================================
         // ================================ Save and load =================================
         // ================================================================================
-        private General.GameProgression.ProgressionInstance[] savedInstances;
+        private List<General.GameProgression.ProgressionInstance> savedInstances;
 
         private int savedInstanceCount; 
         private int totalInstanceCount;
@@ -56,6 +58,8 @@ namespace HappyDungeon.UI.Displays
 
         private GeneralSprite loadText;
         private GeneralSprite loadTextOnHover;
+        private GeneralSprite saveText;
+        private GeneralSprite saveTextOnHover; 
         private GeneralSprite overrrideText;
         private GeneralSprite overrideTextOnHover;
         private GeneralSprite backText;
@@ -85,10 +89,14 @@ namespace HappyDungeon.UI.Displays
         private int instanceDragRecTime = 500; // 500 ms recovery time 
         private System.Diagnostics.Stopwatch recoverySW;
 
+        // Different from some other displays, load and save has a pair of separated KeyBoardIndex, 
+        // horizontal and vertical, this is due to the options may change in number as the player
+        // creates or removes saved files 
         private int horizontalIndex = 0;
         private int verticalIndex = 0;
         private bool KBS = false; // Keyboard session flag 
-        private int KBI = 0;      // Option index 
+        private int KBI_Horizontal = 0;      // Horizontal option index 
+        private int KBI_Vertical = 0;        // Vertical option index 
         private System.Diagnostics.Stopwatch KBSW = new System.Diagnostics.Stopwatch();
         private int KBInterval = 100;
 
@@ -103,11 +111,15 @@ namespace HappyDungeon.UI.Displays
             );
 
         private Rectangle loadTextRect;
+        private Rectangle saveTextRect; 
         private Rectangle overrideTextRect;
+        private Rectangle backTextRect; 
 
         private bool[] loadTextIsOnHover;
-        private bool[] overrideTextIsOnHover; 
+        private bool[] overrideTextIsOnHover;
+        private bool backTextIsOnHover;
 
+        private Vector2 backTextDrawPos; 
 
         // ================================================================================
         // ================================= Methods ======================================
@@ -117,10 +129,14 @@ namespace HappyDungeon.UI.Displays
             game = G;
             spriteBatch = game.spriteBatch;
 
+            savedInstances = new List<General.GameProgression.ProgressionInstance>();
+
             LoadAllSprites();
             SetupPositions();
 
             UpdateSavedInstances();
+
+            backTextIsOnHover = false; 
 
             recoverySW = new System.Diagnostics.Stopwatch();
         }
@@ -138,10 +154,12 @@ namespace HappyDungeon.UI.Displays
 
             Texture2D LT = textGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(0), game.GraphicsDevice);
             Texture2D LTO = textOnHoverGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(0), game.GraphicsDevice);
-            Texture2D OT = textGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(1), game.GraphicsDevice);
-            Texture2D OTO = textOnHoverGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(1), game.GraphicsDevice);
-            Texture2D BT = textGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(2), game.GraphicsDevice);
-            Texture2D BTO = textOnHoverGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(2), game.GraphicsDevice);
+            Texture2D ST = textGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(1), game.GraphicsDevice);
+            Texture2D STO = textOnHoverGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(1), game.GraphicsDevice);
+            Texture2D OT = textGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(2), game.GraphicsDevice);
+            Texture2D OTO = textOnHoverGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(2), game.GraphicsDevice);
+            Texture2D BT = textGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(3), game.GraphicsDevice);
+            Texture2D BTO = textOnHoverGen.GetText(TextBridge.Instance.GetLoadAndSaveOptions(3), game.GraphicsDevice);
 
             loadSaveInstance = new GeneralSprite[LSI.Length];
 
@@ -156,6 +174,8 @@ namespace HappyDungeon.UI.Displays
 
             loadText = new GeneralSprite(LT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             loadTextOnHover = new GeneralSprite(LTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
+            saveText = new GeneralSprite(ST, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
+            saveTextOnHover = new GeneralSprite(STO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             overrrideText = new GeneralSprite(OT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             overrideTextOnHover = new GeneralSprite(OTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             backText = new GeneralSprite(BT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
@@ -172,25 +192,48 @@ namespace HappyDungeon.UI.Displays
                 loadText.selfTexture.Width,
                 loadText.selfTexture.Height
             );
+            saveTextRect = new Rectangle(
+                (INSTANCE_WIDTH / 2 - saveText.selfTexture.Width / 2 * Globals.SCALAR),
+                TX_OVERLD_TO_TOP,
+                saveText.selfTexture.Width,
+                saveText.selfTexture.Height
+            );
             overrideTextRect = new Rectangle(
                 (INSTANCE_WIDTH / 2 - overrrideText.selfTexture.Width / 2 * Globals.SCALAR),
                 TX_OVERLD_TO_TOP,
                 overrrideText.selfTexture.Width,
                 overrrideText.selfTexture.Height
             );
+            // The width and height of the load, save, override is calculated during runtime 
+            // Due to the fact that they move in realtime
+            // The scalar multiplication is also done in runtime rather than here 
+
+            backTextRect = new Rectangle(Globals.OUT_FWIDTH / 2 - backText.selfTexture.Width / 2 * Globals.SCALAR, 
+                TX_BACK_TO_TOP, 
+                backText.selfTexture.Width * Globals.SCALAR, 
+                backText.selfTexture.Height * Globals.SCALAR);
+            backTextDrawPos = new Vector2(backTextRect.X, backTextRect.Y);
         }
 
+        /// <summary>
+        /// At the start of the game and every time this display is invoked, this method 
+        /// should be called to check for saved game progressions. 
+        /// </summary>
         private void UpdateSavedInstances()
         {
-            savedInstances = game.loadAndSave.GetSavedInstances();
+            savedInstances = game.loadAndSave.UpdateSavedInstances();
 
+            // Update the amount of saved instances 
             if (savedInstances == null)
                 savedInstanceCount = 0;
             else
-                savedInstanceCount = savedInstances.Length;
+                savedInstanceCount = savedInstances.Count;
 
+            // Update the total amount of instances that shall be displayed 
             totalInstanceCount = savedInstanceCount + MAX_VACANT_SLOTS;
 
+
+            // Update the on hover boolean indicators 
             loadTextIsOnHover = new bool[totalInstanceCount];
             overrideTextIsOnHover = new bool[totalInstanceCount];
 
@@ -200,7 +243,6 @@ namespace HappyDungeon.UI.Displays
                 overrideTextIsOnHover[i] = false;
             }
         }
-
 
         /// <summary>
         /// Calculate whether or not the darg need to be reset, and if so, signal the start. 
@@ -279,16 +321,39 @@ namespace HappyDungeon.UI.Displays
 
                 loadSaveInstance[i % loadSaveInstance.Length].Draw(spriteBatch, currentInstancePivot, defualtTint);
 
+
                 if (i >= savedInstanceCount)
                 {
+                    overrideTextToTop = new Vector2(saveTextRect.X, saveTextRect.Y);
                     loadSaveInstanceOverlay.Draw(spriteBatch, currentInstancePivot, defualtTint);
                 }
 
-                if(loadTextIsOnHover[i])
+
+                // -------------------------- Texts and on hover --------------------------
+
+                // Load, if it's an empty slot then draw transprent 
+                float loadTextOpacity = (i < savedInstanceCount) ? 1f : .5f; 
+                if (loadTextIsOnHover[i] && i < savedInstanceCount)
                     loadTextOnHover.Draw(spriteBatch, currentInstancePivot + loadTextOffset, defualtTint);
                 else
-                    loadText.Draw(spriteBatch, currentInstancePivot + loadTextOffset, defualtTint);
-                overrrideText.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint);
+                    loadText.Draw(spriteBatch, currentInstancePivot + loadTextOffset, defualtTint * loadTextOpacity);
+
+                float saveTextOpacity = game.virgin ? .5f : 1f;
+                if (i >= savedInstanceCount)
+                {   // For empty instances, it is "save" not "override"
+                    if (overrideTextIsOnHover[i] && !game.virgin)
+                        saveTextOnHover.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint);
+                    else
+                        saveText.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint * saveTextOpacity);
+                }
+                else
+                {
+                    // Override, note that if there is nothing to save then this is greyed out 
+                    if (overrideTextIsOnHover[i] && !game.virgin)
+                        overrideTextOnHover.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint);
+                    else
+                        overrrideText.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint * saveTextOpacity);
+                }
 
                 //loadSaveInstanceSelect.Draw(spriteBatch, currentInstancePivot, defualtTint);
             }
@@ -297,6 +362,41 @@ namespace HappyDungeon.UI.Displays
         // ================================================================================
         // ============================== Public methods ==================================
         // ================================================================================
+         
+        public void OptionMoveUp()
+        {
+            if (!KBS) KBS = true; 
+
+            KBI_Vertical -= 1;
+        }
+
+        public void OptionMoveDown() 
+        {
+            if (!KBS) KBS = true;
+
+            KBI_Vertical += 1;
+        }
+
+        public void OptionMoveLeft()
+        {
+            if (!KBS) KBS = true;
+
+            KBI_Horizontal -= 1;
+        }
+
+        public void OptionMoveRight()
+        {
+            if (!KBS) KBS = true;
+
+            KBI_Horizontal += 1; 
+        }
+
+        public void OptionConfirm()
+        {
+            // Don't do anything if it's not in a keyboard session 
+            if (!KBS) return; 
+
+        }
 
         /// <summary>
         /// Dealing with left click. Either marks the start of a left click session,
@@ -344,11 +444,55 @@ namespace HappyDungeon.UI.Displays
                 ResetInstanceZone(); 
             }
 
+            for (int i = 0; i < totalInstanceCount; i++)
+            {
+                Rectangle currentLoadText = new Rectangle(
+                    (int)(i * (INSTANCE_WIDTH + INSTANCE_DISTANCE) +
+                        leftClickDelta.X + loadTextRect.X + INSTANCE_TO_LEFT),
+                    loadTextRect.Y + INSTANCE_TO_TOP,
+                    loadTextRect.Width * Globals.SCALAR,
+                    loadTextRect.Height * Globals.SCALAR
+                    );
+
+                Rectangle currentOverrideText = new Rectangle(
+                    (int)(i * (INSTANCE_WIDTH + INSTANCE_DISTANCE) +
+                        leftClickDelta.X + overrideTextRect.X + INSTANCE_TO_LEFT),
+                    overrideTextRect.Y + INSTANCE_TO_TOP,
+                    overrideTextRect.Width * Globals.SCALAR,
+                    overrideTextRect.Height * Globals.SCALAR
+                    );
+
+                if (currentLoadText.Contains(CursorPos))
+                {
+
+                }
+
+                if (currentOverrideText.Contains(CursorPos) && !game.virgin)
+                {
+                    game.loadAndSave.SaveNow();
+
+                    savedInstances = game.loadAndSave.UpdateSavedInstances(); 
+                }
+
+            }
+
+            // Go back 
+            if (backTextRect.Contains(CursorPos))
+            {
+                game.screenFX.BackToLastState();
+            }
+
             LMBSession = false; 
         }
 
+        /// <summary>
+        /// Update on hover effect depending on where the cursor is at. 
+        /// Could be on any one of the "Load" or "Override" or the go back. 
+        /// </summary>
+        /// <param name="CursorPos"></param>
         public void UpdateOnhover(Vector2 CursorPos)
         {
+            // Iterate through instances 
             for (int i = 0; i < totalInstanceCount; i++)
             {
                 Rectangle currentLoadText = new Rectangle(
@@ -358,16 +502,44 @@ namespace HappyDungeon.UI.Displays
                     loadTextRect.Width * Globals.SCALAR,
                     loadTextRect.Height * Globals.SCALAR
                     );
+
+                Rectangle currentOverrideText = new Rectangle(
+                    (int)(i * (INSTANCE_WIDTH + INSTANCE_DISTANCE) +
+                        leftClickDelta.X + overrideTextRect.X + INSTANCE_TO_LEFT),
+                    overrideTextRect.Y + INSTANCE_TO_TOP,
+                    overrideTextRect.Width * Globals.SCALAR,
+                    overrideTextRect.Height * Globals.SCALAR
+                    );
                 
                 if (currentLoadText.Contains(CursorPos))
                 {
-                    if (!loadTextIsOnHover[i])
+                    // Not every instance can be loaded, empty slots cannot 
+                    if (!loadTextIsOnHover[i] && i < savedInstanceCount)
                         SoundFX.Instance.PlayTitleOnHover();
                     loadTextIsOnHover[i] = true;
                 }   
                 else 
                     loadTextIsOnHover[i] = false;
 
+                if (currentOverrideText.Contains(CursorPos))
+                {
+                    if (!overrideTextIsOnHover[i] && !game.virgin)
+                        SoundFX.Instance.PlayTitleOnHover();
+                    overrideTextIsOnHover[i] = true;
+                }
+                else
+                    overrideTextIsOnHover[i] = false; 
+            }
+
+
+            // Back button on hover 
+            if (backTextRect.Contains(CursorPos))
+            {
+                backTextIsOnHover = true;
+            }
+            else
+            {
+                backTextIsOnHover = false; 
             }
         }
 
@@ -387,10 +559,14 @@ namespace HappyDungeon.UI.Displays
 
             DrawInstances();
 
+            if (backTextIsOnHover)
+                backTextOhHover.Draw(spriteBatch, backTextDrawPos, defualtTint); 
+            else 
+                backText.Draw(spriteBatch, backTextDrawPos, defualtTint);
 
             if (_DEBUGGING)
             {
-                DrawRectangle DragZone = new DrawRectangle(game.GraphicsDevice, spriteBatch, instanceBlockZone, Color.Red);
+                DrawRectangle DragZone = new DrawRectangle(game.GraphicsDevice, spriteBatch, backTextRect, Color.Red);
                 DragZone.Draw();
             }
 

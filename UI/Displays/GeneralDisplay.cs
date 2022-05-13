@@ -60,6 +60,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Setting:
                     settingDisplay.OptionMoveLeft();
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.OptionMoveLeft();
+                    break; 
                 default:
                     break;
             }
@@ -73,6 +76,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Setting:
                     settingDisplay.OptionMoveRight();
+                    break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.OptionMoveRight();
                     break;
                 default:
                     break;
@@ -97,6 +103,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Pause:
                     pauseDisplay.OptionMoveUp();
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.OptionMoveUp();
+                    break;
                 default:
                     break;
             }
@@ -120,6 +129,9 @@ namespace HappyDungeon
                 case Globals.GameStates.Pause:
                     pauseDisplay.OptionMoveDown();
                     break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.OptionMoveDown();
+                    break;
                 default:
                     break;
             }
@@ -142,6 +154,9 @@ namespace HappyDungeon
                     break;
                 case Globals.GameStates.Pause:
                     pauseDisplay.OptionConfirm();
+                    break;
+                case Globals.GameStates.LoadAndSave:
+                    loadAndSaveDisplay.OptionConfirm();
                     break;
                 default:
                     break;

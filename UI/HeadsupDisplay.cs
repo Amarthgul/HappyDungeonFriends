@@ -89,7 +89,9 @@ namespace HappyDungeon
         private Rectangle primaryRange;   // On hover and click 
         private Rectangle[] itemRange;
         private Rectangle bagRange;
-        private Rectangle bloodRange; 
+        private Rectangle bloodRange;
+
+        private bool bagIsOnHover = false; 
 
         private Color defaultTint = Color.White;
         private Color dropShadow = Color.Black;
@@ -541,7 +543,18 @@ namespace HappyDungeon
 
             if (bagRange.Contains(CursorLoc))
             {
-                bagIcon.rowLimitation = 1;
+                if (!bagIsOnHover)
+                {
+                    bagIcon.rowLimitation = 1;
+                    SoundFX.Instance.PlayTitleOnHover();
+                    bagIsOnHover = true;
+                }
+            }
+            else
+            {
+                // Set on hover effect off 
+                bagIcon.rowLimitation = 0;
+                bagIsOnHover = false; 
             }
 
             // Primary and 3 item slots' on hover effects 
@@ -686,8 +699,7 @@ namespace HappyDungeon
             }
 
 
-            // Set on hover effect off 
-            bagIcon.rowLimitation = 0;
+            
         }
     }
 }

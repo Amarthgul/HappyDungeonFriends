@@ -1,7 +1,5 @@
 ﻿# Items
 
-
-
 # Projectiles 
 
 Projectiles are put into their own category so that they can be updated and drawn with a list. It is also 

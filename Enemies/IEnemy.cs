@@ -13,7 +13,7 @@ namespace HappyDungeon
     /// IEnemy represents the "outside" of an enemy class, 
     /// i.e. how they exchange infomation with other characters. 
     /// The inside is handled by "IAgent" class and its derivatives.
-    /// </summary>
+    /// </summary> 
     public interface IEnemy
     {
 

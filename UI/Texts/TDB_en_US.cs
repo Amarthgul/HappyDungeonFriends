@@ -61,7 +61,7 @@ namespace HappyDungeon.UI.Texts
 
         public override string[] SaveAndLoadOptions()
         {
-            return new string[] { "Load", "Override", "Back" };
+            return new string[] { "Load", "Save", "Override", "Back" };
         }
 
         public override string DifficultyOptions(Globals.GameDifficulty DiffOption)

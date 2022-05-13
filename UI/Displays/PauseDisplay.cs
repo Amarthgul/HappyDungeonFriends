@@ -130,6 +130,7 @@ namespace HappyDungeon.UI.Displays
                     game.screenFX.SigTransitionStart(Globals.GameStates.Setting);
                     break;
                 case 2:
+                    game.screenFX.SigTransitionStart(Globals.GameStates.LoadAndSave);
                     break;
                 case 3:
                     game.screenFX.SigTransitionStart(Globals.GameStates.TitleScreen);
