@@ -102,6 +102,12 @@ namespace HappyDungeon
             return goldCount;
         }
 
+        public void SetCount(int Count)
+        {
+            goldCount = Count;
+            game.goldCount = Count; 
+        }
+
         public void Update()
         {
             timer = stopwatch.ElapsedMilliseconds;

@@ -17,11 +17,11 @@ namespace HappyDungeon
     {
         private Game1 game;
 
-        public IItem[] bag { set; get; }
+        public List<IItem> bag { set; get; }
 
-        // Slots
+        // Slots on the headsup UI
         public IItem primary = null;
-        public IItem[] itemSlots = new IItem[Globals.SLOT_SIZE] { null, null, null};
+        public List<IItem> itemSlots = new List<IItem>(Globals.SLOT_SIZE) { null, null, null};
 
         private bool primaryReady = true;
         private bool[] itemsReady = new bool[] { true, true, true };
@@ -41,8 +41,8 @@ namespace HappyDungeon
 
             modifiers = new ModifierCollection();
 
-            bag = new IItem[Globals.BAG_SIZE];
-            for (int i = 0; i < Globals.SLOT_SIZE; i++) bag[i] = null; 
+            bag = new List<IItem>(Globals.BAG_SIZE);
+            for (int i = 0; i < Globals.BAG_SIZE; i++) bag.Add(null); 
         }
 
         

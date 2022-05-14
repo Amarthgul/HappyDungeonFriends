@@ -83,6 +83,12 @@ namespace HappyDungeon
         int GetCount();
 
         /// <summary>
+        /// Set the count of the item. Used in recreat the item from saved files. 
+        /// </summary>
+        /// <param name="Count">What to change into</param>
+        void SetCount(int Count);
+
+        /// <summary>
         /// Pick up modifier is static. 
         /// This is added once this item is picked up and added into item slots. 
         /// May contains passive effects. 

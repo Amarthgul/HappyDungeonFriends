@@ -27,6 +27,7 @@ namespace HappyDungeon
         private Globals.GameStates lastState;
 
         public Texture2D screenCapbackup { set; get; }
+        public Texture2D partialScreenshot { set; get; }
 
         public ScreenFX(Game1 G)
         {

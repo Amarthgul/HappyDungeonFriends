@@ -42,6 +42,10 @@ namespace HappyDungeon.General.GameProgression
 
     }
 
+    /// <summary>
+    /// A more primary version of the ProgressionInstance, remade some varibles into 
+    /// other types that can be serialized. 
+    /// </summary>
     [Serializable]
     public struct SerializableInstance
     {
@@ -51,7 +55,6 @@ namespace HappyDungeon.General.GameProgression
         public int savedLevel;
 
         public DateTime savedTime;
-
 
         // Not displayed attributes 
         public int savedMapSize;

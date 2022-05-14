@@ -67,6 +67,16 @@ namespace HappyDungeon
             return currentLocationIndex;
         }
 
+        public RoomInfo GetRoomInfoByIndex(int Row, int Col)
+        {
+            return currentMapSet[Row, Col];
+        }
+
+        public void MoveIntoRoom(int Row, int Col)
+        {
+            currentLocationIndex = new int[] { Row, Col };
+        }
+
         /// <summary>
         /// Return the room in that direction.
         /// If there is one. 

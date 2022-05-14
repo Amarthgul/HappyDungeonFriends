@@ -76,6 +76,11 @@ namespace HappyDungeon
             return 1;
         }
 
+        public void SetCount(int Count)
+        {
+            // This item does have copies but need not count
+        }
+
         public void Update()
         {
             timer = stopwatch.ElapsedMilliseconds;

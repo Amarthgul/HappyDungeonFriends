@@ -57,6 +57,11 @@ namespace HappyDungeon
             return 1;
         }
 
+        public void SetCount(int Count)
+        {
+
+        }
+
         public virtual void Update()
         {
             timer = stopwatch.ElapsedMilliseconds;

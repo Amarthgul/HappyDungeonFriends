@@ -170,7 +170,7 @@ namespace HappyDungeon
                 gameState = Globals.GameStates.RoomTransitioning;
 
             }
-            if (Direction == 4)  // For death respawn in the same room
+            else if (Direction == 4)  // For death respawn in the same room
             {
                 
             }
@@ -178,7 +178,18 @@ namespace HappyDungeon
             {
                 LoadClasses(0);
             }
+            else if (Direction == Globals.LOAD_SAVED) // Load game from save file 
+            {
+                currentRoom.roomInfo = roomCycler.GetCurrentRoomInfo(); 
+                currentRoom.SetupRoom();
 
+                minimap = new Minimap(this);
+                minimap.SetPivot(roomCycler.GetCurrentLocationIndex());
+                minimap.FlagExplored(roomCycler.GetCurrentLocationIndex());
+                displayWholeMinimap = 0;
+
+                ReloadLists(); 
+            }
 
         }
 

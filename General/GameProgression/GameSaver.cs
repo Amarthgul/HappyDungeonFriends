@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace HappyDungeon.General.GameProgression
 {
@@ -19,7 +19,7 @@ namespace HappyDungeon.General.GameProgression
 
         }
 
-        public void SaveInstance(SerializableInstance Instance)
+        public void SaveInstance(SerializableInstance Instance, Texture2D Thumbnail)
         {
             
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
@@ -30,24 +30,16 @@ namespace HappyDungeon.General.GameProgression
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
 
-            string output = JsonConvert.SerializeObject(Instance);
+            string output = JsonConvert.SerializeObject(Instance, Formatting.Indented);
 
             File.WriteAllText(Path.Combine(savePath, "rec.json"), output);
 
         }
 
-        //public string UpdatePaths(string Paths)
-        //{
-
-        //}
 
         // ================================================================================
         // ============================== Private methods =================================
         // ================================================================================
 
-        private void ParseSaveinstance(ProgressionInstance Instance)
-        {
-
-        }
     }
 }

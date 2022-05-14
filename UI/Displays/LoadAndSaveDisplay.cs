@@ -462,11 +462,15 @@ namespace HappyDungeon.UI.Displays
                     overrideTextRect.Height * Globals.SCALAR
                     );
 
-                if (currentLoadText.Contains(CursorPos))
-                {
 
+                if (currentLoadText.Contains(CursorPos) && i < savedInstances.Count)
+                {
+                    game.loadAndSave.LoadNow(savedInstances[i]);
+                    game.reset(Globals.LOAD_SAVED); 
+                    game.screenFX.SigTransitionStart(Globals.GameStates.Running); 
                 }
 
+                // Actually both save and override
                 if (currentOverrideText.Contains(CursorPos) && !game.virgin)
                 {
                     game.loadAndSave.SaveNow();

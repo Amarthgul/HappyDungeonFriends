@@ -4,11 +4,14 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace HappyDungeon
 {
     /// <summary>
-    /// Load and save as a feature, different from the display. 
+    /// Load and save as a feature, this runs underneath the load and save display. 
     /// </summary>
     public class LoadAndSave
     {
@@ -36,6 +39,7 @@ namespace HappyDungeon
             string SaveToPath = Path.Combine(BasePath, General.GameProgression.Settings.saveToPath);
 
             instancePaths = new List<string>();
+            savedInstances = new List<General.GameProgression.ProgressionInstance>();
 
             savePaths = new List<string>();
             savePaths.Add(SaveToPath);
@@ -48,13 +52,45 @@ namespace HappyDungeon
         }
 
         
+        /// <summary>
+        /// Initiate an attempt to save 
+        /// </summary>
         public void SaveNow()
         {
             General.GameProgression.ProgressionInstance Progression = TakeSnapshot();
 
-            saver.SaveInstance(SerializeInstance(Progression));
+            saver.SaveInstance(SerializeInstance(Progression), Progression.savedThumbnail);
 
             UpdateSavedInstances();
+        }
+
+        /// <summary>
+        /// Load a saved game, current progression (if has any) will be overriden.
+        /// </summary>
+        /// <param name="Target">What to load</param>
+        public void LoadNow(General.GameProgression.ProgressionInstance Target)
+        {
+            game.gameLevel = Target.savedLevel;
+
+            game.mapSize = Target.savedMapSize;
+            game.virgin = Target.savedVirgin;
+
+            for (int i = 0; i < Globals.BAG_SIZE; i++)
+                game.spellSlots.PutIntoBag(Target.savedBagItemList[i], i);
+            game.spellSlots.PutIntoPrimary(Target.savedPrimary);
+            for (int i = 0; i < Globals.SLOT_SIZE; i++)
+                game.spellSlots.PutIntoUsable(Target.savedUsable[i], i);
+            
+
+            game.goldCount = Target.savedGoldCount;
+            game.gameScore = Target.savedScore;
+
+            game.roomCycler.currentMapSet = Target.savedMapInfo;
+            game.roomCycler.MoveIntoRoom( Target.savedPlayerRoomIndex[0], Target.savedPlayerRoomIndex[1]);
+
+            game.mainChara.position = Target.savedPlayerPosition;
+            game.mainChara.facingDir = Target.savedPlayerFacingDir;
+            game.mainChara.currentHealth = Target.savedHealth; 
         }
 
 
@@ -69,7 +105,13 @@ namespace HappyDungeon
 
             foreach(General.GameProgression.SerializableInstance Serializable in SerializableInstances)
             {
-                General.GameProgression.ProgressionInstance iter = DeserializeInstance(Serializable); 
+                General.GameProgression.ProgressionInstance iter = DeserializeInstance(Serializable);
+
+                // If this record exists then skip it
+                if (savedInstances.Exists(x => x.ID == iter.ID)) continue;
+
+                // If this record is unique so far, add it into the saved 
+                savedInstances.Add(iter);
             }
 
             return savedInstances; 
@@ -78,6 +120,12 @@ namespace HappyDungeon
         // ================================================================================
         // ============================== Private methods =================================
         // ================================================================================
+
+        /// <summary>
+        /// Dissect a Roominfo into several parts for serialization 
+        /// </summary>
+        /// <param name="Target">A single RoomInfo</param>
+        /// <returns>SerializableRoomInfo containing serializable contents</returns>
         public SerializableRoomInfo SerializeRoomInfo(RoomInfo Target)
         {
             if (Target == null) return null; 
@@ -104,6 +152,36 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Parse a SerializableRoomInfo into a RoomInfo
+        /// </summary>
+        /// <param name="Target">One SerializableRoomInfo</param>
+        /// <returns>Deserialized RoomInfo</returns>
+        public RoomInfo DeserializeRoomInfo(SerializableRoomInfo Target)
+        {
+            if (Target == null) return null;
+
+            RoomInfo Result = new RoomInfo();
+
+            Result.Arrangement = new int[Target.Arrangement.GetLength(0), Target.Arrangement.GetLength(1)];
+            for (int i = 0; i < Target.Arrangement.GetLength(0); i++)
+            {
+                for (int j = 0; j < Target.Arrangement.GetLength(1); j++)
+                {
+                    Result.Arrangement[i, j] = Target.Arrangement[i, j];
+                }
+            }
+
+            Result.Type = (Globals.RoomTypes)Target.Type;
+            Result.LockedDoors = Target.LockedDoors;
+            Result.Holes = Target.Holes;
+            Result.MysteryDoors = Target.MysteryDoors;
+            Result.OpenDoors = Target.OpenDoors;
+            Result.DefaultBlock = Target.DefaultBlock;
+
+            return Result;
+        }
+
+        /// <summary>
         /// Create the initial snapshot ProgressionInstance. 
         /// </summary>
         /// <returns>ProgressionInstance for current game</returns>
@@ -113,7 +191,9 @@ namespace HappyDungeon
 
             Snapshot = new General.GameProgression.ProgressionInstance();
 
-            Snapshot.ID = (Globals.RND.NextDouble() * Math.Pow(10, General.GameProgression.Settings.ID_LENGTH)).ToString().Substring(0, General.GameProgression.Settings.ID_LENGTH);
+            // ID is random generated number truncated into certain length 
+            Snapshot.ID = (Globals.RND.NextDouble() * Math.Pow(10, 
+                General.GameProgression.Settings.ID_LENGTH)).ToString().Substring(0, General.GameProgression.Settings.ID_LENGTH);
 
             Snapshot.savedThumbnail = game.screenFX.screenCapbackup;
             Snapshot.savedLevel = game.gameLevel;
@@ -122,9 +202,9 @@ namespace HappyDungeon
             Snapshot.savedMapSize = game.mapSize;
             Snapshot.savedVirgin = game.virgin;
 
-            Snapshot.savedBagItemList = game.spellSlots.bag.ToList();
-            Snapshot.savedPrimary = game.spellSlots.GetItem(-1);
-            Snapshot.savedUsable = game.spellSlots.itemSlots.ToList();
+            Snapshot.savedBagItemList = game.spellSlots.bag;
+            Snapshot.savedPrimary = game.spellSlots.primary;
+            Snapshot.savedUsable = game.spellSlots.itemSlots;
 
             Snapshot.savedGoldCount = game.goldCount;
             Snapshot.savedScore = game.gameScore; 
@@ -153,8 +233,12 @@ namespace HappyDungeon
             Serialized.ID = Source.ID; 
 
             Serialized.savedLevel = (int)Source.savedLevel;
+            Serialized.savedTime = Source.savedTime;
+            Serialized.savedMapSize = Source.savedMapSize; 
             Serialized.savedVirgin = Source.savedVirgin;
 
+
+            // -------------------------------------------------------------------------------
             // Items in the bag 
             Serialized.savedBagItemList = new List<int[]>();
             for(int i = 0; i < Globals.BAG_SIZE; i++)
@@ -182,6 +266,8 @@ namespace HappyDungeon
                     Serialized.savedUsable.Add(new int[] { Source.savedUsable[i].SelfIndex(), 
                         Source.savedUsable[i].GetCount() });
             }
+            // -------------------------------------------------------------------------------
+
 
             Serialized.savedGoldCount = Source.savedGoldCount;
             Serialized.savedScore = Source.savedScore;
@@ -205,12 +291,101 @@ namespace HappyDungeon
             return Serialized; 
         }
 
-
+        /// <summary>
+        /// Parse a SerializableInstance into a ProgressionInstance
+        /// </summary>
+        /// <param name="Source">Progression in SerializableInstance form</param>
+        /// <returns>ProgressionInstance form</returns>
         private General.GameProgression.ProgressionInstance DeserializeInstance(General.GameProgression.SerializableInstance Source)
         {
             General.GameProgression.ProgressionInstance Result = new General.GameProgression.ProgressionInstance();
 
+            Result.ID = Source.ID;
 
+            Result.savedLevel = (Globals.GameLevel)Source.savedLevel;
+            Result.savedTime = Source.savedTime;
+            Result.savedMapSize = Source.savedMapSize;
+            Result.savedVirgin = Source.savedVirgin;
+
+            // -------------------------------------------------------------------------------
+            // Items in the bag 
+            Result.savedBagItemList = new List<IItem>();
+            for(int i = 0; i < Globals.BAG_SIZE; i++)
+            {
+                if (Source.savedBagItemList[i] == null)
+                    Result.savedBagItemList.Add(null);
+                else
+                    Result.savedBagItemList.Add(RecreateItem(Source.savedBagItemList[i][0], Source.savedBagItemList[i][1]));
+            }
+
+            // Item on primary slot 
+            if (Source.savedPrimary[0] == Globals.NULL_INDEX && Source.savedPrimary[1] == Globals.NULL_INDEX)
+                Result.savedPrimary = null;
+            else
+                Result.savedPrimary = RecreateItem(Source.savedPrimary[0], Source.savedPrimary[1]);
+
+            // Items on the 3 top slots
+            Result.savedUsable = new List<IItem>();
+            for (int i = 0; i < Globals.SLOT_SIZE; i++)
+            {
+                if (Source.savedUsable[i][0] == Globals.NULL_INDEX && Source.savedUsable[i][1] == Globals.NULL_INDEX)
+                    Result.savedUsable.Add(null);
+                else
+                    Result.savedUsable.Add(RecreateItem(Source.savedUsable[i][0], Source.savedUsable[i][1]));
+            }
+
+            Result.savedGoldCount = Source.savedGoldCount;
+            Result.savedScore = Source.savedScore;
+
+            Result.savedMapInfo = new RoomInfo[Source.savedMapInfo.GetLength(0), Source.savedMapInfo.GetLength(1)];
+            for (int i = 0; i < Source.savedMapInfo.GetLength(0); i++)
+            {
+                for (int j = 0; j < Source.savedMapInfo.GetLength(1); j++)
+                {
+                    Result.savedMapInfo[i, j] = DeserializeRoomInfo(Source.savedMapInfo[i, j]);
+                }
+            }
+
+            Result.savedPlayerRoomIndex = Source.savedPlayerRoomIndex;
+            Result.savedPlayerPosition = Source.savedPlayerPosition;
+            Result.savedPlayerFacingDir = (Globals.Direction)Source.savedPlayerFacingDir;
+            Result.savedHealth = Source.savedHealth; 
+
+            return Result; 
+        }
+
+        /// <summary>
+        /// Given item index and count, recreate this item from read saved file.
+        /// </summary>
+        /// <param name="Index">Item index</param>
+        /// <param name="Count">The count of such item</param>
+        /// <returns>The item instance in its class</returns>
+        private IItem RecreateItem(int Index, int Count)
+        {
+            IItem Result;
+            Vector2 Placeholder = new Vector2(); 
+
+            switch (Index)
+            {
+                case Globals.ITEM_TORCH:
+                    Result = new Torch(game, Placeholder); 
+                    break;
+                case Globals.ITEM_LINKEN:
+                    Result = new LinkenSphere(game, Placeholder);
+                    break;
+                case Globals.ITEM_NOTE_SO:
+                    Result = new NoteSetOne(game, Placeholder);
+                    break;
+                case Globals.ITEM_GOLD:
+                    Result = new DroppedGold(game, Placeholder);
+                    break;
+                case Globals.ITEM_STD:
+                    Result = new IItemSTD(game, Placeholder);
+                    break; 
+                default:
+                    Result = null;
+                    break;
+            }
 
             return Result; 
         }

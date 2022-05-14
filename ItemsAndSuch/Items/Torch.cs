@@ -100,6 +100,11 @@ namespace HappyDungeon
             return torchCount;
         }
 
+        public void SetCount(int Count)
+        {
+            // Do nothing 
+        }
+
         public void Update()
         {
             timer = stopwatch.ElapsedMilliseconds;

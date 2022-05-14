@@ -205,6 +205,11 @@ namespace HappyDungeon
             return 1;
         }
 
+        public void SetCount(int Count)
+        {
+            // Do nothing, this item should not have the count altered 
+        }
+
         public string GetItemDescription()
         {
             return TextBridge.Instance.GetIndexedDescrption(SelfIndex());
