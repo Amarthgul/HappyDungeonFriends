@@ -132,6 +132,7 @@
     <Compile Include="UI\Displays\GameOverDisplay.cs" />
     <Compile Include="UI\Displays\GeneralDisplay.cs" />
     <Compile Include="UI\Displays\LoadAndSaveDisplay.cs" />
+    <Compile Include="UI\Displays\OverlayInput.cs" />
     <Compile Include="UI\Displays\PauseDisplay.cs" />
     <Compile Include="UI\Displays\SettingDisplay.cs" />
     <Compile Include="UI\Displays\TitleScreenDisplay.cs" />

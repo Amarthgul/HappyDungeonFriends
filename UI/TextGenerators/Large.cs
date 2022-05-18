@@ -230,5 +230,21 @@ namespace HappyDungeon.UI
 
             return textTure; 
         }
+
+        public bool IsValidInput(string Text)
+        {
+            foreach (char single in Text)
+                if (!digitWidth.ContainsKey(single) || !alpLowerWidth.ContainsKey(single) ||
+                !alpCapWidth.ContainsKey(single) || !puncWidth.ContainsKey(single))
+                    return false; 
+
+            return true;
+        }
+
+        public bool IsValidInput(char Single)
+        {
+            return digitWidth.ContainsKey(Single) || alpLowerWidth.ContainsKey(Single) ||
+                alpCapWidth.ContainsKey(Single) || puncWidth.ContainsKey(Single);
+        }
     }
 }

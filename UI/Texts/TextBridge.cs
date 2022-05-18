@@ -98,6 +98,11 @@ namespace HappyDungeon
             return textDataBase.PauseOptions();
         }
 
+        public string[] GetNameWindowTexts()
+        {
+            return textDataBase.NameWindow(); 
+        }
+
         public string GetDifficultyOptions(Globals.GameDifficulty DiffOption)
         {
             return textDataBase.DifficultyOptions(DiffOption);

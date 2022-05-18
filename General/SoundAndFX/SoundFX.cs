@@ -235,6 +235,8 @@ namespace HappyDungeon
         {
             if (SFX == null) return;
 
+            if (Math.Abs(Pan) > 1) Pan = Math.Sign(Pan) * 1; 
+
             if (Math.Abs(Pan) < .5f)
             {
                 float PanSide = .5f - Pan;

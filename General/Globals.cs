@@ -29,7 +29,6 @@ namespace HappyDungeon
         /// </summary>
         public const bool REAL_TIME_ACTION = false;
 
-
         // ================================================================================
         // =========================== Game Size and Display ==============================
         // ================================================================================
@@ -160,6 +159,9 @@ namespace HappyDungeon
         public const float UI_MINIMAP = 0.85f;       // Minimap layer
         public const float UI_MINIMAP_PLAYER = 0.86f;// Player noation layer, ensure it's on top
 
+        public const float INTERACTIVE_BG_LAYER = 0.865f;// Gray under the interactive window 
+        public const float INTERACTIVE_WIN_LAYER = 0.87f;// Interactive window 
+
         public const float UI_TEXT_SHADOW = 0.88f;   // UI text drop shadow, nromally black 
         public const float UI_TEXT_LAYER = 0.89f;    // UI text, normally white
         public const float UI_ALT_TEXT = 0.891f;     // Alt display of the texts 
@@ -190,7 +192,7 @@ namespace HappyDungeon
         public enum ItemType { Primary, Usable, Junk };
         public enum Direction { Left, Right, Up, Down, None };
         public enum GameStates { TitleScreen, Running, RoomTransitioning, 
-            Setting, Bag, GameOver, Conversation, Pause, LoadAndSave }
+            Setting, Bag, GameOver, Conversation, Pause, LoadAndSave, Overlay }
         public enum GameLevel { Delight, Joy, Bliss };
         public enum GameDifficulty { Idiot, Normal };
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Stunned, Dead }
@@ -202,6 +204,8 @@ namespace HappyDungeon
         /// speak Spanish, deutsch, or French, so English is the only one language 
         /// currently the game supports (till v0.11)
         public enum Language { English, Spanish, Chinese, Japanese, French, Deutsch };
+
+        public enum KeyboardControl { Tradition, RPG };
 
         // --------------------------------------------------------------------------------
         // -------------------------------- Iterators -------------------------------------

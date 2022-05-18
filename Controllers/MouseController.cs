@@ -39,36 +39,42 @@ namespace HappyDungeon
             Vector2 CurrentLocation = new Vector2(cursorX, cursorY);
             game.cursor.SetPosition(CurrentLocation);
 
-            switch (game.gameState)
+            if (game.overlay.IsEnabled())
             {
-                case Globals.GameStates.Running:
-                    UpdateRunning(CurrentState, CurrentLocation);
-                    break;
-                case Globals.GameStates.RoomTransitioning:
-                    UpdateTransitioning(CurrentState, CurrentLocation);
-                    break;
-                case Globals.GameStates.Bag:
-                    UpdateDisplays(CurrentState, CurrentLocation);
-                    break;
-                case Globals.GameStates.TitleScreen:
-                    UpdateDisplays(CurrentState, CurrentLocation);
-                    break;
-                case Globals.GameStates.Setting:
-                    UpdateDisplays(CurrentState, CurrentLocation);
-                    break;
-                case Globals.GameStates.GameOver:
-                    UpdateDisplays(CurrentState, CurrentLocation);
-                    break;
-                case Globals.GameStates.LoadAndSave:
-                    UpdateDisplays(CurrentState, CurrentLocation);
-                    break;
-                case Globals.GameStates.Pause:
-                    UpdateDisplays(CurrentState, CurrentLocation);
-                    break;
-                default:
-                    break; 
+                game.overlay.UpdateCursor(CurrentState, CurrentLocation);
             }
-                    
+            else
+            {
+                switch (game.gameState)
+                {
+                    case Globals.GameStates.Running:
+                        UpdateRunning(CurrentState, CurrentLocation);
+                        break;
+                    case Globals.GameStates.RoomTransitioning:
+                        UpdateTransitioning(CurrentState, CurrentLocation);
+                        break;
+                    case Globals.GameStates.Bag:
+                        UpdateDisplays(CurrentState, CurrentLocation);
+                        break;
+                    case Globals.GameStates.TitleScreen:
+                        UpdateDisplays(CurrentState, CurrentLocation);
+                        break;
+                    case Globals.GameStates.Setting:
+                        UpdateDisplays(CurrentState, CurrentLocation);
+                        break;
+                    case Globals.GameStates.GameOver:
+                        UpdateDisplays(CurrentState, CurrentLocation);
+                        break;
+                    case Globals.GameStates.LoadAndSave:
+                        UpdateDisplays(CurrentState, CurrentLocation);
+                        break;
+                    case Globals.GameStates.Pause:
+                        UpdateDisplays(CurrentState, CurrentLocation);
+                        break;
+                    default:
+                        break;
+                }
+            }    
 
         }
 

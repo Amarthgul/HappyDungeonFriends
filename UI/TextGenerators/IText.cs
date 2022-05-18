@@ -18,5 +18,9 @@ namespace HappyDungeon.UI
 
         Texture2D GetText(string Text, GraphicsDevice G);
 
+        bool IsValidInput(string Text);
+
+        bool IsValidInput(char Single);
+
     }
 }

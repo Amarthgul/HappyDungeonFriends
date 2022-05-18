@@ -21,6 +21,7 @@ namespace HappyDungeon.UI.Displays
         private const int INSTANCE_TO_LEFT = 16 * Globals.SCALAR;   // White space boundary at left and right 
         private const int INSTANCE_TO_TOP = 17 * Globals.SCALAR;
 
+        private const int TX_DATE_TOP_TOP = 64 * Globals.SCALAR;
         private const int TX_LOAD_TO_TOP = 78 * Globals.SCALAR;     // Distance of the "load" text to the top of instance 
         private const int TX_OVERLD_TO_TOP = 94 * Globals.SCALAR;
 
@@ -38,9 +39,6 @@ namespace HappyDungeon.UI.Displays
         // ================================================================================
         private List<General.GameProgression.ProgressionInstance> savedInstances;
 
-        private int savedInstanceCount; 
-        private int totalInstanceCount;
-
         // ================================================================================
         // =========================== Sprites and their stats ============================
         // ================================================================================
@@ -48,13 +46,22 @@ namespace HappyDungeon.UI.Displays
         // Text generator 
         private LargeBR textGen = new LargeBR();
         private LargeWR textOnHoverGen = new LargeWR();
+        private SmallBR textSML = new SmallBR();
 
-        private GeneralSprite backgroundWhole;
-        private GeneralSprite backgroundRed; 
+        private GeneralSprite backgroundWhole;  // Landscape background 
+        private GeneralSprite backgroundRed;    // Red wall background
 
-        private GeneralSprite loadSaveInstanceSelect;    // Highlight selection 
-        private GeneralSprite[] loadSaveInstance;        // There are several sprites for instances 
-        private GeneralSprite loadSaveInstanceOverlay;   // Empty slot use this to cover the hole 
+        // Highlight selection 
+        private GeneralSprite loadSaveInstanceSelect;    
+
+        // Templates for showing a load/save 
+        private GeneralSprite[] loadSaveInstance;
+
+        // Used to cover the hole on loadSaveInstance
+        private GeneralSprite loadSaveInstanceOverlay;
+
+        private List<GeneralSprite> thumbnails;
+        private List<GeneralSprite> dateTexts; 
 
         private GeneralSprite loadText;
         private GeneralSprite loadTextOnHover;
@@ -67,7 +74,7 @@ namespace HappyDungeon.UI.Displays
 
         private Vector2 instanceStartPosition;
         private Vector2 zeroVector = new Vector2(0, 0);
-
+        private Vector2 thumbnailOffset = new Vector2(4, 11) * Globals.SCALAR;
         
         // Instances together form a block (<div>, if you would), and this is the top-left
         // pivot of the entire instance block. 
@@ -165,11 +172,12 @@ namespace HappyDungeon.UI.Displays
 
             backgroundWhole = new GeneralSprite(BGW.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_UNDER);
             backgroundRed = new GeneralSprite(BGR.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_UNDER);
-            loadSaveInstanceOverlay = new GeneralSprite(LSIO.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
-            loadSaveInstanceSelect = new GeneralSprite(LSIE.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
+
+            loadSaveInstanceOverlay = new GeneralSprite(LSIO.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
+            loadSaveInstanceSelect = new GeneralSprite(LSIE.texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             for (int i = 0; i < LSI.Length; i++)
             {
-                loadSaveInstance[i] = new GeneralSprite(LSI[i].texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_LAYER);
+                loadSaveInstance[i] = new GeneralSprite(LSI[i].texture, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_MID);
             }
 
             loadText = new GeneralSprite(LT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
@@ -180,6 +188,9 @@ namespace HappyDungeon.UI.Displays
             overrideTextOnHover = new GeneralSprite(OTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             backText = new GeneralSprite(BT, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             backTextOhHover = new GeneralSprite(BTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
+
+            thumbnails = new List<GeneralSprite>();
+            dateTexts = new List<GeneralSprite>(); 
         }
 
         private void SetupPositions()
@@ -223,25 +234,34 @@ namespace HappyDungeon.UI.Displays
         {
             savedInstances = game.loadAndSave.UpdateSavedInstances();
 
-            // Update the amount of saved instances 
-            if (savedInstances == null)
-                savedInstanceCount = 0;
-            else
-                savedInstanceCount = savedInstances.Count;
-
-            // Update the total amount of instances that shall be displayed 
-            totalInstanceCount = savedInstanceCount + MAX_VACANT_SLOTS;
-
-
             // Update the on hover boolean indicators 
-            loadTextIsOnHover = new bool[totalInstanceCount];
-            overrideTextIsOnHover = new bool[totalInstanceCount];
+            loadTextIsOnHover = new bool[savedInstances.Count + MAX_VACANT_SLOTS];
+            overrideTextIsOnHover = new bool[savedInstances.Count + MAX_VACANT_SLOTS];
 
-            for (int i = 0; i< totalInstanceCount; i++)
+            for (int i = 0; i< savedInstances.Count + MAX_VACANT_SLOTS; i++)
             {
                 loadTextIsOnHover[i] = false;
                 overrideTextIsOnHover[i] = false;
             }
+
+            while (thumbnails.Count <= savedInstances.Count)
+            {
+                thumbnails.Add(null);
+                dateTexts.Add(null);
+            }
+            for (int i = 0; i < savedInstances.Count; i++)
+            {
+                thumbnails[i] = new GeneralSprite(savedInstances[i].savedThumbnail,
+                    1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_SIG);
+
+                // Create text sprites 
+                string dateTime = savedInstances[i].savedTime.Month.ToString() + "/" +
+                     savedInstances[i].savedTime.Day.ToString() + "/" +
+                     savedInstances[i].savedTime.Year.ToString().Substring(2);
+                dateTexts[i] = new GeneralSprite(textSML.GetText(dateTime, game.GraphicsDevice), 
+                    1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
+            }
+                
         }
 
         /// <summary>
@@ -255,7 +275,8 @@ namespace HappyDungeon.UI.Displays
             // and if so, where should it be recovered to. 
             // This is set up this way becasue depending on the number of instances, 
             // It may be pivoted to the left-most or the right-most part. 
-            if((totalInstanceCount * (INSTANCE_DISTANCE + INSTANCE_WIDTH) - INSTANCE_DISTANCE) < instanceBlockZone.Width)
+            if(((savedInstances.Count + MAX_VACANT_SLOTS) *
+                (INSTANCE_DISTANCE + INSTANCE_WIDTH) - INSTANCE_DISTANCE) < instanceBlockZone.Width)
             {
                 // When the total length of instances cannot fill the entire zone
                 // Any drag to the left should be reset. 
@@ -263,7 +284,8 @@ namespace HappyDungeon.UI.Displays
             }
             else
             {
-                LeftDragThreshold = instanceBlockZone.Width - (totalInstanceCount * (INSTANCE_DISTANCE + INSTANCE_WIDTH) - INSTANCE_DISTANCE);
+                LeftDragThreshold = instanceBlockZone.Width - 
+                    ((savedInstances.Count + MAX_VACANT_SLOTS) * (INSTANCE_DISTANCE + INSTANCE_WIDTH) - INSTANCE_DISTANCE);
             }
 
             
@@ -310,44 +332,45 @@ namespace HappyDungeon.UI.Displays
         /// </summary>
         private void DrawInstances()
         {
-            for (int i = 0; i < totalInstanceCount; i++)
+            Vector2 loadTextOffset = new Vector2(loadTextRect.X, loadTextRect.Y);
+            Vector2 overrideTextToTop = new Vector2(overrideTextRect.X, overrideTextRect.Y);
+            
+
+            for (int i = 0; i < savedInstances.Count + MAX_VACANT_SLOTS; i++)
             {
                 Vector2 currentInstancePivot = new Vector2(
                     i * (INSTANCE_WIDTH + INSTANCE_DISTANCE) + leftClickDelta.X,
                     0)
                     + instanceBlockPivot;
-                Vector2 loadTextOffset = new Vector2(loadTextRect.X, loadTextRect.Y);
-                Vector2 overrideTextToTop = new Vector2(overrideTextRect.X, overrideTextRect.Y);
+                
 
                 loadSaveInstance[i % loadSaveInstance.Length].Draw(spriteBatch, currentInstancePivot, defualtTint);
 
+                float saveTextOpacity = game.virgin ? .5f : 1f;
 
-                if (i >= savedInstanceCount)
+                
+                if (i >= savedInstances.Count)
                 {
+                    // For empty slots, cover the thumbnail picture 
                     overrideTextToTop = new Vector2(saveTextRect.X, saveTextRect.Y);
                     loadSaveInstanceOverlay.Draw(spriteBatch, currentInstancePivot, defualtTint);
-                }
 
-
-                // -------------------------- Texts and on hover --------------------------
-
-                // Load, if it's an empty slot then draw transprent 
-                float loadTextOpacity = (i < savedInstanceCount) ? 1f : .5f; 
-                if (loadTextIsOnHover[i] && i < savedInstanceCount)
-                    loadTextOnHover.Draw(spriteBatch, currentInstancePivot + loadTextOffset, defualtTint);
-                else
-                    loadText.Draw(spriteBatch, currentInstancePivot + loadTextOffset, defualtTint * loadTextOpacity);
-
-                float saveTextOpacity = game.virgin ? .5f : 1f;
-                if (i >= savedInstanceCount)
-                {   // For empty instances, it is "save" not "override"
+                    // For empty instances, it is "save" not "override"
                     if (overrideTextIsOnHover[i] && !game.virgin)
                         saveTextOnHover.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint);
                     else
                         saveText.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint * saveTextOpacity);
+
                 }
-                else
+                else // For saved instances 
                 {
+                    // First draw the thumbnails 
+                    thumbnails[i].Draw(spriteBatch, currentInstancePivot + thumbnailOffset, defualtTint);
+
+                    Vector2 dateTextToTop = new Vector2(INSTANCE_WIDTH /2 - dateTexts[i].selfTexture.Width * Globals.SCALAR /2, 
+                        TX_DATE_TOP_TOP) + currentInstancePivot;
+                    dateTexts[i].Draw(spriteBatch, dateTextToTop, defualtTint);
+
                     // Override, note that if there is nothing to save then this is greyed out 
                     if (overrideTextIsOnHover[i] && !game.virgin)
                         overrideTextOnHover.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint);
@@ -355,8 +378,33 @@ namespace HappyDungeon.UI.Displays
                         overrrideText.Draw(spriteBatch, currentInstancePivot + overrideTextToTop, defualtTint * saveTextOpacity);
                 }
 
-                //loadSaveInstanceSelect.Draw(spriteBatch, currentInstancePivot, defualtTint);
+
+                // Load, if it's an empty slot then draw transprent 
+                float loadTextOpacity = (i < savedInstances.Count) ? 1f : .5f; 
+                if (loadTextIsOnHover[i] && i < savedInstances.Count)
+                    loadTextOnHover.Draw(spriteBatch, currentInstancePivot + loadTextOffset, defualtTint);
+                else
+                    loadText.Draw(spriteBatch, currentInstancePivot + loadTextOffset, defualtTint * loadTextOpacity);
+
             }
+        }
+
+        private void SaveCommand()
+        {
+            game.loadAndSave.SaveNow();
+
+            savedInstances = game.loadAndSave.UpdateSavedInstances();
+
+            UpdateSavedInstances();
+        }
+
+        private void LoadCommand(int Index)
+        {
+            game.loadAndSave.LoadNow(savedInstances[Index]);
+            game.reset(Globals.LOAD_SAVED);
+            game.screenFX.SigTransitionStart(Globals.GameStates.Running);
+
+            
         }
 
         // ================================================================================
@@ -444,7 +492,7 @@ namespace HappyDungeon.UI.Displays
                 ResetInstanceZone(); 
             }
 
-            for (int i = 0; i < totalInstanceCount; i++)
+            for (int i = 0; i < savedInstances.Count + MAX_VACANT_SLOTS; i++)
             {
                 Rectangle currentLoadText = new Rectangle(
                     (int)(i * (INSTANCE_WIDTH + INSTANCE_DISTANCE) +
@@ -465,17 +513,15 @@ namespace HappyDungeon.UI.Displays
 
                 if (currentLoadText.Contains(CursorPos) && i < savedInstances.Count)
                 {
-                    game.loadAndSave.LoadNow(savedInstances[i]);
-                    game.reset(Globals.LOAD_SAVED); 
-                    game.screenFX.SigTransitionStart(Globals.GameStates.Running); 
+                    LoadCommand(i);
                 }
 
                 // Actually both save and override
                 if (currentOverrideText.Contains(CursorPos) && !game.virgin)
                 {
-                    game.loadAndSave.SaveNow();
+                    game.overlay.ToggleActivity(true);
 
-                    savedInstances = game.loadAndSave.UpdateSavedInstances(); 
+                    SaveCommand();
                 }
 
             }
@@ -497,7 +543,7 @@ namespace HappyDungeon.UI.Displays
         public void UpdateOnhover(Vector2 CursorPos)
         {
             // Iterate through instances 
-            for (int i = 0; i < totalInstanceCount; i++)
+            for (int i = 0; i < savedInstances.Count + MAX_VACANT_SLOTS; i++)
             {
                 Rectangle currentLoadText = new Rectangle(
                     (int)(i * (INSTANCE_WIDTH + INSTANCE_DISTANCE) + 
@@ -518,7 +564,7 @@ namespace HappyDungeon.UI.Displays
                 if (currentLoadText.Contains(CursorPos))
                 {
                     // Not every instance can be loaded, empty slots cannot 
-                    if (!loadTextIsOnHover[i] && i < savedInstanceCount)
+                    if (!loadTextIsOnHover[i] && i < savedInstances.Count)
                         SoundFX.Instance.PlayTitleOnHover();
                     loadTextIsOnHover[i] = true;
                 }   
@@ -539,7 +585,11 @@ namespace HappyDungeon.UI.Displays
             // Back button on hover 
             if (backTextRect.Contains(CursorPos))
             {
-                backTextIsOnHover = true;
+                if (!backTextIsOnHover)
+                {
+                    backTextIsOnHover = true;
+                    SoundFX.Instance.PlayTitleOnHover();
+                }
             }
             else
             {

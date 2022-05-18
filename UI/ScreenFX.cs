@@ -13,7 +13,9 @@ namespace HappyDungeon
 {
     public class ScreenFX
     {
-        private const bool _DEBUGGING = false; 
+        private const bool _DEBUGGING = false;
+        private const int PARTIAL_WIDTH = 56;
+        private const int PARTIAL_HEIGHT = 38;
 
         private Game1 game;
         private SpriteBatch spriteBatch;
@@ -129,9 +131,19 @@ namespace HappyDungeon
             return (Math.Abs(PlayerPos.X - FlyPos.X) + Math.Abs(PlayerPos.Y - FlyPos.Y)) < Range;
         }
 
+        /// <summary>
+        /// Take a screenshot of the current game 
+        /// </summary>
+        /// <returns>Screenshot in Texture2D</returns>
         private Texture2D Screenshot()
         {
             byte[] screenData;
+            partialScreenshot = new Texture2D(game.GraphicsDevice, PARTIAL_WIDTH, PARTIAL_HEIGHT);
+            Rectangle rect = new Rectangle(
+                (int)(game.mainChara.position.X - PARTIAL_WIDTH * Globals.SCALAR / 2 + Globals.OUT_UNIT / 2),
+                (int)(game.mainChara.position.Y - PARTIAL_HEIGHT * Globals.SCALAR / 2 + Globals.OUT_UNIT / 2),
+                PARTIAL_WIDTH * Globals.SCALAR, PARTIAL_HEIGHT * Globals.SCALAR
+                ) ; 
 
             screenData = new byte[game.GraphicsDevice.PresentationParameters.BackBufferWidth *
                 game.GraphicsDevice.PresentationParameters.BackBufferHeight * 4];
@@ -145,6 +157,22 @@ namespace HappyDungeon
                 game.GraphicsDevice.PresentationParameters.BackBufferFormat);
 
             Screenshot.SetData<byte>(screenData);
+
+            int originalCount = PARTIAL_WIDTH * PARTIAL_HEIGHT * Globals.SCALAR * Globals.SCALAR; 
+            int desclaedCount = PARTIAL_WIDTH * PARTIAL_HEIGHT;
+            Color[] originalData = new Color[originalCount];
+            Color[] descaledData = new Color[desclaedCount];
+            Screenshot.GetData(0, rect, originalData, 0, originalCount);
+            // Manually sub-sample the image to scale it 
+            for (int i = 0; i < PARTIAL_WIDTH; i++)
+            {
+                for (int j = 0; j < PARTIAL_HEIGHT; j++)
+                {
+                    int Index = j * PARTIAL_WIDTH * Globals.SCALAR * Globals.SCALAR + i * Globals.SCALAR;
+                    descaledData[j * PARTIAL_WIDTH + i] = originalData[Index];
+                }
+            }
+            partialScreenshot.SetData(descaledData);
 
             return Screenshot; 
         }

@@ -15,7 +15,8 @@ namespace HappyDungeon.General.GameProgression
         public string ID; 
 
         // Displayed attributes 
-        public Texture2D savedThumbnail; 
+        public Texture2D savedThumbnail;
+        public int[] thumbnailSize; 
 
         public Globals.GameLevel savedLevel;
 
@@ -50,6 +51,9 @@ namespace HappyDungeon.General.GameProgression
     public struct SerializableInstance
     {
         public string ID;
+
+        public Color[] savedThumbnail;
+        public int[] thumbnailSize;
 
         // Displayed attributes 
         public int savedLevel;

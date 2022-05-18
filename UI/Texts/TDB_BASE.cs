@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace HappyDungeon.UI.Texts
 {
     /// <summary>
-    /// Basic, so that I don't have to go through every one the implementation when adding methods to the interface. 
+    /// The basic, so that I don't have to go through every one of the language implementation 
+    /// when adding methods to the interface. 
     /// </summary>
     class TDB_BASE : ITDB
     {
@@ -49,6 +50,11 @@ namespace HappyDungeon.UI.Texts
         }
 
         public virtual string[] SaveAndLoadOptions()
+        {
+            return new string[] { };
+        }
+
+        public virtual string[] NameWindow()
         {
             return new string[] { };
         }

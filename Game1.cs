@@ -45,6 +45,8 @@ namespace HappyDungeon
         // -------------------------------- Player changeable -----------------------------
         public float[] volumes { get; set; }                // Sound volume
         public Globals.GameLevel gameLevel { get; set; }    // 3 levels: Delight, Joy, Bliss
+
+        public Globals.KeyboardControl keyboardControl { get; set; }
         public Globals.Language gameLanguage { get; set; }  
         // Only English, add others if you have the patience of drawing sprites for texts 
         public Globals.GameDifficulty difficulty { get; set; }
@@ -80,6 +82,9 @@ namespace HappyDungeon
         public Minimap minimap;                // Map on top-left and when pressing tab 
         public MouseCursor cursor;             // Replacement for displayMouse option 
         public ScreenFX screenFX;              // All minor special effects
+
+        public OverlayInput overlay;
+
         public int displayWholeMinimap { set; get; }  // For tab and other minimap display 
 
         public bool[] transitionProgress { get; set; }
@@ -109,6 +114,8 @@ namespace HappyDungeon
         {
             gameLevel = Globals.GameLevel.Delight;
             gameLanguage = Globals.Language.English;
+            
+
             TextBridge.Instance.Init(this);
 
             loadAndSave = new LoadAndSave(this);   // Proceeds the initialization of displays
@@ -133,6 +140,8 @@ namespace HappyDungeon
             minimap.SetPivot(roomCycler.GetCurrentLocationIndex());
             minimap.FlagExplored(roomCycler.GetCurrentLocationIndex());
             displayWholeMinimap = 0;
+
+            overlay = new OverlayInput(this);
 
             screenFX = new ScreenFX(this);
             headsupDisplay = new HeadsupDisplay(this);
@@ -202,6 +211,8 @@ namespace HappyDungeon
         /// </summary>
         protected override void Initialize()
         {
+            keyboardControl = Globals.KeyboardControl.RPG;
+
             gameState = Globals.GameStates.TitleScreen;
             // Setup window size 
             graphics.PreferredBackBufferWidth = Globals.OUT_FWIDTH;
@@ -253,7 +264,7 @@ namespace HappyDungeon
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Flag the game to its true color if the player has seen what it really is 
+            // Flag the game to its true color if the player has started to play 
             if (virgin) {
                 if (gameState == Globals.GameStates.Running)
                     virgin = false;
@@ -269,36 +280,42 @@ namespace HappyDungeon
             screenFX.Update();
             SoundFX.Instance.UpdateBGM();
 
-            switch (gameState)
+            if (overlay.IsEnabled())
             {
-                case Globals.GameStates.Running:
-                    UpdateRunning();
-                    break;
-                case Globals.GameStates.RoomTransitioning:
-                    UpdateRoomTransit();
-                    break;
-                case Globals.GameStates.Bag:
-                    UpdateBagView();
-                    break;
-                case Globals.GameStates.TitleScreen:
-                    UpdateTitleScreen();
-                    break;
-                case Globals.GameStates.Setting:
-                    UpdateSettings();
-                    break;
-                case Globals.GameStates.Pause:
-                    UpdatePaused();
-                    break;
-                case Globals.GameStates.LoadAndSave:
-                    UpdateLoadAndSave();
-                    break;
-                case Globals.GameStates.GameOver:
-                    UpdateGameOver();
-                    break;
-                default:
-                    break; 
+                overlay.Update(); 
             }
-            
+            else
+            {
+                switch (gameState)
+                {
+                    case Globals.GameStates.Running:
+                        UpdateRunning();
+                        break;
+                    case Globals.GameStates.RoomTransitioning:
+                        UpdateRoomTransit();
+                        break;
+                    case Globals.GameStates.Bag:
+                        UpdateBagView();
+                        break;
+                    case Globals.GameStates.TitleScreen:
+                        UpdateTitleScreen();
+                        break;
+                    case Globals.GameStates.Setting:
+                        UpdateSettings();
+                        break;
+                    case Globals.GameStates.Pause:
+                        UpdatePaused();
+                        break;
+                    case Globals.GameStates.LoadAndSave:
+                        UpdateLoadAndSave();
+                        break;
+                    case Globals.GameStates.GameOver:
+                        UpdateGameOver();
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -315,6 +332,8 @@ namespace HappyDungeon
             // Always draw the cursor 
             cursor.Draw();
             screenFX.Draw();
+
+            overlay.Draw();
 
             switch (gameState)
             {

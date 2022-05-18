@@ -64,6 +64,10 @@ namespace HappyDungeon.UI.Texts
             return new string[] { "Load", "Save", "Override", "Back" };
         }
 
+        public override string[] NameWindow()
+        {
+            return new string[] { "Give a name:", "Ja", "Nein" };
+        }
         public override string DifficultyOptions(Globals.GameDifficulty DiffOption)
         {
             switch (DiffOption)

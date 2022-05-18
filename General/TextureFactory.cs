@@ -34,7 +34,9 @@ namespace HappyDungeon
         // ================================= UI elements ==================================
         // ================================================================================ 
         public ImageFile cursor;
-        public ImageFile cursorRMBClickInMap; 
+        public ImageFile cursorRMBClickInMap;
+
+        public ImageFile[] interactiveWindowMidSzie; 
 
         public ImageFile uiFront;
         public ImageFile uiBack;
@@ -160,6 +162,12 @@ namespace HappyDungeon
             // --------------------------------- UI elements ----------------------------------
             cursor = new ImageFile(content, "Images/UI/cursor", 1, 1);
             cursorRMBClickInMap = new ImageFile(content, "Images/UI/cursorRMBInMap", 4, 4);
+
+            interactiveWindowMidSzie = new ImageFile[]{   
+                new ImageFile(content, "Images/UI/InteractiveBoxMidSizeV1", 1, 1) ,
+                new ImageFile(content, "Images/UI/InteractiveBoxMidSizeV2", 1, 1),
+                new ImageFile(content, "Images/UI/InteractiveBoxMidSizeV3", 1, 1)
+            };
 
             uiFront = new ImageFile(content, "Images/UI/HeadsupUIFront", 1, 1);
             uiBack = new ImageFile(content, "Images/UI/HeadsupUIBack", 1, 1);

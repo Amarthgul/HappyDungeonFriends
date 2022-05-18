@@ -219,6 +219,16 @@ namespace HappyDungeon
         }
 
         /// <summary>
+        /// Given a absolute position, return its original unscaled pixel position. 
+        /// </summary>
+        /// <param name="Target">Position relative to its parent texture</param>
+        /// <returns>Unscaled pixel position</returns>
+        public int[] Descale(Vector2 Target)
+        {
+            return new int[] { (int)(Target.X / Globals.SCALAR), (int)(Target.Y / Globals.SCALAR) }; 
+        }
+
+        /// <summary>
         /// Euclidean distance between 2 points.
         /// </summary>
         /// <param name="P1">Point 1</param>

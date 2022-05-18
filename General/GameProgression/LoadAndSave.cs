@@ -195,10 +195,12 @@ namespace HappyDungeon
             Snapshot.ID = (Globals.RND.NextDouble() * Math.Pow(10, 
                 General.GameProgression.Settings.ID_LENGTH)).ToString().Substring(0, General.GameProgression.Settings.ID_LENGTH);
 
-            Snapshot.savedThumbnail = game.screenFX.screenCapbackup;
+            Snapshot.savedThumbnail = game.screenFX.partialScreenshot;
+            Snapshot.thumbnailSize = new int[] { Snapshot.savedThumbnail.Width, Snapshot.savedThumbnail.Height };
+
             Snapshot.savedLevel = game.gameLevel;
             Snapshot.savedTime = DateTime.Now;
-
+            
             Snapshot.savedMapSize = game.mapSize;
             Snapshot.savedVirgin = game.virgin;
 
@@ -230,8 +232,11 @@ namespace HappyDungeon
             General.GameProgression.SerializableInstance Serialized;
             Serialized = new General.GameProgression.SerializableInstance();
 
-            Serialized.ID = Source.ID; 
+            Serialized.savedThumbnail = new Color[Source.savedThumbnail.Width * Source.savedThumbnail.Height];
+            Source.savedThumbnail.GetData(Serialized.savedThumbnail);
+            Serialized.thumbnailSize = Source.thumbnailSize; 
 
+            Serialized.ID = Source.ID;
             Serialized.savedLevel = (int)Source.savedLevel;
             Serialized.savedTime = Source.savedTime;
             Serialized.savedMapSize = Source.savedMapSize; 
@@ -301,6 +306,9 @@ namespace HappyDungeon
             General.GameProgression.ProgressionInstance Result = new General.GameProgression.ProgressionInstance();
 
             Result.ID = Source.ID;
+
+            Result.savedThumbnail = new Texture2D(game.GraphicsDevice, Source.thumbnailSize[0], Source.thumbnailSize[1]);
+            Result.savedThumbnail.SetData(Source.savedThumbnail);
 
             Result.savedLevel = (Globals.GameLevel)Source.savedLevel;
             Result.savedTime = Source.savedTime;

@@ -30,6 +30,8 @@ namespace HappyDungeon.UI.Texts
 
         string[] SaveAndLoadOptions();
 
+        string[] NameWindow();
+
         string DifficultyOptions(Globals.GameDifficulty DiffOption);
 
         string NoteSetOneRand();

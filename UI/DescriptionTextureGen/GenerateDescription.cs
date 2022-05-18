@@ -10,6 +10,9 @@ using System.Diagnostics;
 
 namespace HappyDungeon
 {
+    /// <summary>
+    /// For items in the bag, this generates a box showing item descriptions 
+    /// </summary>
     public class GenerateDescription
     {
         private const int WHOLE_WIDTH = 84;
