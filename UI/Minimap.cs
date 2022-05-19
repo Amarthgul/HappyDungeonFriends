@@ -224,6 +224,24 @@ namespace HappyDungeon
         // ================================================================================
 
         /// <summary>
+        /// When loading game from previously saved, this method is called to reconstruct 
+        /// the entire minimap based on all rooms that has been explored. 
+        /// </summary>
+        public void RedrawEntireMinimap()
+        {
+            for (int i = 0; i < game.mapSize; i++)
+            {
+                for (int j = 0; j < game.mapSize; j++)
+                {
+                    if (game.roomCycler.currentMapSet[i, j] != null && game.roomCycler.currentMapSet[i, j].Explored)
+                    {
+                        FlagExplored(new int[] { i, j });
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Re-calculate the ratio of the tab display offset.
         /// </summary>
         /// <param name="Direction">Direction of the new room</param>

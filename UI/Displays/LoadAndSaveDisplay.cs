@@ -21,6 +21,7 @@ namespace HappyDungeon.UI.Displays
         private const int INSTANCE_TO_LEFT = 16 * Globals.SCALAR;   // White space boundary at left and right 
         private const int INSTANCE_TO_TOP = 17 * Globals.SCALAR;
 
+        private const int TX_NAME_TOP_TOP = 50 * Globals.SCALAR; 
         private const int TX_DATE_TOP_TOP = 64 * Globals.SCALAR;
         private const int TX_LOAD_TO_TOP = 78 * Globals.SCALAR;     // Distance of the "load" text to the top of instance 
         private const int TX_OVERLD_TO_TOP = 94 * Globals.SCALAR;
@@ -38,6 +39,9 @@ namespace HappyDungeon.UI.Displays
         // ================================ Save and load =================================
         // ================================================================================
         private List<General.GameProgression.ProgressionInstance> savedInstances;
+
+        private System.Diagnostics.Stopwatch updateSW = new System.Diagnostics.Stopwatch();
+        private long updateInterval = 2000; 
 
         // ================================================================================
         // =========================== Sprites and their stats ============================
@@ -61,7 +65,8 @@ namespace HappyDungeon.UI.Displays
         private GeneralSprite loadSaveInstanceOverlay;
 
         private List<GeneralSprite> thumbnails;
-        private List<GeneralSprite> dateTexts; 
+        private List<GeneralSprite> nameTextSprites;
+        private List<GeneralSprite> dateTextSprites; 
 
         private GeneralSprite loadText;
         private GeneralSprite loadTextOnHover;
@@ -146,6 +151,7 @@ namespace HappyDungeon.UI.Displays
             backTextIsOnHover = false; 
 
             recoverySW = new System.Diagnostics.Stopwatch();
+            updateSW.Start();
         }
 
         /// <summary>
@@ -190,7 +196,8 @@ namespace HappyDungeon.UI.Displays
             backTextOhHover = new GeneralSprite(BTO, 1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
 
             thumbnails = new List<GeneralSprite>();
-            dateTexts = new List<GeneralSprite>(); 
+            dateTextSprites = new List<GeneralSprite>();
+            nameTextSprites = new List<GeneralSprite>();
         }
 
         private void SetupPositions()
@@ -247,7 +254,8 @@ namespace HappyDungeon.UI.Displays
             while (thumbnails.Count <= savedInstances.Count)
             {
                 thumbnails.Add(null);
-                dateTexts.Add(null);
+                dateTextSprites.Add(null);
+                nameTextSprites.Add(null);
             }
             for (int i = 0; i < savedInstances.Count; i++)
             {
@@ -258,7 +266,9 @@ namespace HappyDungeon.UI.Displays
                 string dateTime = savedInstances[i].savedTime.Month.ToString() + "/" +
                      savedInstances[i].savedTime.Day.ToString() + "/" +
                      savedInstances[i].savedTime.Year.ToString().Substring(2);
-                dateTexts[i] = new GeneralSprite(textSML.GetText(dateTime, game.GraphicsDevice), 
+                dateTextSprites[i] = new GeneralSprite(textSML.GetText(dateTime, game.GraphicsDevice), 
+                    1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
+                nameTextSprites[i] = new GeneralSprite(textSML.GetText(savedInstances[i].saveName, game.GraphicsDevice),
                     1, 1, Globals.WHOLE_SHEET, 1, Globals.UI_ICONS);
             }
                 
@@ -367,9 +377,13 @@ namespace HappyDungeon.UI.Displays
                     // First draw the thumbnails 
                     thumbnails[i].Draw(spriteBatch, currentInstancePivot + thumbnailOffset, defualtTint);
 
-                    Vector2 dateTextToTop = new Vector2(INSTANCE_WIDTH /2 - dateTexts[i].selfTexture.Width * Globals.SCALAR /2, 
+                    Vector2 nameTextToTop = new Vector2(INSTANCE_WIDTH / 2 - nameTextSprites[i].selfTexture.Width * Globals.SCALAR / 2,
+                        TX_NAME_TOP_TOP) + currentInstancePivot;
+                    Vector2 dateTextToTop = new Vector2(INSTANCE_WIDTH /2 - dateTextSprites[i].selfTexture.Width * Globals.SCALAR /2, 
                         TX_DATE_TOP_TOP) + currentInstancePivot;
-                    dateTexts[i].Draw(spriteBatch, dateTextToTop, defualtTint);
+
+                    nameTextSprites[i].Draw(spriteBatch, nameTextToTop, defualtTint);
+                    dateTextSprites[i].Draw(spriteBatch, dateTextToTop, defualtTint);
 
                     // Override, note that if there is nothing to save then this is greyed out 
                     if (overrideTextIsOnHover[i] && !game.virgin)
@@ -389,13 +403,19 @@ namespace HappyDungeon.UI.Displays
             }
         }
 
+        /// <summary>
+        /// Save command doesn't directly save it, since there needs a name, and the 
+        /// player need to enter the name. This method only calls the naming window. 
+        /// </summary>
         private void SaveCommand()
         {
-            game.loadAndSave.SaveNow();
+            game.overlay.ToggleActivity(true);
+            game.overlay.SetMode(OverlayInput.Mode.Save); 
+        }
 
-            savedInstances = game.loadAndSave.UpdateSavedInstances();
-
-            UpdateSavedInstances();
+        private void OverrideCommand(int Index)
+        {
+            game.loadAndSave.OverrideNow(savedInstances[Index]);
         }
 
         private void LoadCommand(int Index)
@@ -403,8 +423,6 @@ namespace HappyDungeon.UI.Displays
             game.loadAndSave.LoadNow(savedInstances[Index]);
             game.reset(Globals.LOAD_SAVED);
             game.screenFX.SigTransitionStart(Globals.GameStates.Running);
-
-            
         }
 
         // ================================================================================
@@ -516,12 +534,22 @@ namespace HappyDungeon.UI.Displays
                     LoadCommand(i);
                 }
 
-                // Actually both save and override
+                // Both save and override goes here 
                 if (currentOverrideText.Contains(CursorPos) && !game.virgin)
                 {
-                    game.overlay.ToggleActivity(true);
+                    if(i >= savedInstances.Count)
+                    {
+                        // Save
+                        game.overlay.ToggleActivity(true);
+                        SaveCommand();
+                    }
+                    else
+                    {
+                        // Override, does not need player input
+                        OverrideCommand(i); 
+                    }
 
-                    SaveCommand();
+                    
                 }
 
             }
@@ -599,6 +627,11 @@ namespace HappyDungeon.UI.Displays
 
         public void Update()
         {
+            if (updateSW.ElapsedMilliseconds > updateInterval)
+            {
+                UpdateSavedInstances();
+                updateSW.Restart();
+            }
 
             if (instanceDragRecovery)
                 InstanceDragRecovery();

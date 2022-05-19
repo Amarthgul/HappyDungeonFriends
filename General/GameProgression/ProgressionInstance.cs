@@ -12,7 +12,9 @@ namespace HappyDungeon.General.GameProgression
     [Serializable]
     public struct ProgressionInstance
     {
-        public string ID; 
+        public string ID;
+
+        public string saveName; 
 
         // Displayed attributes 
         public Texture2D savedThumbnail;
@@ -51,6 +53,8 @@ namespace HappyDungeon.General.GameProgression
     public struct SerializableInstance
     {
         public string ID;
+
+        public string saveName;
 
         public Color[] savedThumbnail;
         public int[] thumbnailSize;

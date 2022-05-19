@@ -16,8 +16,6 @@ namespace HappyDungeon
     public class LoadAndSave
     {
 
-        private const int PAIR = 2; 
-
         private Game1 game;
 
         private List<String> savePaths;    // Where the files will be saved to 
@@ -55,9 +53,20 @@ namespace HappyDungeon
         /// <summary>
         /// Initiate an attempt to save 
         /// </summary>
-        public void SaveNow()
+        public void SaveNow(string SaveFileName)
         {
-            General.GameProgression.ProgressionInstance Progression = TakeSnapshot();
+            General.GameProgression.ProgressionInstance Progression = TakeSnapshot(SaveFileName);
+
+            saver.SaveInstance(SerializeInstance(Progression), Progression.savedThumbnail);
+
+            UpdateSavedInstances();
+        }
+
+
+        public void OverrideNow(General.GameProgression.ProgressionInstance Target)
+        {
+            General.GameProgression.ProgressionInstance Progression = TakeSnapshot(Target.saveName);
+            Progression.ID = Target.ID;
 
             saver.SaveInstance(SerializeInstance(Progression), Progression.savedThumbnail);
 
@@ -90,7 +99,8 @@ namespace HappyDungeon
 
             game.mainChara.position = Target.savedPlayerPosition;
             game.mainChara.facingDir = Target.savedPlayerFacingDir;
-            game.mainChara.currentHealth = Target.savedHealth; 
+            game.mainChara.currentHealth = Target.savedHealth;
+
         }
 
 
@@ -142,6 +152,7 @@ namespace HappyDungeon
             }
 
             Result.Type = (int)Target.Type;
+            Result.Explored = Target.Explored; 
             Result.LockedDoors = Target.LockedDoors;
             Result.Holes = Target.Holes;
             Result.MysteryDoors = Target.MysteryDoors;
@@ -172,6 +183,7 @@ namespace HappyDungeon
             }
 
             Result.Type = (Globals.RoomTypes)Target.Type;
+            Result.Explored = Target.Explored;
             Result.LockedDoors = Target.LockedDoors;
             Result.Holes = Target.Holes;
             Result.MysteryDoors = Target.MysteryDoors;
@@ -185,7 +197,7 @@ namespace HappyDungeon
         /// Create the initial snapshot ProgressionInstance. 
         /// </summary>
         /// <returns>ProgressionInstance for current game</returns>
-        private General.GameProgression.ProgressionInstance TakeSnapshot()
+        private General.GameProgression.ProgressionInstance TakeSnapshot(string Name)
         {
             General.GameProgression.ProgressionInstance Snapshot;
 
@@ -194,6 +206,7 @@ namespace HappyDungeon
             // ID is random generated number truncated into certain length 
             Snapshot.ID = (Globals.RND.NextDouble() * Math.Pow(10, 
                 General.GameProgression.Settings.ID_LENGTH)).ToString().Substring(0, General.GameProgression.Settings.ID_LENGTH);
+            Snapshot.saveName = Name; 
 
             Snapshot.savedThumbnail = game.screenFX.partialScreenshot;
             Snapshot.thumbnailSize = new int[] { Snapshot.savedThumbnail.Width, Snapshot.savedThumbnail.Height };
@@ -237,6 +250,7 @@ namespace HappyDungeon
             Serialized.thumbnailSize = Source.thumbnailSize; 
 
             Serialized.ID = Source.ID;
+            Serialized.saveName = Source.saveName;
             Serialized.savedLevel = (int)Source.savedLevel;
             Serialized.savedTime = Source.savedTime;
             Serialized.savedMapSize = Source.savedMapSize; 
@@ -306,6 +320,7 @@ namespace HappyDungeon
             General.GameProgression.ProgressionInstance Result = new General.GameProgression.ProgressionInstance();
 
             Result.ID = Source.ID;
+            Result.saveName = Source.saveName;
 
             Result.savedThumbnail = new Texture2D(game.GraphicsDevice, Source.thumbnailSize[0], Source.thumbnailSize[1]);
             Result.savedThumbnail.SetData(Source.savedThumbnail);

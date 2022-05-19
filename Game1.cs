@@ -21,9 +21,9 @@ namespace HappyDungeon
         /// Also note that Dev mode is not the same as BEGUGGING in the Globals. 
         /// Dev mode aims in tweaking features, while DEBUGGING is for coding. 
         /// </summary>
-        private bool _DEVMODE = false;       // Root flag for all other dev options 
+        private bool _DEVMODE = true;       // Root flag for all other dev options 
         private bool _ENABLE_FOW = false;   // Enable fog of war
-        private bool _SHOW_BOX = false;     // Draw boundary boxes for objects 
+        private bool _SHOW_BOX = true;     // Draw boundary boxes for objects 
 
         // ================================================================================
         // ============================= Abstract resources ===============================
@@ -192,12 +192,15 @@ namespace HappyDungeon
                 currentRoom.roomInfo = roomCycler.GetCurrentRoomInfo(); 
                 currentRoom.SetupRoom();
 
+                ReloadLists();
+
+                mainChara.Refresh(this);
+
                 minimap = new Minimap(this);
                 minimap.SetPivot(roomCycler.GetCurrentLocationIndex());
                 minimap.FlagExplored(roomCycler.GetCurrentLocationIndex());
+                minimap.RedrawEntireMinimap();
                 displayWholeMinimap = 0;
-
-                ReloadLists(); 
             }
 
         }

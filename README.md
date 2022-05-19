@@ -21,10 +21,12 @@ Currently still work in progress.
 
 **Please note that these updates may not be reflected in release**
 
-Updated 28th March 2022: 
+Updated 19th May 2022: 
 
-Added a new UI display for save and load game progressions, still work in
-progress. 
+The load and save finally works, also allowing the player to give the save a name. 
+Override is still buggy and needs additional work. 
+
+I intend to publish 0.92 once the load and save feature fully functions. 
 
 
 <p align="center">
@@ -42,29 +44,29 @@ progress.
 Unfortunately there is no key-binding that the player can change in-game, but by toggling certain variables, 
 the game can have different controls. By default the control is `Keyboard (RPG)` with `Mouse`.
 
-### Keyboard (Traditional)
-
-Traditional approach combines the arrow key with MOBA skill keys, when used with mouse, it
-produces an experience somewhat similar to Dota or Starcraft. 
-
-* Arrow keys for movement and option selection (some may not be fully implmented)
-* `Q` `W` `E` `R` to use items 
-* `Enter` to confirm
-* `Alt` to display hotkeys
-* `A` to attack
-* `B` to open bag, you can also click on the bag icon
-* `Tab` to display minimap, use LMB to pan it around 
-* `Esc` to pause/quit 
-
 ### Keyboard (RPG)
 
 A more concentrated approach, as most operational keys are gathered in left side of the keyboard.
 
 * `Q` `W` `E` `R` to move 
-* `1`, `2`, `3`, `4` to use items
+* `1` `2` `3` `4` to use items/skills
 * `Enter` to confirm
 * `Alt` to display hotkeys
 * `Space` to attack 
+* `B` to open bag, you can also click on the bag icon
+* `Tab` to display minimap, use LMB to pan it around 
+* `Esc` to pause/quit 
+
+### Keyboard (Traditional)
+
+Traditional approach combines the arrow key with MOBA skill keys, when used with mouse, it
+produces an experience somewhat similar to Dota or Starcraft. 
+
+* Arrow keys for movement and option selection
+* `Q` `W` `E` `R` to use items/skills
+* `Enter` to confirm
+* `Alt` to display hotkeys
+* `A` to attack
 * `B` to open bag, you can also click on the bag icon
 * `Tab` to display minimap, use LMB to pan it around 
 * `Esc` to pause/quit 

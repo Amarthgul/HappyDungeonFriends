@@ -12,6 +12,8 @@ namespace HappyDungeon
 
         public Globals.RoomTypes Type{ get; set; }
 
+        public bool Explored { get; set; }
+
         public bool[] LockedDoors { get; set; }
         public bool[] Holes { get; set; }
         public bool[] MysteryDoors { get; set; }
@@ -28,6 +30,8 @@ namespace HappyDungeon
         public int[,] Arrangement { get; set; }
 
         public int Type { get; set; }
+
+        public bool Explored { get; set; }
 
         public bool[] LockedDoors { get; set; }
         public bool[] Holes { get; set; }

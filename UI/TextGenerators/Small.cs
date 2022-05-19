@@ -10,6 +10,7 @@ namespace HappyDungeon.UI
 {
     /// <summary>
     /// Small font is mostly for descriptions and other text-heavy parts. 
+    /// Also used in player input, and thus has a input cursor sprite. 
     /// </summary>
     public class Small : IText
     {
@@ -19,6 +20,7 @@ namespace HappyDungeon.UI
         protected const int ROW_LOC_CAP = 13;
         protected const int ROW_LOC_DIG = 22;
         protected const int ROW_LOC_PUN = 31;
+        protected const int ROW_LOC_SPE = 40;
 
         protected bool upperCaseOnly = true;
 
@@ -26,6 +28,7 @@ namespace HappyDungeon.UI
 
         public Texture2D textTure;
 
+        // Unfortunately, those below needs to be checked and typed manually whenever changes are made 
         protected Dictionary<char, int> digitWidth = new Dictionary<char, int>
         {
             {'0', 3 },
@@ -118,7 +121,10 @@ namespace HappyDungeon.UI
             {'?', 3 },
             {'%', 3 }
         };
-
+        protected Dictionary<Globals.SpecialCharacters, int> specWidth =
+            new Dictionary<Globals.SpecialCharacters, int> {
+                { Globals.SpecialCharacters.InputCursor, 1}
+            };
 
         public int interval { set; get; }
         public int spaceSize { set; get; }
@@ -155,6 +161,16 @@ namespace HappyDungeon.UI
             return result;
         }
 
+        protected int GetCharWidth(Globals.SpecialCharacters TarChar)
+        {
+            int result = 0;
+
+            result = specWidth[TarChar];
+            result += 2 * widthOffset;
+
+            return result; 
+        }
+
 
         protected int GetSrcLocation(char TarChar)
         {
@@ -172,6 +188,20 @@ namespace HappyDungeon.UI
             return Result;
 
         }
+
+        protected int GetSrcLocation(Globals.SpecialCharacters TarChar)
+        {
+            Dictionary<Globals.SpecialCharacters, int> ExmDict;
+            int Result = 0;
+
+            ExmDict = specWidth;
+
+            for (int i = 0; ExmDict.ElementAt(i).Key != TarChar; i++)
+                Result += ExmDict.ElementAt(i).Value + interval + 2 * widthOffset; // Small basic has 1 offset between each character
+
+            return Result;
+        }
+
 
         protected Texture2D GetCharTexture(char TarChar, GraphicsDevice G)
         {
@@ -203,6 +233,32 @@ namespace HappyDungeon.UI
 
             return SingleChar;
         }
+
+        protected Texture2D GetCharTexture(Globals.SpecialCharacters TarChar, GraphicsDevice G)
+        {
+            int RowLoc, CharWidth, CharSrcPosition;
+            Texture2D SingleChar;
+            Rectangle SourceRect;
+            Color[] Data;
+
+            RowLoc = ROW_LOC_SPE - heightOffset;
+            CharWidth = GetCharWidth(TarChar);
+
+            SingleChar = TextureFactory.Instance.GenerateTexture(G, CharWidth, HEIGHT + 2 * heightOffset, pixel => Color.Transparent);
+            Data = new Color[SingleChar.Width * SingleChar.Height];
+
+            CharSrcPosition = GetSrcLocation(TarChar);
+            SourceRect = new Rectangle(CharSrcPosition, RowLoc, CharWidth, HEIGHT + 2 * heightOffset);
+
+            sourceTexts.GetData(0, SourceRect, Data, 0, Data.Length);
+            SingleChar.SetData(Data);
+
+            return SingleChar;
+        }
+
+        // ================================================================================
+        // ================================ Public methods ================================
+        // ================================================================================
 
         public Texture2D GetText(string Text, GraphicsDevice G)
         {
@@ -246,6 +302,12 @@ namespace HappyDungeon.UI
             }
 
             return textTure;
+        }
+
+        public Texture2D GetSpecialChar(Globals.SpecialCharacters TarChar, GraphicsDevice G)
+        {
+            // Since it's just one character 
+            return GetCharTexture(TarChar, G);
         }
 
         public bool IsValidInput(string Text)

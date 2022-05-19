@@ -135,6 +135,7 @@ namespace HappyDungeon
                 default:
                     break;
             }
+            currentMapSet[currentLocationIndex[0], currentLocationIndex[1]].Explored = true; 
         }
 
         /// <summary>

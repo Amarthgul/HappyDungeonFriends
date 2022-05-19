@@ -31,8 +31,9 @@ namespace HappyDungeon.General.GameProgression
                 Directory.CreateDirectory(savePath);
 
             string output = JsonConvert.SerializeObject(Instance, Formatting.Indented);
+            string SaveName = Instance.saveName; 
 
-            File.WriteAllText(Path.Combine(savePath, "rec.json"), output);
+            File.WriteAllText(Path.Combine(savePath, SaveName + ".json"), output);
 
         }
 

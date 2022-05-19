@@ -201,9 +201,12 @@ namespace HappyDungeon
         public enum DamageType { None, Burn };
 
         /// Chinese and Japanese sprites are too difficult to make and I don't
-        /// speak Spanish, deutsch, or French, so English is the only one language 
+        /// speak Spanish or French, so English is the only one language 
         /// currently the game supports (till v0.11)
         public enum Language { English, Spanish, Chinese, Japanese, French, Deutsch };
+
+        // For marking and displaying special character 
+        public enum SpecialCharacters { InputCursor, InvalidCharacter };
 
         public enum KeyboardControl { Tradition, RPG };
 

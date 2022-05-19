@@ -17,6 +17,9 @@ namespace HappyDungeon
     /// </summary>
     public class OverlayInput
     {
+        public enum Mode { Save };
+
+        private enum Options { EnterName, Confirm, Cancel}
 
         private const int HEIGHT_TO_TOP = 54;
 
@@ -28,12 +31,17 @@ namespace HappyDungeon
         private Game1 game;
         private SpriteBatch spriteBatch;
 
+        private Mode currentMode = Mode.Save; 
+
         // ================================================================================
         // =========================== Abstract and parameters ============================
         // ================================================================================
         private bool newWindowInSession = false;
 
-        private List<string> userInput = new List<string>();
+        // If the LMB is currently being pressed 
+        private bool LMBSession = false; 
+
+        private List<string> playerInputString = new List<string>();
 
         // ================================================================================
         // ==================== Sprites, positions, and their stats =======================
@@ -55,6 +63,7 @@ namespace HappyDungeon
 
         // Text of the player input, has left and right 2 parts b/c there's a cursor 
         private List<GeneralSprite> playerInputSprite = new List<GeneralSprite>();
+        private GeneralSprite playerInputCursor; // That tiny vertical line 
 
         private List<GeneralSprite> nameOptionTexts;
         private List<GeneralSprite> nameOptionTextsOnHover;
@@ -62,6 +71,7 @@ namespace HappyDungeon
         private Vector2 zeroVector = new Vector2();
         private Vector2 windowDrawPosition = new Vector2();
         private Vector2 playerInputLoc = new Vector2();
+        private Vector2 inputCursorOffset; 
         private List<Vector2> nameWindowTxLoc = new List<Vector2>(); // Locations for naming window 
 
         private List<Rectangle> nameWindowTxRect = new List<Rectangle>(); 
@@ -77,6 +87,10 @@ namespace HappyDungeon
         // For player input, a timer is used to avoid one press event to spawn a million characters 
         private System.Diagnostics.Stopwatch inputSW = new System.Diagnostics.Stopwatch();
         private long inputInterval = 200; // Interval between each valid key pressing  
+
+        private System.Diagnostics.Stopwatch cursorBlinkSW = new System.Diagnostics.Stopwatch();
+        private long cursorBlinkInterval = 500;
+        private bool cursorOnDisplay = false;
 
         // ================================================================================
         // ==================================== Methods ===================================
@@ -95,7 +109,8 @@ namespace HappyDungeon
 
             InitilizeInput();
 
-            inputSW.Start(); 
+            inputSW.Start();
+            cursorBlinkSW.Start();
         }
 
         /// <summary>
@@ -106,7 +121,7 @@ namespace HappyDungeon
             List<ImageFile> WindowMidSize = new List<ImageFile>();
             List<Texture2D> nameOptionTextRaw = new List<Texture2D>();
             List<Texture2D> nameOptionTextRawOH = new List<Texture2D>();
-
+            Texture2D InputCursorTxt = textGenSML.GetSpecialChar(Globals.SpecialCharacters.InputCursor, game.GraphicsDevice);
             foreach (ImageFile img in TextureFactory.Instance.interactiveWindowMidSzie)
                 WindowMidSize.Add(img);
             foreach (string txt in TextBridge.Instance.GetNameWindowTexts())
@@ -117,6 +132,7 @@ namespace HappyDungeon
             }
 
 
+            playerInputCursor = new GeneralSprite(InputCursorTxt, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_LAYER);
             
             InteractiveWindowsMidSize = new List<GeneralSprite>();
             nameOptionTexts = new List<GeneralSprite>();
@@ -134,6 +150,8 @@ namespace HappyDungeon
                 TextureFactory.Instance.GenerateTexture(game.GraphicsDevice, Globals.OUT_FWIDTH, Globals.OUT_FHEIGHT, pixel=> backgroundColor), 
                 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.INTERACTIVE_BG_LAYER
                 );
+
+            
         }
 
         /// <summary>
@@ -141,14 +159,17 @@ namespace HappyDungeon
         /// </summary>
         private void SetupPositions()
         {
-            
+            inputCursorOffset = new Vector2(playerInputCursor.selfTexture.Width * Globals.SCALAR, 0);
         }
 
+        /// <summary>
+        /// Clear old inputs and add 2 slots for new ones. 
+        /// </summary>
         private void InitilizeInput()
         {
-            userInput.Clear(); 
-            userInput.Add("");
-            userInput.Add("");
+            playerInputString.Clear(); 
+            playerInputString.Add("");
+            playerInputString.Add("");
 
             playerInputSprite.Clear();
             playerInputSprite.Add(null);
@@ -160,6 +181,8 @@ namespace HappyDungeon
         /// </summary>
         private void InitilizeNewSession()
         {
+            InitilizeInput();
+
             windowNow = InteractiveWindowsMidSize[Globals.RND.Next() % InteractiveWindowsMidSize.Count];
 
             windowDrawPosition = new Vector2(
@@ -184,21 +207,30 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Empty the sprites for user input and remake them to represent updates 
+        /// Empty the sprites for user input and remake them to represent new updates.
         /// </summary>
         private void UpdateInputSprite()
         {
             int TotalWidth = 0;
 
-            Texture2D TxtLeft = textGenSML.GetText(userInput[0], game.GraphicsDevice);
-            //Texture2D TxtRight = textGenSML.GetText(userInput[1], game.GraphicsDevice);
+            Texture2D TxtLeft;
+            Texture2D TxtRight;
 
-            playerInputSprite[0] = new GeneralSprite(TxtLeft, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_LAYER);
+            if (playerInputString[0].Length > 0)
+            {
+                TxtLeft = textGenSML.GetText(playerInputString[0], game.GraphicsDevice);
 
-            if (playerInputSprite[0] != null )
-                TotalWidth += playerInputSprite[0].selfTexture.Width;
-            if (playerInputSprite[1] != null)
-                TotalWidth += playerInputSprite[1].selfTexture.Width;
+                TotalWidth += TxtLeft.Width;
+                playerInputSprite[0] = new GeneralSprite(TxtLeft, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_LAYER);
+            }
+
+            if (playerInputString[1].Length > 0)
+            {
+                TxtRight = textGenSML.GetText(playerInputString[1], game.GraphicsDevice);
+
+                TotalWidth += TxtRight.Width;
+                playerInputSprite[1] = new GeneralSprite(TxtRight, 1, 1, Globals.WHOLE_SHEET, Globals.ONE_FRAME, Globals.UI_TEXT_LAYER);
+            }
 
             TotalWidth *= Globals.SCALAR; 
 
@@ -207,7 +239,8 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Change the displayed string accroding to player input 
+        /// Change the displayed string accroding to player input.
+        /// Currently does not support Shift to alter texts. 
         /// </summary>
         /// <param name="key">Single input key</param>
         /// <returns>True if this is a valid input</returns>
@@ -218,9 +251,35 @@ namespace HappyDungeon
             string pattern = @".*(\d)";
             Regex rg = new Regex(pattern);
 
+            // If last key pressing is not too long ago, skip this one
             if (inputSW.ElapsedMilliseconds < inputInterval) return HasChanged;
             else inputSW.Reset();
 
+            // Check for delete and arrow keys 
+            if(key == Keys.Back && playerInputString[0].Length > 0)
+            {
+                playerInputString[0] = playerInputString[0].Substring(0, playerInputString[0].Length - 1);
+                HasChanged = true;
+            }
+            else if (key == Keys.Left && playerInputString[0].Length > 0)
+            {
+                // Move one character from left to right 
+                playerInputString[1] = string.Concat(
+                    playerInputString[0][playerInputString[0].Length - 1], 
+                    playerInputString[1]);
+                playerInputString[0] = playerInputString[0].Substring(0, playerInputString[0].Length - 1);
+                HasChanged = true;
+            }
+            else if (key == Keys.Right && playerInputString[1].Length > 0)
+            {
+                // Move one character from right to left 
+                playerInputString[0] = string.Concat(playerInputString[0], 
+                    playerInputString[1][0]);
+                playerInputString[1] = playerInputString[1].Substring(1, playerInputString[1].Length-1);
+                HasChanged = true;
+            }
+
+            // Check for inputs 
             string currentKeyTr = key.ToString();
             currentKey = (char)currentKeyTr[0];
 
@@ -231,20 +290,20 @@ namespace HappyDungeon
                 if (matchedNumber.Count > 0)
                 {
                     string digit = currentKeyTr.Substring(currentKeyTr.Length - 1);
-                    userInput[0] = string.Concat(userInput[0], (char)digit[0]);
+                    playerInputString[0] = string.Concat(playerInputString[0], (char)digit[0]);
                     HasChanged = true;
                 }
             }
             else if (char.IsLetter(currentKey))
             {
                 // Convert all letter input into caps  
-                userInput[0] = string.Concat(userInput[0], char.ToUpper(currentKey).ToString());
+                playerInputString[0] = string.Concat(playerInputString[0], char.ToUpper(currentKey).ToString());
                 HasChanged = true;
             }
             else if (textGenSML.IsValidInput(currentKey))
             {
                 // Otherwise, just check if it is a valid input, if so, concate 
-                userInput[0] = string.Concat(userInput[0], currentKey.ToString());
+                playerInputString[0] = string.Concat(playerInputString[0], currentKey.ToString());
                 HasChanged = true;
             }
 
@@ -268,6 +327,39 @@ namespace HappyDungeon
             if (HasChanged) UpdateInputSprite();
         }
 
+        private void DrawPlayerInput()
+        {
+
+            if (playerInputString[0].Length > 0)
+                playerInputSprite[0].Draw(spriteBatch, playerInputLoc, defualtTint);
+
+            if( playerInputString[1].Length > 0)
+            {
+                Vector2 string2Offset = new Vector2(playerInputSprite[0].selfTexture.Width * Globals.SCALAR, 0);
+
+                if(cursorOnDisplay)
+                    playerInputCursor.Draw(spriteBatch, playerInputLoc + string2Offset, defualtTint);
+
+                playerInputSprite[1].Draw(spriteBatch, playerInputLoc + string2Offset + inputCursorOffset, defualtTint);
+            }
+
+        }
+
+        private void ExecuteCommand(Options Cmd)
+        {
+            switch (Cmd)
+            {
+                case Options.Cancel:
+                    break;
+                case Options.Confirm:
+                    game.loadAndSave.SaveNow(string.Concat(playerInputString[0], playerInputString[1]));
+                    ToggleActivity(false);
+                    break;
+                default:
+                    break; 
+            }
+        }
+
         // ================================================================================
         // ================================ Public methods ================================
         // ================================================================================
@@ -286,11 +378,22 @@ namespace HappyDungeon
             newWindowInSession = Target; 
         }
 
+        public void SetMode(Mode Tar)
+        {
+            currentMode = Tar; 
+        }
+
+        /// <summary>
+        /// Updating for the on hover and click event. 
+        /// </summary>
+        /// <param name="CurrentState"></param>
+        /// <param name="CurrentLocation"></param>
         public void UpdateCursor(MouseState CurrentState, Vector2 CurrentLocation)
         {
 
             for(int i = 1; i < nameWindowTxRect.Count; i++)
             {
+                // Check on hover 
                 if (nameWindowTxRect[i].Contains(CurrentLocation) )
                 {
                     if (!nameTextIsOnHover[i])
@@ -300,6 +403,16 @@ namespace HappyDungeon
                     }
                 } 
                 else nameTextIsOnHover[i] = false;
+
+                // Check click an release 
+                if(CurrentState.LeftButton == ButtonState.Pressed)
+                {
+                    LMBSession = true; 
+                }
+                else if (LMBSession && nameWindowTxRect[i].Contains(CurrentLocation))
+                {
+                    ExecuteCommand((Options)i);
+                }
             }
         }
 
@@ -307,7 +420,11 @@ namespace HappyDungeon
         {
             UpdateKeyboardInput();
 
-
+            if(cursorBlinkSW.ElapsedMilliseconds > cursorBlinkInterval)
+            {
+                cursorOnDisplay = !cursorOnDisplay;
+                cursorBlinkSW.Restart();
+            }
         }
 
         public void Draw()
@@ -319,11 +436,9 @@ namespace HappyDungeon
 
             windowNow.Draw(spriteBatch, windowDrawPosition, defualtTint);
 
-            foreach (GeneralSprite input in playerInputSprite)
-                if (input != null)
-                    input.Draw(spriteBatch, playerInputLoc, defualtTint);
+            DrawPlayerInput(); 
 
-            for(int i = 0; i < nameOptionTexts.Count; i++)
+            for (int i = 0; i < nameOptionTexts.Count; i++)
             {
                 if (i > 0 && nameTextIsOnHover[i])
                     nameOptionTextsOnHover[i].Draw(spriteBatch, nameWindowTxLoc[i], defualtTint);
