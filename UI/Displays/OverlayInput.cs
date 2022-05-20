@@ -86,7 +86,10 @@ namespace HappyDungeon
 
         // For player input, a timer is used to avoid one press event to spawn a million characters 
         private System.Diagnostics.Stopwatch inputSW = new System.Diagnostics.Stopwatch();
-        private long inputInterval = 200; // Interval between each valid key pressing  
+        private long inputInterval = 125; // Interval between each valid key pressing  
+        private long inputSameInterval = 250; // Same character is more likely to be under same key pressing
+        private char lastCharacter;
+        private Keys lastKey; 
 
         private System.Diagnostics.Stopwatch cursorBlinkSW = new System.Diagnostics.Stopwatch();
         private long cursorBlinkInterval = 500;
@@ -251,15 +254,36 @@ namespace HappyDungeon
             string pattern = @".*(\d)";
             Regex rg = new Regex(pattern);
 
-            // If last key pressing is not too long ago, skip this one
-            if (inputSW.ElapsedMilliseconds < inputInterval) return HasChanged;
-            else inputSW.Reset();
-
-            // Check for delete and arrow keys 
-            if(key == Keys.Back && playerInputString[0].Length > 0)
+            if (inputSW.ElapsedMilliseconds < inputInterval)
             {
-                playerInputString[0] = playerInputString[0].Substring(0, playerInputString[0].Length - 1);
-                HasChanged = true;
+                // If last key pressing is not too long ago, skip this one
+                return HasChanged;
+            }
+
+            // -----------------------------------------------------------------------
+            // Before going any further, check if last key pressed is also this key.
+            // If so, there's a large chance that the player was simply holding the 
+            // same key for too long.
+            if (lastKey != Keys.None && lastKey == key
+                && inputSW.ElapsedMilliseconds < inputSameInterval)
+            {
+                // last character is the same and the timer is not yet long enough
+                // to think the player actually intended to type the same twice 
+                return false;
+            }
+            else
+            {
+                lastKey = key;
+                inputSW.Restart();
+            }
+
+
+            // -----------------------------------------------------------------------
+            // ------------------- Check for delete and arrow keys -------------------
+            if (key == Keys.Back && playerInputString[0].Length > 0)
+            {
+                playerInputString[0] = playerInputString[0].Remove(playerInputString[0].Length - 1, 1);
+                return true;
             }
             else if (key == Keys.Left && playerInputString[0].Length > 0)
             {
@@ -268,7 +292,7 @@ namespace HappyDungeon
                     playerInputString[0][playerInputString[0].Length - 1], 
                     playerInputString[1]);
                 playerInputString[0] = playerInputString[0].Substring(0, playerInputString[0].Length - 1);
-                HasChanged = true;
+                return true;
             }
             else if (key == Keys.Right && playerInputString[1].Length > 0)
             {
@@ -276,10 +300,11 @@ namespace HappyDungeon
                 playerInputString[0] = string.Concat(playerInputString[0], 
                     playerInputString[1][0]);
                 playerInputString[1] = playerInputString[1].Substring(1, playerInputString[1].Length-1);
-                HasChanged = true;
+                return true;
             }
 
-            // Check for inputs 
+            // -----------------------------------------------------------------------
+            // --------------------- Check for different inputs ----------------------
             string currentKeyTr = key.ToString();
             currentKey = (char)currentKeyTr[0];
 
@@ -290,24 +315,25 @@ namespace HappyDungeon
                 if (matchedNumber.Count > 0)
                 {
                     string digit = currentKeyTr.Substring(currentKeyTr.Length - 1);
-                    playerInputString[0] = string.Concat(playerInputString[0], (char)digit[0]);
+                    currentKey = digit[0];
                     HasChanged = true;
                 }
             }
             else if (char.IsLetter(currentKey))
             {
                 // Convert all letter input into caps  
-                playerInputString[0] = string.Concat(playerInputString[0], char.ToUpper(currentKey).ToString());
+                currentKey = char.ToUpper(currentKey);
                 HasChanged = true;
             }
             else if (textGenSML.IsValidInput(currentKey))
             {
                 // Otherwise, just check if it is a valid input, if so, concate 
-                playerInputString[0] = string.Concat(playerInputString[0], currentKey.ToString());
                 HasChanged = true;
             }
 
-            inputSW.Restart(); 
+            
+            playerInputString[0] = string.Concat(playerInputString[0], currentKey.ToString());
+
             return HasChanged; 
         }
 

@@ -31,11 +31,11 @@ namespace HappyDungeon
             const float DOOR_VERTICAL_MARK = 5.25f;
             const float DOOR_HORIZONTAL_MARK = 7.5f;
             const int MID_DIVISION = 6;
-            const double LEFT_OFFSET = 1.25;
-            const double RIGHT_OFFSET = 2.75;
+            const double LEFT_OFFSET = 1.2;
+            const double RIGHT_OFFSET = 2.8;
             const int VERTICAL_DIVISION = 3;
-            const double UP_OFFSET = 1.95;
-            const double DOWN_OFFSET = 2.05;
+            const double UP_OFFSET = 1.85;
+            const double DOWN_OFFSET = 2.15;
 
             int TopPosition = Globals.OUT_HEADSUP + Globals.OUT_UNIT;
             int ButtPosition = Globals.OUT_FHEIGHT - 2 * Globals.OUT_UNIT;

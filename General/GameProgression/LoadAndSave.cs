@@ -63,6 +63,11 @@ namespace HappyDungeon
         }
 
 
+        /// <summary>
+        /// Override a given record. 
+        /// Essentially the same as SaveNow, but replacing the name and ID with given record.
+        /// </summary>
+        /// <param name="Target">Which one to be overriden</param>
         public void OverrideNow(General.GameProgression.ProgressionInstance Target)
         {
             General.GameProgression.ProgressionInstance Progression = TakeSnapshot(Target.saveName);
@@ -74,7 +79,8 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Load a saved game, current progression (if has any) will be overriden.
+        /// Load a saved game stats, current progression (if has any) will be overriden.
+        /// Note that the game also needs to be reset in order to make them effective. 
         /// </summary>
         /// <param name="Target">What to load</param>
         public void LoadNow(General.GameProgression.ProgressionInstance Target)
@@ -117,8 +123,11 @@ namespace HappyDungeon
             {
                 General.GameProgression.ProgressionInstance iter = DeserializeInstance(Serializable);
 
-                // If this record exists then skip it
-                if (savedInstances.Exists(x => x.ID == iter.ID)) continue;
+                // If this record exists then remove the old one to override it
+                if (savedInstances.Exists(x => x.ID == iter.ID)) 
+                {
+                    savedInstances.Remove(savedInstances.Find(x => x.ID == iter.ID));
+                }
 
                 // If this record is unique so far, add it into the saved 
                 savedInstances.Add(iter);

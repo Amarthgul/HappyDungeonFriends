@@ -21,7 +21,7 @@ namespace HappyDungeon
         /// Also note that Dev mode is not the same as BEGUGGING in the Globals. 
         /// Dev mode aims in tweaking features, while DEBUGGING is for coding. 
         /// </summary>
-        private bool _DEVMODE = true;       // Root flag for all other dev options 
+        private bool _DEVMODE = false;       // Root flag for all other dev options 
         private bool _ENABLE_FOW = false;   // Enable fog of war
         private bool _SHOW_BOX = true;     // Draw boundary boxes for objects 
 
@@ -273,12 +273,12 @@ namespace HappyDungeon
                     virgin = false;
             }
 
-            // Keyboard and mouse always updates, but is dependent on game state in their Update method
+            // Note that keyboard actually don;t update if overlay is enabled  
             foreach (IController controller in controllerList)
             {
                 controller.Update();
             }
-            // The cursor location is actually always on update
+            // Mouse and cursor always updates, but is dependent on game state in their Update method
             cursor.Update();
             screenFX.Update();
             SoundFX.Instance.UpdateBGM();

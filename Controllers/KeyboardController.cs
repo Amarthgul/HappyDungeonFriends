@@ -77,6 +77,7 @@ namespace HappyDungeon
         public void Update()
         {
             // Overlay window uses it own keyboard input and is not presented here 
+            if (game.overlay.IsEnabled()) return;
 
             Keys[] PressedKeys = Keyboard.GetState().GetPressedKeys();
 

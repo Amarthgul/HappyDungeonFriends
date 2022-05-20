@@ -229,16 +229,22 @@ namespace HappyDungeon
         /// </summary>
         public void RedrawEntireMinimap()
         {
+            int[] BackupIndex = currentFocusIndex; 
+
             for (int i = 0; i < game.mapSize; i++)
             {
                 for (int j = 0; j < game.mapSize; j++)
                 {
                     if (game.roomCycler.currentMapSet[i, j] != null && game.roomCycler.currentMapSet[i, j].Explored)
                     {
-                        FlagExplored(new int[] { i, j });
+                        int[] currentIndex = new int[] { i, j };
+                        currentFocusIndex = currentIndex; 
+                        FlagExplored(currentIndex);
                     }
                 }
             }
+
+            currentFocusIndex = BackupIndex; 
         }
 
         /// <summary>
@@ -273,7 +279,7 @@ namespace HappyDungeon
         /// <param name="Index"></param>
         public void FlagExplored(int[] Index)
         {
-            RoomInfo CurrentRoomInfo = game.roomCycler.GetCurrentRoomInfo();
+            RoomInfo CurrentRoomInfo = game.roomCycler.currentMapSet[Index[0], Index[1]];
             Color[] RoomData = new Color[singleRoom.Width * singleRoom.Height];
 
             int PosX = Index[1] * WHOLE_WIDTH + 1;

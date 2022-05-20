@@ -15,27 +15,26 @@ Currently still work in progress.
 
 まだまだ...
 
+<p align="center">
+	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/W4hXXG4.png" width="256">
+</p>
+
+<p align="center">
+	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="256">
+</p>
+
 --------------------------------------------------------
 
 ## Latest Update
 
 **Please note that these updates may not be reflected in release**
 
-Updated 19th May 2022: 
+Update 19th May 2022: 
 
 The load and save finally works, also allowing the player to give the save a name. 
 Override is still buggy and needs additional work. 
 
 I intend to publish 0.92 once the load and save feature fully functions. 
-
-
-<p align="center">
-	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/W4hXXG4.png" width="512">
-</p>
-
-<p align="center">
-	<img src="https://github.com/Amarthgul/HappyDungeonFriends/blob/main/Content/Screencap/lye4f1D.png" width="512">
-</p>
 
 --------------------------------------------------------
 
@@ -80,6 +79,21 @@ produces an experience somewhat similar to Dota or Starcraft.
 --------------------------------------------------------
 
 ## Dev logs
+
+### Ver.0.92
+
+Released 19th May 2022
+
+* The game can now save and load from saved. Note this is a naive save mechanism, it saves most of
+the progression, but enemies are not fully recorded, that is, if an enemy is injured but not killed, 
+then after load from saved, this enemy will spawn at its last position with full health and other stats
+as originally would spawned.
+
+* Bag icon in HUD now come with on hover sound.
+
+* Updated the bag graphics and character art.
+
+* As suggested in issue, distance to pass through a door is widened.
 
 ### Ver.0.91
 

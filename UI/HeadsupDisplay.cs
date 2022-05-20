@@ -278,10 +278,13 @@ namespace HappyDungeon
             int AllSlotSize = 4; 
             fontLBRGenerator = new UI.LargeBR();
 
-            Texture2D PM = fontLBRGenerator.GetText("Q", game.GraphicsDevice);
-            Texture2D Slot1 = fontLBRGenerator.GetText("W", game.GraphicsDevice);
-            Texture2D Slot2 = fontLBRGenerator.GetText("E", game.GraphicsDevice);
-            Texture2D Slot3 = fontLBRGenerator.GetText("R", game.GraphicsDevice);
+            string[] UseItemHotkeys = (game.keyboardControl == Globals.KeyboardControl.RPG) ?
+                new string[] {"1", "2", "3", "4" }: new string[] {"Q", "W", "E", "R" };
+
+            Texture2D PM = fontLBRGenerator.GetText(UseItemHotkeys[0], game.GraphicsDevice);
+            Texture2D Slot1 = fontLBRGenerator.GetText(UseItemHotkeys[1], game.GraphicsDevice);
+            Texture2D Slot2 = fontLBRGenerator.GetText(UseItemHotkeys[2], game.GraphicsDevice);
+            Texture2D Slot3 = fontLBRGenerator.GetText(UseItemHotkeys[3], game.GraphicsDevice);
             Texture2D BagText = fontLBRGenerator.GetText("B", game.GraphicsDevice);
 
             altDisplays = new GeneralSprite[] {
