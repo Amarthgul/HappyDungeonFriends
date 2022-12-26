@@ -125,7 +125,7 @@ Plus the user interface and game control.
 
 ## Random comments 
 
-* This is a badly made game, no way to cover that, my lack of experience made too many shitty 
+* This is a flawed game, no way to cover that. My lack of experience have made some pretty bad 
 desicions, including but not limited to gameplay, variable names, UI, code structure, etc.
 
 * Based on Legend of Zelda (gameplay-wise), this project was originally a group project

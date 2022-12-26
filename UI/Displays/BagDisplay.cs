@@ -476,8 +476,8 @@ namespace HappyDungeon.UI.Displays
                 itemSelected = game.spellSlots.GetBagItem(bagItemSelectionIndex);
                 Selected = true;
 
-                bagslotSelected[bagItemSelectionIndex] = true;
                 bagSlots[bagItemSelectionIndex].layer = Globals.UI_ICONS;
+                bagslotSelected[bagItemSelectionIndex] = true;
 
                 leftClickInProcess = true;
                 lastRecoredCursor = CursorPos;
@@ -776,6 +776,7 @@ namespace HappyDungeon.UI.Displays
             {
                 if (itemSlots[i] != null) {
                     if (slotSelected[i])  {
+                        
                         itemSlots[i].Draw(spriteBatch, itemsLoc[i] + selectionOffset, defaultTint);
                     }
                     else {
@@ -794,6 +795,7 @@ namespace HappyDungeon.UI.Displays
                         (i / 6) * Globals.OUT_UNIT
                         ) + bagLoc; // Determines position to draw 
                     if (bagslotSelected[i])  {
+                        bagSlots[i].layer = Globals.UI_ICONS;
                         bagSlots[i].Draw(spriteBatch, ItemDrawPos + selectionOffset, defaultTint);
                     }
                     else {

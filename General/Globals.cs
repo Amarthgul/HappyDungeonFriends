@@ -154,7 +154,7 @@ namespace HappyDungeon
         public const float UI_SLOTS = 0.79f;         // Items in the slot 
         public const float UI_SLOTS_CD = 0.795f;     // Item CDs 
         public const float UI_LAYER = 0.8f;          // UI front panel layer
-        public const float UI_ICONS = 0.81f;         // Bag and gold icon
+        public const float UI_ICONS = 0.81f;         // Bag and gold icon, and moving items
 
         public const float UI_MINIMAP = 0.85f;       // Minimap layer
         public const float UI_MINIMAP_PLAYER = 0.86f;// Player noation layer, ensure it's on top

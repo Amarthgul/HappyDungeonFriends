@@ -542,7 +542,14 @@ namespace HappyDungeon
         public void CheckOnHover(Vector2 CursorLoc)
         {
             if (CursorLoc.Y > AREA_HEIGHT_BOUND)
+            {
+                bagIcon.rowLimitation = 0;
+                bagIsOnHover = false; 
+                // To fix the issue where bag will continue showing on-hover effect
+                // after player back to the main gameplay window
+
                 return;
+            }
 
             if (bagRange.Contains(CursorLoc))
             {
