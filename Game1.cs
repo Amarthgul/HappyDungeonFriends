@@ -119,6 +119,9 @@ namespace HappyDungeon
             TextBridge.Instance.Init(this);
 
             loadAndSave = new LoadAndSave(this);   // Proceeds the initialization of displays
+            // Load and save uses the text database,
+            // and thus need to be refreshed afterwards 
+            TextRefresh(); 
 
             roomCycler = new LevelCycling(mapSize, gameLevel);
 
@@ -205,6 +208,14 @@ namespace HappyDungeon
 
         }
 
+        /// <summary>
+        /// Text database uses bool flags to create some of the descriptions, 
+        /// this method is for refreshing the database for each game progressions. 
+        /// </summary>
+        public void TextRefresh()
+        {
+            TextBridge.Instance.Refresh();
+        }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -671,5 +682,6 @@ namespace HappyDungeon
         {
             projList.RemoveAll(x => x.Expired() == true);
         }
+
     }
 }

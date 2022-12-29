@@ -73,6 +73,17 @@ namespace HappyDungeon
             }
         }
 
+        /// <summary>
+        /// Refresh text database. 
+        /// Some of the texts are created using flags, which might have been flagged 
+        /// previsuly or in other instances. This method refreshes these flags so that
+        /// they can be used again. 
+        /// </summary>
+        public void Refresh()
+        {
+            textDataBase.Refresh();
+        }
+
         public string GetIndexedDescrption(int Index)
         {
             return textDataBase.IndexedDescription(Index);

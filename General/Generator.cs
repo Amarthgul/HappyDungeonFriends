@@ -124,7 +124,8 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Return items  in this room that are not yet in the bag of the character.
+        /// Generate a list of items in this room 
+        /// that are not yet in the bag of the character.
         /// </summary>
         /// <param name="game">Game1 object</param>
         /// <returns>List of items in this room</returns>
@@ -166,7 +167,13 @@ namespace HappyDungeon
             return ItemList; 
         }
 
-
+        /// <summary>
+        /// Generate a list of blocks
+        /// that are in the main game area and are visible, 
+        /// they may also have animations. 
+        /// </summary>
+        /// <param name="Game">Game1 object</param>
+        /// <returns>List of blocks in this room</returns>
         public List<IBlock> GetBlockList(Game1 Game)
         {
             List<IBlock> BlockList = new List<IBlock>();
@@ -200,7 +207,11 @@ namespace HappyDungeon
             return BlockList; 
         }
 
-
+        /// <summary>
+        /// Generate a list of enemies in this room.
+        /// </summary>
+        /// <param name="Game">Game1 object</param>
+        /// <returns>List of enemy in this room</returns>
         public List<IEnemy> GetEnemyList(Game1 Game)
         {
             List<IEnemy> EnemyList = new List<IEnemy>();

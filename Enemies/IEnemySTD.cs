@@ -24,9 +24,9 @@ namespace HappyDungeon
         public Globals.Direction facingDir;
 
         protected IAgent brainAgent;
-        protected Vector2 spawnPosition; 
-        protected Vector2 position;
-        protected Vector2 stagedMovement;
+        protected Vector2 spawnPosition;    // Initial position of spawning
+        protected Vector2 position;         // Current position 
+        protected Vector2 stagedMovement;   // Intended position, used to check collision
 
         protected Globals.EnemyTypes selfType = Globals.EnemyTypes.Minion;
 
@@ -124,6 +124,26 @@ namespace HappyDungeon
         protected int fadeStartTime = 1000; // Opacity starts to decrease after this time 
         protected int lingeringTime = 1500; // Completely disappears after this time 
 
+        // ======================== Gold and item drop after death ========================
+        protected bool enableDeathDrop = true;  // General drop flag 
+        protected bool enableDropGold = true;   // Gold drop flag 
+
+        protected int goldDropBaseline = 10;
+        protected int goldDropFluctuate = 5;
+        protected float goldDropChance = .8f;  // Possibility of dropping gold 
+
+        // Item drop does not have a flag, if the list is empty, then no item will be dropped
+        // If the list is not empty, then go by chance. 
+        /*
+         * If gold drop is also enabled, then item drop is calculated after gold. 
+         * For example, if gold drop chance is 0.8, then the game will first calculate if the 80%
+         * chance of dropping gold is triggered. If not, calculate the chance of dropping item. 
+         */
+        protected float itemDropChance = .8f; 
+        // List of items that can be dropped upon death, represented in item index 
+        protected List<int> droppableItem = new List<int>();
+
+
         /// <summary>
         /// Init
         /// </summary>
@@ -210,6 +230,7 @@ namespace HappyDungeon
 
         /// <summary>
         /// Try to inflict damge onto this enemy. 
+        /// Other effects, such as DoT, may also be applied.
         /// </summary>
         /// <param name="Damage">A damage instance</param>
         public virtual void TakeDamage(DamageInstance Damage)
@@ -601,6 +622,9 @@ namespace HappyDungeon
                 startOfEnd = true;
                 deathSW.Restart();
 
+                // Check for item drop, if dropped, then add it immediately 
+                CheckDeathDrop();
+
                 // Swap the sprite, by default the death sprite is 2 pixel wider than normal 
                 mainSprite = deathSprite;
 
@@ -624,6 +648,31 @@ namespace HappyDungeon
                     position = new Vector2(-Globals.OUT_UNIT, -Globals.OUT_UNIT);
                     game.roomCycler.RemoveIndex(selfIndex, Misc.Instance.PositionReverse(spawnPosition));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Perform a check upon death on whether or not to drop something
+        /// </summary>
+        protected virtual void CheckDeathDrop()
+        {
+            if (!enableDeathDrop) return; // Quit if drop is not enabled 
+
+            if (enableDropGold && Globals.RND.NextDouble() < goldDropChance)
+            {
+                // When drop gold is enabled and RND gave the jackpot 
+
+                int goldCount = goldDropBaseline + Globals.RND.Next(-goldDropFluctuate, goldDropFluctuate);
+                DroppedGold goldItem = new DroppedGold(game, position);
+                goldItem.SetGoldAmount(goldCount);
+
+                game.collectibleItemList.Add(goldItem);
+            }
+            else
+            {
+                if (droppableItem.Count == 0) return; // Quit if nothing to drop 
+
+
             }
         }
 

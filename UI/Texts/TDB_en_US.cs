@@ -32,6 +32,10 @@ namespace HappyDungeon.UI.Texts
             };
         }
 
+        public override void Refresh()
+        {
+            noteSetOneMark = new bool[] { false, false, false, false };
+        }
 
 
         public override string IndexedDescription(int Index)
@@ -83,14 +87,15 @@ namespace HappyDungeon.UI.Texts
 
         public override string NoteSetOneRand()
         {
+            // If all notes are used, then return this
             if (noteSetOneMark.All(x => x == true))
                 return "Everything on it looks blurry";
 
+            // If there are still unused note, rand pick one
             int Index = Globals.RND.Next() % 4;
             while (noteSetOneMark[Index])
             {
                 Index = Globals.RND.Next() % 4;
-
             }
             noteSetOneMark[Index] = true;
 

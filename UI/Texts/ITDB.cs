@@ -13,6 +13,8 @@ namespace HappyDungeon.UI.Texts
     /// </summary>
     public interface ITDB
     {
+        void Refresh(); 
+
         string IndexedDescription(int index);
 
 

@@ -339,6 +339,8 @@ namespace HappyDungeon
             Result.savedMapSize = Source.savedMapSize;
             Result.savedVirgin = Source.savedVirgin;
 
+            game.TextRefresh();
+
             // -------------------------------------------------------------------------------
             // Items in the bag 
             Result.savedBagItemList = new List<IItem>();

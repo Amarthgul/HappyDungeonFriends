@@ -22,6 +22,10 @@ namespace HappyDungeon.UI.Texts
 
         }
 
+        public virtual void Refresh()
+        {
+
+        }
         
 
         public virtual string IndexedDescription(int Index)
