@@ -16,7 +16,7 @@ namespace HappyDungeon.UI.Displays
     class BagDisplay
     {
         private const int HOVERING_HORIZONTAL_SWITCH = 144 * Globals.SCALAR;
-        private const int HOVERING_VERTICAL_TOLERANCE = 16 * Globals.SCALAR;
+        private const int HOVERING_VERTICAL_TOLERANCE = 64 * Globals.SCALAR;
         private const int HOVERING_WIDTH = 84 * Globals.SCALAR;
 
         private Game1 game;
@@ -47,6 +47,11 @@ namespace HappyDungeon.UI.Displays
                 new Vector2(179, 70) * Globals.SCALAR };
         private Vector2 bagLoc = new Vector2(112, 96) * Globals.SCALAR;
 
+        private Vector2[] goldLoc = new Vector2[] { 
+                new Vector2(185, 41) * Globals.SCALAR, 
+                new Vector2(180, 46) * Globals.SCALAR};
+        private int goldRectSize = 12 * Globals.SCALAR; 
+
         private Vector2 drawPosition = new Vector2(0, 0);
         private Color defaultTint = Color.White;
 
@@ -57,9 +62,14 @@ namespace HappyDungeon.UI.Displays
         private Rectangle[] itemsRange;
         private Rectangle bagRange;
 
+        private Rectangle[] goldRange; // 2 rect that indicates the on-hoever region for gold
+
         private bool primaryOnHover = false;
         private bool[] itemsOnHover = new bool[] { false, false, false };
         private bool bagOnHover = false;
+
+        private bool goldOnHover = false;
+
         private bool[] bagOnHoverSFX = new bool[Globals.BAG_SIZE];
 
         private Vector2 bagOnHoverIndexedLoc = new Vector2(0, 0); // Determining which slot will the hover not be in
@@ -188,6 +198,11 @@ namespace HappyDungeon.UI.Displays
                 112 * Globals.SCALAR, 96 * Globals.SCALAR,
                 Globals.OUT_UNIT * 6, Globals.OUT_UNIT * 4
                 );
+
+            goldRange = new Rectangle[] { 
+                new Rectangle((int)goldLoc[0].X, (int)goldLoc[0].Y, goldRectSize, goldRectSize),
+                new Rectangle((int)goldLoc[1].X, (int)goldLoc[1].Y, goldRectSize, goldRectSize)
+                };
         }
 
         /// <summary>
@@ -640,7 +655,7 @@ namespace HappyDungeon.UI.Displays
         }
 
         /// <summary>
-        /// Marks onhover effect for the draw method, also checks hovering descriptions. 
+        /// Marks onhover effect for the draw method, also checks hovering item descriptions. 
         /// </summary>
         /// <param name="CursorPos">Position of the cursor</param>
         public void UpdateOnhover(Vector2 CursorPos)
@@ -650,16 +665,17 @@ namespace HappyDungeon.UI.Displays
 
             isStationary = CheckStationary(CursorPos);
 
+            // Primary slot 
             if (primaryRange.Contains(CursorPos))
             {
                 if (!primaryOnHover) OnHoverSFX = true;
 
                 // Check for whether or not to display the item description 
-                if (isStationary && !hoveringDisplay)  {
+                if (isStationary && !hoveringDisplay) {
                     hoveringDisplay = true;
                     InitHoveringDisplay(game.spellSlots.GetItem(-1), CursorPos);
                 }
-                else if (! isStationary) {
+                else if (!isStationary) {
                     hoveringDisplay = false;
                 }
 
@@ -697,15 +713,32 @@ namespace HappyDungeon.UI.Displays
                 OnHoverDetected = true;
                 ResetOnHover(3);
             }
+            // Gold icon 
+            else if (goldRange[0].Contains(CursorPos) || goldRange[1].Contains(CursorPos)) { 
+                if (!goldOnHover)
+                {
+
+                }
+
+                if(isStationary && !hoveringDisplay)
+                {
+                    hoveringDisplay = true;
+                    InitHoveringDisplay(new DroppedGold(game, new Vector2()), CursorPos);
+                }
+                else if (!isStationary)
+                {
+                    hoveringDisplay = false;
+                }
+            }
             // The 3 slots on top
             else
             {
-                for (int i = 0; i < Globals.SLOT_SIZE; i++){
+                for (int i = 0; i < Globals.SLOT_SIZE; i++) {
                     if (itemsRange[i].Contains(CursorPos)) {
                         if (!itemsOnHover[i]) OnHoverSFX = true;
 
                         // Check for whether or not to display the item description 
-                        if (isStationary && !hoveringDisplay && game.spellSlots.GetItem(i) != null){
+                        if (isStationary && !hoveringDisplay && game.spellSlots.GetItem(i) != null) {
                             hoveringDisplay = true;
                             InitHoveringDisplay(game.spellSlots.GetItem(i), CursorPos);
                         }
@@ -716,7 +749,7 @@ namespace HappyDungeon.UI.Displays
                         itemsOnHover[i] = true;
                         OnHoverDetected = true;
                         ResetOnHover(2);
-                    }   
+                    }
                 }
             }
 

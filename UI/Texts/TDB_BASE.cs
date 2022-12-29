@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 namespace HappyDungeon.UI.Texts
 {
     /// <summary>
-    /// The basic, so that I don't have to go through every one of the language implementation 
-    /// when adding methods to the interface. 
+    /// The basic, so that newly added languages does not have to implment every single
+    /// one of the methods in the interface to work. 
+    /// A way to reduce work, altough may introduce some logic errors. 
     /// </summary>
     class TDB_BASE : ITDB
     {

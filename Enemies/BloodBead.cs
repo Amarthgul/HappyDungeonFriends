@@ -24,6 +24,8 @@ namespace HappyDungeon
             spawnPosition = P;
             spriteBatch = game.spriteBatch;
 
+            droppableItem.Add(Globals.ITEM_LINKEN);
+
             // ------------------------------------------------------------------
             // -------------------- Difference from STD--------------------------
             selfIndex = Globals.ENEMY_BEAD;

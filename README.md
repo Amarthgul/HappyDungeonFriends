@@ -31,11 +31,13 @@ Currently still work in progress.
 
 Update 28th Dec 2022:
 
-* Added a proper gold drop function when killing an enemy 
+* Added a proper gold drop function after killing an enemy 
 
 * Fixed the problem where note items have wrong description due to premature bool flagging
 
 * Fixed the problem where items are drawn in the wrong layer when dragged from bag to slots
+
+* Fixed the problem where bag icon on HUD keeps showing on-hover effect even after quitting the bag view
 
 --------------------------------------------------------
 
@@ -122,3 +124,11 @@ and an item/enemy spawn on top. Implementation detail at `General/IndexCoder`
 
 * Basic framework, the character can move, attack, pickup and use item, kill and be killed. 
 Plus the user interface and game control.  
+
+--------------------------------------------------------
+
+## Known issues 
+
+* Item descriptions may differ or duplicate, due to them all invoking from `TextBridge` instance. 
+For example, if `Note` items are dropped from enemies, they may have the same text description despite
+the alogrithm was designed to make them different. 

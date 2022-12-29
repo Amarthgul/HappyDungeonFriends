@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HappyDungeon
 {
-    class Generator
+    public class Generator
     {
         private Game1 game; 
 
@@ -144,23 +144,12 @@ namespace HappyDungeon
                     Position = Misc.Instance.PositionTranslate(i, j);
                     ItemIndex = General.IndexCoder.GetAuxIndex(RoomMat[i, j]);
 
-                    switch (ItemIndex)
-                    {
-                        case Globals.ITEM_TORCH:
-                            ItemList.Add(new Torch(Game, Position)); ;
-                            break;
-                        case Globals.ITEM_LINKEN:
-                            ItemList.Add(new LinkenSphere(Game, Position)); 
-                            break;
-                        case Globals.ITEM_GOLD:
-                            ItemList.Add(new DroppedGold(Game, Position));
-                            break;
-                        case Globals.ITEM_NOTE_SO:
-                            ItemList.Add(new NoteSetOne(Game, Position));
-                            break;
-                        default:
-                            break;
-                    }
+                    
+                    IItem itemToBeAdded = CreateItem(Game, Position, ItemIndex);
+
+                    if(itemToBeAdded != null)
+                        ItemList.Add(itemToBeAdded);
+                    
                 }
             }
 
@@ -244,6 +233,28 @@ namespace HappyDungeon
             return EnemyList;
         }
 
-
+        /// <summary>
+        /// Given an index and other info, create the item
+        /// </summary>
+        /// <param name="Game">Game1 object</param>
+        /// <param name="Position">Position of the item</param>
+        /// <param name="ItemIndex">Index of item that indicates its type</param>
+        /// <returns>An Iitem object of certain type</returns>
+        public IItem CreateItem(Game1 Game, Vector2 Position, int ItemIndex)
+        {
+            switch (ItemIndex)
+            {
+                case Globals.ITEM_TORCH:
+                    return new Torch(Game, Position); 
+                case Globals.ITEM_LINKEN:
+                    return new LinkenSphere(Game, Position);
+                case Globals.ITEM_GOLD:
+                    return new DroppedGold(Game, Position);
+                case Globals.ITEM_NOTE_SO:
+                    return new NoteSetOne(Game, Position);
+                default:
+                    return null; 
+            }
+        }
     }
 }

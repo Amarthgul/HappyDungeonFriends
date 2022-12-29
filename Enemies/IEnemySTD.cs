@@ -130,7 +130,7 @@ namespace HappyDungeon
 
         protected int goldDropBaseline = 10;
         protected int goldDropFluctuate = 5;
-        protected float goldDropChance = .8f;  // Possibility of dropping gold 
+        protected float goldDropChance = .1f;  // Possibility of dropping gold 
 
         // Item drop does not have a flag, if the list is empty, then no item will be dropped
         // If the list is not empty, then go by chance. 
@@ -672,6 +672,15 @@ namespace HappyDungeon
             {
                 if (droppableItem.Count == 0) return; // Quit if nothing to drop 
 
+                if (Globals.RND.NextDouble() < itemDropChance)
+                {
+                    // When an item should be dropped 
+                    int itemIndex = droppableItem[Globals.RND.Next() % droppableItem.Count];
+                    IItem itemToBeAdded = game.mapGenerator.CreateItem(game, position, itemIndex);
+
+                    game.collectibleItemList.Add(itemToBeAdded);
+                    
+                }
 
             }
         }

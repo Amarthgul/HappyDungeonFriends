@@ -66,7 +66,7 @@ namespace HappyDungeon
         // ================================================================================
         // =================== Maps, rooms, and environmental effects =====================
         // ================================================================================
-        private Generator mapGenerator;
+        public Generator mapGenerator;
         public FoW fogOfWar;
         public LevelCycling roomCycler;
         public Room currentRoom;

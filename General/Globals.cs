@@ -100,7 +100,6 @@ namespace HappyDungeon
 
         public const int ITEM_BOUND = -256;
 
-
         //Enemy or MPC 
         public const int ENEMY_STD =   -256;
         public const int ENEMY_BEAD =  -257;

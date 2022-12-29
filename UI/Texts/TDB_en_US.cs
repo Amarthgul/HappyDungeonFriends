@@ -28,7 +28,7 @@ namespace HappyDungeon.UI.Texts
                 { Globals.ITEM_TORCH, "A simple wooden stick with fabrics tied on top. Most likly left here by another poor soul." },
                 { Globals.ITEM_LINKEN, "Shimmering orb, probably had its time in the past. Generates a shield that could absorb an attack" },
                 { Globals.ITEM_NOTE_SO, "TEMP" },
-                { Globals.ITEM_GOLD, "What can money do in this dark world"}
+                { Globals.ITEM_GOLD, "What can money do in this dark place?"}
             };
         }
 
