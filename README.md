@@ -27,25 +27,26 @@ Currently still work in progress.
 
 ## Latest Update
 
-**Please note that these updates may not be reflected in release**
+**Please note that the update in this section may not be reflected in the release**
 
-Update 19th May 2022: 
+Update 28th Dec 2022:
 
-The load and save finally works, also allowing the player to give the save a name. 
-Override is still buggy and needs additional work. 
+* Added a proper gold drop function when killing an enemy 
 
-I intend to publish 0.92 once the load and save feature fully functions. 
+* Fixed the problem where note items have wrong description due to premature bool flagging
+
+* Fixed the problem where items are drawn in the wrong layer when dragged from bag to slots
 
 --------------------------------------------------------
 
 ## How to control: 
 
-Unfortunately there is no key-binding that the player can change in-game, but by toggling certain variables, 
+There is no key-binding that the player can change in-game, but by toggling certain variables, 
 the game can have different controls. By default the control is `Keyboard (RPG)` with `Mouse`.
 
 ### Keyboard (RPG)
 
-A more concentrated approach, as most operational keys are gathered in left side of the keyboard.
+An approach that resembles common RPG games, most operational keys are gathered in left side of the keyboard.
 
 * `Q` `W` `E` `R` to move 
 * `1` `2` `3` `4` to use items/skills
@@ -74,7 +75,6 @@ produces an experience somewhat similar to Dota or Starcraft.
 * RMB key to move 
 * LMB to attack or select/open
 
-(It is not sure if Mac keyboard can work, tbh Mac cannot run it at all)  
 
 --------------------------------------------------------
 
@@ -87,7 +87,7 @@ Released 19th May 2022
 * The game can now save and load from saved. Note this is a naive save mechanism, it saves most of
 the progression, but enemies are not fully recorded, that is, if an enemy is injured but not killed, 
 then after load from saved, this enemy will spawn at its last position with full health and other stats
-as originally would spawned.
+as originally spawned.
 
 * Bag icon in HUD now come with on hover sound.
 
@@ -122,16 +122,3 @@ and an item/enemy spawn on top. Implementation detail at `General/IndexCoder`
 
 * Basic framework, the character can move, attack, pickup and use item, kill and be killed. 
 Plus the user interface and game control.  
-
-## Random comments 
-
-* This is a flawed game, no way to cover that. My lack of experience have made some pretty bad 
-desicions, including but not limited to gameplay, variable names, UI, code structure, etc.
-
-* Based on Legend of Zelda (gameplay-wise), this project was originally a group project
-for one of my CSE classes. But I feel that project was largly flawed, so I decided to completely 
-remake it and add things I wish I have added for the project. 
-
-* Drew inspiration from some of my favorite games, Diablo, DotA 2, Warcraft, Isaac, Gris, Disgaea, 
-to name a few. Also imbued heavily is the idea of Mahou Shoujo, Madoka Magica especially, that is, failure 
-and sacrifice even with the earnest wish and best effort. 
