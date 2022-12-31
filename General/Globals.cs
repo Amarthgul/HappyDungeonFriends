@@ -174,8 +174,10 @@ namespace HappyDungeon
         // ================================================================================
         // ==================================== Misc ======================================
         // ================================================================================
+
+        public const int INSTANT_KILL_DMG = -10000; 
         // Speed metre 
-        public const int SPEED_BASELINE = 1 * SCALAR;
+        public const float SPEED_BASELINE = 1.0f * SCALAR;
         // Time realted 
         public const int ITEM_HOLD = 100;     // Items cannot be picked up before this time ends 
         public const int KEYBOARD_HOLD = 100; // Keys are pressed may become protected for this amount of time

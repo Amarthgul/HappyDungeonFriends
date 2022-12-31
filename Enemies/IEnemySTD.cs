@@ -52,6 +52,7 @@ namespace HappyDungeon
         protected int rangedAttackDistance = 4 * Globals.OUT_UNIT;
         protected int meleeAttackRange = 1 * Globals.OUT_UNIT;
         protected int attackDamage = -10;
+        // Please note there is also a suicide damge that could be used 
         protected int attackLastingTime = 400;  // If hold on attack, then that's the time it stops 
         protected int attackIntervalMin = 2000; // 2 seconds' interval at least 
         protected int attackIntervalMax = 8000; // Some perform attack randomly, that's the longest interval time
@@ -102,6 +103,10 @@ namespace HappyDungeon
 
         protected bool startWithHibernate = false;  // If the enemy starts in hibernation
         protected bool wakeupByIlluminati = false;  // Only waken by lights
+
+        protected bool suicidal = true;
+        protected int suicideDamage = -30; 
+
         protected bool wakingup = false; 
         protected int wakeUpDistance = (int)(2.0 * Globals.OUT_UNIT); // When player is within this distance 
         protected int wakeupTime = 1600;
@@ -113,7 +118,7 @@ namespace HappyDungeon
         protected int regenAmount = 1;
         protected int regenInterval = 200;  // Pretty much the min number that can be killed  
         protected Stopwatch regenSW;
-        protected Stopwatch damageProtectionSW;  // Avoid being 1 shot
+        protected Stopwatch damageProtectionSW;  // Avoid being continuously attacked to death  
         protected int recoverTime = 1000;
 
         // ================================================================================
@@ -319,6 +324,11 @@ namespace HappyDungeon
             return attackSW.ElapsedMilliseconds > attackInterval && canAttack;
         }
 
+        public virtual bool IsSuicidal()
+        {
+            return suicidal; 
+        }
+
         public virtual void Attack()
         {
             if (!canAttack) return;  // Fail-safe 
@@ -388,8 +398,12 @@ namespace HappyDungeon
             if (currentHealth == 0 || selfState == Globals.GeneralStates.Hold)
                 return null;
 
-            DamageInstance DMG = new DamageInstance(collisionDMG, new Globals.DamageEffect[] { Globals.DamageEffect.Knockback });
-            DMG.knowckbackDist = collisionDMG;
+            int damageCount = suicidal ? suicideDamage : collisionDMG; 
+
+            DamageInstance DMG = new DamageInstance(
+                damageCount, 
+                new Globals.DamageEffect[] { Globals.DamageEffect.Knockback });
+            DMG.knowckbackDist = collisionDMG; // Exact linear relationship 
 
             return DMG;
         }

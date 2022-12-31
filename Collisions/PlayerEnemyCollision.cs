@@ -52,7 +52,13 @@ namespace HappyDungeon
                             DamageFrom = Globals.Direction.Right;
                     }
 
+                    
+                    if (enemy.IsSuicidal())
+                    {
+                        enemy.TakeDamage(Misc.Instance.InstaKill());
+                    }
                     game.mainChara.TakeDamage(enemy.DealCollisionDamage(), DamageFrom);
+                    
                 }
             }
 

@@ -250,5 +250,16 @@ namespace HappyDungeon
             Vector2 Total = P1 - P2; 
             return (int)(Math.Abs(Total.X) + Math.Abs(Total.Y)) ;
         }
+
+        /// <summary>
+        /// Create a damage instant that would instantly kill anything.
+        /// </summary>
+        /// <returns>Damage instance with extremely  high damage count</returns>
+        public DamageInstance InstaKill()
+        {
+            DamageInstance instantKill = new DamageInstance(Globals.INSTANT_KILL_DMG, null);
+
+            return instantKill; 
+        }
     }
 }

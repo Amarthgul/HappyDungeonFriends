@@ -29,15 +29,16 @@ Currently still work in progress.
 
 **Please note that the update in this section may not be reflected in the release**
 
-Update 29th Dec 2022:
+Update 31th Dec 2022:
 
 * Added a proper gold drop function after killing an enemy 
 
 * Added item description for gold when mouse if hovering on top
 
-* Fixed the problem where items are drawn in the wrong layer when dragged from bag to slots
+* Added suicidal enemies who will try to seek and suicide kill the player. Suicide kill deleivers
+more damage than normal collision damage. 
 
-* Fixed the problem where bag icon on HUD keeps showing on-hover effect even after quitting the bag view
+* Fixed the issue where some enemy run away from the player even without the light on. 
 
 --------------------------------------------------------
 

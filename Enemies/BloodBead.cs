@@ -42,6 +42,7 @@ namespace HappyDungeon
             startWithHibernate = false;            // Not hibernating 
             isVisible = true;                      // Born visible
             canAttack = false;                     // Does not attack 
+            suicidal = false;                      // Not suicidal 
             selfState = Globals.GeneralStates.Moving; 
             // ------------------------------------------------------------------
 

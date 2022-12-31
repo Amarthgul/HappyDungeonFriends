@@ -30,6 +30,8 @@ namespace HappyDungeon
 
         bool CanAttack();
 
+        bool IsSuicidal();
+
         void Attack();
 
         void SetAttackInterval(int Pattern);
