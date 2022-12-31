@@ -96,12 +96,12 @@ namespace HappyDungeon
         private int audibleRange = 3 * Globals.OUT_UNIT;
 
         // ================================================================================
-        // ========================= Being alive and healthy ==============================
+        // ========================= Being alive and kicking ==============================
         // ================================================================================ 
         public Globals.GeneralStates selfState; 
 
         protected bool startWithHibernate = false;  // If the enemy starts in hibernation
-        protected bool wakeupByIlluminati = false; // Only waken by illuminati state
+        protected bool wakeupByIlluminati = false;  // Only waken by lights
         protected bool wakingup = false; 
         protected int wakeUpDistance = (int)(2.0 * Globals.OUT_UNIT); // When player is within this distance 
         protected int wakeupTime = 1600;
@@ -119,6 +119,8 @@ namespace HappyDungeon
         // ================================================================================
         // ==================================== Death =====================================
         // ================================================================================ 
+
+
         protected bool startOfEnd = false;
         protected Stopwatch deathSW;
         protected int fadeStartTime = 1000; // Opacity starts to decrease after this time 
@@ -223,7 +225,7 @@ namespace HappyDungeon
             movingSprite.Update();
         }
 
-        public virtual void SpeedChange(int NewSpeed)
+        public virtual void SpeedChange(float NewSpeed)
         {
             baseMovementSpeed = NewSpeed;
         }

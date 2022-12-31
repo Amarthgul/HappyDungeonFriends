@@ -10,9 +10,10 @@ namespace HappyDungeon
 {
 
     /// <summary>
-    /// IEnemy represents the "outside" of an enemy class, 
-    /// i.e. how they exchange infomation with other characters. 
-    /// The inside is handled by "IAgent" class and its derivatives.
+    /// IEnemy represents the "body" of an enemy class, 
+    /// i.e. how they move and exchange infomation with other characters. 
+    /// The inside, or the "brain", is handled by "IAgent" class 
+    /// and its derivatives.
     /// </summary> 
     public interface IEnemy
     {
@@ -21,7 +22,7 @@ namespace HappyDungeon
 
         void Draw();
 
-        void SpeedChange(int NewSpeed); 
+        void SpeedChange(float NewSpeed); 
 
         void Turn(Globals.Direction NewDir);
 

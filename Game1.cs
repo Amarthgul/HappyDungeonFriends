@@ -22,7 +22,7 @@ namespace HappyDungeon
         /// Dev mode aims in tweaking features, while DEBUGGING is for coding. 
         /// </summary>
         private bool _DEVMODE = false;       // Root flag for all other dev options 
-        private bool _ENABLE_FOW = false;   // Enable fog of war
+        private bool _ENABLE_FOW = true;   // Enable fog of war
         private bool _SHOW_BOX = true;     // Draw boundary boxes for objects 
 
         // ================================================================================
@@ -138,6 +138,7 @@ namespace HappyDungeon
             spellSlots = new SpellSlots(this);
 
             fogOfWar = new FoW(this);
+            fogOfWar.SetDevMode(_DEVMODE);
 
             minimap = new Minimap(this);
             minimap.SetPivot(roomCycler.GetCurrentLocationIndex());
@@ -569,7 +570,7 @@ namespace HappyDungeon
 
             mainChara.Draw();
 
-            if (_ENABLE_FOW || !_DEVMODE)
+            if (_ENABLE_FOW)
                 fogOfWar.Draw();
 
             screenFX.DrawFlies(mainChara.position);

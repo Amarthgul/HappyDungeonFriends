@@ -44,6 +44,8 @@ namespace HappyDungeon
 
         private Color fillColor = Color.Black;  // Draw() method tint 
         private Color defaultTint = Color.White;  // Draw() method tint 
+        private double baseOpacity = 0.9; 
+        private double devOpacity = 0.6;
         private double opacity = 0.9;
 
         private float layer = Globals.FOW_LAYER;
@@ -72,6 +74,19 @@ namespace HappyDungeon
             rangeNow = rangeBaseline; 
 
             Generate();
+        }
+
+        /// <summary>
+        /// Invoke at the start of game to mark the way FoW is drawn. 
+        /// When dev mode is enabled, FoW has lower opacity. 
+        /// </summary>
+        /// <param name="isDevMode"></param>
+        public void SetDevMode(bool isDevMode)
+        {
+            if (isDevMode)
+                opacity = devOpacity;
+            else
+                opacity = baseOpacity; 
         }
 
         /// <summary>

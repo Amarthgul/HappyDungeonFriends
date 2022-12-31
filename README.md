@@ -29,11 +29,11 @@ Currently still work in progress.
 
 **Please note that the update in this section may not be reflected in the release**
 
-Update 28th Dec 2022:
+Update 29th Dec 2022:
 
 * Added a proper gold drop function after killing an enemy 
 
-* Fixed the problem where note items have wrong description due to premature bool flagging
+* Added item description for gold when mouse if hovering on top
 
 * Fixed the problem where items are drawn in the wrong layer when dragged from bag to slots
 

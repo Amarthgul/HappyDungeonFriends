@@ -720,7 +720,7 @@ namespace HappyDungeon.UI.Displays
 
                 }
 
-                if(isStationary && !hoveringDisplay)
+                if(isStationary && !hoveringDisplay && game.goldCount > 0)
                 {
                     hoveringDisplay = true;
                     InitHoveringDisplay(new DroppedGold(game, new Vector2()), CursorPos);

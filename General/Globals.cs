@@ -45,7 +45,7 @@ namespace HappyDungeon
         public const int SCALAR = 4;
 
         // Sizes after scaling, used in moving calculation and drawing
-        public const int OUT_UNIT = ORIG_UNIT * SCALAR;         // Pixel unit after scaled 
+        public const int OUT_UNIT = ORIG_UNIT * SCALAR;         // Grid unit after scaled 
         public const int OUT_GWIDTH = ORIG_GWIDTH * SCALAR;
         public const int OUT_GHEIGHT = ORIG_GHEIGHT * SCALAR;
         public const int OUT_HEADSUP = ORIG_HEADSUP * SCALAR;

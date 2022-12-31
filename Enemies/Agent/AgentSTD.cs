@@ -24,23 +24,24 @@ namespace HappyDungeon.Enemies
 
         IEnemy self;
 
-        protected int baseSpeed = (int)(0.4 * Globals.SCALAR);
-        protected int frenzySpeed = (int)(0.8 * Globals.SCALAR); 
+        protected float baseSpeed = 0.4f * Globals.SCALAR;
+        protected float frenzySpeed = 0.8f * Globals.SCALAR; 
 
         protected bool seekPlayer = true;        // If it has the ability to identify player as its enemy
-        protected bool rangedSensing = false;     // Constrain on seekPlayer only when they're close enough 
-        protected bool rangedFrenzy = false;      // Whether if it enters frenzy after sensing the player 
+        protected bool rangedSensing = true;     // Constrain on seekPlayer only when they're close enough 
+        protected bool rangedFrenzy = true;      // Whether if it enters frenzy after sensing the player 
         protected bool photophobia = true;       // If it runs away when the player has illuminati on 
-        protected bool photonFrenzy = true;      // If it enters frenzy as it eascapes from light 
+        protected bool photonFrenzy = true;      // If it enters into a frenzy after seeing light 
         protected bool smartPathFinding = false;  // If it knows to try to go around the wall 
         protected bool smartRedirection = true;  // If it keeps a memeory of recent directions 
-        protected bool smartAttack = true;       // Only attacks when alighned 
-        protected bool canLockOnPlayer = true;   // If it can loack on player once encountered 
-        protected bool lockPhotonTrigger = true; // If automatically trigger lock on when illuminati is on 
-        
+        protected bool smartAttack = true;       // Only attacks when aligned with the player  
+        protected bool canLockOnPlayer = true;   // If it can lock onto the player once encountered 
+        protected bool lockPhotonTrigger = true; // If automatically trigger lock on when illuminati is on
+        protected bool isBlind = false;          // Being blind will make nullify photophobia 
+
         protected bool lockOnPlayer = false;     // If the player is being locked 
-        protected int senseRange = (int)(2.25 * Globals.OUT_UNIT);
-        protected int photonRange = (int)(2.5 * Globals.OUT_UNIT);
+        protected float senseRange = 2.25f * Globals.OUT_UNIT;
+        protected float photonRange = 2.5f * Globals.OUT_UNIT;
         protected int attackAlignTolerance = (int)(0.5 * Globals.OUT_UNIT);
         protected int lockOnPlayerTurnRateBase = (int)(1.5 * Globals.OUT_UNIT);
         protected int directionMemoryCount = 10; // For smartRedirection, try to find the direction appear least in the list
@@ -103,6 +104,7 @@ namespace HappyDungeon.Enemies
 
         public virtual void Update(MC MainChara)
         {
+            // If the game is not currently running and not set to real time, then do not update
             if (game.gameState != Globals.GameStates.Running && !Globals.REAL_TIME_ACTION)
                 return; 
 
@@ -131,13 +133,14 @@ namespace HappyDungeon.Enemies
             if (seekPlayer && canLockOnPlayer)
             {
                 nextTurnLockModified = (int)(nextTurn * 
-                    (ToPlayerD1Distance(MainChara, false) / (double)lockOnPlayerTurnRateBase));
+                    (ToTargetD1Distance(MainChara.position, false) / (double)lockOnPlayerTurnRateBase));
             }
             if (photophobia)
             {
                 nextTurnPhotoModified = (int)(nextTurn * Math.Pow((playerDistance / (double)photonRange), 2));
             }
 
+            // Assume that when player emits light, the enemy can see the player regardless 
             if (canLockOnPlayer && lockPhotonTrigger)
             {
                 if (MainChara.Illuminati())
@@ -148,16 +151,21 @@ namespace HappyDungeon.Enemies
 
             if (seekPlayer)
             {
-                if (photophobia && photonFrenzy && playerDistance < photonRange)
+                if (!isBlind && // Photophobia requires vision
+                    MainChara.Illuminati() && // The light is on 
+                    (photophobia && photonFrenzy && (playerDistance < photonRange)))
                 {
+                    // When player with light comes into range, flee away
                     MarkFrenzy(true);
                 }
-                else if (rangedSensing && rangedFrenzy && playerDistance < senseRange)
+                else if ((rangedSensing && rangedFrenzy && (playerDistance < senseRange)))
                 {
+                    // Chase the player
                     MarkFrenzy(false);
                 }
                 else
                 {
+                    // Go back to normal 
                     self.SpeedChange(baseSpeed);
                 }
             }
@@ -216,12 +224,16 @@ namespace HappyDungeon.Enemies
             }
         }
 
+        /// <summary>
+        /// Check if it can make an attack, and if so, what kind of attack it will do.
+        /// </summary>
+        /// <param name="MainChara">Player and related information</param>
         protected virtual void UpdateAttack(MC MainChara)
         {
             if (self.CanAttack())
             {
                 if (smartAttack && seekPlayer && facingDir == playerDirection &&
-                    ToPlayerD1Distance(MainChara, false) < attackAlignTolerance)
+                    ToTargetD1Distance(MainChara.position, false) < attackAlignTolerance)
                 {
                     Attack();
                 }
@@ -246,6 +258,7 @@ namespace HappyDungeon.Enemies
 
                 if (InFear)
                 {
+                    // Flee from the player 
                     List<Globals.Direction> Dirs = new List<Globals.Direction>(Globals.FourDirIter);
                     Dirs.Remove(playerDirection);
                     Turn(Dirs[Globals.RND.Next() % Dirs.Count]);
@@ -333,6 +346,10 @@ namespace HappyDungeon.Enemies
             self.SetAttackInterval(0);
         }
 
+        /// <summary>
+        /// Calculate the next random delay constant for turning. 
+        /// </summary>
+        /// <param name="Standard">Mode index, negative will use its minDelay</param>
         protected virtual void RecalNextDelay(int Standard)
         {
             if (Standard > 0)
@@ -369,10 +386,10 @@ namespace HappyDungeon.Enemies
             return RelDirection;
         }
 
-        protected virtual int ToPlayerD1Distance(MC MainChara, bool LongSide)
+        protected virtual float ToTargetD1Distance(Vector2 Target, bool LongSide)
         {
-            int D1Distance;
-            Vector2 Distance = self.GetPosition() - MainChara.position;
+            float D1Distance;
+            Vector2 Distance = self.GetPosition() - Target;
 
             Distance.X = Math.Abs(Distance.X);
             Distance.Y = Math.Abs(Distance.Y);

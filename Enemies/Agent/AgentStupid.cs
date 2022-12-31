@@ -42,6 +42,10 @@ namespace HappyDungeon.Enemies
             self.Turn(Misc.Instance.Opposite(FacingDir));
         }
 
+        /// <summary>
+        /// Does not care about the player, this agent would move on its own.
+        /// </summary>
+        /// <param name="MainChara">Not used</param>
         public void Update(MC MainChara) 
         {
             if (game.gameState != Globals.GameStates.Running && !Globals.REAL_TIME_ACTION)
