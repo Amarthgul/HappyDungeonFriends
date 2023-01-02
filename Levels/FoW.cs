@@ -135,7 +135,7 @@ namespace HappyDungeon
         /// <summary>
         /// Turn on or off shaky mode. 
         /// In shaky mode the fog range change a bit.  
-        /// Reason why shaky didn't use a repetitive call on clairvoyant
+        /// The reason why shaky didn't also call on clairvoyantMode
         /// is because calirvoyant actually makes player sees further,
         /// while shaky mode only looks shaky. 
         /// </summary>

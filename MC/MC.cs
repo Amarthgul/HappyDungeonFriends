@@ -282,11 +282,13 @@ namespace HappyDungeon
 
         /// <summary>
         /// While holding torch (or in some other conditions),
-        /// the character might drive enemies away.
+        /// the character emits light and might drive enemies away.
         /// </summary>
         /// <returns>If the character is in Illuminati mode</returns>
         public bool Illuminati()
         {
+            // The primaryState is only Torch when torch is eqiped and turned on. 
+            // If torch is eqiped but not on, this returns false. 
             return primaryState == Globals.primaryTypes.Torch;
         }
 

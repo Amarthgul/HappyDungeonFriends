@@ -28,6 +28,9 @@ namespace HappyDungeon
             game = G;
         }
 
+        /// <summary>
+        /// General update method. 
+        /// </summary>
         public void Update()
         {
 

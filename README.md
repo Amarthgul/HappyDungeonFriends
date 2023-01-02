@@ -29,13 +29,13 @@ Currently still work in progress.
 
 **Please note that the update in this section may not be reflected in the release**
 
-Update 31th Dec 2022:
+Update 1th Jan 2023:
 
-* Added a proper gold drop function after killing an enemy 
+* Added a proper gold and item drop function after killing an enemy 
 
 * Added item description for gold when mouse if hovering on top
 
-* Added suicidal enemies who will try to seek and suicide kill the player. Suicide kill deleivers
+* Added suicidal enemies who will try to seek and suicide kill the player. Suicide kill delivers
 more damage than normal collision damage. 
 
 * Fixed the issue where some enemy run away from the player even without the light on. 

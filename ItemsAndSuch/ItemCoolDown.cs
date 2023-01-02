@@ -10,7 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 namespace HappyDungeon.Items
 {
     /// <summary>
-    /// Shows item cooldown.
+    /// Shows item cooldown on the heads up display panel.
+    /// Cooldown are drawn as a black mask gradually decreasing in size,
+    /// when the item is revealed again, it means the cooldown is complete. 
     /// Used in HeadsupDisplay class. 
     /// </summary>
     class ItemCoolDown

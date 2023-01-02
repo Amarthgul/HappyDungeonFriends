@@ -74,6 +74,8 @@ namespace HappyDungeon
         // ================================================================================
         // =================== Drawing and the sound of the enemy =========================
         // ================================================================================
+        protected bool usingExtendedFrame = false; 
+
         protected GeneralSprite mainSprite; 
         protected GeneralSprite movingSprite;
         protected GeneralSprite deathSprite;
@@ -472,17 +474,21 @@ namespace HappyDungeon
             ImageFile STDA = TextureFactory.Instance.enemySTDAttack;
             ImageFile AP = TextureFactory.Instance.enemySTDProjectile;
 
+            int frameCycle = usingExtendedFrame ? Globals.FRAME_CYCLE_EXT : Globals.FRAME_CYCLE; 
+
             // Normal moving 
             movingSprite = new GeneralSprite(STD.texture, STD.C, STD.R,
-                Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
+                Globals.WHOLE_SHEET, frameCycle, Globals.ENEMY_LAYER);
             movingSprite.frameDelay = 250;
 
             // Death or effect 
             deathSprite = new GeneralSprite(STDD.texture, STDD.C, STDD.R,
-                    Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
+                    Globals.WHOLE_SHEET, frameCycle, Globals.ENEMY_LAYER);
             deathSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
 
-            // Wake up from hibernation animation 
+            // Wake up from hibernation animation. 
+            // This animation plays the entire sheet throughout, and thus
+            // does not need the frame cycle to be limited. 
             wakeupSprite = new GeneralSprite(STDB.texture, STDB.C, STDB.R,
                     Globals.WHOLE_SHEET, STDB.C * STDB.R, Globals.ENEMY_LAYER);
             wakeupSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
@@ -490,12 +496,12 @@ namespace HappyDungeon
 
             // Attack animation 
             attackSprite = new GeneralSprite(STDA.texture, STDA.C, STDA.R,
-                    Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
+                    Globals.WHOLE_SHEET, frameCycle, Globals.ENEMY_LAYER);
             attackSprite.positionOffset = new Vector2(-2, -2) * Globals.SCALAR;
             attackSprite.frameDelay = (attackLastingTime / Globals.FRAME_CYCLE);
 
             projectileSprite = new GeneralSprite(AP.texture, AP.C, AP.R,
-                    Globals.WHOLE_SHEET, Globals.FRAME_CYCLE, Globals.ENEMY_LAYER);
+                    Globals.WHOLE_SHEET, frameCycle, Globals.ENEMY_LAYER);
 
             mainSprite = movingSprite; // Avoid null init 
         }

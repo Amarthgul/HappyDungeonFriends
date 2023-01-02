@@ -17,7 +17,7 @@ namespace HappyDungeon
 
         // Version lower than 1.0 means campign is not yet finished 
         // and the game is mostly still in dev. 
-        public const float VERSION = 0.11f;
+        public const float VERSION = 0.92f;
 
         // ================================================================================
         // ============================== Gameplay Options ================================
@@ -25,7 +25,7 @@ namespace HappyDungeon
 
         /// <summary>
         /// When this is enabled, enemy can move even while the player is not active
-        /// (i.e. in bag view etc.)
+        /// (i.e. in bag view, pause, etc.)
         /// </summary>
         public const bool REAL_TIME_ACTION = false;
 
@@ -64,7 +64,8 @@ namespace HappyDungeon
         // ================================================================================
         public const int WHOLE_SHEET = -1; // Use the entire sheet when updating frames 
         public const int ONE_FRAME = 1;
-        public const int FRAME_CYCLE = 4;  // By default each animation cycle has 4 frames 
+        public const int FRAME_CYCLE = 4;  // By default each animation cycle has 4 frames
+        public const int FRAME_CYCLE_EXT = 8; // Extended cycle has 8 frames 
         public static Vector2 SPRITE_OFFSET_2 = new Vector2(-2 * SCALAR, -2 * SCALAR);
         public static Vector2 SPRITE_OFFSET_UNIT = new Vector2(-ORIG_UNIT * SCALAR, -ORIG_UNIT * SCALAR);
 

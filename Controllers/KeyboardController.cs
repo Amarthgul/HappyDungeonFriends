@@ -17,6 +17,7 @@ namespace HappyDungeon
             this.game = game;
             controllerMappings = new Dictionary<Keys, ICommand>(); 
 
+            // QWER input based on games like DotA or LoL.
             controllerMappingsDefault = new Dictionary<Keys, ICommand>()
             {
                 {Keys.Q, new UsePrimaryCommand(game)},
@@ -37,6 +38,7 @@ namespace HappyDungeon
                 {Keys.LeftAlt, new AltDisplayCommand(game)},
             };
 
+            // WASD input based on RPG
             controllerMappingsRPG = new Dictionary<Keys, ICommand>()
             {
                 {Keys.D1, new UsePrimaryCommand(game)},
