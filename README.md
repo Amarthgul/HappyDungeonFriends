@@ -62,7 +62,7 @@ An approach that resembles common RPG games, most operational keys are gathered 
 
 ### Keyboard (Traditional)
 
-Traditional approach combines the arrow key with MOBA skill keys, when used with mouse, it
+Traditional approach combines the arrow key operation with MOBA skill keys, when used with mouse, it
 produces an experience somewhat similar to Dota or Starcraft. 
 
 * Arrow keys for movement and option selection
@@ -132,4 +132,4 @@ Plus the user interface and game control.
 
 * Item descriptions may differ or duplicate, due to them all invoking from `TextBridge` instance. 
 For example, if `Note` items are dropped from enemies, they may have the same text description despite
-the alogrithm was designed to make them different. 
+the alogrithm was designed to make them different.  
