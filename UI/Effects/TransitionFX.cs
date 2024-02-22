@@ -99,7 +99,8 @@ namespace HappyDungeon.UI.Effects
             }
             else if (game.transitionProgress[2])
             {
-                drawPosition.Y = (updateSW.ElapsedMilliseconds / (float)Globals.TRANSITION_SINGLE) * totlaTravelDistance;
+                drawPosition.Y = (updateSW.ElapsedMilliseconds / (float)Globals.TRANSITION_SINGLE) 
+                    * totlaTravelDistance;
 
                 if (updateSW.ElapsedMilliseconds > Globals.TRANSITION_SINGLE)
                 {

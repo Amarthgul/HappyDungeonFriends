@@ -17,8 +17,9 @@ namespace HappyDungeon
         // ================================================================================
 
         private const int UPDATE_DELAY = 4;
-        private const int TRANSITION_STEP_Y = 8;
-        private const int TRANSITION_STEP_X = 16;
+
+        private const int TRANSITION_STEP_Y = Globals.SCALAR * 2;
+        private const int TRANSITION_STEP_X = Globals.SCALAR * 4;
  
         // ================================================================================
         // ========================= Infomation about the room ============================

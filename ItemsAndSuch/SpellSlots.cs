@@ -273,7 +273,7 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// For other classes to make inquries about the items. 
+        /// For other classes to make inquries about the items currently on heads up display. 
         /// </summary>
         /// <param name="Index">Index of item in slots, negative for the primary</param>
         /// <returns>The item in the slot</returns>

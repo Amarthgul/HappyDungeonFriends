@@ -42,7 +42,13 @@ namespace HappyDungeon
         public const int ORIG_BORDER = 32;        // Size of the border, where player cannot go in 
 
         // How much bigger the output would be 
-        public const int SCALAR = 4;
+        public const int SCALAR = 8;
+
+        // Scale on which the dev process is conducted on. 
+        // This is used to fix some errors caused by incorrect scaling, for example, when SCALAR is set
+        // to 2 or 8, some sprites might render too small/big, this DEV_SCALE provides an easy and lazy
+        // fix without changing the sprite size calculation logic...  
+        public const int DEV_SCALE = 4; 
 
         // Sizes after scaling, used in moving calculation and drawing
         public const int OUT_UNIT = ORIG_UNIT * SCALAR;         // Grid unit after scaled 

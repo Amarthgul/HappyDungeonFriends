@@ -16,14 +16,15 @@ namespace HappyDungeon
     {
         /// <summary>
         /// Dev options. 
+        /// ===============================================================================
         /// Please note that _DEVMODE is the master trigger. All other triggers are 
         /// regarded as not enabled unless _DEVMODE is on. 
         /// Also note that Dev mode is not the same as BEGUGGING in the Globals. 
-        /// Dev mode aims in tweaking features, while DEBUGGING is for coding. 
+        /// Dev mode aims in checking features, while DEBUGGING is for code/console message. 
         /// </summary>
         private bool _DEVMODE = false;       // Root flag for all other dev options 
         private bool _ENABLE_FOW = true;   // Enable fog of war
-        private bool _SHOW_BOX = true;     // Draw boundary boxes for objects 
+        private bool _SHOW_BOX = true;     // Draw boundary boxes for all 
 
         // ================================================================================
         // ============================= Abstract resources ===============================

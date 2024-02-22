@@ -222,12 +222,26 @@ namespace HappyDungeon
         {
             List<GeneralSprite> SpriteList = new List<GeneralSprite>();
 
-            if (primaryState == Globals.primaryTypes.Torch
-                && ((Torch)game.spellSlots.GetItem(-1)).torchOn)
+            if (primaryState != Globals.primaryTypes.None)
             {
-                SpriteList.Add(walkingWithTorch);
-                SpriteList.Add(torchFlame);
-                SpriteList.Add(torchShadow);
+                switch (primaryState)
+                {
+                    case Globals.primaryTypes.Torch:
+                        if (game.spellSlots.GetItem(-1) != null
+                            && ((Torch)game.spellSlots.GetItem(-1)).torchOn)
+                        {
+                            // This null check is needed since the player may
+                            // drag the torch into the bag while it is still turned on 
+                            SpriteList.Add(walkingWithTorch);
+                            SpriteList.Add(torchFlame);
+                            SpriteList.Add(torchShadow);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                    
+                
             }
             else
             {

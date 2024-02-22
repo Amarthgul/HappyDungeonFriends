@@ -9,6 +9,7 @@ using System.Diagnostics;
 
 namespace HappyDungeon
 {
+    // TODO: fix 8 times scale up FoW size issue 
     public class FoW
     {
         // ================================================================================
@@ -97,7 +98,7 @@ namespace HappyDungeon
         public void SetRange(float Range)
         {
             rangeNow = Range; 
-            scaler = Range + 2;
+            scaler = (Range + 2) * (Globals.SCALAR / (float)Globals.DEV_SCALE);
             position = new Vector2(-((scaler * width / 2) - Globals.OUT_UNIT / 2),
                 -((scaler * height / 2) - Globals.OUT_UNIT / 2));
         }
@@ -109,7 +110,7 @@ namespace HappyDungeon
         /// <param name="RangeWithShake">Range with shake effect.</param>
         private void SetShakyRange(float RangeWithShake)
         {
-            scaler = RangeWithShake + 2;
+            scaler = (RangeWithShake + 2) * (Globals.SCALAR / (float)Globals.DEV_SCALE);
             position = new Vector2(-((scaler * width / 2) - Globals.OUT_UNIT / 2),
                 -((scaler * height / 2) - Globals.OUT_UNIT / 2));
         }
@@ -145,7 +146,7 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Turn on or off clairvoyant, whihc grants extra vision while on.
+        /// Turn on or off clairvoyant, which grants extra vision.
         /// </summary>
         /// <param name="Expansion">The range bonus</param>
         public void ToggleClairvoyant(float Expansion)

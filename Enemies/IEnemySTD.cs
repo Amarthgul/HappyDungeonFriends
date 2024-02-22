@@ -106,8 +106,8 @@ namespace HappyDungeon
         protected bool startWithHibernate = false;  // If the enemy starts in hibernation
         protected bool wakeupByIlluminati = false;  // Only waken by lights
 
-        protected bool suicidal = true;
-        protected int suicideDamage = -30; 
+        protected bool suicidal = true;    // When flagged, the enemy dies when collide with player
+        protected int suicideDamage = -30; // Damage to player when colliding 
 
         protected bool wakingup = false; 
         protected int wakeUpDistance = (int)(2.0 * Globals.OUT_UNIT); // When player is within this distance 

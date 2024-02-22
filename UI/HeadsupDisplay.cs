@@ -186,7 +186,7 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Setup the texture and sprite for top-right corner HP.  
+        /// Setup the texture and sprite for top-right corner HP vessel.  
         /// </summary>
         private void SetUpHealthVessel()
         {
