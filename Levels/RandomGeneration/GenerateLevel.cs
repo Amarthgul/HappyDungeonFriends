@@ -25,7 +25,7 @@ namespace HappyDungeon
         private const int BOSS_SPAWN_OFFSET = 3;      // Range within which boss shall not spawn 
 
 
-        public RoomInfo[,] levelSet;
+        public RoomInfo[,] levelSet; // A matrix of rooms 
 
         public int levelSetRow { set; get; }
         public int levelSetCol { set; get; }
@@ -61,8 +61,10 @@ namespace HappyDungeon
                     ResumeStartupRoom();
                     break;
                 case Globals.GameLevel.Joy:
+                    init();
                     break;
                 case Globals.GameLevel.Bliss:
+
                     break;
                 default:
                     break; 
@@ -252,7 +254,7 @@ namespace HappyDungeon
 
 
         /// <summary>
-        /// Randomly select a position, if there's a room, then make it as the start up room.
+        /// Randomly select a position, if there's a room, then make it as the start up room. If not, repeat until finding a room. 
         /// </summary>
         private void PickStartUpRoom()
         {

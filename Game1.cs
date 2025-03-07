@@ -113,7 +113,7 @@ namespace HappyDungeon
         /// <returns>0 if all loaded successfually</returns>
         public int LoadClasses(int mode)
         {
-            gameLevel = Globals.GameLevel.Delight;
+            gameLevel = Globals.GameLevel.Delight;  // Change this for testing starting level 
             gameLanguage = Globals.Language.English;
             
 
