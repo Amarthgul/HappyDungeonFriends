@@ -14,7 +14,7 @@ namespace HappyDungeon
     /// </summary>
     class GenerateRoomDelight : Levels.GenerateRoomBasics
     {
-        private bool _DEVMODE = true;
+        private bool _DEVMODE = false;
 
         private const int DELIGHT_ENEMY_MAX = 5; 
 
@@ -40,8 +40,7 @@ namespace HappyDungeon
 
             defaultBlock = 0;
             tileList = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
-            walkableBlockList = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 
-                17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
+            walkableBlockList = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
             solidBlockLIst = new int[] { 128, 144, 160, 161};
             blackRoomInedx = 1;
             //bossIndex = Globals.BOSS_ENEMY;

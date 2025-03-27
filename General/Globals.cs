@@ -78,9 +78,13 @@ namespace HappyDungeon
         // ================================================================================
         // ============================== Levels and Rooms ================================
         // ================================================================================
+
         // Room tile dimensions 
         public const int RTILE_ROW = 7;
         public const int RTILE_COLUMN = 12;
+
+        public const int RTILE_ROW_EXT = 11;
+        public const int RTILE_COLUMN_EXT = 16;
 
         // Random Room Generation 
         public const int MAX_DIR_COMBO = 3;
