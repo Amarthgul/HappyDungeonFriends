@@ -88,7 +88,10 @@ namespace HappyDungeon
             for (int i = 0; i < levelSet.GetLength(0); i++)
                 for (int j = 0; j < levelSet.GetLength(1); j++)
                     if (Placement[i, j])
+                    {
                         levelSet[i, j] = new GenerateRoomDelight().InitRoom();
+                    }
+                        
 
             levelRowCount = levelSet.GetLength(0);
             levelColCount = levelSet.GetLength(1);
