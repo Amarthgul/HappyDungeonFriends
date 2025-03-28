@@ -47,13 +47,17 @@ namespace HappyDungeon
         {
             levelSetRow = Row;
             levelSetCol = Col;
-            gameLevel = LevelSetting; 
+            gameLevel = LevelSetting;
+
+
+            init(LevelSetting);
+            PickStartUpRoom();
+            
+            
 
             switch (LevelSetting)
             {
                 case Globals.GameLevel.Delight:
-                    init();
-                    PickStartUpRoom();
                     RegulateDoors();
                     PopulateRoomsDelight();
                     SetBossRooms();
@@ -61,10 +65,8 @@ namespace HappyDungeon
                     ResumeStartupRoom();
                     break;
                 case Globals.GameLevel.Joy:
-                    init();
                     break;
                 case Globals.GameLevel.Bliss:
-
                     break;
                 default:
                     break; 
@@ -76,7 +78,7 @@ namespace HappyDungeon
         /// <summary>
         /// Generate a set of placement, fill these rooms with placeholders.
         /// </summary>
-        private void init()
+        private void init(Globals.GameLevel LevelSetting)
         {
             levelSet = new RoomInfo[levelSetRow, levelSetCol];
 
@@ -89,7 +91,20 @@ namespace HappyDungeon
                 for (int j = 0; j < levelSet.GetLength(1); j++)
                     if (Placement[i, j])
                     {
-                        levelSet[i, j] = new GenerateRoomDelight().InitRoom();
+                        switch (LevelSetting)
+                        {
+                            case Globals.GameLevel.Delight:
+                                levelSet[i, j] = new GenerateRoomDelight().InitRoom();
+                                break;
+                            case Globals.GameLevel.Joy:
+                                levelSet[i, j] = new GenerateRoomJoy().InitRoom();
+                                break;
+                            case Globals.GameLevel.Bliss:
+                                break;
+                            default:
+                                break;
+                        }
+                        
                     }
                         
 
@@ -274,6 +289,7 @@ namespace HappyDungeon
             }
         }
 
+
         /// <summary>
         /// Re-tag the type of the room on startup location as start. 
         /// </summary>
@@ -282,6 +298,7 @@ namespace HappyDungeon
             GenerateRoomDelight RoomGenTemp = new GenerateRoomDelight();
             levelSet[startUpRow, startUpCol] = RoomGenTemp.SetAsStartupRoom(levelSet[startUpRow, startUpCol]);
         }
+
 
         /// <summary>
         /// Given a pair of index, calculate the L1 distance from the startup room.
@@ -293,6 +310,7 @@ namespace HappyDungeon
         {
             return Math.Abs(row - startUpRow) + Math.Abs(col - startUpCol);
         }
+
 
         /// <summary>
         /// Assume a room is neither boss nor startup room, 
@@ -330,6 +348,7 @@ namespace HappyDungeon
             }
         }
 
+
         /// <summary>
         /// Randomly picking rooms and set them as merchant rooms.
         /// </summary>
@@ -365,6 +384,7 @@ namespace HappyDungeon
 
             }
         }
+
 
         /// <summary>
         /// Randomly pick rooms. 
