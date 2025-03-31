@@ -14,7 +14,7 @@ namespace HappyDungeon
     /// </summary>
     class GenerateRoomDelight : Levels.GenerateRoomBasics
     {
-        private bool _DEVMODE = false;
+        private bool _DEVMODE = true;
 
         private const int DELIGHT_ENEMY_MAX = 5; 
 
@@ -47,6 +47,7 @@ namespace HappyDungeon
 
         }
 
+
         /// <summary>
         /// Fill the map info with placeholders, all disabled by default; 
         /// </summary>
@@ -74,7 +75,6 @@ namespace HappyDungeon
             return template;
         }
 
- 
 
         public void PopulateEnemy()
         {
@@ -109,8 +109,9 @@ namespace HappyDungeon
 
         }
 
+
         /// <summary>
-        /// Generates the map blocks for the rrom. 
+        /// Generates the map blocks for the room. 
         /// This method is packed with too much imformation, virtually impossible for me to 
         /// explain it. If you want to change the appearances of the rooms, it's probably better 
         /// just start another method rather than modifiying on this one.  
@@ -217,6 +218,7 @@ namespace HappyDungeon
             }
         }
 
+
         public void SetAsMerchantRoom()
         {
             room.DefaultBlock = blackRoomInedx;
@@ -241,6 +243,7 @@ namespace HappyDungeon
             //room.Arrangement[RowMid, ColMid] = merchantCharaList[Globals.RND.Next(merchantCharaList.Length)];
         }
 
+
         public RoomInfo SetAsStartupRoom(RoomInfo RL)
         {
             room = RL;
@@ -262,6 +265,7 @@ namespace HappyDungeon
 
             return room;
         }
+
 
         public void SetAsBossRoom()
         {

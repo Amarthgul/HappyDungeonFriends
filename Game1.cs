@@ -113,7 +113,7 @@ namespace HappyDungeon
         /// <returns>0 if all loaded successfually</returns>
         public int LoadClasses(int mode)
         {
-            gameLevel = Globals.GameLevel.Delight;  // Change this for testing starting level 
+            gameLevel = Globals.GameLevel.Joy;  // Change this for testing starting level 
             gameLanguage = Globals.Language.English;
             
 
@@ -158,6 +158,7 @@ namespace HappyDungeon
 
             return 0; 
         }
+
 
         /// <summary>
         /// Reset current game, either into a new room, refresh current room or hard restart.
@@ -210,6 +211,7 @@ namespace HappyDungeon
 
         }
 
+
         /// <summary>
         /// Text database uses bool flags to create some of the descriptions, 
         /// this method is for refreshing the database for each game progressions. 
@@ -218,6 +220,7 @@ namespace HappyDungeon
         {
             TextBridge.Instance.Refresh();
         }
+
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -245,6 +248,7 @@ namespace HappyDungeon
             base.Initialize();
         }
 
+
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
@@ -264,6 +268,7 @@ namespace HappyDungeon
             // TODO: use this.Content to load your game content here
         }
 
+
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
         /// game-specific content.
@@ -272,6 +277,7 @@ namespace HappyDungeon
         {
             // TODO: Unload any non ContentManager content here
         }
+
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -335,6 +341,7 @@ namespace HappyDungeon
 
             base.Update(gameTime);
         }
+
 
         /// <summary>
         /// This is called when the game should draw itself.

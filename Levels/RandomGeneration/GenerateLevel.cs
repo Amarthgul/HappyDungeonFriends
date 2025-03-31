@@ -52,19 +52,19 @@ namespace HappyDungeon
 
             init(LevelSetting);
             PickStartUpRoom();
-            
-            
+            RegulateDoors();
+
 
             switch (LevelSetting)
             {
                 case Globals.GameLevel.Delight:
-                    RegulateDoors();
                     PopulateRoomsDelight();
                     SetBossRooms();
                     SetMerchantRooms();
                     ResumeStartupRoom();
                     break;
                 case Globals.GameLevel.Joy:
+                    PopulateRoomsJoy(); 
                     break;
                 case Globals.GameLevel.Bliss:
                     break;
@@ -112,6 +112,7 @@ namespace HappyDungeon
             levelColCount = levelSet.GetLength(1);
 
         }
+
 
         /// <summary>
         /// Change doors depending on the inter-room relationship 
@@ -346,6 +347,12 @@ namespace HappyDungeon
                     }
                 }
             }
+        }
+
+
+        private void PopulateRoomsJoy()
+        {
+
         }
 
 

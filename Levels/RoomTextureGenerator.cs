@@ -54,8 +54,19 @@ namespace HappyDungeon.Levels
         private void GenerateTexture()
         {
             Load();
-            AlterTexture();
-            UpdateDrawDoors();
+            
+
+            if(game.gameLevel == Globals.GameLevel.Delight)
+            {
+                AlterTextureDelight();
+                // Only bliss has walled room and thus doors 
+                UpdateDrawDoors();
+            }
+            if(game.gameLevel == Globals.GameLevel.Joy)
+            {
+                AlterTextureJoy();
+            }
+
             GenerateOverlay();
 
         }
@@ -74,6 +85,9 @@ namespace HappyDungeon.Levels
                         TextureFactory.Instance.roomDelightDirts.Length].texture;
                     break;
                 case Globals.GameLevel.Joy:
+                    levelTexture = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
+                        Globals.ORIG_GWIDTH, Globals.ORIG_GHEIGHT, pixel => defaultColor);
+                    groundOverlay = null;
                     break;
                 case Globals.GameLevel.Bliss:
                     break;
@@ -82,6 +96,7 @@ namespace HappyDungeon.Levels
             }
 
         }
+
 
         /// <summary>
         /// Crop the target block from the all might texture.
@@ -111,20 +126,25 @@ namespace HappyDungeon.Levels
             return block;
         }
 
+
         /// <summary>
-        /// Overwrite the texture, add the border and tiles 
+        /// Overwrite the texture, add the border and tiles for level Bliss 
         /// </summary>
-        private void AlterTexture()
+        private void AlterTextureDelight()
         {
             Texture2D Border = TextureFactory.Instance.roomBorder
                 [Globals.RND.Next() % TextureFactory.Instance.roomBorder.Length].texture;
             int CountBorder = Border.Width * Border.Height;
             Color[] RawDataBorder = new Color[CountBorder];
-            int[,] mapMatrix = roomInfo.Arrangement;
+            int[,] mapMatrix = roomInfo.Arrangement; // The tiles in the room 
             int defaultBlockIndex = roomInfo.DefaultBlock;
 
+
+            
             Border.GetData<Color>(RawDataBorder);
             levelTexture.SetData(0, new Rectangle(0, 0, Border.Width, Border.Height), RawDataBorder, 0, CountBorder);
+            
+            
 
             // Add tiles 
             for (int r = 0; r < Globals.RTILE_ROW; r++)
@@ -154,6 +174,45 @@ namespace HappyDungeon.Levels
 
         }
 
+
+        /// <summary>
+        /// Overwrite the texture, add the border and tiles for level Joy  
+        /// </summary>
+        private void AlterTextureJoy()
+        {
+            int[,] mapMatrix = roomInfo.Arrangement; // The tiles in the room 
+            int defaultBlockIndex = roomInfo.DefaultBlock;
+
+            // Add tiles 
+            for (int r = 0; r < Globals.RTILE_ROW_EXT; r++)
+            {
+                for (int c = 0; c < Globals.RTILE_COLUMN_EXT; c++)
+                {
+                    Vector2 StartPoint = new Vector2(c * Globals.ORIG_UNIT,
+                        r * Globals.ORIG_UNIT);
+
+                    int BlockIndex = General.IndexCoder.GetBlockIndex(mapMatrix[r, c]);
+                    int TileTypeNow = (BlockIndex >= 0 && BlockIndex < ALL_MIGH_COUNT) ?
+                        BlockIndex : defaultBlockIndex;
+
+                    Texture2D TextureNow = getBlockByIndex(TileTypeNow);
+
+                    int CountNow = TextureNow.Width * TextureNow.Height;
+                    Color[] RawDataNow = new Color[CountNow];
+                    TextureNow.GetData<Color>(RawDataNow);
+
+                    // Paste the data of the tiles 
+                    levelTexture.SetData(0, new Rectangle(
+                        (int)StartPoint.X, (int)StartPoint.Y,
+                        Globals.ORIG_UNIT, Globals.ORIG_UNIT),
+                        RawDataNow, 0, CountNow);
+                }
+            }
+
+        }
+
+
+
         public Texture2D GenerateOverlay()
         {
             Texture2D TranspBlock = TextureFactory.Instance.GenerateTexture(game.GraphicsDevice,
@@ -177,6 +236,7 @@ namespace HappyDungeon.Levels
 
             return roomOverlay;
         }
+
 
         /// <summary>
         /// Update the doors, used both in initialization and 
@@ -245,19 +305,26 @@ namespace HappyDungeon.Levels
             return levelTexture;
         }
 
+
         public Texture2D GetRoomTexture()
         {
             GenerateTexture();
             return levelTexture;
         }
 
+
         /// <summary>
         /// An overlay on top of the ground for dirt effect 
         /// </summary>
         public void DrawGroundOverlays()
         {
-            spriteBatch.Draw(groundOverlay, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint,
+            if(groundOverlay != null)
+            {
+                // Some level may not have a ground overlay, thus does not need it to be drawn 
+                spriteBatch.Draw(groundOverlay, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint,
                     0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.GROUND_EFFECTS);
+            }
+            
         }
 
     }

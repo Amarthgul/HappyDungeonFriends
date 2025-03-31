@@ -16,7 +16,7 @@ namespace HappyDungeon.General
     /// 
     /// This coder is designed to combine both indexes into one. 
     /// 
-    /// The way it does this is basically by concatenating the two indexes. 
+    /// The way it does this is by concatenating the two indexes. 
     /// For example, if blood bead (index -257) is standing on top on block 7, 
     /// then the result would be:
     ///     - (257 * 1000 + 7) = -257007

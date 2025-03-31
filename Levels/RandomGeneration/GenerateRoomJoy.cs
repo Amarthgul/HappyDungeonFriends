@@ -18,13 +18,12 @@ namespace HappyDungeon
         private const int JOY_ENEMY_MAX = 5;
 
 
-        public int[] tileList { get; set; } // For level delight
+        public int[] tileList { get; set; } 
 
 
         public GenerateRoomJoy()
         {
             // Setup the template 
-            roomDB = new Levels.RoomDB();
 
             enemyList = new int[]{
                 Globals.ENEMY_BEAD
@@ -49,7 +48,7 @@ namespace HappyDungeon
 
 
         /// <summary>
-        /// Fill the map info with placeholders, all disabled by default; 
+        /// Fill the room info with placeholders, all disabled by default; 
         /// </summary>
         /// <returns></returns>
         public RoomInfo InitRoom()
@@ -74,6 +73,10 @@ namespace HappyDungeon
 
             return template;
         }
+
+
+
+
 
     }
 

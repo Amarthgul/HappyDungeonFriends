@@ -167,7 +167,7 @@ namespace HappyDungeon
                 roomTexture.DrawGroundOverlays();
 
                 // Overlay appears only in Joy and Delight 
-                if (game.gameLevel == Globals.GameLevel.Delight || game.gameLevel == Globals.GameLevel.Joy)
+                if (game.gameLevel == Globals.GameLevel.Delight)
                 {
                     spriteBatch.Draw(roomOverlay, new Vector2(0, Globals.OUT_HEADSUP), null, defaultTint,
                     0, Vector2.Zero, Globals.SCALAR, SpriteEffects.None, Globals.MAP_OVERLAY);

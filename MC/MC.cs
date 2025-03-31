@@ -545,6 +545,8 @@ namespace HappyDungeon
         /// <returns>True if the door is open or not colliding with any doors.</returns>
         private bool CanPassDoors()
         {
+
+
             if (newRoomProtectSW.ElapsedMilliseconds < newRoomProtectTime && newRoomProtectionOn)
             {
                 return true;

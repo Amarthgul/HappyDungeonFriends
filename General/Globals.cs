@@ -79,10 +79,11 @@ namespace HappyDungeon
         // ============================== Levels and Rooms ================================
         // ================================================================================
 
-        // Room tile dimensions 
+        // Room tile dimensions for level delight 
         public const int RTILE_ROW = 7;
         public const int RTILE_COLUMN = 12;
 
+        // Room tile dimensions for level joy and bliss, which are extended by 4 tiles 
         public const int RTILE_ROW_EXT = 11;
         public const int RTILE_COLUMN_EXT = 16;
 
@@ -186,33 +187,62 @@ namespace HappyDungeon
         // ==================================== Misc ======================================
         // ================================================================================
 
-        public const int INSTANT_KILL_DMG = -10000; 
-        // Speed metre 
+        public const int INSTANT_KILL_DMG = -10000;
+
+        /// <summary>
+        /// Speed metre 
+        /// </summary>
         public const float SPEED_BASELINE = 1.0f * SCALAR;
-        // Time realted 
-        public const int ITEM_HOLD = 100;     // Items cannot be picked up before this time ends 
-        public const int KEYBOARD_HOLD = 100; // Keys are pressed may become protected for this amount of time
-        public const int KB_STATE_HOLD = 200; // For keys that triggers game state change
-        public const int FRAME_DELAY = 125;   // 8 fps 
+         
+        /// <summary>
+        /// Items cannot be picked up before this time ends 
+        /// </summary>
+        public const int ITEM_HOLD = 100;
+        
+        /// <summary>
+        /// Keys are pressed may become protected for this amount of time
+        /// </summary>
+        public const int KEYBOARD_HOLD = 100;
+        
+        /// <summary>
+        /// For keys that triggers game state change
+        /// </summary>
+        public const int KB_STATE_HOLD = 200;
+        
+        /// <summary>
+        /// Roughly 8 fps 
+        /// </summary>
+        public const int FRAME_DELAY = 125;   
+        
 
         public static Random RND = new Random();
 
         public enum primaryTypes { None, Torch };
 
         public enum RoomTypes { Start, Boss, Merchant, Normal };
+
         public enum EnemyTypes { Minion, Elite, Boss };
+
         public enum ItemType { Primary, Usable, Junk };
+
         public enum Direction { Left, Right, Up, Down, None };
+
         public enum GameStates { TitleScreen, Running, RoomTransitioning, 
             Setting, Bag, GameOver, Conversation, Pause, LoadAndSave, Overlay }
+
         public enum GameLevel { Delight, Joy, Bliss };
+
         public enum GameDifficulty { Idiot, Normal };
+
         public enum GeneralStates { Moving, Hold, Attack, Damaged, Broken, Stunned, Dead }
+
         public enum AttackType { Melee, Ranged, Target, None };
+
         public enum DamageEffect { Stun, Knockback, Break, None };
+
         public enum DamageType { None, Burn };
 
-        /// Chinese and Japanese sprites are too difficult to make and I don't
+        /// Chinese and Japanese sprites are too difficult to make, I don't
         /// speak Spanish or French, so English is the only one language 
         /// currently the game supports (till v0.11)
         public enum Language { English, Spanish, Chinese, Japanese, French, Deutsch };
@@ -224,7 +254,7 @@ namespace HappyDungeon
 
         // --------------------------------------------------------------------------------
         // -------------------------------- Iterators -------------------------------------
-        // Created for quick access or iteration 
+        // Created for quick access of iteration 
         public static List<Direction> FourDirIter = new List<Direction>() 
             { Direction.Left, Direction.Right, Direction.Up, Direction.Down};
 

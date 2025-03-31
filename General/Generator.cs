@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HappyDungeon
 {
+
     public class Generator
     {
         private Game1 game; 
@@ -25,102 +26,18 @@ namespace HappyDungeon
         /// <returns>A list of static blocks that are invisible. </returns>
         public List<IBlock> GetStaticBlockList()
         {
-            List<IBlock> StaticBlockList = new List<IBlock>();
-            RoomInfo MapInfo = game.currentRoom.roomInfo;
-
-            const float DOOR_VERTICAL_MARK = 5.25f;
-            const float DOOR_HORIZONTAL_MARK = 7.5f;
-            const int MID_DIVISION = 6;
-            const double LEFT_OFFSET = 1.2;
-            const double RIGHT_OFFSET = 2.8;
-            const int VERTICAL_DIVISION = 3;
-            const double UP_OFFSET = 1.85;
-            const double DOWN_OFFSET = 2.15;
-
-            int TopPosition = Globals.OUT_HEADSUP + Globals.OUT_UNIT;
-            int ButtPosition = Globals.OUT_FHEIGHT - 2 * Globals.OUT_UNIT;
-            int LeftPosition = Globals.OUT_UNIT;
-            int RightPosition = Globals.OUT_FWIDTH - 2 * Globals.OUT_UNIT;
-            int HorizontalPos, VerticalPos = 0;
-
-            Vector2 LeftDoorBlocking = new Vector2(1 * Globals.OUT_UNIT,
-                Globals.OUT_HEADSUP + DOOR_VERTICAL_MARK * Globals.OUT_UNIT - 4 * Globals.SCALAR);
-            Vector2 RightDoorBlocking = new Vector2(Globals.OUT_FWIDTH - 2 * Globals.OUT_UNIT,
-                Globals.OUT_HEADSUP + DOOR_VERTICAL_MARK * Globals.OUT_UNIT);
-            Vector2 TopDoorBlocking = new Vector2(DOOR_HORIZONTAL_MARK * Globals.OUT_UNIT,
-                2 * Globals.OUT_UNIT);
-            Vector2 BottomDoorBlocking = new Vector2(DOOR_HORIZONTAL_MARK * Globals.OUT_UNIT,
-                Globals.OUT_FHEIGHT - 2 * Globals.OUT_UNIT);
-
-            // Stuck a block if that direction has no entry  
-            for (int i = 0; i < MapInfo.OpenDoors.Length; i++)
+            switch (game.gameLevel)
             {
-                bool CouldPass = (MapInfo.LockedDoors[i] || MapInfo.Holes[i] 
-                    ||  MapInfo.OpenDoors[i] || MapInfo.MysteryDoors[i]);
+                case Globals.GameLevel.Delight:
+                    return GetStaticBlockListDelight();
+                case Globals.GameLevel.Joy:
+                    return GetStaticBlockListJoy();
+                case Globals.GameLevel.Bliss:
+                    return null;
+                default:
+                    return null;
 
-                if (!CouldPass)
-                {
-                    switch (i)
-                    {
-                        case (int)Globals.Direction.Up:
-                            StaticBlockList.Add(new BlockInvis(TopDoorBlocking));
-                            break;
-                        case (int)Globals.Direction.Down:
-                            StaticBlockList.Add(new BlockInvis(BottomDoorBlocking));
-                            break;
-                        case (int)Globals.Direction.Right:
-                            StaticBlockList.Add(new BlockInvis(RightDoorBlocking));
-                            break;
-                        case (int)Globals.Direction.Left:
-                            StaticBlockList.Add(new BlockInvis(LeftDoorBlocking));
-                            break;
-                        default:
-                            break;
-                    }
-                }
             }
-
-
-            // The following 2 for loops are for the creation of walls (in lieu of boundary check)
-            for (int i = 0; i < Globals.RTILE_COLUMN; i++)
-            {
-
-                if (i < MID_DIVISION)
-                    HorizontalPos = (int)((i + LEFT_OFFSET) * Globals.OUT_UNIT);
-                else
-                    HorizontalPos = (int)((i + RIGHT_OFFSET) * Globals.OUT_UNIT);
-
-                if (i == 5 || i == 6)
-                {   // Adding extra blocks to avoid player from going into cracks 
-                    StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, TopPosition - Globals.OUT_UNIT)));
-                    StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, ButtPosition + Globals.OUT_UNIT)));
-                }
-
-                StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, TopPosition)));
-                StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, ButtPosition)));
-            }
-            for (int i = 0; i < Globals.RTILE_ROW; i++)
-            {
-                if (i < VERTICAL_DIVISION)
-                    VerticalPos = Globals.OUT_HEADSUP + (int)((i + UP_OFFSET) * Globals.OUT_UNIT);
-                if (i > VERTICAL_DIVISION)
-                    VerticalPos = Globals.OUT_HEADSUP + (int)((i + DOWN_OFFSET) * Globals.OUT_UNIT);
-
-                if (i == 2 || i == 4)
-                {   // Adding extra blocks to avoid player from going into cracks 
-                    StaticBlockList.Add(new BlockInvis(new Vector2(LeftPosition - Globals.OUT_UNIT, VerticalPos)));
-                    StaticBlockList.Add(new BlockInvis(new Vector2(RightPosition + Globals.OUT_UNIT, VerticalPos)));
-                }
-
-                if(i < VERTICAL_DIVISION || i > VERTICAL_DIVISION)
-                {
-                    StaticBlockList.Add(new BlockInvis(new Vector2(LeftPosition, VerticalPos)));
-                    StaticBlockList.Add(new BlockInvis(new Vector2(RightPosition, VerticalPos)));
-                }
-                
-            }
-
-            return StaticBlockList;
         }
 
         /// <summary>
@@ -157,8 +74,7 @@ namespace HappyDungeon
         }
 
         /// <summary>
-        /// Generate a list of blocks
-        /// that are in the main game area and are visible, 
+        /// Generate a list of blocks that are in the main game area and are visible, 
         /// they may also have animations. 
         /// </summary>
         /// <param name="Game">Game1 object</param>
@@ -256,5 +172,116 @@ namespace HappyDungeon
                     return null; 
             }
         }
+
+
+        private List<IBlock> GetStaticBlockListDelight()
+        {
+            List<IBlock> StaticBlockList = new List<IBlock>();
+            RoomInfo MapInfo = game.currentRoom.roomInfo;
+
+            const float DOOR_VERTICAL_MARK = 5.25f;
+            const float DOOR_HORIZONTAL_MARK = 7.5f;
+            const int MID_DIVISION = 6;
+            const double LEFT_OFFSET = 1.2;
+            const double RIGHT_OFFSET = 2.8;
+            const int VERTICAL_DIVISION = 3;
+            const double UP_OFFSET = 1.85;
+            const double DOWN_OFFSET = 2.15;
+
+            int TopPosition = Globals.OUT_HEADSUP + Globals.OUT_UNIT;
+            int ButtPosition = Globals.OUT_FHEIGHT - 2 * Globals.OUT_UNIT;
+            int LeftPosition = Globals.OUT_UNIT;
+            int RightPosition = Globals.OUT_FWIDTH - 2 * Globals.OUT_UNIT;
+            int HorizontalPos, VerticalPos = 0;
+
+            Vector2 LeftDoorBlocking = new Vector2(1 * Globals.OUT_UNIT,
+                Globals.OUT_HEADSUP + DOOR_VERTICAL_MARK * Globals.OUT_UNIT - 4 * Globals.SCALAR);
+            Vector2 RightDoorBlocking = new Vector2(Globals.OUT_FWIDTH - 2 * Globals.OUT_UNIT,
+                Globals.OUT_HEADSUP + DOOR_VERTICAL_MARK * Globals.OUT_UNIT);
+            Vector2 TopDoorBlocking = new Vector2(DOOR_HORIZONTAL_MARK * Globals.OUT_UNIT,
+                2 * Globals.OUT_UNIT);
+            Vector2 BottomDoorBlocking = new Vector2(DOOR_HORIZONTAL_MARK * Globals.OUT_UNIT,
+                Globals.OUT_FHEIGHT - 2 * Globals.OUT_UNIT);
+
+            // Stuck a block if that direction has no entry  
+            for (int i = 0; i < MapInfo.OpenDoors.Length; i++)
+            {
+                bool CouldPass = (MapInfo.LockedDoors[i] || MapInfo.Holes[i]
+                    || MapInfo.OpenDoors[i] || MapInfo.MysteryDoors[i]);
+
+                if (!CouldPass)
+                {
+                    switch (i)
+                    {
+                        case (int)Globals.Direction.Up:
+                            StaticBlockList.Add(new BlockInvis(TopDoorBlocking));
+                            break;
+                        case (int)Globals.Direction.Down:
+                            StaticBlockList.Add(new BlockInvis(BottomDoorBlocking));
+                            break;
+                        case (int)Globals.Direction.Right:
+                            StaticBlockList.Add(new BlockInvis(RightDoorBlocking));
+                            break;
+                        case (int)Globals.Direction.Left:
+                            StaticBlockList.Add(new BlockInvis(LeftDoorBlocking));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+
+            // The following 2 for loops are for the creation of walls (in lieu of boundary check)
+            for (int i = 0; i < Globals.RTILE_COLUMN; i++)
+            {
+
+                if (i < MID_DIVISION)
+                    HorizontalPos = (int)((i + LEFT_OFFSET) * Globals.OUT_UNIT);
+                else
+                    HorizontalPos = (int)((i + RIGHT_OFFSET) * Globals.OUT_UNIT);
+
+                if (i == 5 || i == 6)
+                {   // Adding extra blocks to avoid player from going into cracks 
+                    StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, TopPosition - Globals.OUT_UNIT)));
+                    StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, ButtPosition + Globals.OUT_UNIT)));
+                }
+
+                StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, TopPosition)));
+                StaticBlockList.Add(new BlockInvis(new Vector2(HorizontalPos, ButtPosition)));
+            }
+            for (int i = 0; i < Globals.RTILE_ROW; i++)
+            {
+                if (i < VERTICAL_DIVISION)
+                    VerticalPos = Globals.OUT_HEADSUP + (int)((i + UP_OFFSET) * Globals.OUT_UNIT);
+                if (i > VERTICAL_DIVISION)
+                    VerticalPos = Globals.OUT_HEADSUP + (int)((i + DOWN_OFFSET) * Globals.OUT_UNIT);
+
+                if (i == 2 || i == 4)
+                {   // Adding extra blocks to avoid player from going into cracks 
+                    StaticBlockList.Add(new BlockInvis(new Vector2(LeftPosition - Globals.OUT_UNIT, VerticalPos)));
+                    StaticBlockList.Add(new BlockInvis(new Vector2(RightPosition + Globals.OUT_UNIT, VerticalPos)));
+                }
+
+                if (i < VERTICAL_DIVISION || i > VERTICAL_DIVISION)
+                {
+                    StaticBlockList.Add(new BlockInvis(new Vector2(LeftPosition, VerticalPos)));
+                    StaticBlockList.Add(new BlockInvis(new Vector2(RightPosition, VerticalPos)));
+                }
+
+            }
+
+            return StaticBlockList;
+        }
+
+
+        private List<IBlock> GetStaticBlockListJoy()
+        {
+            List<IBlock> StaticBlockList = new List<IBlock>();
+
+            return StaticBlockList; 
+        }
+
+
     }
 }
