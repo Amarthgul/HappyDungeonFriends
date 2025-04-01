@@ -152,13 +152,18 @@ namespace HappyDungeon
             SerializableRoomInfo Result = new SerializableRoomInfo();
 
             Result.Arrangement = new int[Target.Arrangement.GetLength(0), Target.Arrangement.GetLength(1)];
+            Result.PathTile = new bool[Target.Arrangement.GetLength(0), Target.Arrangement.GetLength(1)];
             for (int i = 0; i < Target.Arrangement.GetLength(0); i++)
             {
                 for (int j = 0; j< Target.Arrangement.GetLength(1); j++)
                 {
                     Result.Arrangement[i, j] = Target.Arrangement[i, j];
+                    Result.PathTile[i, j] = Target.PathTile[i, j];
                 }
             }
+
+
+
 
             Result.Type = (int)Target.Type;
             Result.Explored = Target.Explored; 
@@ -183,11 +188,13 @@ namespace HappyDungeon
             RoomInfo Result = new RoomInfo();
 
             Result.Arrangement = new int[Target.Arrangement.GetLength(0), Target.Arrangement.GetLength(1)];
+            Result.PathTile = new bool[Target.Arrangement.GetLength(0), Target.Arrangement.GetLength(1)];
             for (int i = 0; i < Target.Arrangement.GetLength(0); i++)
             {
                 for (int j = 0; j < Target.Arrangement.GetLength(1); j++)
                 {
                     Result.Arrangement[i, j] = Target.Arrangement[i, j];
+                    Result.PathTile[i, j] = Target.PathTile[i, j];
                 }
             }
 

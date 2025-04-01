@@ -10,6 +10,10 @@ namespace HappyDungeon
     {
         public int[,] Arrangement { get; set; }
 
+
+        public bool[,] PathTile { get; set; }
+
+
         public Globals.RoomTypes Type{ get; set; }
 
         public bool Explored { get; set; }
@@ -28,6 +32,10 @@ namespace HappyDungeon
     public class SerializableRoomInfo
     {
         public int[,] Arrangement { get; set; }
+
+
+        public bool[,] PathTile { get; set; }
+
 
         public int Type { get; set; }
 

@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Collections;
 
 
 
@@ -59,9 +60,6 @@ namespace HappyDungeon
             {
                 case Globals.GameLevel.Delight:
                     PopulateRoomsDelight();
-                    SetBossRooms();
-                    SetMerchantRooms();
-                    ResumeStartupRoom();
                     break;
                 case Globals.GameLevel.Joy:
                     PopulateRoomsJoy(); 
@@ -74,6 +72,32 @@ namespace HappyDungeon
 
             return levelSet;
         }
+
+
+        public int NextRoomEdge(int[] CurrentPos, Globals.Direction Direction)
+        {
+
+
+            return 0;
+        }
+
+
+        public RoomInfo StartUpRoom()
+        {
+            return levelSet[startUpRow, startUpCol];
+        }
+
+
+        public int[] StartUpRoomIndex()
+        {
+            return new int[] { startUpRow, startUpCol };
+        }
+
+
+        // ================================================================================
+        // ==================================== Private ===================================
+        // ================================================================================
+
 
         /// <summary>
         /// Generate a set of placement, fill these rooms with placeholders.
@@ -115,6 +139,161 @@ namespace HappyDungeon
 
 
         /// <summary>
+        /// Populate the rooms with content using logics for level 1 Delight. 
+        /// </summary>
+        private void PopulateRoomsDelight()
+        {
+            // ======================================================================
+            // ======================= Add contents to each room ====================
+
+            // This section assume every room is neither boss nor startup room, thus populate them with items, blocks, and enemies indiscriminately.
+
+            int L1Dist;
+            double RowProgression = 0, ColProgression = 0;
+            GenerateRoomDelight RoomGen = new GenerateRoomDelight();
+
+            for (int i = 0; i < levelSet.GetLength(0); i++)
+            {
+                for (int j = 0; j < levelSet.GetLength(1); j++)
+                {
+                    L1Dist = L1DistanceFromStart(i, j);
+                    ColProgression = j / levelColCount;
+                    RowProgression = i / levelRowCount;
+
+                    if (levelSet[i, j] != null)
+                    {
+                        RoomGen = new GenerateRoomDelight();
+                        RoomGen.InitRoom();
+                        RoomGen.room = levelSet[i, j];
+                        RoomGen.SetPara(L1Dist, RowProgression, ColProgression);
+
+
+                        RoomGen.PopulateBlock();
+                        RoomGen.PopulateEnemy();
+                        RoomGen.PopulateItem();
+
+                        levelSet[i, j] = RoomGen.room;
+                    }
+                }
+            }
+
+
+            // ======================================================================
+            // ======================== Add boos into the level =====================
+            int count = 0;
+            int[] iter = new int[] { 0, 1, 2, 3 };
+            RoomGen = new GenerateRoomDelight();
+
+            if (_DEVMODE)
+            {
+                if (HasNextRoom(new int[] { startUpRow, startUpCol }, Globals.Direction.Up))
+                {
+                    RoomGen.SetAsBossRoom();
+                    levelSet[startUpRow - 1, startUpCol] = RoomGen.room;
+                }
+                else if (HasNextRoom(new int[] { startUpRow, startUpCol }, Globals.Direction.Down))
+                {
+                    RoomGen.SetAsBossRoom();
+                    levelSet[startUpRow + 1, startUpCol] = RoomGen.room;
+                }
+            }
+
+            while (count < BOSS_ROOM_COUNT)
+            {
+                // Randomly select rooms and make them into boss room 
+                int row = Globals.RND.Next(levelSet.GetLength(0));
+                int col = Globals.RND.Next(levelSet.GetLength(1));
+
+                int Threshold = (int)Math.Pow(L1DistanceFromStart(row, col) - BOSS_SPAWN_OFFSET, BOSS_DIST_MOD);
+
+                if (!IsStartUpRoom(row, col) && levelSet[row, col] != null &&
+                    Globals.RND.Next(100) < Threshold)
+                {
+                    RoomGen.room = levelSet[row, col];
+                    RoomGen.SetAsBossRoom();
+                    levelSet[row, col] = RoomGen.room;
+                    count++;
+                }
+            }
+
+            // ======================================================================
+            // ====================== Add merchant into the level ===================
+
+            while (count < MERCHANT_ROOM_COUNT)
+            {
+                int row = Globals.RND.Next(levelSet.GetLength(0));
+                int col = Globals.RND.Next(levelSet.GetLength(1));
+
+                if (!IsStartUpRoom(row, col) && levelSet[row, col] != null)
+                {
+                    RoomGen = new GenerateRoomDelight();
+                    RoomGen.InitRoom();
+                    RoomGen.SetAsMerchantRoom();
+
+                    levelSet[row, col] = RoomGen.room;
+
+                    foreach (Globals.Direction Dir in Globals.FourDirIter)
+                    {
+                        if (HasNextRoom(new int[] { row, col }, Dir))
+                        {
+                            AddMysDoors(new int[] { row, col }, Dir);
+                        }
+                    }
+
+                    count++;
+                }
+            }
+
+
+            // ======================================================================
+            // ===== Re - tag the type of the room on startup location as start =====
+            RoomGen = new GenerateRoomDelight();
+            levelSet[startUpRow, startUpCol] = RoomGen.SetAsStartupRoom(levelSet[startUpRow, startUpCol]);
+        }
+
+
+        /// <summary>
+        /// Populate the rooms with content using logics for level 2 Joy. 
+        /// </summary>
+        private void PopulateRoomsJoy()
+        {
+
+            // This section assume every room is neither boss nor startup room, thus populate them with items, blocks, and enemies indiscriminately.
+
+            int L1Dist;
+            double RowProgression = 0, ColProgression = 0;
+            GenerateRoomJoy RoomGen = new GenerateRoomJoy();
+
+            for (int i = 0; i < levelSet.GetLength(0); i++)
+            {
+                for (int j = 0; j < levelSet.GetLength(1); j++)
+                {
+                    L1Dist = L1DistanceFromStart(i, j);
+                    ColProgression = j / levelColCount;
+                    RowProgression = i / levelRowCount;
+
+                    if (levelSet[i, j] != null)
+                    {
+                        RoomGen = new GenerateRoomJoy();
+
+                        // Pasted the initilized room info to the current room 
+                        RoomGen.room = levelSet[i, j];
+
+                        RoomGen.GenerateTilePlacement(levelSet); 
+
+                        // Put the newly updated room info back to the level 
+                        levelSet[i, j] = RoomGen.room;
+                    }
+                }
+            }
+        }
+
+
+        // ================================================================================
+        // ======================================= Util ===================================
+        // ================================================================================
+
+        /// <summary>
         /// Change doors depending on the inter-room relationship 
         /// </summary>
         private void RegulateDoors()
@@ -142,6 +321,7 @@ namespace HappyDungeon
                 }
             }
         }
+
 
         /// <summary>
         /// Open a set of doors in this room and the room at the given direction. 
@@ -185,6 +365,7 @@ namespace HappyDungeon
             levelSet[CurrentPos[0] + (int)Offset.Y, CurrentPos[1] + (int)Offset.X].OpenDoors[nextRoomDoorDir] = true;
         }
 
+
         /// <summary>
         /// Actually just eliminate all visible doors.
         /// </summary>
@@ -227,6 +408,7 @@ namespace HappyDungeon
             levelSet[CurrentPos[0] + (int)Offset.Y, CurrentPos[1] + (int)Offset.X].LockedDoors[nextRoomDoorDir] = false;
             levelSet[CurrentPos[0] + (int)Offset.Y, CurrentPos[1] + (int)Offset.X].OpenDoors[nextRoomDoorDir] = false;
         }
+
 
         /// <summary>
         /// Add mystery doors, in this game it's money doors. 
@@ -292,16 +474,6 @@ namespace HappyDungeon
 
 
         /// <summary>
-        /// Re-tag the type of the room on startup location as start. 
-        /// </summary>
-        private void ResumeStartupRoom()
-        {
-            GenerateRoomDelight RoomGenTemp = new GenerateRoomDelight();
-            levelSet[startUpRow, startUpCol] = RoomGenTemp.SetAsStartupRoom(levelSet[startUpRow, startUpCol]);
-        }
-
-
-        /// <summary>
         /// Given a pair of index, calculate the L1 distance from the startup room.
         /// </summary>
         /// <param name="row">Row of the given room</param>
@@ -314,138 +486,6 @@ namespace HappyDungeon
 
 
         /// <summary>
-        /// Assume a room is neither boss nor startup room, 
-        /// populate it with items, blocks, and enemies.
-        /// </summary>
-        private void PopulateRoomsDelight()
-        {
-            int L1Dist;
-            double RowProgression = 0, ColProgression = 0;
-
-
-            for (int i = 0; i < levelSet.GetLength(0); i++)
-            {
-                for (int j = 0; j < levelSet.GetLength(1); j++)
-                {
-                    L1Dist = L1DistanceFromStart(i, j);
-                    ColProgression = j / levelColCount;
-                    RowProgression = i / levelRowCount;
-
-                    if (levelSet[i, j] != null)
-                    {
-                        GenerateRoomDelight RoomGen = new GenerateRoomDelight();
-                        RoomGen.InitRoom();
-                        RoomGen.room = levelSet[i, j];
-                        RoomGen.SetPara(L1Dist, RowProgression, ColProgression);
-
-                        
-                        RoomGen.PopulateBlock();
-                        RoomGen.PopulateEnemy();
-                        RoomGen.PopulateItem();
-
-                        levelSet[i, j] = RoomGen.room;
-                    }
-                }
-            }
-        }
-
-
-        private void PopulateRoomsJoy()
-        {
-
-        }
-
-
-        /// <summary>
-        /// Randomly picking rooms and set them as merchant rooms.
-        /// </summary>
-        private void SetMerchantRooms()
-        {
-
-            int count = 0;
-            int[] iter = new int[] { 0, 1, 2, 3 };
-
-            while (count < MERCHANT_ROOM_COUNT)
-            {
-                int row = Globals.RND.Next(levelSet.GetLength(0));
-                int col = Globals.RND.Next(levelSet.GetLength(1));
-
-                if (!IsStartUpRoom(row, col) && levelSet[row, col] != null)
-                {
-                    GenerateRoomDelight RoomGen = new GenerateRoomDelight();
-                    RoomGen.InitRoom();
-                    RoomGen.SetAsMerchantRoom();
-
-                    levelSet[row, col] = RoomGen.room;
-
-                    foreach (Globals.Direction Dir in Globals.FourDirIter)
-                    {
-                        if (HasNextRoom(new int[] { row, col }, Dir))
-                        {
-                            AddMysDoors(new int[] { row, col }, Dir);
-                        }
-                    }
-
-                    count++;
-                }
-
-            }
-        }
-
-
-        /// <summary>
-        /// Randomly pick rooms. 
-        /// If it's not null and not the start, then 
-        /// there's a chance to make it the boss room. 
-        /// The further it is from the startup the more likly
-        /// if is to become the boss room. 
-        /// </summary>
-        /// <returns>0 if exit successfully</returns>
-        private int SetBossRooms()
-        {
-
-            int count = 0;
-            int[] iter = new int[] { 0, 1, 2, 3 };
-            GenerateRoomDelight RoomGen = new GenerateRoomDelight();
-            RoomGen.InitRoom();
-            
-
-            if (_DEVMODE)
-            {
-                if (HasNextRoom(new int[] { startUpRow, startUpCol }, Globals.Direction.Up))
-                {
-                    RoomGen.SetAsBossRoom();
-                    levelSet[startUpRow - 1, startUpCol] = RoomGen.room;
-                }
-                else if (HasNextRoom(new int[] { startUpRow, startUpCol }, Globals.Direction.Down))
-                {
-                    RoomGen.SetAsBossRoom();
-                    levelSet[startUpRow + 1, startUpCol] = RoomGen.room;
-                }
-                return 0;
-            }
-
-            while (count < BOSS_ROOM_COUNT)
-            {
-                int row = Globals.RND.Next(levelSet.GetLength(0));
-                int col = Globals.RND.Next(levelSet.GetLength(1));
-
-                int Threshold = (int)Math.Pow(L1DistanceFromStart(row, col) - BOSS_SPAWN_OFFSET, BOSS_DIST_MOD); 
-
-                if (!IsStartUpRoom(row, col) && levelSet[row, col] != null &&
-                    Globals.RND.Next(100) < Threshold)
-                {
-                    RoomGen.room = levelSet[row, col]; 
-                    RoomGen.SetAsBossRoom();
-                    levelSet[row, col] = RoomGen.room;
-                    count++;
-                }
-            }
-
-            return 0;
-        }
-
-        /// <summary>
         /// Quick check if a given room is assigned as the startup.
         /// </summary>
         /// <param name="row">Row of the given room</param>
@@ -456,13 +496,14 @@ namespace HappyDungeon
             return (row == startUpRow && col == startUpCol);
         }
 
+
         /// <summary>
         /// Check if the direction at the given room has a neighbor. 
         /// </summary>
         /// <param name="CurrentPos">The location of the room</param>
         /// <param name="Direction">The direction relative to the room to loop up</param>
         /// <returns></returns>
-        public bool HasNextRoom(int[] CurrentPos, Globals.Direction Direction)
+        private bool HasNextRoom(int[] CurrentPos, Globals.Direction Direction)
         {
             switch (Direction)
             {
@@ -487,15 +528,8 @@ namespace HappyDungeon
             }
         }
 
-        public RoomInfo StartUpRoom()
-        {
-            return  levelSet[ startUpRow, startUpCol ];
-        }
 
-        public int[] StartUpRoomIndex()
-        {
-            return new int[] {startUpRow, startUpCol };
-        }
+
 
     }
 }

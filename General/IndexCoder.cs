@@ -24,6 +24,7 @@ namespace HappyDungeon.General
     ///     -     (257    *      1000     +    7     )  =  -257007
     ///   Sign  Item/Enemy     THOUSAND      Block       Coded Result   
     ///   
+    /// This also makes it possible to directly assign tile block.
     /// </summary>
 
     class IndexCoder
