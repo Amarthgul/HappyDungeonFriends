@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -129,7 +130,9 @@ namespace HappyDungeon
         {
 
             DirectPathCreation();
-            IterativeSmoothPathTile(); 
+            BevelPathTile(); 
+
+
 
         }
 
@@ -147,13 +150,14 @@ namespace HappyDungeon
                 for (int col = 0; col < Globals.RTILE_COLUMN_EXT; col++)
                     room.PathTile[row, col] = false;
 
+
             // Find the center point that will be used as an anchor 
             int centerRow = Globals.RTILE_ROW_EXT / 2;
             int centerCol = Globals.RTILE_COLUMN_EXT / 2;
             room.PathTile[centerRow, centerCol] = true;
 
             // Left: Fill from the center to the left edge.
-            if (room.OpenDoors[0])
+            if (room.OpenDoors[(int)Globals.Direction.Left])
             {
                 for (int col = 0; col <= centerCol; col++)
                 {
@@ -162,7 +166,7 @@ namespace HappyDungeon
             }
 
             // Right: Fill from the center to the right edge.
-            if (room.OpenDoors[1])
+            if (room.OpenDoors[(int)Globals.Direction.Right])
             {
                 for (int col = centerCol; col < Globals.RTILE_COLUMN_EXT; col++)
                 {
@@ -171,7 +175,7 @@ namespace HappyDungeon
             }
 
             // Up: Fill from the center to the top edge.
-            if (room.OpenDoors[2])
+            if (room.OpenDoors[(int)Globals.Direction.Up])
             {
                 for (int row = 0; row <= centerRow; row++)
                 {
@@ -180,13 +184,15 @@ namespace HappyDungeon
             }
 
             // Down: Fill from the center to the bottom edge.
-            if (room.OpenDoors[3])
+            if (room.OpenDoors[(int)Globals.Direction.Down])
             {
                 for (int row = centerRow; row < Globals.RTILE_ROW_EXT; row++)
                 {
                     room.PathTile[row, centerCol] = true;
                 }
             }
+
+
         }
 
 
@@ -195,7 +201,7 @@ namespace HappyDungeon
         /// This will most likely expend the path and make it less straight along the L shaped corners. 
         /// </summary>
         /// <param name="threshold">Threshold above which shall be converted to true</param>
-        private void GaussianSmoothPathTile(double threshold = 0.1)
+        private void BevelPathTile(int smoothStep = 1)
         {
             // Check for exactly one horizontal and one vertical opening.
             // (Using exclusive or to ensure only one door per axis is open.)
@@ -204,129 +210,164 @@ namespace HappyDungeon
 
             if (!(horizontalOpen && verticalOpen))
             {
-                // Do not apply smoothing if the openings are not exactly one horizontal and one vertical.
+                // Do not apply bevel if the openings are not exactly one horizontal and one vertical.
                 return;
             }
 
-            int rows = Globals.RTILE_ROW_EXT;
-            int cols = Globals.RTILE_COLUMN_EXT; 
+            // Clear the matrix 
+            for (int row = 0; row < Globals.RTILE_ROW_EXT; row++)
+                for (int col = 0; col < Globals.RTILE_COLUMN_EXT; col++)
+                    room.PathTile[row, col] = false;
 
-            // Define a 3x3 Gaussian kernel with sigma approximated to 1.
-            // The kernel weights sum to 1.
-            double[,] kernel = new double[,]
+            
+            int horizontalSign = room.OpenDoors[(int)Globals.Direction.Left] ? -1 : 1;
+            int verticalSign = room.OpenDoors[(int)Globals.Direction.Up] ? 1 : -1;
+
+            int centerRow = Globals.RTILE_ROW_EXT / 2;
+            int centerCol = Globals.RTILE_COLUMN_EXT / 2;
+
+            if(smoothStep == 0)
+            {   // If there is no smooth, fill the center line 
+                room.PathTile[centerRow, centerCol] = true;
+            }
+
+            // Left: Fill from the center to the left edge.
+            if (room.OpenDoors[(int)Globals.Direction.Left])
             {
-            { 1.0/16, 2.0/16, 1.0/16 },
-            { 2.0/16, 4.0/16, 2.0/16 },
-            { 1.0/16, 2.0/16, 1.0/16 }
-            };
-
-            // Temporary array to store the smoothed values.
-            double[,] blurred = new double[rows, cols];
-
-            // Perform convolution on the matrix.
-            // Convert true to 1.0 and false to 0.0.
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
+                for (int col = 0; col <= centerCol; col++)
                 {
-                    double sum = 0.0;
-                    // Apply the kernel.
-                    for (int ki = -1; ki <= 1; ki++)
-                    {
-                        for (int kj = -1; kj <= 1; kj++)
-                        {
-                            int ni = i + ki;
-                            int nj = j + kj;
-                            if (ni >= 0 && ni < rows && nj >= 0 && nj < cols)
-                            {
-                                double value = room.PathTile[ni, nj] ? 1.0 : 0.0;
-                                sum += value * kernel[ki + 1, kj + 1];
-                            }
-                        }
-                    }
-                    blurred[i, j] = sum;
+                    int distFromCtr = Math.Abs(centerCol - col);
+                    int offset = (smoothStep >= distFromCtr) ? distFromCtr : 0;
+
+                    room.PathTile[centerRow, col] = true;
+
+                    room.PathTile[centerRow, col+ horizontalSign*distFromCtr] = true;
                 }
             }
 
-            // Threshold the blurred values to update the room.PathTile.
-            // Cells with a value greater than or equal to the threshold are set to true.
-            for (int i = 0; i < rows; i++)
+            // Right: Fill from the center to the right edge.
+            if (room.OpenDoors[(int)Globals.Direction.Right])
             {
-                for (int j = 0; j < cols; j++)
+                for (int col = centerCol; col < Globals.RTILE_COLUMN_EXT; col++)
                 {
-                    room.PathTile[i, j] = blurred[i, j] >= threshold;
+                    room.PathTile[centerRow, col] = true;
                 }
             }
+
+            // Up: Fill from the center to the top edge.
+            if (room.OpenDoors[(int)Globals.Direction.Up])
+            {
+                for (int row = 0; row <= centerRow; row++)
+                {
+                    room.PathTile[row, centerCol] = true;
+                }
+            }
+
+            // Down: Fill from the center to the bottom edge.
+            if (room.OpenDoors[(int)Globals.Direction.Down])
+            {
+                for (int row = centerRow; row < Globals.RTILE_ROW_EXT; row++)
+                {
+                    room.PathTile[row, centerCol] = true;
+                }
+            }
+
         }
 
 
         /// <summary>
-        /// 
+        /// This method is supposed to smooth the path but it makes things extremely slow 
         /// </summary>
-        /// <param name="iterations"></param>
-        /// <param name="threshold"></param>
-        private void IterativeSmoothPathTile(int iterations = 3, double threshold = 0.3)
+        /// <param name="points"></param>
+        /// <param name="sigma"></param>
+        /// <param name="edgeBias"></param>
+        /// <returns></returns>
+        private  List<Point> GaussianSmoothPoints(List<Point> points, double sigma=2, double edgeBias = 3)
         {
-            // Ensure exactly one horizontal and one vertical door are open.
-            bool horizontalOpen = room.OpenDoors[0] ^ room.OpenDoors[1];
-            bool verticalOpen = room.OpenDoors[2] ^ room.OpenDoors[3];
-            if (!(horizontalOpen && verticalOpen))
+            List<Point> smoothedPoints = new List<Point>();
+            double twoSigmaSq = 2 * sigma * sigma;
+
+            // Determine the boundaries of the point set.
+            int minX = int.MaxValue, maxX = int.MinValue;
+            int minY = int.MaxValue, maxY = int.MinValue;
+            foreach (var pt in points)
             {
-                // Only apply smoothing if there is a single horizontal and a single vertical opening.
-                return;
+                if (pt.X < minX) minX = pt.X;
+                if (pt.X > maxX) maxX = pt.X;
+                if (pt.Y < minY) minY = pt.Y;
+                if (pt.Y > maxY) maxY = pt.Y;
             }
 
-            int rows = Globals.RTILE_ROW_EXT;
-            int cols = Globals.RTILE_COLUMN_EXT;
+            // For each point, compute the Gaussian-smoothed new position.
+            foreach (var p in points)
+            {
+                // Check if the point is on the edge of the set.
+                bool isEdge = (p.X == minX || p.X == maxX || p.Y == minY || p.Y == maxY);
 
-            // Convert the boolean matrix to a double matrix (true -> 1.0, false -> 0.0)
-            double[,] values = new double[rows, cols];
+                double weightSum = 0.0;
+                double xSum = 0.0;
+                double ySum = 0.0;
+
+                foreach (var q in points)
+                {
+                    double dx = p.X - q.X;
+                    double dy = p.Y - q.Y;
+                    double distanceSq = dx * dx + dy * dy;
+
+                    // Gaussian weight: exp(-distance^2 / (2*sigma^2))
+                    double weight = Math.Exp(-distanceSq / twoSigmaSq);
+
+                    // If q is the same as p and p is an edge point, apply extra bias.
+                    if (p.Equals(q) && isEdge)
+                    {
+                        weight *= edgeBias;
+                    }
+
+                    weightSum += weight;
+                    xSum += q.X * weight;
+                    ySum += q.Y * weight;
+                }
+
+                int newX = (int)Math.Round(xSum / weightSum);
+                int newY = (int)Math.Round(ySum / weightSum);
+                smoothedPoints.Add(new Point(newX, newY));
+            }
+
+            return smoothedPoints;
+        }
+
+
+        private static List<Point> GetPointsFromMatrix(bool[,] matrix)
+        {
+            List<Point> points = new List<Point>();
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    values[i, j] = room.PathTile[i, j] ? 1.0 : 0.0;
-                }
-            }
-
-            // Perform iterative smoothing with a uniform 3x3 averaging filter.
-            for (int iter = 0; iter < iterations; iter++)
-            {
-                double[,] newValues = new double[rows, cols];
-                for (int i = 0; i < rows; i++)
-                {
-                    for (int j = 0; j < cols; j++)
+                    if (matrix[i, j])
                     {
-                        double sum = 0.0;
-                        int count = 0;
-                        // Average the cell and its 8 neighbors.
-                        for (int di = -1; di <= 1; di++)
-                        {
-                            for (int dj = -1; dj <= 1; dj++)
-                            {
-                                int ni = i + di;
-                                int nj = j + dj;
-                                if (ni >= 0 && ni < rows && nj >= 0 && nj < cols)
-                                {
-                                    sum += values[ni, nj];
-                                    count++;
-                                }
-                            }
-                        }
-                        newValues[i, j] = sum / count;
+                        // Note: X is the column index and Y is the row index.
+                        points.Add(new Point(j, i));
                     }
                 }
-                values = newValues;
             }
+            return points;
+        }
 
-            // Convert the smoothed values back to booleans using the provided threshold.
-            for (int i = 0; i < rows; i++)
+
+        private static bool[,] PointsToMatrix(List<Point> points, int rows, int cols)
+        {
+            bool[,] matrix = new bool[rows, cols];
+            foreach (var p in points)
             {
-                for (int j = 0; j < cols; j++)
+                if (p.Y >= 0 && p.Y < rows && p.X >= 0 && p.X < cols)
                 {
-                    room.PathTile[i, j] = values[i, j] >= threshold;
+                    matrix[p.Y, p.X] = true;
                 }
             }
+            return matrix;
         }
 
 
@@ -334,4 +375,3 @@ namespace HappyDungeon
     }
 
 }
-
