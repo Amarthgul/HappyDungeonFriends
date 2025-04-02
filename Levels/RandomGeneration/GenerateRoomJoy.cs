@@ -201,7 +201,7 @@ namespace HappyDungeon
         /// This will most likely expend the path and make it less straight along the L shaped corners. 
         /// </summary>
         /// <param name="threshold">Threshold above which shall be converted to true</param>
-        private void BevelPathTile(int smoothStep = 1)
+        private void BevelPathTile(int smoothStep = 3)
         {
             // Check for exactly one horizontal and one vertical opening.
             // (Using exclusive or to ensure only one door per axis is open.)
@@ -220,8 +220,8 @@ namespace HappyDungeon
                     room.PathTile[row, col] = false;
 
             
-            int horizontalSign = room.OpenDoors[(int)Globals.Direction.Left] ? -1 : 1;
-            int verticalSign = room.OpenDoors[(int)Globals.Direction.Up] ? 1 : -1;
+            int horizontalSign = room.OpenDoors[(int)Globals.Direction.Left] ? 1 : -1;
+            int verticalSign = room.OpenDoors[(int)Globals.Direction.Up] ? -1 : 1;
 
             int centerRow = Globals.RTILE_ROW_EXT / 2;
             int centerCol = Globals.RTILE_COLUMN_EXT / 2;
@@ -234,30 +234,50 @@ namespace HappyDungeon
             // Left: Fill from the center to the left edge.
             if (room.OpenDoors[(int)Globals.Direction.Left])
             {
-                for (int col = 0; col <= centerCol; col++)
+                for (int col = 0; col < centerCol; col++)
                 {
                     int distFromCtr = Math.Abs(centerCol - col);
-                    int offset = (smoothStep >= distFromCtr) ? distFromCtr : 0;
+                    int offset = (smoothStep >= distFromCtr) ? smoothStep - distFromCtr : 0;
 
-                    room.PathTile[centerRow, col] = true;
-
-                    room.PathTile[centerRow, col+ horizontalSign*distFromCtr] = true;
+                    if (smoothStep >= distFromCtr)
+                    {
+                        int compensate = offset > 0 ? -verticalSign : 0; 
+                        room.PathTile[centerRow + verticalSign * offset, col] = true;
+                        room.PathTile[centerRow + verticalSign * offset + compensate, col] = true;
+                    }
+                    else
+                    {
+                        room.PathTile[centerRow, col] = true;
+                    }
+ 
                 }
             }
 
             // Right: Fill from the center to the right edge.
             if (room.OpenDoors[(int)Globals.Direction.Right])
             {
-                for (int col = centerCol; col < Globals.RTILE_COLUMN_EXT; col++)
+                for (int col = centerCol+1; col < Globals.RTILE_COLUMN_EXT; col++)
                 {
-                    room.PathTile[centerRow, col] = true;
+                    int distFromCtr = Math.Abs(centerCol - col);
+                    int offset = (smoothStep >= distFromCtr) ? smoothStep - distFromCtr : 0;
+
+                    if (smoothStep >= distFromCtr)
+                    {
+                        int compensate = offset > 0 ? -verticalSign : 0;
+                        room.PathTile[centerRow + verticalSign * offset, col] = true;
+                        room.PathTile[centerRow + verticalSign * offset + compensate, col] = true;
+                    }
+                    else
+                    {
+                        room.PathTile[centerRow, col] = true;
+                    }
                 }
             }
 
             // Up: Fill from the center to the top edge.
             if (room.OpenDoors[(int)Globals.Direction.Up])
             {
-                for (int row = 0; row <= centerRow; row++)
+                for (int row = 0; row <= centerRow + 1 - smoothStep; row++)
                 {
                     room.PathTile[row, centerCol] = true;
                 }
@@ -266,7 +286,7 @@ namespace HappyDungeon
             // Down: Fill from the center to the bottom edge.
             if (room.OpenDoors[(int)Globals.Direction.Down])
             {
-                for (int row = centerRow; row < Globals.RTILE_ROW_EXT; row++)
+                for (int row = centerRow+smoothStep-1; row < Globals.RTILE_ROW_EXT; row++)
                 {
                     room.PathTile[row, centerCol] = true;
                 }
