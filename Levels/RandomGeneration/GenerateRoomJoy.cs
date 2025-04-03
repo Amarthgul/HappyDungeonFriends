@@ -143,7 +143,29 @@ namespace HappyDungeon
 
         private void ConvolveGrow(int iteration = 4)
         {
-            double[,] mapArray = MathUtil.BoolToDouble(room.PathTile); 
+            double[,] mapArray = MathUtil.BoolToDouble(room.PathTile);
+
+            //double[,] kernel = {
+            //    { 1.0 / 16, 3.0 / 16, 1.0 / 16 },
+            //    { 3.0 / 16, 0   / 16, 3.0 / 16 },
+            //    { 1.0 / 16, 3.0 / 16, 1.0 / 16 }
+            //};
+            double[,] kernel = {
+                { 1.0 / 16, 1.0 / 16, 4.0 / 16 },
+                { 1.0 / 16, 0   / 16, 3.0 / 16 },
+                { 1.0 / 16, 1.0 / 16, 4.0 / 16 }
+            };
+            double[,] result = new double[mapArray.GetLength(0), mapArray.GetLength(1)]; 
+
+            for (int i = 0; i < iteration; i++)
+            {
+                result = MathUtil.Convolve2D(result, kernel);
+                result = MathUtil.ArrayAdd(result, mapArray);
+            }
+
+
+            room.PathTile = MathUtil.DoubleToBool(result); 
+
 
 
         }

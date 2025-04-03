@@ -10,7 +10,16 @@ namespace HappyDungeon
     class MathUtil
     {
 
-        public static double[,] Convolve2D(double[,] input, double[,] kernel)
+        public static double[,] Convolve2D(double[,] input, double[,] kernel, bool padInput=false)
+        {
+            if (padInput)
+                return Convolve2DInputPadding(input, kernel);
+            else
+                return Convolve2DOutputPadding(input, kernel);
+        }
+
+
+        public static double[,] Convolve2DInputPadding(double[,] input, double[,] kernel)
         {
             // Ensure the kernel is 3x3.
             if (kernel.GetLength(0) != 3 || kernel.GetLength(1) != 3)
@@ -48,6 +57,97 @@ namespace HappyDungeon
             return output;
         }
 
+
+        public static double[,] Convolve2DOutputPadding(double[,] input, double[,] kernel)
+        {
+            // Validate that the kernel is 3x3.
+            if (kernel.GetLength(0) != 3 || kernel.GetLength(1) != 3)
+                throw new ArgumentException("Kernel must be 3x3.");
+
+            int inputRows = input.GetLength(0);
+            int inputCols = input.GetLength(1);
+            double[,] output = new double[inputRows, inputCols];
+
+            // Only compute convolution where the kernel fully overlaps the input.
+            // This valid region is from row 1 to inputRows - 2 and column 1 to inputCols - 2.
+            for (int i = 1; i < inputRows - 1; i++)
+            {
+                for (int j = 1; j < inputCols - 1; j++)
+                {
+                    double sum = 0.0;
+
+                    // Loop over the kernel indices.
+                    for (int ki = 0; ki < 3; ki++)
+                    {
+                        for (int kj = 0; kj < 3; kj++)
+                        {
+                            // Calculate the corresponding input indices.
+                            int inputRow = i + ki - 1;
+                            int inputCol = j + kj - 1;
+                            sum += input[inputRow, inputCol] * kernel[ki, kj];
+                        }
+                    }
+
+                    // Assign the computed sum to the output at the same location.
+                    output[i, j] = sum;
+                }
+            }
+
+            // The border cells of the output remain zero (or can be assigned any desired default)
+            // which effectively pads the output to match the dimensions of the input.
+            return output;
+        }
+
+
+        /// <summary>
+        /// Performs element-wise addition of two 2D int arrays and clamps each result to the specified range.
+        /// </summary>
+        /// <param name="arr1">The first 2D array.</param>
+        /// <param name="arr2">The second 2D array (must be the same dimensions as arr1).</param>
+        /// <param name="minValue">The minimum allowed value in the result.</param>
+        /// <param name="maxValue">The maximum allowed value in the result.</param>
+        /// <returns>A new 2D int array containing the clamped sums.</returns>
+        /// <exception cref="ArgumentException">Thrown if the input arrays do not have the same dimensions.</exception>
+        public static double[,] ArrayAdd(double[,] arr1, double[,] arr2)
+        {
+            int rows = arr1.GetLength(0);
+            int cols = arr1.GetLength(1);
+
+            if (rows != arr2.GetLength(0) || cols != arr2.GetLength(1))
+                throw new ArgumentException("Both arrays must have the same dimensions.");
+
+            double[,] result = new double[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    double sum = arr1[i, j] + arr2[i, j];
+                    result[i, j] = sum; 
+                }
+            }
+
+            return result;
+        }
+
+        public static double[,] ArrayClamp(double[,] arr, double minValue = 0, double maxValue = 1)
+        {
+            int rows = arr.GetLength(0);
+            int cols = arr.GetLength(1);
+
+            double[,] result = new double[rows, cols];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+ 
+                    result[i, j] = (result[i, j] < minValue) ? minValue : (result[i, j] > maxValue ? maxValue : result[i, j]);
+                }
+            }
+
+            return result;
+        }
 
 
         /// <summary>
