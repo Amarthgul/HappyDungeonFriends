@@ -96,6 +96,7 @@
     <Compile Include="General\Modifiers\ModifierTorch.cs" />
     <Compile Include="General\SoundAndFX\SoundFX.cs" />
     <Compile Include="Levels\RandomGeneration\GenerateRoomJoy.cs" />
+    <Compile Include="Misc\MathUtil.cs" />
     <Compile Include="Misc\Stopwatch.cs" />
     <Compile Include="UI\DescriptionTextureGen\GenerateDescription.cs" />
     <Compile Include="ItemsAndSuch\Items\DroppedGold.cs" />

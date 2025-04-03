@@ -42,7 +42,7 @@ namespace HappyDungeon
         public const int ORIG_BORDER = 32;        // Size of the border, where player cannot go in 
 
         // How much bigger the output would be 
-        public const int SCALAR = 4;
+        public const int SCALAR = 6;
 
         // Scale on which the dev process is conducted on. 
         // This is used to fix some errors caused by incorrect scaling, for example, when SCALAR is set

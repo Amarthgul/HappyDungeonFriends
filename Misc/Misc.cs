@@ -185,6 +185,15 @@ namespace HappyDungeon
         // ==================================== Misc ======================================
         // ================================================================================
 
+
+        public static void Swap<T>(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
+        }
+
+
         /// <summary>
         /// Translate the tile position of row and column to the absolute position
         /// in the game window, as in pixel locations. 
@@ -202,6 +211,7 @@ namespace HappyDungeon
             return FinalPos;
         }
 
+
         /// <summary>
         /// Given a position, reverse translate it into the column and row tile index.
         /// In relative only to the room area, i.e. 2 offsets on all sides. 
@@ -218,6 +228,7 @@ namespace HappyDungeon
             return Rev;
         }
 
+
         /// <summary>
         /// Given a absolute position, return its original unscaled pixel position. 
         /// </summary>
@@ -227,6 +238,7 @@ namespace HappyDungeon
         {
             return new int[] { (int)(Target.X / Globals.SCALAR), (int)(Target.Y / Globals.SCALAR) }; 
         }
+
 
         /// <summary>
         /// Euclidean distance between 2 points.
@@ -239,6 +251,7 @@ namespace HappyDungeon
             return (int)Math.Sqrt(Math.Pow((P1.X - P2.X), 2) + Math.Pow((P1.Y - P2.Y), 2));
         }
 
+
         /// <summary>
         /// Manhattan distance between 2 points.
         /// </summary>
@@ -250,6 +263,7 @@ namespace HappyDungeon
             Vector2 Total = P1 - P2; 
             return (int)(Math.Abs(Total.X) + Math.Abs(Total.Y)) ;
         }
+
 
         /// <summary>
         /// Create a damage instant that would instantly kill anything.

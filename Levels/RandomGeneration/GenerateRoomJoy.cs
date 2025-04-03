@@ -130,13 +130,51 @@ namespace HappyDungeon
         {
 
             DirectPathCreation();
-            BevelPathTile(); 
 
+            // For the L corners, bevel them 
+            BevelPathTile();
+
+            JitterPath();
+
+            ConvolveGrow();
+
+        }
+
+
+        private void ConvolveGrow(int iteration = 4)
+        {
+            double[,] mapArray = MathUtil.BoolToDouble(room.PathTile); 
 
 
         }
 
 
+
+        /// <summary>
+        /// Add jitter onto the rigid path, this also tends to increase the thickness a little. 
+        /// </summary>
+        /// <param name="iteration">Number of iterations. More iteration creates more jitter.</param>
+        private void JitterPath(int iteration = 4)
+        {
+            bool horizontalOpen = room.OpenDoors[0] ^ room.OpenDoors[1];
+            bool verticalOpen = room.OpenDoors[2] ^ room.OpenDoors[3];
+
+            if (horizontalOpen && verticalOpen)
+            {
+                // Skip the room if it's L corner 
+                return;
+            }
+
+            int centerRow = Globals.RTILE_ROW_EXT / 2;
+            int centerCol = Globals.RTILE_COLUMN_EXT / 2;
+
+            for (int i = 0;  i < iteration; i++)
+            {
+                ShiftRows(centerRow, centerCol);
+                ShiftCols(centerRow, centerCol);
+            }
+
+        }
 
 
         /// <summary>
@@ -201,7 +239,7 @@ namespace HappyDungeon
         /// This will most likely expend the path and make it less straight along the L shaped corners. 
         /// </summary>
         /// <param name="threshold">Threshold above which shall be converted to true</param>
-        private void BevelPathTile(int smoothStep = 3)
+        private void BevelPathTile(int smoothStep = 4)
         {
             // Check for exactly one horizontal and one vertical opening.
             // (Using exclusive or to ensure only one door per axis is open.)
@@ -293,104 +331,255 @@ namespace HappyDungeon
             }
 
         }
+        
+
+        /// <summary>
+        /// Shifting some random vertical patterns to the left or right. 
+        /// </summary>
+        /// <param name="ctrRow">Index for the center row</param>
+        /// <param name="ctrCol">Index for the center column</param>
+        private void ShiftRows(int ctrRow, int ctrCol)
+        {
+            int rangeRow1 = Globals.RND.Next(0, Globals.RTILE_ROW_EXT);
+            int rangeRow2 = Globals.RND.Next(0, Globals.RTILE_ROW_EXT);
+
+            if (rangeRow2 < rangeRow1)
+                Misc.Swap(ref rangeRow1, ref rangeRow2);
+
+            if (rangeRow1 == rangeRow2 || 
+                Math.Abs(rangeRow2 - rangeRow1)<3 ||
+                Math.Abs(rangeRow1 - ctrRow) < 1 ||
+                Math.Abs(rangeRow2 - ctrRow) < 1)
+                // If the random index are the same or if the difference is too small, skip. 
+                return;
+
+            int direction = Globals.RND.NextDouble() > 0.5 ? 1 : -1;
+
+            
+            for (int row = rangeRow1; row <= rangeRow2; row++)
+            {
+                if (direction == -1)
+                    for (int c = 1; c < Globals.RTILE_COLUMN_EXT-1; c++)
+                    {
+                        bool Changed = false; 
+                        if (room.PathTile[row, c])
+                        {
+                            room.PathTile[row, c + direction] = true;
+                            Changed = true;
+                        }
+
+                        if (Changed && row != rangeRow1 && row != rangeRow2 && row != ctrRow)
+                            room.PathTile[row, c] = false;
+                    }
+
+                if (direction == 1)
+                    for (int c = Globals.RTILE_COLUMN_EXT - 2; c > 0 ; c--)
+                    {
+                        bool Changed = false;
+                        if (room.PathTile[row, c])
+                        {
+                            room.PathTile[row, c + direction] = true;
+                            Changed = true;
+                        }
+
+                        if (Changed && row != rangeRow1 && row != rangeRow2 && row != ctrRow)
+                            room.PathTile[row, c] = false;
+                    }
+            }
+
+
+        }
 
 
         /// <summary>
-        /// This method is supposed to smooth the path but it makes things extremely slow 
+        /// Shifting some random horizontal patterns upward or downward. 
         /// </summary>
-        /// <param name="points"></param>
-        /// <param name="sigma"></param>
-        /// <param name="edgeBias"></param>
-        /// <returns></returns>
-        private  List<Point> GaussianSmoothPoints(List<Point> points, double sigma=2, double edgeBias = 3)
+        /// <param name="ctrRow">Index for the center row</param>
+        /// <param name="ctrCol">Index for the center column</param>
+        private void ShiftCols(int ctrRow, int ctrCol)
         {
-            List<Point> smoothedPoints = new List<Point>();
-            double twoSigmaSq = 2 * sigma * sigma;
 
-            // Determine the boundaries of the point set.
-            int minX = int.MaxValue, maxX = int.MinValue;
-            int minY = int.MaxValue, maxY = int.MinValue;
-            foreach (var pt in points)
+            int rangeCol1 = Globals.RND.Next(0, Globals.RTILE_COLUMN_EXT);
+            int rangeCol2 = Globals.RND.Next(0, Globals.RTILE_COLUMN_EXT);
+
+            if (rangeCol1 > rangeCol2)
+                Misc.Swap(ref rangeCol1, ref rangeCol2);
+
+
+            if (rangeCol1 == rangeCol2 || 
+                Math.Abs(rangeCol2 - rangeCol1) < 3 ||
+                Math.Abs(rangeCol1 - ctrCol) < 1 ||
+                Math.Abs(rangeCol2 - ctrCol) < 1)
+                // If the random index are the same or if the difference is too small, skip. 
+                return;
+
+            int direction = Globals.RND.NextDouble() > 0.5 ? 1 : -1;
+            
+            for  (int col = rangeCol1; col <= rangeCol2; col++)
             {
-                if (pt.X < minX) minX = pt.X;
-                if (pt.X > maxX) maxX = pt.X;
-                if (pt.Y < minY) minY = pt.Y;
-                if (pt.Y > maxY) maxY = pt.Y;
-            }
-
-            // For each point, compute the Gaussian-smoothed new position.
-            foreach (var p in points)
-            {
-                // Check if the point is on the edge of the set.
-                bool isEdge = (p.X == minX || p.X == maxX || p.Y == minY || p.Y == maxY);
-
-                double weightSum = 0.0;
-                double xSum = 0.0;
-                double ySum = 0.0;
-
-                foreach (var q in points)
-                {
-                    double dx = p.X - q.X;
-                    double dy = p.Y - q.Y;
-                    double distanceSq = dx * dx + dy * dy;
-
-                    // Gaussian weight: exp(-distance^2 / (2*sigma^2))
-                    double weight = Math.Exp(-distanceSq / twoSigmaSq);
-
-                    // If q is the same as p and p is an edge point, apply extra bias.
-                    if (p.Equals(q) && isEdge)
+                if (direction == -1)
+                    for (int r = 1; r < Globals.RTILE_ROW_EXT - 1; r++)
                     {
-                        weight *= edgeBias;
+                        bool Changed = false;
+                        if (room.PathTile[r, col])
+                        {
+                            room.PathTile[r + direction, col] = true;
+                            Changed = true;
+                        }
+
+                        if (Changed && col != rangeCol1 && col != rangeCol2 && col != ctrCol)
+                            room.PathTile[r, col] = false;
                     }
 
-                    weightSum += weight;
-                    xSum += q.X * weight;
-                    ySum += q.Y * weight;
-                }
+                if (direction == 1)
+                    for (int r = Globals.RTILE_ROW_EXT - 2; r > 0 ; r--)
+                    {
+                        bool Changed = false;
+                        if (room.PathTile[r, col])
+                        {
+                            room.PathTile[r + direction, col] = true;
+                            Changed = true;
+                        }
 
-                int newX = (int)Math.Round(xSum / weightSum);
-                int newY = (int)Math.Round(ySum / weightSum);
-                smoothedPoints.Add(new Point(newX, newY));
+                        if (Changed && col != rangeCol1 && col != rangeCol2 && col != ctrCol)
+                            room.PathTile[r, col] = false;
+                    }
             }
 
-            return smoothedPoints;
+
         }
 
 
-        private static List<Point> GetPointsFromMatrix(bool[,] matrix)
+
+        /// <summary>
+        /// Returns the index of the first cell in the specified row from which there are at least MAX_CONT consecutive true values.
+        /// If no such sequence exists, returns -1.
+        /// </summary>
+        /// <param name="matrix">The 2D boolean array.</param>
+        /// <param name="rowIndex">The row index to inspect.</param>
+        /// <param name="maxCont">The required number of consecutive true values.</param>
+        /// <returns>The starting column index for the consecutive true sequence, or -1 if none exists.</returns>
+        private static int GetFirstConsecutiveTrueIndexInRow(bool[,] matrix, int rowIndex, int maxCont)
         {
-            List<Point> points = new List<Point>();
-            int rows = matrix.GetLength(0);
             int cols = matrix.GetLength(1);
-            for (int i = 0; i < rows; i++)
+            // We only need to iterate up to cols - maxCont, as starting later cannot have enough consecutive cells.
+            for (int start = 0; start <= cols - maxCont; start++)
             {
-                for (int j = 0; j < cols; j++)
+                bool valid = true;
+                for (int offset = 0; offset < maxCont; offset++)
                 {
-                    if (matrix[i, j])
+                    if (!matrix[rowIndex, start + offset])
                     {
-                        // Note: X is the column index and Y is the row index.
-                        points.Add(new Point(j, i));
+                        valid = false;
+                        break;
                     }
                 }
-            }
-            return points;
-        }
-
-
-        private static bool[,] PointsToMatrix(List<Point> points, int rows, int cols)
-        {
-            bool[,] matrix = new bool[rows, cols];
-            foreach (var p in points)
-            {
-                if (p.Y >= 0 && p.Y < rows && p.X >= 0 && p.X < cols)
+                if (valid)
                 {
-                    matrix[p.Y, p.X] = true;
+                    return start;
                 }
             }
-            return matrix;
+            return -1;
         }
 
 
+        /// <summary>
+        /// Returns the index of the first cell in the specified column from which there are at least MAX_CONT consecutive true values.
+        /// If no such sequence exists, returns -1.
+        /// </summary>
+        /// <param name="matrix">The 2D boolean array.</param>
+        /// <param name="colIndex">The column index to inspect.</param>
+        /// <param name="maxCont">The required number of consecutive true values.</param>
+        /// <returns>The starting row index for the consecutive true sequence, or -1 if none exists.</returns>
+        private static int GetFirstConsecutiveTrueIndexInColumn(bool[,] matrix, int colIndex, int maxCont)
+        {
+            int rows = matrix.GetLength(0);
+            // Iterate only up to rows - maxCont.
+            for (int start = 0; start <= rows - maxCont; start++)
+            {
+                bool valid = true;
+                for (int offset = 0; offset < maxCont; offset++)
+                {
+                    if (!matrix[start + offset, colIndex])
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (valid)
+                {
+                    return start;
+                }
+            }
+            return -1;
+        }
+
+
+        /// <summary>
+        /// Finds the maximum number of consecutive true values in the specified row.
+        /// </summary>
+        /// <param name="matrix">The 2D boolean array.</param>
+        /// <param name="rowIndex">The row index to inspect.</param>
+        /// <returns>The maximum consecutive true count in the row.</returns>
+        private static int GetMaxConsecutiveTrueInRow(bool[,] matrix, int rowIndex)
+        {
+            int maxCount = 0;
+            int currentCount = 0;
+            int columns = matrix.GetLength(1);
+
+            for (int col = 0; col < columns; col++)
+            {
+                if (matrix[rowIndex, col])
+                {
+                    currentCount++;
+                    if (currentCount > maxCount)
+                    {
+                        maxCount = currentCount;
+                    }
+                }
+                else
+                {
+                    currentCount = 0;
+                }
+            }
+
+            return maxCount;
+        }
+
+
+        /// <summary>
+        /// Finds the maximum number of consecutive true values in the specified column.
+        /// </summary>
+        /// <param name="matrix">The 2D boolean array.</param>
+        /// <param name="colIndex">The column index to inspect.</param>
+        /// <returns>The maximum consecutive true count in the column.</returns>
+        private static int GetMaxConsecutiveTrueInColumn(bool[,] matrix, int colIndex)
+        {
+            int maxCount = 0;
+            int currentCount = 0;
+            int rows = matrix.GetLength(0);
+
+            for (int row = 0; row < rows; row++)
+            {
+                if (matrix[row, colIndex])
+                {
+                    currentCount++;
+                    if (currentCount > maxCount)
+                    {
+                        maxCount = currentCount;
+                    }
+                }
+                else
+                {
+                    currentCount = 0;
+                }
+            }
+
+            return maxCount;
+        }
+
+
+        
 
     }
 
