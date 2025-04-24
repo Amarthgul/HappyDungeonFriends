@@ -19,6 +19,22 @@ namespace HappyDungeon
 
         private const int JOY_ENEMY_MAX = 5;
 
+        // Path number variables 
+        private int[] full = new int[] {48, 49, 50, 51, 52, 53, 54, 55 };
+        private int[] oppositeLR = new int[] {100, 101, 102, 103 };
+        private int[] oppositeUD = new int[] {96, 96, 98, 99 };
+        private int[] turnLU = new int[] {80, 81, 82, 83 }; // Turn connecting left and up 
+        private int[] turnLD = new int[] {84, 85, 86, 87 }; // Turn connecting left and down 
+        private int[] turnRU = new int[] {88, 89, 90, 91 }; // Turn connecting right and up 
+        private int[] turnRD = new int[] {92, 93, 94, 95 }; // Turn connecting right and down 
+        private int[] bankR = new int[] {64, 65, 66, 67 };  // Bank at left, connecting up and down  
+        private int[] bankL = new int[] {68, 69, 70, 71 };  // Bank at right, connecting up and down  
+        private int[] bankD = new int[] {72, 73, 74, 75 };  // Bank at up, connecting left and right  
+        private int[] bankU = new int[] {76, 77, 78, 79 };  // Bank at down, connecting left and right
+        private int[] endL = new int[] {104, 105 };
+        private int[] endR = new int[] {106, 107 };
+        private int[] endU = new int[] {108, 109 };
+        private int[] endD = new int[] {110, 111 };
 
         public int[] tileList { get; set; } 
 
@@ -43,7 +59,7 @@ namespace HappyDungeon
 
             };
 
-            defaultBlock = 48;
+            defaultBlock = 176;
             tileList = new int[] { 33, 34, 35, 36 };
             walkableBlockList = new int[] { 96 };
             solidBlockLIst = new int[] { 128, 144, 160, 161 };
@@ -88,7 +104,6 @@ namespace HappyDungeon
             PathGeneration(levelSet);
 
 
-
             // Iterate through the tiles, assign them with proper tile texture indices 
             for (int row = 0; row < Globals.RTILE_ROW_EXT; row++)
             {
@@ -96,7 +111,14 @@ namespace HappyDungeon
                 {
                     if(room.PathTile[row, col])
                     {
-                        room.Arrangement[row, col] = walkableBlockList[Globals.RND.Next() % walkableBlockList.Count()];
+                        List<bool> neighborType = GetNeighborPath(row, col);
+                        // Bool in order of Direction { Left, Right, Up, Down };
+
+                        int tileIndex = PathTileNumberSelection(neighborType);
+
+
+                        room.Arrangement[row, col] = tileIndex; 
+
                     }
                 }
             }
@@ -108,6 +130,66 @@ namespace HappyDungeon
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================
+
+
+        /// <summary>
+        /// neighbourPath is a 4-bool list ordered { Left, Right, Up, Down }.
+        /// • 1 connection  → “end”  sprite in the matching direction.
+        /// • 2 connections → if opposite  use “opposite”, otherwise use the right corner “turn”.
+        /// • 3 connections → use a “bank” (T-junction) whose missing side is the only false entry.
+        /// • 4 connections → use a “full” (cross).
+        /// The method returns one random frame from the corresponding array.
+        /// </summary>
+        private int PathTileNumberSelection(List<bool> neighborPath)
+        {
+            // Fallback if the input is bad.
+            if (neighborPath == null || neighborPath.Count != 4)
+                return full[Globals.RND.Next(full.Length)];
+
+            int connectionCount = neighborPath.Count(b => b);
+            int[] pool;
+
+            switch (connectionCount)
+            {
+                case 1:   // Dead-end
+                    pool = neighborPath[0] ? endL :
+                           neighborPath[1] ? endR :
+                           neighborPath[2] ? endU : endD;
+                    break;
+
+                case 2:   // Straight or corner
+                    if (neighborPath[0] && neighborPath[1])           // Left & Right
+                        pool = oppositeLR;
+                    else if (neighborPath[2] && neighborPath[3])      // Up & Down
+                        pool = oppositeUD;
+                    else if (neighborPath[0] && neighborPath[2])      // Left & Up
+                        pool = turnLU;
+                    else if (neighborPath[0] && neighborPath[3])      // Left & Down
+                        pool = turnLD;
+                    else if (neighborPath[1] && neighborPath[2])      // Right & Up
+                        pool = turnRU;
+                    else                                              // Right & Down
+                        pool = turnRD;
+                    break;
+
+                case 3:   // T-junction  (bank)
+                    pool = !neighborPath[0] ? bankL :
+                           !neighborPath[1] ? bankR :
+                           !neighborPath[2] ? bankU : bankD;
+                    break;
+
+                case 4:   // Cross
+                    pool = full;
+                    break;
+
+                default:  // Isolated tile (shouldn’t happen) – fall back to full
+                    pool = full;
+                    break;
+            }
+
+            return pool[Globals.RND.Next(pool.Length)];
+        }
+
 
 
         /// <summary>
@@ -126,6 +208,10 @@ namespace HappyDungeon
         }
 
 
+        /// <summary>
+        /// Main method for generating the path area in the room. 
+        /// </summary>
+        /// <param name="levelSet"></param>
         private void PathGeneration(RoomInfo[,] levelSet)
         {
 
@@ -138,9 +224,15 @@ namespace HappyDungeon
 
             ConvolveGrow();
 
+            
+
         }
 
 
+        /// <summary>
+        /// Apply convolution additively to expand the path area. 
+        /// </summary>
+        /// <param name="iteration">Number of iterations. The more iteration, the bigger the growth.</param>
         private void ConvolveGrow(int iteration = 4)
         {
             double[,] mapArray = MathUtil.BoolToDouble(room.PathTile);
@@ -165,7 +257,6 @@ namespace HappyDungeon
 
 
             room.PathTile = MathUtil.DoubleToBool(result); 
-
 
 
         }
@@ -470,6 +561,10 @@ namespace HappyDungeon
 
 
         }
+
+
+
+
 
 
 

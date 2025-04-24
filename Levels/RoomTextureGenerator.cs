@@ -176,7 +176,7 @@ namespace HappyDungeon.Levels
 
 
         /// <summary>
-        /// Overwrite the texture, add the border and tiles for level Joy  
+        /// Overwrite the texture by iterating through every tile position.  
         /// </summary>
         private void AlterTextureJoy()
         {
@@ -190,6 +190,8 @@ namespace HappyDungeon.Levels
                 {
                     Vector2 StartPoint = new Vector2(c * Globals.ORIG_UNIT,
                         r * Globals.ORIG_UNIT);
+
+                    
 
                     int BlockIndex = General.IndexCoder.GetBlockIndex(mapMatrix[r, c]);
                     int TileTypeNow = (BlockIndex >= 0 && BlockIndex < ALL_MIGH_COUNT) ?

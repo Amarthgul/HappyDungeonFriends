@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace HappyDungeon.Levels
 {
     public class GenerateRoomBasics
@@ -59,6 +61,52 @@ namespace HappyDungeon.Levels
         }
 
 
+
+        /// <summary>
+        /// Given the position of a tile (row , col) inside RoomInfo.PathTile:
+        /// • If the tile itself is not a path tile → return null.
+        /// • Otherwise return a 4-bool list indicating whether its four orthogonal
+        ///   neighbours (Up, Down, Left, Right) are path tiles.
+        ///   A neighbour that lies outside the room is treated as false.
+        /// </summary>
+        public List<bool> GetNeighborPath(int row, int col)
+        {
+            // Quick bounds check – defensive, in case callers pass bad indices.
+            int rows = room.PathTile.GetLength(0);
+            int cols = room.PathTile.GetLength(1);
+            if (row < 0 || row >= rows || col < 0 || col >= cols)
+                return null;
+
+            // If the current cell itself is not a path tile, nothing to classify.
+            if (!room.PathTile[row, col])
+                return null;
+
+            // Up, Down, Left, Right – default to false.
+            List<bool> result = new List<bool> { true, true, true, true };
+
+            // Up
+            if (row - 1 >= 0)
+                result[(int)Globals.Direction.Up] = room.PathTile[row - 1, col];
+
+            // Down
+            if (row + 1 < rows )
+                result[(int)Globals.Direction.Down] = room.PathTile[row + 1, col];
+
+            // Left
+            if (col - 1 >= 0)
+                result[(int)Globals.Direction.Left] = room.PathTile[row, col - 1];
+
+            // Right
+            if (col + 1 < cols)
+                result[(int)Globals.Direction.Right] = room.PathTile[row, col + 1];
+
+            return result;
+        }
+
+
+
+
+
         /// <summary>
         /// Given an index, populate it into the map in a given pattern.
         /// </summary>
@@ -81,6 +129,7 @@ namespace HappyDungeon.Levels
                 }
             }
         }
+
 
         /// <summary>
         /// Given a pattern and a list of indexes, fill part of the pattern with the index. 
@@ -111,6 +160,7 @@ namespace HappyDungeon.Levels
             }
 
         }
+
 
         /// <summary>
         /// Given a list of indexes, choose some of them and populate then into a pattern.
@@ -151,6 +201,7 @@ namespace HappyDungeon.Levels
             }
         }
 
+
         /// <summary>
         /// Check the matrix, replace with random index in the list 
         /// when both the condition and pattern are met.  
@@ -179,6 +230,7 @@ namespace HappyDungeon.Levels
                 }
             }
         }
+
 
         /// <summary>
         /// Given a pattern and list, populate the pattern with random list index.
@@ -213,9 +265,11 @@ namespace HappyDungeon.Levels
             }
         }
 
+
         // ================================================================================
         // =============================== Private methods ================================
         // ================================================================================
+
 
         /// <summary>
         /// Check if that position is going to spawn as a block/walkable tile.
@@ -227,6 +281,7 @@ namespace HappyDungeon.Levels
         {
             return (General.IndexCoder.GetBlockIndex(room.Arrangement[row, col]) > 0);
         }
+
 
         /// <summary>
         /// Check if that position is going to spawn with a solid block.
@@ -240,6 +295,7 @@ namespace HappyDungeon.Levels
             return (General.IndexCoder.GetBlockIndex(room.Arrangement[row, col]) > Globals.SOLID_BLOCK_BOUND);
         }
 
+
         /// <summary>
         /// Check if the given location shall spawn with an item. 
         /// </summary>
@@ -251,6 +307,7 @@ namespace HappyDungeon.Levels
             return (General.IndexCoder.GetAuxIndex(room.Arrangement[row, col]) < 0 &&
                 General.IndexCoder.GetAuxIndex(room.Arrangement[row, col]) > Globals.ITEM_BOUND);
         }
+
 
         /// <summary>
         /// Check and clear anything that could clog the doors.
@@ -266,6 +323,7 @@ namespace HappyDungeon.Levels
                 }
             }
         }
+
 
         /// <summary>
         /// Generate a random bool matrix with given density of true.
@@ -297,6 +355,7 @@ namespace HappyDungeon.Levels
             return scatter;
         }
 
+
         /// <summary>
         /// Find the positions of the index that is within given list.  
         /// </summary>
@@ -318,6 +377,7 @@ namespace HappyDungeon.Levels
 
             return result;
         }
+
 
         /// <summary>
         /// Flood the arrangement matrix with one single index. 
