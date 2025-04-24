@@ -20,7 +20,11 @@ namespace HappyDungeon
         private const int JOY_ENEMY_MAX = 5;
 
         // Path number variables 
-        private int[] full = new int[] {48, 49, 50, 51, 52, 53, 54, 55 };
+        private int[] full = new int[] {32, 33, 34, 35, 36, 37, 38, 39, 48, 49, 50, 51, 52, 53, 54, 55 };
+        private int[] fullLU = new int[] {112, 113 }; // Full with left up neighbor being a non path
+        private int[] fullLD = new int[] {114, 115 }; // Full with left down neighbor being a non path
+        private int[] fullRU = new int[] {116, 117 }; // Full with right up neighbor being a non path
+        private int[] fullRD = new int[] {118, 119 }; // Full with right down neighbor being a non path
         private int[] oppositeLR = new int[] {100, 101, 102, 103 };
         private int[] oppositeUD = new int[] {96, 96, 98, 99 };
         private int[] turnLU = new int[] {80, 81, 82, 83 }; // Turn connecting left and up 
@@ -116,6 +120,10 @@ namespace HappyDungeon
 
                         int tileIndex = PathTileNumberSelection(neighborType);
 
+                        if(tileIndex == -1)
+                        {
+                            tileIndex = PathTileFullTypeSelection(row, col);
+                        }
 
                         room.Arrangement[row, col] = tileIndex; 
 
@@ -130,6 +138,38 @@ namespace HappyDungeon
         // ================================================================================
         // ================================ Private methods ===============================
         // ================================================================================
+
+
+        /// <summary>
+        /// Decide which “full” sprite variant to use at (row , col).
+        /// • Check the four diagonal neighbours (LU, LD, RU, RD).
+        /// • If any in-bounds diagonal is *not* a path tile, choose the matching
+        ///   corner-cut “fullXY” array; otherwise choose from the ordinary “full”.
+        ///   NOTE: An out-of-bounds diagonal is considered **true** (i.e. “already ok”).
+        /// </summary>
+        private int PathTileFullTypeSelection(int row, int col)
+        {
+            int rows = room.PathTile.GetLength(0);
+            int cols = room.PathTile.GetLength(1);
+
+            // Out-of-bounds counts as TRUE now.
+            bool IsPath(int r, int c)
+                => (r < 0 || r >= rows || c < 0 || c >= cols) || room.PathTile[r, c];
+
+            bool lu = IsPath(row - 1, col - 1);   // left-up
+            bool ld = IsPath(row + 1, col - 1);   // left-down
+            bool ru = IsPath(row - 1, col + 1);   // right-up
+            bool rd = IsPath(row + 1, col + 1);   // right-down
+
+            int[] pool =
+                !lu ? fullLU :
+                !ld ? fullLD :
+                !ru ? fullRU :
+                !rd ? fullRD :
+                full;
+
+            return pool[Globals.RND.Next(pool.Length)];
+        }
 
 
         /// <summary>
@@ -179,15 +219,17 @@ namespace HappyDungeon
                     break;
 
                 case 4:   // Cross
-                    pool = full;
-                    break;
+                    return -1; 
+                    //pool = full;
+                    //break;
 
                 default:  // Isolated tile (shouldn’t happen) – fall back to full
-                    pool = full;
-                    break;
+                    return -1;
+                    //pool = full;
+                    //break;
             }
 
-            return pool[Globals.RND.Next(pool.Length)];
+            return pool[Globals.RND.Next() % pool.Length];
         }
 
 
@@ -222,9 +264,152 @@ namespace HappyDungeon
 
             JitterPath();
 
-            ConvolveGrow();
+            ConvolveMod();
 
-            
+        }
+
+
+        private void ConvolveMod()
+        {
+            double[,] crossKernel = {
+                { 1.0 / 16, 3.0 / 16, 1.0 / 16 },
+                { 3.0 / 16, 0   / 16, 3.0 / 16 },
+                { 1.0 / 16, 3.0 / 16, 1.0 / 16 }
+            };
+            double[,] diagKernel = {
+                { 3.0 / 16, 1.0 / 16, 3.0 / 16 },
+                { 1.0 / 16, 0   / 16, 1.0 / 16 },
+                { 3.0 / 16, 1.0 / 16, 3.0 / 16 }
+            };
+
+            double[,] evenKernel = {
+                { 2.0 / 16, 2.0 / 16, 2.0 / 16 },
+                { 2.0 / 16, 0   / 16, 2.0 / 16 },
+                { 2.0 / 16, 2.0 / 16, 2.0 / 16 }
+            };
+            double[,] evenKernelHalf = {
+                { 1.0 / 16, 1.0 / 16, 1.0 / 16 },
+                { 1.0 / 16, 0   / 16, 1.0 / 16 },
+                { 1.0 / 16, 1.0 / 16, 1.0 / 16 }
+            };
+
+
+            double[,] evenKernelLarge = {
+                { 0,        1.0 / 16,   1.0 / 16,     0        },
+                { 1.0 / 16, 2   / 16,   2.0 / 16,     1.0 / 16 },
+                { 1.0 / 16, 2   / 16,   2.0 / 16,     1.0 / 16 },
+                { 0,        1.0 / 16,   1.0 / 16,     0        }
+            };
+
+
+            // A side way kernel for vertical and horizontal convolution 
+            double[,] sideKernel = {
+                { 0,        0,          0           },
+                { 8.0 / 16, 0   / 16,   8.0 / 16    },
+                { 0,        0,          0           }
+            };
+
+            double[,] directionalKernel = {
+                { 0 / 16,   1.0 / 16, 4.0 / 16 },
+                { 1.0 / 16, 0   / 16, 5.0 / 16 },
+                { 0 / 16,   1.0 / 16, 4.0 / 16 }
+            };
+
+            double[,] directionalSpressingKernel = {
+                { 0 / 16,   -8.0 / 16, 0.0 / 16 },
+                { -8.0 / 16, 0   / 16, 24.0 / 16 },
+                { 0 / 16,   -8.0 / 16, 0.0 / 16 }
+            };
+
+            ReduceSinglePath(4, sideKernel);
+
+
+            NonPathIslandGeneration(2, crossKernel);
+            //PointExpand(2, directionalSpressingKernel);
+
+            //ReduceSinglePath(1, sideKernel);
+
+            BasicExpand(5, crossKernel);
+            BasicExpand(1, diagKernel);
+
+        }
+
+
+        /// <summary>
+        /// Convolving the map to apply a basic expanding effect. 
+        /// </summary>
+        /// <param name="iteration">Number of iterations</param>
+        /// <param name="kernel">Convolution kernel</param>
+        private void BasicExpand(int iteration = 4, double[,] kernel = null, bool randKernel=true)
+        {
+            ConvolveMap(iteration, kernel, false, randKernel);
+
+        }
+
+
+        private void DirectionalIter(int iteration = 4, double[,] kernel=null)
+        {
+
+            double[,] mapArray = MathUtil.BoolToDouble(room.PathTile);
+            double[,] result = new double[mapArray.GetLength(0), mapArray.GetLength(1)];
+
+            double[,] kernel90 = MathUtil.Rotate90Clockwise(kernel);
+            double[,] kernel180 = MathUtil.Rotate90Clockwise(kernel90);
+            double[,] kernel270 = MathUtil.Rotate90Clockwise(kernel180);
+
+            result = MathUtil.Convolve2D(result, kernel);
+            result = MathUtil.ArrayAdd(result, mapArray);
+
+            result = MathUtil.Convolve2D(result, kernel90);
+            result = MathUtil.ArrayAdd(result, mapArray);
+
+            result = MathUtil.Convolve2D(result, kernel180);
+            result = MathUtil.ArrayAdd(result, mapArray);
+
+            result = MathUtil.Convolve2D(result, kernel270);
+            result = MathUtil.ArrayAdd(result, mapArray);
+
+            room.PathTile = MathUtil.DoubleToBool(result);
+        }
+
+
+        private void NonPathIslandGeneration(int iteration = 4, double[,] kernel = null)
+        {
+            double[,] mapArray = MathUtil.BoolToDouble(room.PathTile);
+            double[,] mapArrayInverted = MathUtil.BoolToDoubleInvert(room.PathTile);
+
+            double[,] result = new double[mapArray.GetLength(0), mapArray.GetLength(1)];
+
+
+            result = MathUtil.ConvolveZeroMaskGaussian(mapArray);
+
+            // MathUtil.PrintShaded(result);
+
+            for (int i = 0; i < iteration; i++)
+            {
+                result = MathUtil.ArrayAdd(result, MathUtil.RandomDoubleArray(mapArray.GetLength(0), mapArray.GetLength(1), -0.45, 0.45) ) ;
+                result = MathUtil.ArrayClamp(result);
+
+               // MathUtil.PrintShaded(result);
+
+                result = MathUtil.Erode(result, 1);
+
+                // MathUtil.PrintShaded(result);
+            }
+            result = MathUtil.ArrayMultiply(result, 1.75);
+            result = MathUtil.ArrayAdd(result, mapArray);
+            //MathUtil.PrintShaded(result);
+            room.PathTile = MathUtil.DoubleToBool(result);
+        }
+
+
+        private void ReduceSinglePath(int iteration = 4, double[,] kernel = null)
+        {
+
+            double[,] rotateKernel = MathUtil.Rotate90Clockwise(kernel);
+
+            ConvolveMap(iteration, kernel, true);
+            ConvolveMap(iteration, rotateKernel, true);
 
         }
 
@@ -233,26 +418,23 @@ namespace HappyDungeon
         /// Apply convolution additively to expand the path area. 
         /// </summary>
         /// <param name="iteration">Number of iterations. The more iteration, the bigger the growth.</param>
-        private void ConvolveGrow(int iteration = 4)
+        private void ConvolveMap(int iteration = 5, double[,] kernel=null, bool padInput=false, bool randKernel=false)
         {
             double[,] mapArray = MathUtil.BoolToDouble(room.PathTile);
 
-            //double[,] kernel = {
-            //    { 1.0 / 16, 3.0 / 16, 1.0 / 16 },
-            //    { 3.0 / 16, 0   / 16, 3.0 / 16 },
-            //    { 1.0 / 16, 3.0 / 16, 1.0 / 16 }
-            //};
-            double[,] kernel = {
-                { 1.0 / 16, 1.0 / 16, 4.0 / 16 },
-                { 1.0 / 16, 0   / 16, 3.0 / 16 },
-                { 1.0 / 16, 1.0 / 16, 4.0 / 16 }
-            };
+            
             double[,] result = new double[mapArray.GetLength(0), mapArray.GetLength(1)]; 
 
             for (int i = 0; i < iteration; i++)
             {
-                result = MathUtil.Convolve2D(result, kernel);
+                result = MathUtil.Convolve2D(result, kernel, padInput);
                 result = MathUtil.ArrayAdd(result, mapArray);
+
+                if (randKernel)
+                {
+                    double[,] tempKernel = MathUtil.RandomizeKernel(kernel);
+                    kernel = MathUtil.NormalizeKernel(MathUtil.ArrayAdd(kernel, tempKernel));
+                }
             }
 
 

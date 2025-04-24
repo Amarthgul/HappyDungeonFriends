@@ -22,8 +22,8 @@ namespace HappyDungeon
         /// Also note that Dev mode is not the same as BEGUGGING in the Globals. 
         /// Dev mode aims in checking features, while DEBUGGING is for code/console message. 
         /// </summary>
-        private bool _DEVMODE = true;       // Root flag for all other dev options 
-        private bool _ENABLE_FOW = false;   // Enable fog of war
+        private bool _DEVMODE = false;       // Root flag for all other dev options 
+        private bool _ENABLE_FOW = true;   // Enable fog of war
         private bool _SHOW_BOX = true;     // Draw boundary boxes for all 
 
         // ================================================================================
