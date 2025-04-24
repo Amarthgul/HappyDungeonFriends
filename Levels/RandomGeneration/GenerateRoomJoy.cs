@@ -321,16 +321,14 @@ namespace HappyDungeon
                 { 0 / 16,   -8.0 / 16, 0.0 / 16 }
             };
 
+
             ReduceSinglePath(4, sideKernel);
 
-
             NonPathIslandGeneration(2, crossKernel);
-            //PointExpand(2, directionalSpressingKernel);
-
-            //ReduceSinglePath(1, sideKernel);
 
             BasicExpand(5, crossKernel);
             BasicExpand(1, diagKernel);
+
 
         }
 
